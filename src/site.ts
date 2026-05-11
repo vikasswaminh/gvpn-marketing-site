@@ -17,9 +17,10 @@ export const site = {
   //   * proContact → mailto for Pro / managed inquiries. Update the
   //     address before launch.
   signupFree: "https://github.com/vikasswaminh/meshwg#quick-start",
-  proContact: "mailto:hello@meshwg.io?subject=MeshWG%20Pro",
+  proContact: "mailto:hello@meshwg.com?subject=MeshWG%20Pro",
 
   // Brand
   productName: "MeshWG",
+  domain:      "meshwg.com",
   tagline:     "Mesh the routers, laptops, and servers you already own.",
 } as const;

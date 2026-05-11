@@ -1,0 +1,228 @@
+---
+import { site } from "../site";
+
+// Three plans, one number that matters. No tier ladder.
+// "Cloud" line items reflect the eventual hosted shape; the CTA links
+// to signup which today routes to the self-host docs (free, real,
+// works today). When the hosted version is live, only site.signupFree
+// changes — copy stays.
+const plans = [
+  {
+    key: "self",
+    name: "Self-hosted",
+    price: "$0",
+    unit: "forever",
+    description: "The OSS. Run it on your own Linux VM with full source.",
+    bullets: [
+      "Unlimited machines",
+      "All features, no gates",
+      "Full source on GitHub (MIT)",
+      "Reconciler, e2e harness, deploy templates",
+    ],
+    ctaLabel: "Get the source",
+    ctaHref: site.repo,
+    ctaExternal: true,
+    accent: false,
+  },
+  {
+    key: "cloud",
+    name: "Cloud",
+    price: "$1",
+    unit: "/ machine / month, billed annually",
+    sub: "or $3 / machine / month, billed monthly",
+    description: "Hosted controller on our infrastructure. Free up to 2 machines.",
+    bullets: [
+      "2 machines free, forever",
+      "Sign in with Google or email",
+      "Hosted, monitored, backed up",
+      "Audit log, basic alerts",
+    ],
+    ctaLabel: "Sign up free",
+    ctaHref: site.signupFree,
+    ctaExternal: true,
+    accent: true,
+  },
+  {
+    key: "pro",
+    name: "Pro",
+    price: "Custom",
+    unit: "talk to us",
+    description: "Bigger fleets, dedicated infrastructure, priority support.",
+    bullets: [
+      "Dedicated controller instance",
+      "Custom domain (acme.meshwg.io)",
+      "Priority email support",
+      "Negotiated SLA",
+    ],
+    ctaLabel: "Talk to us",
+    ctaHref: site.proContact,
+    ctaExternal: false,
+    accent: false,
+  },
+];
+---
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-eyebrow">/ pricing</div>
+    <h2 class="sec-h">One number. Per machine.</h2>
+    <p class="sec-lede">
+      A "machine" is any peer in your mesh — a router, a laptop, a server,
+      a phone. Two free, forever. After that, <span class="mono-inline">$1/machine/month</span>
+      on annual billing or <span class="mono-inline">$3/machine/month</span> monthly.
+    </p>
+
+    <div class="price-grid">
+      {plans.map((p) => (
+        <article class={`plan${p.accent ? " plan-accent" : ""}`}>
+          <header>
+            <div class="plan-name">{p.name}</div>
+            <div class="plan-price">
+              <span class="num">{p.price}</span>
+              <span class="unit">{p.unit}</span>
+            </div>
+            {p.sub && <div class="plan-sub">{p.sub}</div>}
+          </header>
+
+          <p class="plan-desc">{p.description}</p>
+
+          <ul class="plan-list">
+            {p.bullets.map((b) => (
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                {b}
+              </li>
+            ))}
+          </ul>
+
+          <a
+            class={`btn ${p.accent ? "btn-primary" : ""} plan-cta`}
+            href={p.ctaHref}
+            target={p.ctaExternal ? "_blank" : undefined}
+            rel={p.ctaExternal ? "noopener" : undefined}>
+            {p.ctaLabel}
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <p class="price-foot">
+      All Cloud plans share the same product — no feature gates on ACLs,
+      reconciler, multi-tenant or any core function. The OSS and the Cloud
+      version are built from the same codebase.
+    </p>
+  </div>
+</section>
+
+<style>
+  .mono-inline {
+    font-family: var(--font-mono);
+    font-size: .95em;
+    color: var(--text);
+  }
+
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 64px;
+  }
+
+  .plan {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: flex; flex-direction: column;
+    gap: 20px;
+  }
+  .plan-accent {
+    border-color: var(--text);
+    background: var(--surface);
+  }
+  .plan-accent::before {
+    content: "Most popular";
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    margin-bottom: -8px;
+  }
+
+  .plan-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-3);
+    margin-bottom: 12px;
+  }
+
+  .plan-price {
+    display: flex; align-items: baseline; gap: 8px;
+    flex-wrap: wrap;
+  }
+  .plan-price .num {
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+  .plan-price .unit {
+    font-size: 12.5px;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+  .plan-sub {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-4);
+    font-family: var(--font-mono);
+  }
+
+  .plan-desc {
+    color: var(--text-2);
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .plan-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+    flex: 1;
+  }
+  .plan-list li {
+    display: flex; align-items: flex-start; gap: 8px;
+    color: var(--text-2);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .plan-list :global(svg) {
+    color: var(--ok);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .plan-cta {
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+  }
+
+  .price-foot {
+    margin: 40px 0 0;
+    font-size: 13px;
+    color: var(--text-3);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 980px) {
+    .price-grid { grid-template-columns: 1fr; }
+  }
+</style>

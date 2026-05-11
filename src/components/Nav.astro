@@ -1,25 +1,24 @@
 ---
 import BrandMark from "./BrandMark.astro";
-
-const repoUrl = "https://github.com/vikasswaminh/meshwg";
+import { site } from "../site";
 ---
 <nav class="nav">
   <div class="wrap nav-inner">
     <a class="brand" href="/">
       <BrandMark />
-      MeshWG
+      <span class="brand-name">{site.productName}</span>
     </a>
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#features">Features</a>
-      <a href="#compare">vs. SDWAN appliances</a>
-      <a href="#deploy">Deploy</a>
-      <a href={repoUrl} target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="#compare">vs. Tailscale</a>
+      <a href="#pricing">Pricing</a>
+      <a href={site.repo} target="_blank" rel="noopener">GitHub</a>
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href={`${repoUrl}#readme`} target="_blank" rel="noopener">Read the docs</a>
-      <a class="btn btn-primary" href={repoUrl} target="_blank" rel="noopener">Get the source</a>
+      <a class="btn btn-ghost" href={site.proContact}>Talk to us</a>
+      <a class="btn btn-primary" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
     </div>
   </div>
 </nav>
@@ -27,26 +26,37 @@ const repoUrl = "https://github.com/vikasswaminh/meshwg";
 <style>
   .nav {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(255,255,255,.85);
+    background: rgba(255, 255, 255, .88);
     backdrop-filter: saturate(180%) blur(14px);
     border-bottom: 1px solid var(--border);
   }
   .nav-inner {
-    height: 60px;
+    height: 64px;
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 32px;
   }
   .brand {
-    display: flex; align-items: center; gap: 9px;
-    font-weight: 600; letter-spacing: -.005em;
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 500; letter-spacing: -.01em;
+    font-size: 15px;
   }
-  .nav-links { display: flex; gap: 22px; font-size: 13.5px; color: var(--text-2); }
+  .brand-name { color: var(--text); }
+  .nav-links {
+    display: flex; gap: 24px;
+    font-size: 13.5px;
+    color: var(--text-3);
+  }
+  .nav-links a {
+    transition: color .12s ease;
+  }
   .nav-links a:hover { color: var(--text); }
   .nav-spacer { flex: 1; }
   .nav-cta { display: flex; gap: 8px; align-items: center; }
 
   @media (max-width: 980px) {
     .nav-links { display: none; }
+    .nav-inner { gap: 16px; }
+    .nav-cta .btn-ghost { display: none; }
   }
 </style>

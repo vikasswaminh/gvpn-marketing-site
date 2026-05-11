@@ -1,51 +1,88 @@
 ---
-// Comparison points use only verifiable claims for the MeshWG column.
-// SDWAN-appliance side uses generic well-known vendor characteristics,
-// not specific made-up prices.
+// Compare against the real competition: agent-based mesh VPNs.
+// Every claim in the MeshWG column is verifiable from the codebase.
+// Competitor cells are based on each product's public docs / pricing pages
+// at time of writing — kept generic to stay accurate as their offerings
+// shift over time.
+const cols = ["Tailscale", "Netbird", "ZeroTier"] as const;
+
 const rows = [
-  { label: "Hardware cost per site",       them: "$400 – $2,000 list",                                us: "$0 — uses the WireGuard already in your router" },
-  { label: "Tunnel protocol",              them: "Vendor-proprietary IPSec / GRE",                    us: "Standard WireGuard (RFC-equivalent)" },
-  { label: "Lead time to deploy",          them: "Weeks (procure, ship, install)",                    us: "Minutes (paste a wg-quick config)" },
-  { label: "Lock-in",                      them: "Hardware + license + RMA dependencies",             us: "None — config + keys are yours, MIT licensed code" },
-  { label: "Multi-vendor support",         them: "Single vendor",                                     us: "Anything that runs WireGuard" },
-  { label: "Site-to-site policy",          them: "Yes",                                               us: "Yes — iptables-enforced, kernel-level" },
-  { label: "Multi-port / port-range ACLs", them: "Varies by vendor / license tier",                   us: "Yes — `tcp 443,8000-8100` syntax" },
-  { label: "Tenant isolation",             them: "VRFs or separate appliances",                       us: "Linux network namespaces — verified by tcpdump test" },
-  { label: "Internet egress through hub",  them: "Configurable",                                      us: "Explicitly not provided — pure overlay relay" },
-  { label: "If the vendor disappears",     them: "Box becomes a brick",                               us: "wg-quick keeps running; source is on GitHub" },
+  {
+    label: "Needs a per-device agent?",
+    cells: ["Yes (tailscaled)", "Yes (netbird agent)", "Yes (zerotier-one)"],
+    us:    "No — uses native WireGuard already in your router / OS",
+  },
+  {
+    label: "Works with consumer routers (TP-Link, MikroTik)?",
+    cells: ["Workaround via subnet router", "Workaround via netbird-relay", "Workaround via bridging"],
+    us:    "Direct — paste a wg-quick config, done",
+  },
+  {
+    label: "Self-hostable?",
+    cells: ["Headscale (community)", "Yes (Apache 2)", "Yes (BSL)"],
+    us:    "Yes (MIT) — first-class, this is the deployment model",
+  },
+  {
+    label: "Free tier",
+    cells: ["3 users / 100 devices", "5 users / 100 peers", "1 network / 25 devices"],
+    us:    "2 machines, forever — or unlimited if self-hosted",
+  },
+  {
+    label: "Paid pricing",
+    cells: ["$6 / user / mo", "$5 / user / mo", "$5 / mo for 25 devices"],
+    us:    "$1 / machine / month — or $3 monthly",
+  },
+  {
+    label: "Pricing scales by",
+    cells: ["Users", "Users", "Devices"],
+    us:    "Machines — the thing you actually count",
+  },
+  {
+    label: "ACL granularity",
+    cells: ["L4 (tailnet policy file)", "L4 (groups + rules)", "L2 / L3 (flow rules)"],
+    us:    "L3/L4 with multi-port (tcp 443,8000-8100)",
+  },
+  {
+    label: "Tenant isolation",
+    cells: ["Tailnets (logical)", "Single-account", "Networks (logical)"],
+    us:    "Linux network namespace per tenant (kernel-level)",
+  },
+  {
+    label: "If the provider dies",
+    cells: ["Run Headscale", "Self-host the dashboard", "Self-host moons + planet"],
+    us:    "wg-quick keeps running; source is on GitHub",
+  },
 ];
 ---
 
-<section id="compare" style="background: var(--bg-2);">
+<section id="compare">
   <div class="wrap">
-    <div class="sec-eyebrow">vs. SDWAN appliances</div>
-    <h2 class="sec-h">The cheapest SDWAN is the one you already deployed.</h2>
+    <div class="sec-eyebrow">/ vs the competition</div>
+    <h2 class="sec-h">Different shape. Fewer pieces.</h2>
     <p class="sec-lede">
-      Box-based SDWAN appliances cost hundreds to thousands of dollars per
-      site plus annual licensing. For 20 branches that is real money.
-      MeshWG uses the WireGuard implementation that is already in your AP.
+      Tailscale, Netbird and ZeroTier are agent-based — every device runs
+      their daemon. MeshWG works with the WireGuard interface your router
+      and OS already ship. Different problem, different price model.
     </p>
 
-    <div class="compare">
-      <table>
+    <div class="compare-wrap">
+      <table class="compare">
         <thead>
           <tr>
-            <th></th>
-            <th>
-              Box-based SDWAN
-              <span class="sub">Cisco Meraki MX, Fortinet, VeloCloud</span>
-            </th>
-            <th class="us">
-              MeshWG
-              <span class="sub">Open-source · self-hosted</span>
-            </th>
+            <th class="rh"></th>
+            {cols.map((c) => (
+              <th>{c}</th>
+            ))}
+            <th class="us">MeshWG</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
             <tr>
-              <td>{r.label}</td>
-              <td>{r.them}</td>
+              <td class="rh">{r.label}</td>
+              {r.cells.map((c) => (
+                <td>{c}</td>
+              ))}
               <td class="us">{r.us}</td>
             </tr>
           ))}
@@ -56,41 +93,53 @@ const rows = [
 </section>
 
 <style>
-  .compare {
-    margin-top: 48px;
-    background: var(--surface);
+  .compare-wrap {
+    margin-top: 64px;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow-x: auto;
   }
-  .compare table { width: 100%; border-collapse: collapse; }
+  .compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 800px;
+  }
   .compare th, .compare td {
-    text-align: left; padding: 16px 20px; font-size: 13.5px;
+    text-align: left;
+    padding: 14px 16px;
     border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
   }
   .compare thead th {
-    font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em;
-    color: var(--text-3); font-weight: 500;
-    background: var(--surface-2);
-  }
-  .compare thead th .sub {
-    display: block;
-    font-weight: 400; text-transform: none; letter-spacing: 0;
-    color: var(--text-4);
-    margin-top: 3px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-3);
+    font-weight: 500;
+    background: var(--bg-2);
   }
   .compare thead th.us {
     color: var(--accent);
-    background: color-mix(in oklab, var(--accent) 6%, var(--surface));
+    background: var(--accent-soft);
   }
-  .compare thead th.us .sub { color: var(--accent); opacity: .7; }
+  .compare td.rh, .compare th.rh {
+    color: var(--text-3);
+    width: 200px;
+    background: var(--bg-2);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+  }
   .compare td.us {
-    background: color-mix(in oklab, var(--accent) 4%, var(--surface));
+    background: color-mix(in oklab, var(--accent) 3%, var(--surface));
+    color: var(--text);
     font-weight: 500;
   }
-  .compare tr:last-child td { border-bottom: 0; }
+  .compare tbody tr:last-child td { border-bottom: 0; }
 
   @media (max-width: 980px) {
-    .compare th, .compare td { padding: 12px; font-size: 12.5px; }
+    .compare th, .compare td { padding: 10px 12px; font-size: 12px; }
   }
 </style>

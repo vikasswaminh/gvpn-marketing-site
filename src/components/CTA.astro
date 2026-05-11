@@ -1,73 +1,77 @@
 ---
-const repoUrl    = "https://github.com/vikasswaminh/meshwg";
-const deployDocs = "https://github.com/vikasswaminh/meshwg/tree/master/deploy";
+import { site } from "../site";
 ---
 
-<div class="wrap">
-  <div class="cta">
-    <div class="cta-inner">
-      <h2>Mesh your branches in a few minutes.<br />On the hardware you already own.</h2>
-      <p>
-        Open source under MIT. Clone the repo, follow <code>deploy/README.md</code>,
-        and you have a controller running on a Linux VM with a working
-        end-to-end test suite to prove it.
-      </p>
-      <div class="row">
-        <a class="btn btn-accent btn-lg" href={repoUrl} target="_blank" rel="noopener">
-          Get the source
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </a>
-        <a class="btn btn-lg btn-on-dark" href={deployDocs} target="_blank" rel="noopener">
-          Read the deploy docs
-        </a>
+<section class="cta-section">
+  <div class="wrap">
+    <div class="cta">
+      <div class="cta-inner">
+        <div class="cta-eyebrow">/ get started</div>
+        <h2 class="cta-h">Sign up free. <span>Bring your own hardware.</span></h2>
+        <p class="cta-p">
+          Two machines free, forever. Mesh your homelab, your laptop, and
+          your router in five minutes. No card. No agent install.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary btn-lg" href={site.signupFree} target="_blank" rel="noopener">
+            Sign up free
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a class="btn btn-lg" href={site.proContact}>
+            Talk to us — Pro
+          </a>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <style>
+  .cta-section {
+    padding: 0 0 128px;
+  }
+
   .cta {
-    background: linear-gradient(135deg, #0a0a0a, #18181b);
-    color: #fff;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 64px 56px;
-    margin: 96px 0;
-    position: relative; overflow: hidden;
+    padding: 80px 64px;
   }
-  .cta::before {
-    content: ""; position: absolute; inset: 0;
-    background: radial-gradient(800px 400px at 80% 20%,
-      color-mix(in oklab, var(--accent) 30%, transparent), transparent 60%);
-    pointer-events: none;
-  }
-  .cta-inner { position: relative; max-width: 720px; }
-  .cta h2 {
-    font-size: 38px; line-height: 1.1; letter-spacing: -.02em;
-    margin: 0 0 14px; font-weight: 600;
-  }
-  .cta p {
-    color: rgba(255,255,255,.7);
-    font-size: 16px; margin: 0 0 24px;
-  }
-  .cta code {
+  .cta-inner { max-width: 720px; }
+
+  .cta-eyebrow {
+    display: inline-block;
     font-family: var(--font-mono);
-    background: rgba(255,255,255,.08);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: .9em;
+    font-size: 11px;
+    letter-spacing: .04em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
   }
-  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .btn-on-dark {
-    background: rgba(255,255,255,.06);
-    color: #fff;
-    border-color: rgba(255,255,255,.18);
+  .cta-h {
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin: 0 0 16px;
+    font-weight: 500;
+    color: var(--text);
   }
-  .btn-on-dark:hover {
-    background: rgba(255,255,255,.12);
+  .cta-h span { color: var(--text-3); }
+  .cta-p {
+    color: var(--text-2);
+    font-size: 16px;
+    margin: 0 0 28px;
+    line-height: 1.6;
+  }
+  .cta-row {
+    display: flex; gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
   }
 
   @media (max-width: 980px) {
-    .cta { padding: 40px 28px; margin: 56px 0; }
-    .cta h2 { font-size: 26px; }
+    .cta-section { padding: 0 0 64px; }
+    .cta { padding: 48px 28px; }
+    .cta-h { font-size: 28px; }
   }
 </style>

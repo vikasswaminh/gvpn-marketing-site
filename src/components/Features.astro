@@ -1,56 +1,56 @@
 ---
-// Every feature here maps to actual code in the repo. No aspirational
-// items. Bullet at the end of each one names the verifying e2e step.
+// Every feature maps to actual code. The trailing tag names the file
+// or e2e step that verifies it.
 const features = [
   {
-    title: "Sites & user endpoints",
+    title: "Machines & subnets",
     body: "Each peer is one row — site (with LAN subnets) or user endpoint. The controller generates the keypair, allocates the next overlay IP atomically, and returns a one-time wg-quick config.",
-    proof: "internal/handlers/devices.go",
+    tag: "handlers/devices.go",
   },
   {
-    title: "L3/L4 access policies",
-    body: "Allow/deny rules between any two peers by protocol and port (single, comma list, or ranges). Rules are flushed and reapplied to the tenant namespace's iptables FORWARD chain in real time.",
-    proof: "verified by e2e steps 8, 11, 14",
+    title: "L3 / L4 access policies",
+    body: "Allow / deny rules between any two machines by protocol and port (single, comma list, or ranges). Rules flush and re-apply to the tenant namespace's iptables FORWARD chain in real time.",
+    tag: "e2e step 11 + 14",
   },
   {
     title: "Tenant isolation by namespace",
     body: "Each org gets its own Linux network namespace. tcpdump in one tenant's namespace sees zero packets while another tenant floods — proved by step 12 of the e2e harness.",
-    proof: "internal/namespace + step 12",
+    tag: "namespace/manager.go",
   },
   {
     title: "Pure spoke-to-spoke through hub",
-    body: "The hub forwards overlay traffic between peers. It is explicitly not an internet exit — no MASQUERADE, no SNAT, only wg0+lo inside the tenant ns. Verified by step 17b.",
-    proof: "HANDSOFF_GUIDE.md §2.1.1",
+    body: "The hub forwards overlay traffic between peers. It's explicitly not an internet exit — no MASQUERADE, no SNAT, only wg0+lo inside the tenant ns. Verified by step 17b.",
+    tag: "e2e step 17b",
   },
   {
     title: "Reboots are non-events",
-    body: "A startup reconciler walks every tenant in PostgreSQL and rebuilds the namespace, wg0, peers and routes from DB. Fresh deploy or host reboot: kernel state restores itself in seconds.",
-    proof: "internal/wireguard/reconcile.go + step 15",
+    body: "A startup reconciler walks every tenant in PostgreSQL and rebuilds namespace, wg0, peers and routes from DB. Fresh deploy or host reboot: kernel state restores itself in seconds.",
+    tag: "wireguard/reconcile.go",
   },
   {
     title: "Multi-tenant from day one",
-    body: "One controller, many orgs, per-tenant admin accounts, per-tenant private keys (AES-256-GCM at rest). No second deployment needed when you onboard a new customer.",
-    proof: "internal/handlers/tenants.go",
+    body: "One controller, many orgs, per-tenant admin accounts, per-tenant private keys (AES-256-GCM at rest). No second deployment when you onboard a new customer.",
+    tag: "handlers/tenants.go",
   },
 ];
 ---
 
 <section id="features">
   <div class="wrap">
-    <div class="sec-eyebrow">What it actually ships</div>
-    <h2 class="sec-h">Small surface. Picked for branch IT.</h2>
+    <div class="sec-eyebrow">/ features</div>
+    <h2 class="sec-h">Small surface. All of it shipping.</h2>
     <p class="sec-lede">
-      Everything below is in the codebase today and exercised by the
-      end-to-end test harness on every release. No vapor.
+      Everything below is in the codebase today and exercised by an
+      end-to-end harness on every release. No roadmap items.
     </p>
 
     <div class="feature-grid">
       {features.map((f) => (
-        <div class="feature">
-          <h4>{f.title}</h4>
-          <p>{f.body}</p>
-          <code>{f.proof}</code>
-        </div>
+        <article class="feature">
+          <h4 class="ft-title">{f.title}</h4>
+          <p class="ft-body">{f.body}</p>
+          <code class="ft-tag">{f.tag}</code>
+        </article>
       ))}
     </div>
   </div>
@@ -60,31 +60,40 @@ const features = [
   .feature-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
+    gap: 0;
+    margin-top: 64px;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    margin-top: 48px;
     overflow: hidden;
   }
   .feature {
     background: var(--surface);
-    padding: 28px 28px 30px;
+    padding: 28px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
     display: flex; flex-direction: column;
+    transition: background .15s ease;
   }
-  .feature h4 {
-    font-size: 15px; font-weight: 600; margin: 0 0 8px;
+  .feature:hover { background: var(--bg-2); }
+  /* Strip extra borders from the grid edges */
+  .feature:nth-child(3n) { border-right: 0; }
+  .feature:nth-last-child(-n+3) { border-bottom: 0; }
+
+  .ft-title {
+    font-size: 15px; font-weight: 500;
     letter-spacing: -.005em;
+    margin: 0 0 10px;
   }
-  .feature p {
-    color: var(--text-2); font-size: 13.5px; line-height: 1.55;
-    margin: 0 0 14px;
+  .ft-body {
+    color: var(--text-2);
+    font-size: 13.5px; line-height: 1.6;
+    margin: 0 0 18px;
     flex: 1;
   }
-  .feature code {
-    font: 11.5px var(--font-mono);
+  .ft-tag {
+    font: 11px var(--font-mono);
     color: var(--text-3);
-    background: var(--surface-2);
+    background: var(--bg-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 3px 7px;
@@ -93,5 +102,12 @@ const features = [
 
   @media (max-width: 980px) {
     .feature-grid { grid-template-columns: 1fr; }
+    .feature {
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feature:last-child { border-bottom: 0; }
+    .feature:nth-child(3n) { border-right: 0; }
+    .feature:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
   }
 </style>

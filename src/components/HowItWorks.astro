@@ -1,138 +1,132 @@
 ---
-// Three steps map 1:1 to actual MeshWG routes:
-//   1. Create org      → POST /admin/orgs/add
-//   2. Add sites/users → POST /sites/add, /users/add (returns wg-quick config)
-//   3. Set policies    → POST /policies/add (L3/L4, multi-port, allow/deny)
-// The illustrative configs are intentionally generic — no fabricated
-// "18 sites · 142 users" or "tunnel up — 11 ms" counters from the original.
-
 const steps = [
   {
     num: "01",
     title: "Create an org",
-    body: "Sign up the super admin. Create an organization — that's a tenant. Each tenant gets its own isolated Linux network namespace and a unique WireGuard hub keypair (private key AES-256 encrypted at rest).",
+    body: "Sign up, name your organization. Each org gets its own isolated Linux network namespace and a unique WireGuard hub keypair (private key AES-256 encrypted at rest).",
     code: [
       { c: "# tenant" },
-      { k: "name",      v: '"acme-networks"' },
-      { k: "namespace", v: '"qm_acme_networks"' },
-      { k: "hub_ip",    v: '"10.100.0.1/16"' },
+      { k: "name",       v: '"acme-networks"' },
+      { k: "namespace",  v: '"qm_acme_networks"' },
+      { k: "hub_ip",     v: '"10.100.0.1/16"' },
     ],
   },
   {
     num: "02",
-    title: "Add sites",
-    body: "One site = one peer. The controller generates the WireGuard keypair, allocates an overlay IP, and returns a ready-to-paste wg-quick config. Drop it into your router's existing WireGuard interface.",
+    title: "Add machines",
+    body: "Each machine — router, laptop, server, phone — is one peer. The controller generates the keypair, allocates an overlay IP, and returns a ready-to-paste wg-quick config.",
     code: [
-      { c: "# device" },
-      { k: "name",        v: '"branch-mumbai"' },
-      { k: "device_type", v: '"site"' },
-      { k: "overlay_ip",  v: '"10.100.0.2"' },
-      { k: "lan_subnets", v: '["192.168.10.0/24"]' },
+      { c: "# machine" },
+      { k: "name",         v: '"branch-mumbai"' },
+      { k: "device_type",  v: '"site"' },
+      { k: "overlay_ip",   v: '"10.100.0.2"' },
+      { k: "lan_subnets",  v: '["192.168.10.0/24"]' },
     ],
   },
   {
     num: "03",
     title: "Set policies",
-    body: "Define which peers can reach which. Allow/deny, by protocol and port. Rules are written into the tenant namespace's iptables FORWARD chain in real time — no daemon to restart.",
+    body: "Define which machines can reach which. Allow / deny, by protocol and port. Rules write into the tenant namespace's iptables FORWARD chain in real time.",
     code: [
       { c: "# access_policy" },
-      { k: "source_id",     v: "<site-A>" },
-      { k: "dest_id",       v: "<site-B>" },
-      { k: "dest_protocol", v: '"tcp"' },
-      { k: "dest_ports",    v: '"443,8000-8100"' },
-      { k: "action",        v: '"allow"' },
+      { k: "source_id",      v: "<machine-A>" },
+      { k: "dest_id",        v: "<machine-B>" },
+      { k: "dest_protocol",  v: '"tcp"' },
+      { k: "dest_ports",     v: '"443,8000-8100"' },
+      { k: "action",         v: '"allow"' },
     ],
   },
 ];
-
-import IconBuilding from "./icons/IconBuilding.astro";
-import IconRouter from "./icons/IconRouter.astro";
-import IconShield from "./icons/IconShield.astro";
-const icons = [IconBuilding, IconRouter, IconShield];
 ---
 
 <section id="how">
   <div class="wrap">
-    <div class="sec-eyebrow">How it works</div>
-    <h2 class="sec-h">Three things. That's the whole product.</h2>
+    <div class="sec-eyebrow">/ how it works</div>
+    <h2 class="sec-h">Three primitives. That's the whole product.</h2>
     <p class="sec-lede">
-      No magic. No vendor firmware. The controller speaks standard WireGuard
-      to your routers, applies policy at the kernel level, and otherwise
-      stays out of the way.
+      No vendor firmware. No agent. The controller speaks standard
+      WireGuard to your machines and writes policy at the kernel level.
     </p>
 
     <div class="how-grid">
-      {steps.map((s, i) => {
-        const Icon = icons[i];
-        return (
-          <div class="step">
-            <span class="num">{s.num}</span>
-            <div class="ico"><Icon /></div>
-            <h3>{s.title}</h3>
-            <p>{s.body}</p>
-            <div class="visual">
-              {s.code.map((line) => (
-                line.c
-                  ? <div><span class="c">{line.c}</span></div>
-                  : <div><span class="k">{line.k}</span> = {line.v}</div>
-              ))}
-            </div>
-          </div>
-        );
-      })}
+      {steps.map((s) => (
+        <article class="step">
+          <header class="step-head">
+            <span class="step-num">{s.num}</span>
+            <h3 class="step-title">{s.title}</h3>
+          </header>
+          <p class="step-body">{s.body}</p>
+          <pre class="step-code">
+{s.code.map((line) => (
+  line.c
+    ? <span class="line"><span class="c">{line.c}</span></span>
+    : <span class="line"><span class="k">{line.k}</span><span class="op"> = </span><span class="v">{line.v}</span></span>
+))}
+          </pre>
+        </article>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
   .how-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 16px; margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 64px;
   }
   .step {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 24px;
-    position: relative;
-    overflow: hidden;
+    padding: 28px;
     opacity: 1;
     animation: up .5s ease both;
   }
   .step:nth-child(2) { animation-delay: .08s; }
   .step:nth-child(3) { animation-delay: .16s; }
 
-  .step .num {
-    position: absolute; top: 18px; right: 22px;
-    font: 600 11.5px var(--font-mono);
-    color: var(--text-3);
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 2px 7px;
+  .step-head {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 12px;
   }
-  .step .ico {
-    width: 38px; height: 38px; border-radius: 9px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    display: grid; place-items: center;
-    margin-bottom: 16px;
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-4);
+    letter-spacing: .02em;
   }
-  .step h3 { font-size: 17px; font-weight: 600; letter-spacing: -.005em; margin: 0 0 6px; }
-  .step p  { color: var(--text-2); font-size: 14px; line-height: 1.55; margin: 0; }
-  .step .visual {
-    margin-top: 20px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px;
-    font-family: var(--font-mono); font-size: 11.5px;
+  .step-title {
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -.01em;
+    margin: 0;
+  }
+  .step-body {
     color: var(--text-2);
-    line-height: 1.7;
-    min-height: 120px;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
   }
-  .step .visual .k { color: var(--accent); }
-  .step .visual .c { color: var(--text-4); }
+  .step-code {
+    margin: 24px 0 0;
+    background: var(--bg-2);
+    border: 1px solid var(--border-faint);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font: 11.5px/1.75 var(--font-mono);
+    color: var(--text-2);
+    min-height: 130px;
+    white-space: pre;
+    overflow: auto;
+  }
+  .step-code .line { display: block; }
+  .step-code .k { color: var(--accent); }
+  .step-code .v { color: var(--text); }
+  .step-code .c { color: var(--text-4); }
+  .step-code .op { color: var(--text-4); }
 
   @media (max-width: 980px) {
     .how-grid { grid-template-columns: 1fr; }

@@ -1,0 +1,127 @@
+/* Design tokens for MeshWG marketing site.
+ * Single source of truth — every component reads from these vars rather
+ * than hardcoding colors / spacing / radii / fonts. Swap a value here and
+ * the whole site changes consistently. */
+
+:root {
+  /* ── Color: accent (single brand color, indigo) ───────────────────── */
+  --accent:         #6366f1;
+  --accent-strong:  #4f46e5;
+  --accent-soft:    #eef2ff;
+
+  /* ── Color: surfaces ──────────────────────────────────────────────── */
+  --bg:             #ffffff;
+  --bg-2:           #fafafa;
+  --surface:        #ffffff;
+  --surface-2:      #f5f5f5;
+
+  /* ── Color: borders ───────────────────────────────────────────────── */
+  --border:         #ececec;
+  --border-strong:  #d4d4d4;
+
+  /* ── Color: text (4-step ramp) ────────────────────────────────────── */
+  --text:           #0a0a0a;
+  --text-2:         #525252;
+  --text-3:         #8a8a8a;
+  --text-4:         #a3a3a3;
+
+  /* ── Color: status ────────────────────────────────────────────────── */
+  --ok:             #10b981;
+  --warn:           #f59e0b;
+  --err:            #ef4444;
+  --info:           #0ea5e9;
+
+  /* ── Typography ───────────────────────────────────────────────────── */
+  --font-sans:      "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono:      "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ── Radii ────────────────────────────────────────────────────────── */
+  --radius-sm:      6px;
+  --radius:         10px;
+  --radius-lg:      14px;
+  --radius-xl:      18px;
+
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  --wrap-max:       1200px;
+  --wrap-pad-x:     32px;
+
+  /* ── Shadows ──────────────────────────────────────────────────────── */
+  --shadow-card:
+    0 60px 120px -40px rgba(99, 102, 241, .25),
+    0 30px 60px  -20px rgba(0, 0, 0, .12),
+    0 0 0 1px var(--border);
+
+  --shadow-code:
+    0 30px 60px -30px rgba(99, 102, 241, .4);
+}
+
+/* Reset + base */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* Layout helper used everywhere */
+.wrap {
+  max-width: var(--wrap-max);
+  margin: 0 auto;
+  padding: 0 var(--wrap-pad-x);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 36px; padding: 0 14px;
+  border-radius: var(--radius);
+  font-size: 13.5px; font-weight: 500;
+  font-family: inherit;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
+}
+.btn:hover { background: var(--surface-2); }
+.btn-primary { background: var(--text); color: #fff; border-color: var(--text); }
+.btn-primary:hover { background: #1f1f1f; }
+.btn-accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-accent:hover { background: var(--accent-strong); }
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--surface-2); }
+.btn-lg { height: 42px; padding: 0 18px; font-size: 14.5px; }
+
+/* ── Section primitives ──────────────────────────────────────────────── */
+section { padding: 96px 0; border-bottom: 1px solid var(--border); }
+
+.sec-eyebrow {
+  font-size: 11.5px; font-weight: 600; letter-spacing: .14em;
+  color: var(--accent); text-transform: uppercase;
+}
+.sec-h {
+  font-size: 38px; line-height: 1.1; letter-spacing: -.02em;
+  font-weight: 600; margin: 12px 0 12px;
+  max-width: 700px; text-wrap: balance;
+}
+.sec-lede { color: var(--text-2); font-size: 17px; max-width: 620px; line-height: 1.55; }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 980px) {
+  :root { --wrap-pad-x: 20px; }
+  section { padding: 64px 0; }
+  .sec-h { font-size: 28px; }
+}
+
+/* Animations */
+@keyframes flow { to { stroke-dashoffset: -32; } }
+.flow-line { stroke-dasharray: 5 4; animation: flow 1.2s linear infinite; }
+
+@keyframes up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

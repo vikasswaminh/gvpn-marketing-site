@@ -1,0 +1,64 @@
+---
+// These six are the families that ship native WireGuard support in their
+// stock firmware (or via OpenWrt). No commercial partnership claim — just
+// "if it speaks WireGuard, it works with MeshWG".
+const vendors = [
+  { tag: "TP", name: "TP-Link",   sub: "Archer · Deco · ER",      color: "#4ACBD6" },
+  { tag: "DL", name: "D-Link",    sub: "DIR · COVR · DSR",        color: "#003D7A" },
+  { tag: "UI", name: "Ubiquiti",  sub: "UDM · EdgeRouter",        color: "#0559C9" },
+  { tag: "MT", name: "MikroTik",  sub: "RouterOS 7+",             color: "#293239" },
+  { tag: "OW", name: "OpenWrt",   sub: "19.07+",                  color: "#F08000" },
+  { tag: "OP", name: "OPNsense",  sub: "pfSense too",             color: "#D94F00" },
+];
+---
+<div class="wrap">
+  <div class="vendor-strip">
+    <div class="lbl">Works with any router that ships WireGuard</div>
+    <div class="vendor-row">
+      {vendors.map((v) => (
+        <div class="vendor-tile">
+          <span class="vlogo" style={`background:${v.color}`}>{v.tag}</span>
+          <div>
+            <div class="vname">{v.name}</div>
+            <div class="vsub">{v.sub}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .vendor-strip {
+    margin-top: 24px;
+    padding: 28px 0 64px;
+    border-top: 1px dashed var(--border);
+  }
+  .lbl {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--text-3); font-weight: 500; margin-bottom: 18px;
+  }
+  .vendor-row {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;
+    align-items: center;
+  }
+  .vendor-tile {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .vlogo {
+    width: 28px; height: 28px; border-radius: var(--radius-sm);
+    display: grid; place-items: center;
+    color: #fff; font-weight: 700; font-size: 11px;
+    flex-shrink: 0;
+  }
+  .vname { font-size: 13.5px; font-weight: 500; }
+  .vsub  { font-size: 11px; color: var(--text-3); }
+
+  @media (max-width: 980px) {
+    .vendor-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

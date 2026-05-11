@@ -1,0 +1,52 @@
+---
+import BrandMark from "./BrandMark.astro";
+
+const repoUrl = "https://github.com/vikasswaminh/meshwg";
+---
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <BrandMark />
+      MeshWG
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#compare">vs. SDWAN appliances</a>
+      <a href="#deploy">Deploy</a>
+      <a href={repoUrl} target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+    <div class="nav-spacer"></div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href={`${repoUrl}#readme`} target="_blank" rel="noopener">Read the docs</a>
+      <a class="btn btn-primary" href={repoUrl} target="_blank" rel="noopener">Get the source</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 9px;
+    font-weight: 600; letter-spacing: -.005em;
+  }
+  .nav-links { display: flex; gap: 22px; font-size: 13.5px; color: var(--text-2); }
+  .nav-links a:hover { color: var(--text); }
+  .nav-spacer { flex: 1; }
+  .nav-cta { display: flex; gap: 8px; align-items: center; }
+
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+  }
+</style>

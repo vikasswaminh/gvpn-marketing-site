@@ -1,0 +1,104 @@
+---
+import BrandMark from "./BrandMark.astro";
+
+const repoUrl = "https://github.com/vikasswaminh/meshwg";
+
+const cols = [
+  {
+    h: "Product",
+    items: [
+      { l: "How it works", href: "#how" },
+      { l: "Features",     href: "#features" },
+      { l: "vs. appliances", href: "#compare" },
+      { l: "Deploy",       href: "#deploy" },
+    ],
+  },
+  {
+    h: "Source",
+    items: [
+      { l: "GitHub repo",            href: repoUrl, external: true },
+      { l: "deploy/",                href: `${repoUrl}/tree/master/deploy`, external: true },
+      { l: "e2e test harness",       href: `${repoUrl}/blob/master/e2e/run.sh`, external: true },
+      { l: "HANDSOFF_GUIDE.md",      href: `${repoUrl}/blob/master/HANDSOFF_GUIDE.md`, external: true },
+    ],
+  },
+  {
+    h: "Project",
+    items: [
+      { l: "Issues",           href: `${repoUrl}/issues`, external: true },
+      { l: "Releases",         href: `${repoUrl}/releases`, external: true },
+      { l: "MIT license",      href: `${repoUrl}/blob/master/LICENSE`, external: true },
+    ],
+  },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand">
+          <BrandMark />
+          MeshWG
+        </div>
+        <p>
+          Open-source SDWAN + ZTNA controller built on standard WireGuard.
+          Self-hosted, multi-tenant, kernel-level policy enforcement.
+        </p>
+      </div>
+
+      {cols.map((col) => (
+        <div>
+          <h5>{col.h}</h5>
+          <ul>
+            {col.items.map((it) => (
+              <li>
+                <a href={it.href}
+                   target={it.external ? "_blank" : undefined}
+                   rel={it.external ? "noopener" : undefined}>
+                  {it.l}{it.external ? " ↗" : ""}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="foot-bot">
+      <div>© {year} MeshWG contributors · MIT licensed</div>
+      <div>WireGuard is a registered trademark of Jason A. Donenfeld.</div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { padding: 48px 0 56px; color: var(--text-3); font-size: 13px; }
+  .foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+
+  .foot-grid .brand {
+    display: flex; align-items: center; gap: 9px;
+    font-weight: 600; color: var(--text);
+    margin-bottom: 14px;
+  }
+  .foot-grid p { max-width: 320px; margin: 0; line-height: 1.55; }
+
+  .foot-grid h5 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--text-2); font-weight: 600; margin: 0 0 12px;
+  }
+  .foot-grid ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .foot-grid a:hover { color: var(--text); }
+
+  .foot-bot {
+    margin-top: 40px; padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+
+  @media (max-width: 980px) {
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>

@@ -1,0 +1,97 @@
+---
+// Every feature here maps to actual code in the repo. No aspirational
+// items. Bullet at the end of each one names the verifying e2e step.
+const features = [
+  {
+    title: "Sites & user endpoints",
+    body: "Each peer is one row — site (with LAN subnets) or user endpoint. The controller generates the keypair, allocates the next overlay IP atomically, and returns a one-time wg-quick config.",
+    proof: "internal/handlers/devices.go",
+  },
+  {
+    title: "L3/L4 access policies",
+    body: "Allow/deny rules between any two peers by protocol and port (single, comma list, or ranges). Rules are flushed and reapplied to the tenant namespace's iptables FORWARD chain in real time.",
+    proof: "verified by e2e steps 8, 11, 14",
+  },
+  {
+    title: "Tenant isolation by namespace",
+    body: "Each org gets its own Linux network namespace. tcpdump in one tenant's namespace sees zero packets while another tenant floods — proved by step 12 of the e2e harness.",
+    proof: "internal/namespace + step 12",
+  },
+  {
+    title: "Pure spoke-to-spoke through hub",
+    body: "The hub forwards overlay traffic between peers. It is explicitly not an internet exit — no MASQUERADE, no SNAT, only wg0+lo inside the tenant ns. Verified by step 17b.",
+    proof: "HANDSOFF_GUIDE.md §2.1.1",
+  },
+  {
+    title: "Reboots are non-events",
+    body: "A startup reconciler walks every tenant in PostgreSQL and rebuilds the namespace, wg0, peers and routes from DB. Fresh deploy or host reboot: kernel state restores itself in seconds.",
+    proof: "internal/wireguard/reconcile.go + step 15",
+  },
+  {
+    title: "Multi-tenant from day one",
+    body: "One controller, many orgs, per-tenant admin accounts, per-tenant private keys (AES-256-GCM at rest). No second deployment needed when you onboard a new customer.",
+    proof: "internal/handlers/tenants.go",
+  },
+];
+---
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-eyebrow">What it actually ships</div>
+    <h2 class="sec-h">Small surface. Picked for branch IT.</h2>
+    <p class="sec-lede">
+      Everything below is in the codebase today and exercised by the
+      end-to-end test harness on every release. No vapor.
+    </p>
+
+    <div class="feature-grid">
+      {features.map((f) => (
+        <div class="feature">
+          <h4>{f.title}</h4>
+          <p>{f.body}</p>
+          <code>{f.proof}</code>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-top: 48px;
+    overflow: hidden;
+  }
+  .feature {
+    background: var(--surface);
+    padding: 28px 28px 30px;
+    display: flex; flex-direction: column;
+  }
+  .feature h4 {
+    font-size: 15px; font-weight: 600; margin: 0 0 8px;
+    letter-spacing: -.005em;
+  }
+  .feature p {
+    color: var(--text-2); font-size: 13.5px; line-height: 1.55;
+    margin: 0 0 14px;
+    flex: 1;
+  }
+  .feature code {
+    font: 11.5px var(--font-mono);
+    color: var(--text-3);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px 7px;
+    align-self: flex-start;
+  }
+
+  @media (max-width: 980px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+</style>

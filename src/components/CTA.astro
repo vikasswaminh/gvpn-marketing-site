@@ -1,0 +1,73 @@
+---
+const repoUrl    = "https://github.com/vikasswaminh/meshwg";
+const deployDocs = "https://github.com/vikasswaminh/meshwg/tree/master/deploy";
+---
+
+<div class="wrap">
+  <div class="cta">
+    <div class="cta-inner">
+      <h2>Mesh your branches in a few minutes.<br />On the hardware you already own.</h2>
+      <p>
+        Open source under MIT. Clone the repo, follow <code>deploy/README.md</code>,
+        and you have a controller running on a Linux VM with a working
+        end-to-end test suite to prove it.
+      </p>
+      <div class="row">
+        <a class="btn btn-accent btn-lg" href={repoUrl} target="_blank" rel="noopener">
+          Get the source
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-lg btn-on-dark" href={deployDocs} target="_blank" rel="noopener">
+          Read the deploy docs
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cta {
+    background: linear-gradient(135deg, #0a0a0a, #18181b);
+    color: #fff;
+    border-radius: var(--radius-xl);
+    padding: 64px 56px;
+    margin: 96px 0;
+    position: relative; overflow: hidden;
+  }
+  .cta::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(800px 400px at 80% 20%,
+      color-mix(in oklab, var(--accent) 30%, transparent), transparent 60%);
+    pointer-events: none;
+  }
+  .cta-inner { position: relative; max-width: 720px; }
+  .cta h2 {
+    font-size: 38px; line-height: 1.1; letter-spacing: -.02em;
+    margin: 0 0 14px; font-weight: 600;
+  }
+  .cta p {
+    color: rgba(255,255,255,.7);
+    font-size: 16px; margin: 0 0 24px;
+  }
+  .cta code {
+    font-family: var(--font-mono);
+    background: rgba(255,255,255,.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: .9em;
+  }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn-on-dark {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    border-color: rgba(255,255,255,.18);
+  }
+  .btn-on-dark:hover {
+    background: rgba(255,255,255,.12);
+  }
+
+  @media (max-width: 980px) {
+    .cta { padding: 40px 28px; margin: 56px 0; }
+    .cta h2 { font-size: 26px; }
+  }
+</style>

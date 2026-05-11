@@ -1,0 +1,31 @@
+---
+import Base         from "../layouts/Base.astro";
+import Nav          from "../components/Nav.astro";
+import Hero         from "../components/Hero.astro";
+import VendorStrip  from "../components/VendorStrip.astro";
+import HowItWorks   from "../components/HowItWorks.astro";
+import ConfigBlock  from "../components/ConfigBlock.astro";
+import Features     from "../components/Features.astro";
+import Compare      from "../components/Compare.astro";
+import Deploy       from "../components/Deploy.astro";
+import FAQ          from "../components/FAQ.astro";
+import CTA          from "../components/CTA.astro";
+import Footer       from "../components/Footer.astro";
+
+const title = "MeshWG — SDWAN for the routers you already own";
+const description = "Open-source SDWAN and ZTNA controller built on standard WireGuard. Self-hosted, multi-tenant, kernel-level policy enforcement. Works with any router that supports WireGuard.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <Hero />
+  <VendorStrip />
+  <HowItWorks />
+  <ConfigBlock />
+  <Features />
+  <Compare />
+  <Deploy />
+  <FAQ />
+  <CTA />
+  <Footer />
+</Base>

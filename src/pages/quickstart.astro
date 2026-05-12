@@ -1,0 +1,346 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import Footer     from "../components/Footer.astro";
+import { site } from "../site";
+
+// Vendor-specific quick paths. Each row is a real product family with a
+// real WireGuard configuration path. Steps are kept generic on purpose —
+// each vendor's UI shifts between firmware versions, so we point at the
+// vendor's own current docs for the menu specifics.
+const vendorGuides = [
+  {
+    name: "TP-Link",
+    color: "#4ACBD6",
+    blurb: "Archer · Deco · ER series with WireGuard support.",
+    steps: [
+      "Open the router's admin UI (typically http://192.168.0.1)",
+      "Go to Advanced → VPN Server → WireGuard",
+      "Click Add, paste the [Interface] + [Peer] config from your MeshWG dashboard",
+      "Save & Enable",
+    ],
+    docs: "https://www.tp-link.com/support/faq/",
+  },
+  {
+    name: "MikroTik",
+    color: "#293239",
+    blurb: "RouterOS 7+. WireGuard is a first-class interface type.",
+    steps: [
+      "Open WinBox or the WebFig admin",
+      "Go to WireGuard → + (Add) and create the interface",
+      "Add a Peer with the public key, endpoint, and allowed-IPs from MeshWG",
+      "Add an IP address on the WireGuard interface (your machine's overlay IP)",
+    ],
+    docs: "https://help.mikrotik.com/docs/spaces/ROS/pages/69370121/WireGuard",
+  },
+  {
+    name: "OpenWrt",
+    color: "#F08000",
+    blurb: "19.07+ via LuCI or /etc/config/network. Wraps wg-quick.",
+    steps: [
+      "Install: opkg update && opkg install wireguard-tools luci-app-wireguard luci-proto-wireguard",
+      "LuCI → Network → Interfaces → Add new interface (Protocol: WireGuard VPN)",
+      "Paste the keys, endpoint, and allowed-IPs from MeshWG",
+      "Save & Apply",
+    ],
+    docs: "https://openwrt.org/docs/guide-user/services/vpn/wireguard/start",
+  },
+  {
+    name: "Ubiquiti",
+    color: "#0559C9",
+    blurb: "UDM (firmware 3.x+) and EdgeRouter with the wireguard package.",
+    steps: [
+      "UDM: Settings → Teleport & VPN → VPN Client → WireGuard, import the config",
+      "EdgeRouter: install the wireguard .deb, configure via `configure` mode",
+      "Reference the public key, endpoint, and allowed-IPs from MeshWG",
+      "Commit; save",
+    ],
+    docs: "https://help.ui.com/hc/en-us/categories/200320654-UniFi-Network",
+  },
+  {
+    name: "OPNsense / pfSense",
+    color: "#D94F00",
+    blurb: "OPNsense 22.1+ has WireGuard in core. pfSense 2.7+ as a package.",
+    steps: [
+      "VPN → WireGuard → Instances → Add",
+      "Paste keys + tunnel address from MeshWG",
+      "Add a Peer with public key, endpoint, allowed-IPs",
+      "Enable; assign the interface; firewall rule to allow",
+    ],
+    docs: "https://docs.opnsense.org/manual/wireguard/",
+  },
+  {
+    name: "Linux / Mac / Windows / mobile",
+    color: "#0a0a0a",
+    blurb: "Use the official WireGuard app — it imports the .conf as-is.",
+    steps: [
+      "Install the official WireGuard client from wireguard.com/install/",
+      "Click Import tunnel(s) from file",
+      "Pick the .conf file MeshWG generated for this machine",
+      "Activate the tunnel",
+    ],
+    docs: "https://www.wireguard.com/install/",
+  },
+];
+
+const title = "Quickstart — MeshWG";
+const description = "Get your first machine on a MeshWG mesh in under 2 minutes. Step-by-step setup for TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense, and the official WireGuard apps.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <PageHero
+    eyebrow="/ quickstart"
+    title="Get your first machine online in 2 minutes."
+    lede="Three steps to create the mesh, plus vendor-specific paste instructions for whatever hardware you have."
+  />
+
+  <section class="qs-section">
+    <div class="wrap">
+
+      <!-- ── The three core steps -->
+      <ol class="steps">
+        <li>
+          <div class="step-n">01</div>
+          <div>
+            <h2>Sign up</h2>
+            <p>Create your account with Google or email. No credit card. You land in the dashboard in under a minute.</p>
+            <a class="btn btn-primary" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+          </div>
+        </li>
+        <li>
+          <div class="step-n">02</div>
+          <div>
+            <h2>Add a machine</h2>
+            <p>Click <code>Add machine</code>, give it a name (e.g. "branch-mumbai" or "office-router"), and we generate a WireGuard config tied to that machine. The config is shown once — download it or copy it now.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-n">03</div>
+          <div>
+            <h2>Paste the config into your device</h2>
+            <p>Open the WireGuard section of your router or the official WireGuard app on your laptop / phone. Paste the config. The tunnel comes up within seconds.</p>
+            <p class="hint">Vendor-specific instructions below. Pick yours.</p>
+          </div>
+        </li>
+      </ol>
+
+      <!-- ── Per-vendor guides -->
+      <div class="vendor-grid">
+        {vendorGuides.map((v) => (
+          <article class="vguide">
+            <header class="vg-head">
+              <span class="vg-mark" style={`background:${v.color}`}>{v.name.slice(0, 2).toUpperCase()}</span>
+              <div>
+                <h3 class="vg-name">{v.name}</h3>
+                <p class="vg-blurb">{v.blurb}</p>
+              </div>
+            </header>
+            <ol class="vg-steps">
+              {v.steps.map((s) => <li>{s}</li>)}
+            </ol>
+            <a class="vg-docs" href={v.docs} target="_blank" rel="noopener">Vendor docs ↗</a>
+          </article>
+        ))}
+      </div>
+
+      <!-- ── Self-host CTA -->
+      <div class="self-host">
+        <div>
+          <div class="sh-eyebrow">/ self-host</div>
+          <h3>Or run MeshWG on your own VM.</h3>
+          <p>Full source under MIT. A single Go binary plus PostgreSQL. <code>deploy/README.md</code> has the 5-step install.</p>
+        </div>
+        <div class="sh-cta">
+          <a class="btn btn-primary" href={site.repo} target="_blank" rel="noopener">Get the source</a>
+          <a class="btn" href={site.deployDocs} target="_blank" rel="noopener">Read deploy/README</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <Footer />
+</Base>
+
+<style>
+  .qs-section { padding: 80px 0 128px; }
+
+  /* Core three steps */
+  .steps {
+    list-style: none;
+    padding: 0; margin: 0 0 64px;
+    display: flex; flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 24px;
+    padding: 32px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .steps li:last-child { border-bottom: 0; }
+  .step-n {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: .04em;
+    padding-top: 6px;
+  }
+  .steps h2 {
+    font-size: 19px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -.01em;
+  }
+  .steps p {
+    margin: 0 0 12px;
+    color: var(--text-2);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 640px;
+  }
+  .steps p:last-child { margin-bottom: 0; }
+  .steps code {
+    font-family: var(--font-mono);
+    font-size: .92em;
+    background: var(--bg-2);
+    padding: 1px 5px;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+  }
+  .hint {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  /* Vendor grid */
+  .vendor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+  .vguide {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex; flex-direction: column;
+    gap: 16px;
+  }
+  .vg-head {
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .vg-mark {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    display: grid; place-items: center;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .vg-name {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+  .vg-blurb {
+    font-size: 12.5px;
+    color: var(--text-3);
+    margin: 0;
+    font-family: var(--font-mono);
+    line-height: 1.5;
+  }
+  .vg-steps {
+    list-style: none;
+    counter-reset: vg;
+    padding: 0; margin: 0;
+    display: flex; flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .vg-steps li {
+    counter-increment: vg;
+    padding-left: 26px;
+    position: relative;
+    color: var(--text-2);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .vg-steps li::before {
+    content: counter(vg, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-4);
+  }
+  .vg-docs {
+    font-size: 13px;
+    color: var(--accent);
+    align-self: flex-start;
+    transition: color .12s ease;
+  }
+  .vg-docs:hover { color: var(--accent-strong); }
+
+  /* Self-host strip */
+  .self-host {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+  }
+  .sh-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .self-host h3 {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -.01em;
+    margin: 0 0 6px;
+  }
+  .self-host p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .self-host code {
+    font-family: var(--font-mono);
+    font-size: .92em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+  }
+  .sh-cta {
+    display: flex; gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 980px) {
+    .qs-section { padding: 48px 0 64px; }
+    .steps li { grid-template-columns: 1fr; padding: 24px; }
+    .step-n { padding-top: 0; }
+    .vendor-grid { grid-template-columns: 1fr; }
+    .self-host { grid-template-columns: 1fr; padding: 24px; }
+  }
+</style>

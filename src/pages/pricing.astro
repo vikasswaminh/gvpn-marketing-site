@@ -1,0 +1,569 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import Footer     from "../components/Footer.astro";
+import { site } from "../site";
+
+// Real prices. Free tier deducts 2 machines.
+const FREE_MACHINES = 2;
+const ANNUAL_PER_MACHINE = 1;   // $/machine/month when billed annually
+const MONTHLY_PER_MACHINE = 3;  // $/machine/month when billed monthly
+
+const pricingFaqs = [
+  {
+    q: "What counts as a machine?",
+    a: "Anything in your mesh — a router, a laptop, a phone, a server, a VPS. Each peer in the controller is one machine.",
+  },
+  {
+    q: "Can I switch between monthly and annual?",
+    a: "Yes, anytime in the dashboard. If you switch from monthly to annual mid-cycle, we credit the unused portion of the month against the annual price.",
+  },
+  {
+    q: "What if I cancel mid-year on the annual plan?",
+    a: "Your mesh keeps running at the paid tier until the year ends — you don't lose your machines on day one. No partial refunds on annual. After the year, anything above the free 2 machines goes read-only until you re-subscribe or remove them.",
+  },
+  {
+    q: "Are there volume discounts?",
+    a: "Standard $1/machine/month annual up to 100 machines. Past 100, talk to us about Pro — we tune pricing for big fleets and add a dedicated controller.",
+  },
+  {
+    q: "What payment methods do you accept?",
+    a: "Card via Stripe on the Cloud tier. Bank wire is available for annual Pro contracts. We don't accept crypto today.",
+  },
+  {
+    q: "Do free machines stack with paid ones?",
+    a: "Yes — the first 2 machines in any paid account are free. You only pay for machines 3 and up.",
+  },
+];
+
+const title = "Pricing — MeshWG";
+const description = "$1 per machine per month, billed annually. Or $3 per machine per month, billed monthly. Two machines free, forever. Or self-host for $0. Pick the shape that fits.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <PageHero
+    eyebrow="/ pricing"
+    title="Pay for what you mesh."
+    lede="A machine is anything in your mesh. Two free forever. After that, $1 per machine per month on annual billing — or $3 if you'd rather pay monthly."
+  />
+
+  <section class="price-section">
+    <div class="wrap">
+
+      <!-- Billing toggle -->
+      <div class="toggle-wrap" role="tablist" aria-label="Billing cycle">
+        <button class="toggle-btn is-active" data-cycle="annual" type="button">
+          Annual billing
+          <span class="save-tag">save 67%</span>
+        </button>
+        <button class="toggle-btn" data-cycle="monthly" type="button">
+          Monthly billing
+        </button>
+      </div>
+
+      <!-- Plans -->
+      <div class="plans">
+        <article class="plan">
+          <div class="plan-name">Free</div>
+          <div class="plan-price">
+            <span class="num">$0</span>
+            <span class="unit">forever</span>
+          </div>
+          <p class="plan-desc">Start meshing today. Free for as long as you stay small.</p>
+          <ul class="plan-list">
+            <li>2 machines</li>
+            <li>Hosted by us — nothing to install</li>
+            <li>Google or email sign-in</li>
+            <li>All access-control features</li>
+          </ul>
+          <a class="btn plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+        </article>
+
+        <article class="plan plan-accent">
+          <div class="plan-name">Cloud</div>
+          <div class="plan-price">
+            <span class="num" data-cloud-price>$1</span>
+            <span class="unit" data-cloud-unit>/ machine / month, billed annually</span>
+          </div>
+          <p class="plan-desc">Same hosted product as Free. No machine limit.</p>
+          <ul class="plan-list">
+            <li>Unlimited machines</li>
+            <li>Audit log</li>
+            <li>Email support</li>
+            <li>Cancel anytime</li>
+          </ul>
+          <a class="btn btn-primary plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+        </article>
+
+        <article class="plan">
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">
+            <span class="num">Custom</span>
+            <span class="unit">talk to us</span>
+          </div>
+          <p class="plan-desc">Bigger fleets, dedicated infrastructure, custom needs.</p>
+          <ul class="plan-list">
+            <li>Dedicated controller</li>
+            <li>Custom domain (acme.meshwg.com)</li>
+            <li>Priority support</li>
+            <li>SLA on request</li>
+          </ul>
+          <a class="btn plan-cta" href={site.proContact}>Talk to us</a>
+        </article>
+      </div>
+
+      <p class="self-host-line">
+        Self-hosted: <strong>$0 forever</strong>. Run MeshWG on your own VM
+        with full source on GitHub. Same product, no machine limit.
+        <a href={site.repo} target="_blank" rel="noopener">Get the source ↗</a>
+      </p>
+
+      <!-- Calculator -->
+      <div class="calc">
+        <header class="calc-head">
+          <div class="calc-eyebrow">/ calculator</div>
+          <h2>How much for your mesh?</h2>
+          <p>Drag the slider. The number's exact.</p>
+        </header>
+
+        <div class="calc-body">
+          <label for="machines" class="calc-label">
+            <span>Machines in your mesh</span>
+            <output id="machines-count" data-count>10</output>
+          </label>
+          <input id="machines" type="range" min="0" max="100" value="10" step="1" data-slider />
+
+          <div class="calc-result">
+            <div class="result-card" data-cycle-card="annual">
+              <div class="rc-eyebrow">Annual billing</div>
+              <div class="rc-num"><span data-annual-monthly>$8</span><span class="rc-unit">/ month</span></div>
+              <div class="rc-sub">$<span data-annual-total>96</span> billed yearly · <span data-paid-machines>8</span> paid + 2 free</div>
+            </div>
+
+            <div class="result-card">
+              <div class="rc-eyebrow">Monthly billing</div>
+              <div class="rc-num"><span data-monthly-monthly>$24</span><span class="rc-unit">/ month</span></div>
+              <div class="rc-sub">No annual commitment · cancel anytime</div>
+            </div>
+          </div>
+
+          <p class="calc-foot">
+            <span data-foot-paid hidden>
+              Annual saves you <strong data-savings-amount>$192</strong>/year at this size.
+            </span>
+            <span data-foot-free>
+              All your machines are free at this size.
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="pfaq">
+        <header class="pfaq-head">
+          <div class="db-eyebrow">/ billing faq</div>
+          <h2>Billing questions, answered.</h2>
+        </header>
+        <div class="pfaq-grid">
+          {pricingFaqs.map((f, i) => (
+            <details open={i === 0}>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <Footer />
+</Base>
+
+<script define:vars={{ FREE_MACHINES, ANNUAL_PER_MACHINE, MONTHLY_PER_MACHINE }}>
+  // ── Billing-cycle toggle on the plan cards ─────────────────────────
+  const btns = document.querySelectorAll("[data-cycle]");
+  const cloudPriceEl = document.querySelector("[data-cloud-price]");
+  const cloudUnitEl  = document.querySelector("[data-cloud-unit]");
+
+  btns.forEach((b) => {
+    b.addEventListener("click", () => {
+      btns.forEach((x) => x.classList.remove("is-active"));
+      b.classList.add("is-active");
+      const cycle = b.getAttribute("data-cycle");
+      if (cycle === "annual") {
+        cloudPriceEl.textContent = "$1";
+        cloudUnitEl.textContent  = "/ machine / month, billed annually";
+      } else {
+        cloudPriceEl.textContent = "$3";
+        cloudUnitEl.textContent  = "/ machine / month, billed monthly";
+      }
+    });
+  });
+
+  // ── Calculator ─────────────────────────────────────────────────────
+  // All updates use textContent — no innerHTML. The two foot messages
+  // live as separate elements; we toggle visibility instead of swapping
+  // markup at runtime.
+  const slider             = document.querySelector("[data-slider]");
+  const countEl            = document.querySelector("[data-count]");
+  const annualMonthlyEl    = document.querySelector("[data-annual-monthly]");
+  const annualTotalEl      = document.querySelector("[data-annual-total]");
+  const monthlyMonthlyEl   = document.querySelector("[data-monthly-monthly]");
+  const paidMachinesEl     = document.querySelector("[data-paid-machines]");
+  const savingsAmountEl    = document.querySelector("[data-savings-amount]");
+  const footPaidEl         = document.querySelector("[data-foot-paid]");
+  const footFreeEl         = document.querySelector("[data-foot-free]");
+
+  function update() {
+    const n = parseInt(slider.value, 10);
+    const paid = Math.max(0, n - FREE_MACHINES);
+    const annualMonthly  = paid * ANNUAL_PER_MACHINE;
+    const monthlyMonthly = paid * MONTHLY_PER_MACHINE;
+    const annualSavings  = (monthlyMonthly - annualMonthly) * 12;
+
+    countEl.textContent          = String(n);
+    annualMonthlyEl.textContent  = "$" + annualMonthly;
+    annualTotalEl.textContent    = String(annualMonthly * 12);
+    monthlyMonthlyEl.textContent = "$" + monthlyMonthly;
+    paidMachinesEl.textContent   = String(paid);
+    savingsAmountEl.textContent  = "$" + annualSavings;
+
+    if (paid === 0) {
+      footPaidEl.hidden = true;
+      footFreeEl.hidden = false;
+    } else {
+      footPaidEl.hidden = false;
+      footFreeEl.hidden = true;
+    }
+  }
+
+  slider.addEventListener("input", update);
+  update();
+</script>
+
+<style>
+  .price-section { padding: 64px 0 128px; }
+
+  /* Toggle */
+  .toggle-wrap {
+    display: inline-flex;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 40px;
+  }
+  .toggle-btn {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font: 500 13px var(--font-sans);
+    color: var(--text-3);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .15s ease, color .15s ease;
+  }
+  .toggle-btn.is-active {
+    background: var(--text);
+    color: #fff;
+  }
+  .save-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--ok) 18%, transparent);
+    color: var(--ok);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .toggle-btn.is-active .save-tag {
+    background: rgba(255, 255, 255, .15);
+    color: #fff;
+  }
+
+  /* Plans */
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .plan {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: flex; flex-direction: column;
+    gap: 20px;
+  }
+  .plan-accent {
+    border-color: var(--text);
+  }
+  .plan-accent::before {
+    content: "Most popular";
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    margin-bottom: -8px;
+  }
+  .plan-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-3);
+  }
+  .plan-price {
+    display: flex; align-items: baseline; gap: 8px;
+    flex-wrap: wrap;
+  }
+  .plan-price .num {
+    font-size: 40px; font-weight: 500;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+  .plan-price .unit {
+    font-size: 12.5px;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+  .plan-desc {
+    color: var(--text-2);
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .plan-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 8px;
+    flex: 1;
+  }
+  .plan-list li {
+    color: var(--text-2);
+    font-size: 13px;
+    line-height: 1.5;
+    padding-left: 18px;
+    position: relative;
+  }
+  .plan-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0; top: 0;
+    color: var(--ok);
+    font-weight: 600;
+  }
+  .plan-cta {
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+  }
+
+  .self-host-line {
+    margin: 32px 0 0;
+    font-size: 13.5px;
+    color: var(--text-3);
+    text-align: center;
+  }
+  .self-host-line strong { color: var(--text); font-weight: 500; }
+  .self-host-line a { color: var(--accent); }
+  .self-host-line a:hover { color: var(--accent-strong); }
+
+  /* Calculator */
+  .calc {
+    margin-top: 96px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 48px;
+  }
+  .calc-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .calc-head h2 {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -.018em;
+    margin: 0 0 8px;
+  }
+  .calc-head p {
+    margin: 0 0 32px;
+    color: var(--text-3);
+    font-size: 14.5px;
+  }
+
+  .calc-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .calc-label span {
+    font-size: 13px;
+    color: var(--text-3);
+    font-family: var(--font-mono);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .calc-label output {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  input[type=range] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: var(--border);
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--text);
+    cursor: pointer;
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--border-strong);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--text);
+    cursor: pointer;
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--border-strong);
+  }
+
+  .calc-result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .result-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+  }
+  .result-card[data-cycle-card="annual"] {
+    background: var(--accent-soft);
+    border-color: color-mix(in oklab, var(--accent) 25%, var(--border));
+  }
+  .rc-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-3);
+    margin-bottom: 10px;
+  }
+  .rc-num {
+    display: flex; align-items: baseline; gap: 6px;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -.018em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .rc-unit {
+    font-size: 13px;
+    color: var(--text-3);
+    font-weight: 400;
+  }
+  .rc-sub {
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: var(--text-3);
+    font-family: var(--font-mono);
+  }
+  .calc-foot {
+    margin: 24px 0 0;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--text-3);
+    min-height: 1.4em;
+  }
+  .calc-foot strong { color: var(--text); font-weight: 500; }
+
+  /* Billing FAQ */
+  .pfaq { margin-top: 96px; }
+  .pfaq-head { margin-bottom: 32px; }
+  .pfaq-head h2 {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -.018em;
+    margin: 0;
+  }
+  .db-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .pfaq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 48px;
+  }
+  .pfaq details {
+    border-top: 1px solid var(--border);
+    padding: 22px 0;
+  }
+  .pfaq details:last-child { border-bottom: 1px solid var(--border); }
+  .pfaq summary {
+    cursor: pointer;
+    list-style: none;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -.005em;
+    color: var(--text);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  .pfaq summary::-webkit-details-marker { display: none; }
+  .pfaq summary::after {
+    content: "+";
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--text-4);
+    line-height: 1;
+  }
+  .pfaq details[open] summary::after { content: "−"; }
+  .pfaq details p {
+    margin: 14px 0 0;
+    color: var(--text-2);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 980px) {
+    .price-section { padding: 32px 0 64px; }
+    .plans { grid-template-columns: 1fr; }
+    .calc { padding: 32px 24px; }
+    .calc-result { grid-template-columns: 1fr; }
+    .pfaq-grid { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>

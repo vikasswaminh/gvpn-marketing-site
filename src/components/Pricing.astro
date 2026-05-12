@@ -105,6 +105,10 @@ const plans = [
       Self-hosted: <strong>$0 forever</strong>. Run MeshWG on your own VM
       with full source on GitHub — same product, no machine limit.
     </p>
+
+    <div class="price-detail-link">
+      <a class="btn" href="/pricing">See full pricing, calculator, and billing FAQ →</a>
+    </div>
   </div>
 </section>
 
@@ -216,6 +220,12 @@ const plans = [
     line-height: 1.6;
   }
   .price-foot strong { color: var(--text); font-weight: 500; }
+
+  .price-detail-link {
+    margin: 24px 0 0;
+    display: flex;
+    justify-content: center;
+  }
 
   @media (max-width: 980px) {
     .price-grid { grid-template-columns: 1fr; }

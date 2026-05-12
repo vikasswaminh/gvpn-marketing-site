@@ -1,0 +1,390 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import Footer     from "../components/Footer.astro";
+import { site } from "../site";
+
+// Sections kept verifiable. Each architecture claim maps to a file in
+// the underlying repo; each verification claim points at the harness.
+const archPoints = [
+  {
+    h: "Hub-and-spoke through one controller",
+    p: "All overlay traffic between your machines passes through a controller you choose (ours, or one you self-host). The controller is the single place to apply policy. Peers don't need to discover each other.",
+  },
+  {
+    h: "Per-tenant Linux network namespace",
+    p: "Each organization runs in its own kernel network namespace on the controller. Two tenants on the same controller cannot see each other's overlay traffic, even with identical overlay IP ranges.",
+  },
+  {
+    h: "iptables-enforced ACLs",
+    p: "Allow/deny policies are written into the FORWARD chain of the tenant's namespace. Rules apply at the kernel level — when a policy says deny, the kernel drops the packet before it reaches the destination.",
+  },
+  {
+    h: "Encrypted hub keys at rest",
+    p: "Each tenant's hub private key is generated server-side and stored AES-256-GCM encrypted in PostgreSQL. The encryption key is read from an environment variable; the controller refuses to start if it's unset.",
+  },
+  {
+    h: "No internet egress through the hub",
+    p: "By design and verified: the tenant namespace has no MASQUERADE rules, no SNAT, and no path to public networks. The hub forwards overlay traffic between your peers only. Peers reach the internet via their own local network.",
+  },
+];
+
+const dontDoList = [
+  "We don't ship firmware. The router runs whatever it normally runs.",
+  "We don't install an agent on your devices. The WireGuard implementation is the one already in the device.",
+  "We don't invent a new tunnel protocol. It's WireGuard, RFC-style.",
+  "We don't intercept your traffic — it's WireGuard-encrypted end to end.",
+  "We don't retain per-machine private keys. They're shown to you once at creation, then gone.",
+];
+
+const testCoverage = [
+  { n: "Auth flow",         what: "Real HTTP login → JWT cookie → CSRF + rate-limit checks" },
+  { n: "Tunnel handshake",  what: "Two real Ubuntu VMs do WireGuard handshakes against the controller" },
+  { n: "Policy enforcement", what: "Apply a deny rule, count actual packets dropped at the kernel" },
+  { n: "Cross-tenant isolation", what: "tcpdump in tenant B's namespace sees 0 packets while tenant A floods" },
+  { n: "Concurrent IP allocation", what: "5 parallel POSTs, verify no two devices get the same overlay IP" },
+  { n: "Policy flap soak",  what: "30 toggle cycles, every transition matches expected state" },
+  { n: "Reconciler soak",   what: "Delete the namespace 5 times, restart the service, ping must work each time" },
+  { n: "Tenant burst",      what: "8 parallel org creates, verify each gets a unique port + working wg0" },
+  { n: "Live ping flood",   what: "Flood ping during 10 policy toggles, count kernel drops vs received" },
+  { n: "Internet egress",   what: "Verify external IPs are unreachable from inside a tenant namespace" },
+  { n: "Long-name regression", what: "60-char org name with special chars must onboard without orphan interfaces" },
+  { n: "Delete-org",        what: "API delete → cascade through devices, users, namespace, no leftover state" },
+];
+
+const title = "Docs — MeshWG";
+const description = "How MeshWG actually works: architecture, the wg-quick config it emits, what it doesn't do, and the end-to-end test harness that verifies every claim.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <PageHero
+    eyebrow="/ docs"
+    title="How it actually works."
+    lede="A high-level overview of the architecture, the configuration MeshWG generates, and the test harness that verifies every claim on this site."
+  />
+
+  <section class="docs-section">
+    <div class="wrap">
+
+      <!-- TOC -->
+      <nav class="toc">
+        <span class="toc-label">On this page</span>
+        <a href="#architecture">Architecture</a>
+        <a href="#config">The config we generate</a>
+        <a href="#doesnt-do">What it doesn't do</a>
+        <a href="#verification">How we verify it works</a>
+        <a href="#self-host">Self-host the controller</a>
+      </nav>
+
+      <!-- ── Architecture -->
+      <article id="architecture" class="doc-block">
+        <header>
+          <div class="db-eyebrow">/ 01 architecture</div>
+          <h2>Architecture in five claims.</h2>
+        </header>
+        <div class="claims">
+          {archPoints.map((c) => (
+            <div class="claim">
+              <h3>{c.h}</h3>
+              <p>{c.p}</p>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <!-- ── Config -->
+      <article id="config" class="doc-block">
+        <header>
+          <div class="db-eyebrow">/ 02 the config we generate</div>
+          <h2>Standard WireGuard. Nothing custom.</h2>
+          <p class="db-lede">
+            When you add a machine in the dashboard, MeshWG returns a
+            wg-quick configuration that any WireGuard implementation
+            accepts as-is. Below is the exact format.
+          </p>
+        </header>
+
+        <pre class="config-pre"><span class="hdr"># wg0.conf — generated for machine "branch-mumbai"</span>
+<span class="sec">[Interface]</span>
+<span class="key">PrivateKey</span>          = <span class="val">&lt;generated server-side, returned once&gt;</span>
+<span class="key">Address</span>             = <span class="val">10.100.0.2/16</span>
+<span class="key">MTU</span>                 = <span class="val">1420</span>
+
+<span class="sec">[Peer]</span>
+<span class="hdr"># tenant hub for "acme-networks"</span>
+<span class="key">PublicKey</span>           = <span class="val">&lt;tenant hub public key&gt;</span>
+<span class="key">Endpoint</span>            = <span class="val">vpn.meshwg.com:51820</span>
+<span class="key">AllowedIPs</span>          = <span class="val">10.100.0.0/16</span>
+<span class="key">PersistentKeepalive</span> = <span class="val">25</span></pre>
+      </article>
+
+      <!-- ── What it doesn't do -->
+      <article id="doesnt-do" class="doc-block">
+        <header>
+          <div class="db-eyebrow">/ 03 what it doesn't do</div>
+          <h2>The honest list of things MeshWG isn't.</h2>
+        </header>
+        <ul class="dont">
+          {dontDoList.map((line) => (
+            <li>
+              <span class="dash">—</span>
+              {line}
+            </li>
+          ))}
+        </ul>
+      </article>
+
+      <!-- ── Verification -->
+      <article id="verification" class="doc-block">
+        <header>
+          <div class="db-eyebrow">/ 04 how we verify it works</div>
+          <h2>An end-to-end harness with kernel-level oracles.</h2>
+          <p class="db-lede">
+            Every release runs through a 24-phase test that drives the real
+            controller and two test VMs over SSH, then asserts against
+            actual kernel counters and tcpdump captures — not just HTTP
+            status codes. If anything regresses, the deploy fails.
+          </p>
+        </header>
+
+        <div class="cov-grid">
+          {testCoverage.map((t) => (
+            <div class="cov">
+              <div class="cov-name">{t.n}</div>
+              <div class="cov-what">{t.what}</div>
+            </div>
+          ))}
+        </div>
+
+        <p class="cov-foot">
+          Full harness source: <a href={`${site.repo}/blob/master/e2e/run.sh`} target="_blank" rel="noopener">e2e/run.sh on GitHub ↗</a>
+        </p>
+      </article>
+
+      <!-- ── Self-host -->
+      <article id="self-host" class="doc-block">
+        <header>
+          <div class="db-eyebrow">/ 05 self-host the controller</div>
+          <h2>Run MeshWG on your own VM.</h2>
+          <p class="db-lede">
+            One Linux VM, one PostgreSQL, one Caddy in front for TLS. The
+            install is five copy-paste commands.
+          </p>
+        </header>
+
+        <pre class="install-pre"><span class="c"># on a fresh Ubuntu 22.04+ host</span>
+apt install wireguard-tools iptables postgresql-16 caddy
+
+<span class="c"># clone, build, deploy artifacts</span>
+git clone {site.repo}
+cd meshwg && go build -o /root/quickmesh ./cmd/quickmesh
+
+install -m 0600 deploy/.env.example /etc/quickmesh.env
+<span class="c"># edit /etc/quickmesh.env — set ENCRYPTION_KEY, JWT_SECRET, ADMIN_PASSWORD</span>
+
+install -m 0644 deploy/quickmesh.service /etc/systemd/system/
+install -m 0644 deploy/Caddyfile         /etc/caddy/Caddyfile
+
+systemctl daemon-reload && systemctl enable --now quickmesh caddy</pre>
+
+        <div class="sh-cta">
+          <a class="btn btn-primary" href={site.repo} target="_blank" rel="noopener">Get the source</a>
+          <a class="btn" href={site.deployDocs} target="_blank" rel="noopener">deploy/README.md</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <Footer />
+</Base>
+
+<style>
+  .docs-section { padding: 64px 0 128px; }
+
+  /* TOC */
+  .toc {
+    display: flex; flex-wrap: wrap; gap: 18px 24px;
+    padding: 16px 0;
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .toc-label {
+    font-family: var(--font-mono);
+    color: var(--text-4);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: 11px;
+    margin-right: 8px;
+  }
+  .toc a {
+    color: var(--text-2);
+    transition: color .12s ease;
+  }
+  .toc a:hover { color: var(--text); }
+
+  /* Doc blocks */
+  .doc-block {
+    margin-bottom: 80px;
+  }
+  .doc-block:last-child { margin-bottom: 0; }
+
+  .db-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .doc-block h2 {
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -.018em;
+    font-weight: 500;
+    margin: 0 0 12px;
+    max-width: 720px;
+    text-wrap: balance;
+  }
+  .db-lede {
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.65;
+    margin: 0;
+    max-width: 720px;
+  }
+
+  /* Architecture claims */
+  .claims {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .claim {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+  }
+  .claim h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -.005em;
+  }
+  .claim p {
+    color: var(--text-2);
+    font-size: 13.5px;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* Config pre */
+  .config-pre {
+    margin: 32px 0 0;
+    background: #0a0a0a;
+    color: #e5e5e5;
+    border-radius: var(--radius-lg);
+    padding: 24px 26px;
+    font: 12.5px/1.75 var(--font-mono);
+    overflow: auto;
+    border: 1px solid #1a1a1a;
+    white-space: pre;
+  }
+  .config-pre .hdr { color: #737373; }
+  .config-pre .sec { color: #a5b4fc; }
+  .config-pre .key { color: #fafafa; }
+  .config-pre .val { color: #fbbf24; }
+
+  /* Don't-do list */
+  .dont {
+    list-style: none;
+    padding: 0; margin: 32px 0 0;
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+  .dont li {
+    display: flex; gap: 14px;
+    color: var(--text-2);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .dash {
+    color: var(--text-4);
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+  }
+
+  /* Coverage grid */
+  .cov-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin-top: 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .cov {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .cov:nth-child(2n) { border-right: 0; }
+  .cov:nth-last-child(-n+2) { border-bottom: 0; }
+  .cov-name {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--accent);
+    letter-spacing: .02em;
+  }
+  .cov-what {
+    color: var(--text-2);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .cov-foot {
+    margin-top: 24px;
+    font-size: 13.5px;
+    color: var(--text-3);
+  }
+  .cov-foot a {
+    color: var(--accent);
+  }
+  .cov-foot a:hover { color: var(--accent-strong); }
+
+  /* Install pre */
+  .install-pre {
+    margin: 32px 0;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    font: 12.5px/1.7 var(--font-mono);
+    overflow: auto;
+    color: var(--text);
+    white-space: pre;
+  }
+  .install-pre .c { color: var(--text-3); }
+
+  .sh-cta {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+
+  @media (max-width: 980px) {
+    .docs-section { padding: 32px 0 64px; }
+    .claims { grid-template-columns: 1fr; }
+    .cov-grid { grid-template-columns: 1fr; }
+    .cov { grid-template-columns: 1fr; gap: 4px; padding: 16px; border-right: 0; }
+    .cov:nth-child(2n) { border-right: 0; }
+    .doc-block { margin-bottom: 56px; }
+  }
+</style>

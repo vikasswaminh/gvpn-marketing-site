@@ -27,6 +27,16 @@ const { title, description = "Hosted SDWAN + ZTNA on standard WireGuard. Mesh th
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Plausible analytics (self-hosted at analytics.networkershome.com).
+       Privacy-respecting, cookie-free, no PII. Loaded with defer so it
+       never blocks first paint; outbound-links + 404 + hash plugins
+       give us SEO-useful breakdowns without any per-page changes. -->
+  <script
+    defer
+    data-domain="meshwg.com"
+    src="https://analytics.networkershome.com/js/script.outbound-links.hash.404.js"
+  ></script>
 </head>
 <body>
   <slot />

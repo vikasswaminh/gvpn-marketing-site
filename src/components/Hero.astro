@@ -1,12 +1,11 @@
 ---
 import { site } from "../site";
 
-// Honest claims only. Every one is verifiable.
 const heroChecks = [
   "2 machines free, forever",
-  "Standard wg-quick configs",
-  "Open source · MIT",
-  "Works with TP-Link, MikroTik, OpenWrt",
+  "Setup in under 2 minutes",
+  "Open source",
+  "Works with any WireGuard router",
 ];
 ---
 
@@ -14,18 +13,17 @@ const heroChecks = [
   <div class="wrap hero-inner">
     <div class="eyebrow">
       <span class="dot"></span>
-      <span class="eyebrow-text">v1 · live · MIT licensed</span>
+      <span class="eyebrow-text">one platform · mesh vpn + zero trust access</span>
     </div>
 
     <h1 class="h1">
-      Mesh the routers, laptops, and servers <em>you already own.</em>
+      Turn the routers <em>you already own</em> into a secure mesh network.
     </h1>
 
     <p class="lede">
-      MeshWG is an open-source WireGuard mesh controller. Connect any router,
-      laptop, or server that runs WireGuard — TP-Link, MikroTik, OpenWrt,
-      Ubiquiti, your homelab, your phone — into one private network with
-      policy-based access control. Self-host free, or pay <span class="mono-inline">$1/machine/month</span>.
+      Connect your branches, your home, and your team — without buying
+      $2,999 SDWAN boxes. MeshWG works with the TP-Link, MikroTik,
+      OpenWrt, and Ubiquiti hardware already in your rack.
     </p>
 
     <div class="hero-cta">
@@ -33,7 +31,9 @@ const heroChecks = [
         Sign up free
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
-      <a class="btn btn-lg" href="#how">How it works</a>
+      <a class="btn btn-lg" href={site.proContact}>
+        Talk to us — Pro
+      </a>
     </div>
 
     <div class="hero-meta">
@@ -73,6 +73,7 @@ const heroChecks = [
     font-size: 11px;
     letter-spacing: .04em;
     color: var(--text-3);
+    text-transform: uppercase;
   }
 
   .h1 {
@@ -81,7 +82,7 @@ const heroChecks = [
     letter-spacing: -.028em;
     font-weight: 500;
     margin: 28px 0 24px;
-    max-width: 920px;
+    max-width: 960px;
     text-wrap: balance;
   }
   .h1 em {
@@ -96,11 +97,6 @@ const heroChecks = [
     line-height: 1.6;
     text-wrap: pretty;
     margin: 0;
-  }
-  .mono-inline {
-    font-family: var(--font-mono);
-    font-size: .95em;
-    color: var(--text);
   }
 
   .hero-cta {

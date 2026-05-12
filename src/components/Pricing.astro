@@ -1,26 +1,21 @@
 ---
 import { site } from "../site";
 
-// Three plans, one number that matters. No tier ladder.
-// "Cloud" line items reflect the eventual hosted shape; the CTA links
-// to signup which today routes to the self-host docs (free, real,
-// works today). When the hosted version is live, only site.signupFree
-// changes — copy stays.
 const plans = [
   {
-    key: "self",
-    name: "Self-hosted",
+    key: "free",
+    name: "Free",
     price: "$0",
     unit: "forever",
-    description: "The OSS. Run it on your own Linux VM with full source.",
+    description: "Start meshing today. Free for as long as you stay small.",
     bullets: [
-      "Unlimited machines",
-      "All features, no gates",
-      "Full source on GitHub (MIT)",
-      "Reconciler, e2e harness, deploy templates",
+      "2 machines",
+      "Hosted by us — nothing to install",
+      "Google or email sign-in",
+      "All access-control features",
     ],
-    ctaLabel: "Get the source",
-    ctaHref: site.repo,
+    ctaLabel: "Sign up free",
+    ctaHref: site.signupFree,
     ctaExternal: true,
     accent: false,
   },
@@ -30,12 +25,12 @@ const plans = [
     price: "$1",
     unit: "/ machine / month, billed annually",
     sub: "or $3 / machine / month, billed monthly",
-    description: "Hosted controller on our infrastructure. Free up to 2 machines.",
+    description: "For growing meshes. Same hosted product, no machine limit.",
     bullets: [
-      "2 machines free, forever",
-      "Sign in with Google or email",
-      "Hosted, monitored, backed up",
-      "Audit log, basic alerts",
+      "Unlimited machines",
+      "Audit log",
+      "Email support",
+      "Cancel anytime",
     ],
     ctaLabel: "Sign up free",
     ctaHref: site.signupFree,
@@ -47,12 +42,12 @@ const plans = [
     name: "Pro",
     price: "Custom",
     unit: "talk to us",
-    description: "Bigger fleets, dedicated infrastructure, priority support.",
+    description: "Bigger fleets, dedicated infrastructure, custom needs.",
     bullets: [
-      "Dedicated controller instance",
+      "Dedicated controller",
       "Custom domain (acme.meshwg.com)",
-      "Priority email support",
-      "Negotiated SLA",
+      "Priority support",
+      "SLA on request",
     ],
     ctaLabel: "Talk to us",
     ctaHref: site.proContact,
@@ -65,11 +60,11 @@ const plans = [
 <section id="pricing">
   <div class="wrap">
     <div class="sec-eyebrow">/ pricing</div>
-    <h2 class="sec-h">One number. Per machine.</h2>
+    <h2 class="sec-h">Simple pricing. Per machine. No surprises.</h2>
     <p class="sec-lede">
-      A "machine" is any peer in your mesh — a router, a laptop, a server,
-      a phone. Two free, forever. After that, <span class="mono-inline">$1/machine/month</span>
-      on annual billing or <span class="mono-inline">$3/machine/month</span> monthly.
+      A "machine" is anything in your mesh — a router, a laptop, a phone,
+      or a server. Two free forever; <span class="mono-inline">$1/each</span>
+      after that on annual billing.
     </p>
 
     <div class="price-grid">
@@ -107,9 +102,8 @@ const plans = [
     </div>
 
     <p class="price-foot">
-      All Cloud plans share the same product — no feature gates on ACLs,
-      reconciler, multi-tenant or any core function. The OSS and the Cloud
-      version are built from the same codebase.
+      Self-hosted: <strong>$0 forever</strong>. Run MeshWG on your own VM
+      with full source on GitHub — same product, no machine limit.
     </p>
   </div>
 </section>
@@ -221,6 +215,7 @@ const plans = [
     text-align: center;
     line-height: 1.6;
   }
+  .price-foot strong { color: var(--text); font-weight: 500; }
 
   @media (max-width: 980px) {
     .price-grid { grid-template-columns: 1fr; }

@@ -2,39 +2,18 @@
 const steps = [
   {
     num: "01",
-    title: "Create an org",
-    body: "Sign up, name your organization. Each org gets its own isolated Linux network namespace and a unique WireGuard hub keypair (private key AES-256 encrypted at rest).",
-    code: [
-      { c: "# tenant" },
-      { k: "name",       v: '"acme-networks"' },
-      { k: "namespace",  v: '"qm_acme_networks"' },
-      { k: "hub_ip",     v: '"10.100.0.1/16"' },
-    ],
+    title: "Sign up",
+    body: "Create your account with Google or email. No credit card. You're in the dashboard in under a minute.",
   },
   {
     num: "02",
-    title: "Add machines",
-    body: "Each machine — router, laptop, server, phone — is one peer. The controller generates the keypair, allocates an overlay IP, and returns a ready-to-paste wg-quick config.",
-    code: [
-      { c: "# machine" },
-      { k: "name",         v: '"branch-mumbai"' },
-      { k: "device_type",  v: '"site"' },
-      { k: "overlay_ip",   v: '"10.100.0.2"' },
-      { k: "lan_subnets",  v: '["192.168.10.0/24"]' },
-    ],
+    title: "Add your devices",
+    body: "Click Add machine, give it a name, and paste the WireGuard config we generate into your router or laptop. The tunnel comes up immediately.",
   },
   {
     num: "03",
-    title: "Set policies",
-    body: "Define which machines can reach which. Allow / deny, by protocol and port. Rules write into the tenant namespace's iptables FORWARD chain in real time.",
-    code: [
-      { c: "# access_policy" },
-      { k: "source_id",      v: "<machine-A>" },
-      { k: "dest_id",        v: "<machine-B>" },
-      { k: "dest_protocol",  v: '"tcp"' },
-      { k: "dest_ports",     v: '"443,8000-8100"' },
-      { k: "action",         v: '"allow"' },
-    ],
+    title: "Set who reaches what",
+    body: "Allow or deny traffic between any two machines in one click — site-to-site, user-to-server, by app or by port. Changes apply in real time.",
   },
 ];
 ---
@@ -42,10 +21,11 @@ const steps = [
 <section id="how">
   <div class="wrap">
     <div class="sec-eyebrow">/ how it works</div>
-    <h2 class="sec-h">Three primitives. That's the whole product.</h2>
+    <h2 class="sec-h">From unboxed to fully meshed in 2 minutes.</h2>
     <p class="sec-lede">
-      No vendor firmware. No agent. The controller speaks standard
-      WireGuard to your machines and writes policy at the kernel level.
+      No firmware changes. No agent install on every device. No
+      certificates to manage. The hardware you have is the hardware
+      you use.
     </p>
 
     <div class="how-grid">
@@ -56,13 +36,6 @@ const steps = [
             <h3 class="step-title">{s.title}</h3>
           </header>
           <p class="step-body">{s.body}</p>
-          <pre class="step-code">
-{s.code.map((line) => (
-  line.c
-    ? <span class="line"><span class="c">{line.c}</span></span>
-    : <span class="line"><span class="k">{line.k}</span><span class="op"> = </span><span class="v">{line.v}</span></span>
-))}
-          </pre>
         </article>
       ))}
     </div>
@@ -80,7 +53,7 @@ const steps = [
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 28px;
+    padding: 32px 28px;
     opacity: 1;
     animation: up .5s ease both;
   }
@@ -89,44 +62,27 @@ const steps = [
 
   .step-head {
     display: flex; align-items: baseline; gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .step-num {
     font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 500;
-    color: var(--text-4);
+    color: var(--accent);
     letter-spacing: .02em;
   }
   .step-title {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 500;
     letter-spacing: -.01em;
     margin: 0;
   }
   .step-body {
     color: var(--text-2);
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 14.5px;
+    line-height: 1.65;
     margin: 0;
   }
-  .step-code {
-    margin: 24px 0 0;
-    background: var(--bg-2);
-    border: 1px solid var(--border-faint);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    font: 11.5px/1.75 var(--font-mono);
-    color: var(--text-2);
-    min-height: 130px;
-    white-space: pre;
-    overflow: auto;
-  }
-  .step-code .line { display: block; }
-  .step-code .k { color: var(--accent); }
-  .step-code .v { color: var(--text); }
-  .step-code .c { color: var(--text-4); }
-  .step-code .op { color: var(--text-4); }
 
   @media (max-width: 980px) {
     .how-grid { grid-template-columns: 1fr; }

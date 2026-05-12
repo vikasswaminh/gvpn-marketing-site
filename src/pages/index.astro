@@ -4,7 +4,6 @@ import Nav          from "../components/Nav.astro";
 import Hero         from "../components/Hero.astro";
 import VendorStrip  from "../components/VendorStrip.astro";
 import HowItWorks   from "../components/HowItWorks.astro";
-import ConfigBlock  from "../components/ConfigBlock.astro";
 import Features     from "../components/Features.astro";
 import Compare      from "../components/Compare.astro";
 import Pricing      from "../components/Pricing.astro";
@@ -12,8 +11,8 @@ import FAQ          from "../components/FAQ.astro";
 import CTA          from "../components/CTA.astro";
 import Footer       from "../components/Footer.astro";
 
-const title = "MeshWG — WireGuard mesh for the hardware you already own";
-const description = "Open-source WireGuard mesh controller. Connect routers, laptops, and servers into one private network with kernel-level ACLs. Self-host free, or $1 per machine per month.";
+const title = "MeshWG — Turn the routers you already own into a secure mesh network";
+const description = "Mesh VPN + zero trust access for the routers you already own. Connect your branches and your home without buying $2,999 SDWAN boxes. Setup in 2 minutes. Free for 2 machines.";
 ---
 
 <Base title={title} description={description}>
@@ -21,7 +20,6 @@ const description = "Open-source WireGuard mesh controller. Connect routers, lap
   <Hero />
   <VendorStrip />
   <HowItWorks />
-  <ConfigBlock />
   <Features />
   <Compare />
   <Pricing />

@@ -3,20 +3,14 @@
 // internally consistent and any change is a one-line edit.
 
 export const site = {
-  // Source + docs
-  repo:       "https://github.com/vikasswaminh/meshwg",
-  deployDocs: "https://github.com/vikasswaminh/meshwg/tree/master/deploy",
-  issues:     "https://github.com/vikasswaminh/meshwg/issues",
-  license:    "https://github.com/vikasswaminh/meshwg/blob/master/LICENSE",
+  // CTAs. Every "Sign up free" and "Sign in" button on the site routes
+  // to the controller's login page. Today the login page also carries
+  // a contact-us line under the form; once self-serve signup ships, that
+  // line becomes a "Sign up →" link. The marketing site doesn't change.
+  signupFree: "https://vpn.meshwg.com/login",
+  signIn:     "https://vpn.meshwg.com/login",
 
-  // CTAs.
-  //   * signupFree → currently points to the self-host docs because the
-  //     free version is genuinely self-hosted and works today. Swap to
-  //     a hosted /signup URL when the SaaS backend is live; nothing else
-  //     in the site has to change.
-  //   * proContact → mailto for Pro / managed inquiries. Update the
-  //     address before launch.
-  signupFree: "https://github.com/vikasswaminh/meshwg#quick-start",
+  // Pro / sales contact.
   proContact: "mailto:hello@meshwg.com?subject=MeshWG%20Pro",
 
   // Brand

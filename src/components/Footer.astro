@@ -12,20 +12,17 @@ const cols = [
     ],
   },
   {
-    h: "Source",
+    h: "Account",
     items: [
-      { l: "GitHub repo",         href: site.repo, external: true },
-      { l: "deploy/",             href: site.deployDocs, external: true },
-      { l: "e2e test harness",    href: `${site.repo}/blob/master/e2e/run.sh`, external: true },
-      { l: "MIT license",         href: site.license, external: true },
+      { l: "Sign in",             href: site.signIn,     external: true },
+      { l: "Sign up free",        href: site.signupFree, external: true },
     ],
   },
   {
-    h: "Get started",
+    h: "Contact",
     items: [
-      { l: "Sign up free",        href: site.signupFree, external: true },
       { l: "Talk to us (Pro)",    href: site.proContact, external: false },
-      { l: "Open an issue",       href: site.issues, external: true },
+      { l: "hello@meshwg.com",    href: "mailto:hello@meshwg.com", external: false },
     ],
   },
 ];
@@ -42,8 +39,8 @@ const year = new Date().getFullYear();
           <span>{site.productName}</span>
         </div>
         <p class="foot-tag">
-          Open-source WireGuard mesh controller. Multi-tenant, kernel-level
-          ACLs, self-hosted or hosted by us.
+          Hosted WireGuard mesh + zero-trust access. Multi-tenant, kernel-level
+          ACLs, works with the routers you already own.
         </p>
       </div>
 
@@ -68,7 +65,7 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="foot-bot">
-      <div>© {year} {site.productName} contributors · MIT licensed</div>
+      <div>© {year} {site.productName}. All rights reserved.</div>
       <div>WireGuard is a registered trademark of Jason A. Donenfeld.</div>
     </div>
   </div>

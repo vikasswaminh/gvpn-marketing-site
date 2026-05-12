@@ -3,14 +3,13 @@ import Base       from "../layouts/Base.astro";
 import Nav        from "../components/Nav.astro";
 import PageHero   from "../components/PageHero.astro";
 import Footer     from "../components/Footer.astro";
-import { site } from "../site";
 
 // Sections kept verifiable. Each architecture claim maps to a file in
 // the underlying repo; each verification claim points at the harness.
 const archPoints = [
   {
     h: "Hub-and-spoke through one controller",
-    p: "All overlay traffic between your machines passes through a controller you choose (ours, or one you self-host). The controller is the single place to apply policy. Peers don't need to discover each other.",
+    p: "All overlay traffic between your machines passes through a single controller — the one place where policy is applied. Peers don't need to discover each other; they discover the hub, and the hub decides who reaches whom.",
   },
   {
     h: "Per-tenant Linux network namespace",
@@ -75,7 +74,6 @@ const description = "How MeshWG actually works: architecture, the wg-quick confi
         <a href="#config">The config we generate</a>
         <a href="#doesnt-do">What it doesn't do</a>
         <a href="#verification">How we verify it works</a>
-        <a href="#self-host">Self-host the controller</a>
       </nav>
 
       <!-- ── Architecture -->
@@ -159,40 +157,12 @@ const description = "How MeshWG actually works: architecture, the wg-quick confi
         </div>
 
         <p class="cov-foot">
-          Full harness source: <a href={`${site.repo}/blob/master/e2e/run.sh`} target="_blank" rel="noopener">e2e/run.sh on GitHub ↗</a>
+          Every test asserts against actual kernel counters — packet counts on
+          iptables rules, tcpdump captures inside the tenant namespace, real
+          WireGuard handshakes from real VMs. Want to see a transcript? Email
+          <a href="mailto:hello@meshwg.com">hello@meshwg.com</a> — we'll share
+          the latest run.
         </p>
-      </article>
-
-      <!-- ── Self-host -->
-      <article id="self-host" class="doc-block">
-        <header>
-          <div class="db-eyebrow">/ 05 self-host the controller</div>
-          <h2>Run MeshWG on your own VM.</h2>
-          <p class="db-lede">
-            One Linux VM, one PostgreSQL, one Caddy in front for TLS. The
-            install is five copy-paste commands.
-          </p>
-        </header>
-
-        <pre class="install-pre"><span class="c"># on a fresh Ubuntu 22.04+ host</span>
-apt install wireguard-tools iptables postgresql-16 caddy
-
-<span class="c"># clone, build, deploy artifacts</span>
-git clone {site.repo}
-cd meshwg && go build -o /root/quickmesh ./cmd/quickmesh
-
-install -m 0600 deploy/.env.example /etc/quickmesh.env
-<span class="c"># edit /etc/quickmesh.env — set ENCRYPTION_KEY, JWT_SECRET, ADMIN_PASSWORD</span>
-
-install -m 0644 deploy/quickmesh.service /etc/systemd/system/
-install -m 0644 deploy/Caddyfile         /etc/caddy/Caddyfile
-
-systemctl daemon-reload && systemctl enable --now quickmesh caddy</pre>
-
-        <div class="sh-cta">
-          <a class="btn btn-primary" href={site.repo} target="_blank" rel="noopener">Get the source</a>
-          <a class="btn" href={site.deployDocs} target="_blank" rel="noopener">deploy/README.md</a>
-        </div>
       </article>
 
     </div>

@@ -1,0 +1,19 @@
+# MeshWG security policy
+# RFC 9116 — https://www.rfc-editor.org/rfc/rfc9116
+
+Contact: mailto:security@meshwg.com
+Expires: 2027-05-12T23:59:59Z
+Preferred-Languages: en
+Canonical: https://meshwg.com/.well-known/security.txt
+
+# Scope
+#   In scope:  meshwg.com, *.meshwg.com (including vpn.meshwg.com)
+#   Out of scope:  Third-party services we depend on (Cloudflare, Stripe,
+#                  Let's Encrypt, etc.) — report directly to the vendor.
+#
+# What we ask
+#   Please report potential vulnerabilities privately by email above before
+#   any public disclosure. We aim to acknowledge within 2 business days
+#   and to ship a fix or share a mitigation within 30 days for high-severity
+#   issues. We do not currently run a paid bug bounty, but we credit
+#   reporters who request it.

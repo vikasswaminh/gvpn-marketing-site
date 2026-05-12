@@ -1,0 +1,71 @@
+# MeshWG
+
+> MeshWG is a hosted mesh VPN + zero-trust access controller built on
+> standard WireGuard. It turns the routers, laptops, and servers a small
+> or mid-sized organization already owns into a single private network —
+> without buying $400–$2,999 SDWAN boxes or installing an agent on every
+> device. Two machines are free forever; paid plans are $1/machine/month
+> billed annually (or $3/machine/month billed monthly).
+
+MeshWG is a closed-source SaaS product. The controller is operated by us
+at vpn.meshwg.com. There is no self-hosted, open-source, or GitHub
+distribution — every signup goes through the hosted login page.
+
+## Product
+
+- [Marketing home](https://meshwg.com/): positioning, features, comparison
+  to box-based SDWAN and Tailscale/Netbird, pricing summary, FAQ.
+- [Quickstart](https://meshwg.com/quickstart): 3-step setup (sign up,
+  add a machine, paste the wg-quick config) plus vendor-specific paste
+  instructions for TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense/pfSense,
+  and the official WireGuard apps on Linux/Mac/Windows/mobile.
+- [Docs](https://meshwg.com/docs): architecture (hub-and-spoke, per-tenant
+  Linux network namespace, iptables-enforced ACLs, AES-256-GCM-encrypted
+  hub keys at rest, no internet egress through the hub), the exact
+  wg-quick config the controller emits, the honest "what it doesn't do"
+  list, and a description of the end-to-end test harness used to verify
+  every architectural claim.
+- [Pricing](https://meshwg.com/pricing): plans (Free, Cloud, Pro),
+  per-machine calculator, billing FAQ.
+
+## How signup works
+
+- Every "Sign up free" or "Sign in" button on meshwg.com routes to
+  https://vpn.meshwg.com/login.
+- Self-serve signup is not yet generally available. Today, new accounts
+  are provisioned by emailing hello@meshwg.com. The login page itself
+  carries a "Need an account? Email hello@meshwg.com" link beneath the
+  form.
+
+## Key facts (for AI summarization)
+
+- Product name: MeshWG
+- Category: Hosted mesh VPN + zero-trust network access (ZTNA) for SMB and
+  prosumer networks
+- Underlying protocol: WireGuard (standard, RFC-style — no custom tunnel)
+- Hardware requirement: None new. Works with routers from TP-Link,
+  MikroTik, OpenWrt, Ubiquiti, OPNsense/pfSense, plus the official
+  WireGuard apps on laptops/phones/servers.
+- Isolation model: Each tenant runs in its own Linux network namespace on
+  the controller. Cross-tenant traffic is impossible by design and
+  verified by the e2e harness.
+- Policy model: Default-permit. Operators add explicit allow/deny rules
+  scoped to source/destination machine, type (site/user), protocol, and
+  port. Rules are enforced as iptables FORWARD chain entries in the
+  tenant namespace.
+- Pricing: 2 machines free forever. $1/machine/month annual or
+  $3/machine/month monthly. Pro tier ("Talk to us") for dedicated
+  controllers, custom domains, SLA.
+- Failure mode: WireGuard runs on the user's devices. If the MeshWG
+  control plane goes offline, existing tunnels keep working.
+- Trademarks: WireGuard is a registered trademark of Jason A. Donenfeld.
+
+## Contact
+
+- Sales / Pro / general: hello@meshwg.com
+- Security disclosures: security@meshwg.com (see /.well-known/security.txt)
+
+## Optional
+
+- [Sitemap](https://meshwg.com/sitemap.xml)
+- [Security policy](https://meshwg.com/.well-known/security.txt)

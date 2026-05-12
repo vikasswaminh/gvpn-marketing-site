@@ -66,6 +66,13 @@ const year = new Date().getFullYear();
 
     <div class="foot-bot">
       <div>© {year} {site.productName}. All rights reserved.</div>
+      <div class="legal-links">
+        <a href="/privacy">Privacy</a>
+        <span>·</span>
+        <a href="/terms">Terms</a>
+        <span>·</span>
+        <a href="/.well-known/security.txt">Security</a>
+      </div>
       <div>WireGuard is a registered trademark of Jason A. Donenfeld.</div>
     </div>
   </div>
@@ -122,11 +129,21 @@ const year = new Date().getFullYear();
     border-top: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 16px;
     flex-wrap: wrap;
     font-size: 12px;
     color: var(--text-4);
   }
+  .legal-links {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .legal-links a {
+    color: var(--text-4);
+    transition: color .12s ease;
+  }
+  .legal-links a:hover { color: var(--text-2); }
+  .legal-links span { color: var(--text-4); }
 
   @media (max-width: 980px) {
     .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }

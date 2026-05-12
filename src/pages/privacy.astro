@@ -1,0 +1,255 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import Footer     from "../components/Footer.astro";
+
+const title = "Privacy — MeshWG";
+const description = "What data MeshWG collects, what it never sees, and what we do with what we have. Plain language, no dark patterns.";
+
+// Hand-curated effective date. Bump when the substance changes; don't
+// auto-Date.now() it because that erodes user trust ("this updated today?").
+const effective = "2026-05-13";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <PageHero
+    eyebrow="/ privacy"
+    title="What we see, what we don't, and what we do with what we have."
+    lede={`Effective ${effective}. Written in plain English instead of policy boilerplate, because that is the only honest way to explain what's actually happening.`}
+  />
+
+  <section class="legal">
+    <div class="wrap">
+
+      <article>
+        <h2>The short version</h2>
+        <ul class="bullets">
+          <li><strong>We cannot read your mesh traffic.</strong> It's WireGuard, end-to-end encrypted between your devices. Even if we tried, the keys aren't ours.</li>
+          <li>We collect what's needed to run your account: email, password hash, the names + public keys + overlay IPs of the machines you add, and basic billing if you pay.</li>
+          <li>Web analytics is self-hosted Plausible. No cookies, no fingerprinting, no third-party trackers. Adblockers may block it anyway and that's fine with us.</li>
+          <li>We don't sell your data. We don't have ad partners. There's no "data partner" list because there are no data partners.</li>
+          <li>If you delete your account, your data is gone within 30 days — including the encrypted hub keys we hold on your behalf.</li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>What we collect, why, and how long we keep it</h2>
+
+        <h3>Account information</h3>
+        <p>
+          When you sign up: your email address, a bcrypt-hashed password
+          (we never store the plaintext), an optional display name, and the
+          organization name you typed on the signup form. If you use
+          "Continue with Google", we receive your Google account ID, email,
+          and display name from Google's OpenID Connect — nothing else.
+        </p>
+        <p>
+          <strong>Retention:</strong> for the life of your account, plus 30
+          days after deletion so accidental deletes are recoverable.
+        </p>
+
+        <h3>Mesh metadata (not traffic)</h3>
+        <p>
+          For each machine you add to your mesh, we store: the name you gave
+          it, its public WireGuard key, its assigned overlay IP, and
+          aggregate handshake counters (last seen time, bytes transferred —
+          for the dashboard's status indicators). <strong>We never store the
+          private keys of your devices</strong>; those are shown to you once
+          at device creation and then forgotten by us.
+        </p>
+        <p>
+          We also generate and store a per-tenant <em>hub</em> private key
+          (encrypted at rest with AES-256-GCM) that your peers use to
+          establish tunnels to the controller. The encryption key for this
+          field is held in the controller's environment and is never logged.
+        </p>
+        <p>
+          <strong>Retention:</strong> while the machine is in your mesh; deleted within minutes when you remove it.
+        </p>
+
+        <h3>What we never see</h3>
+        <p>
+          Your mesh traffic is WireGuard, encrypted peer-to-peer. The
+          controller acts as a hub for tunnel <em>establishment</em>, but
+          the data inside the tunnels is end-to-end encrypted with keys we
+          do not hold. We technically forward packets between your peers'
+          namespace and can therefore see packet sizes and IP-header
+          metadata in the kernel; the payload content is encrypted and
+          unreadable to us.
+        </p>
+
+        <h3>Billing</h3>
+        <p>
+          If you upgrade to a paid plan, we store your billing email, the
+          plan, the machine count we're invoicing for, and invoice history.
+          Card details are handled by Stripe — they never reach our servers.
+        </p>
+        <p>
+          <strong>Retention:</strong> 7 years after the last invoice, to meet tax obligations.
+        </p>
+
+        <h3>Technical logs</h3>
+        <p>
+          The controller writes operational logs: HTTP request method/path/status, source IP,
+          timestamp, and error messages. These rotate every 7 days.
+          Application errors that include user-identifying context (email addresses, etc.)
+          are scrubbed before they're written.
+        </p>
+        <p>
+          <strong>Retention:</strong> 7 days for HTTP logs; 30 days for error logs.
+        </p>
+
+        <h3>Web analytics</h3>
+        <p>
+          We use self-hosted <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a> on
+          meshwg.com. Plausible doesn't use cookies, doesn't fingerprint browsers, and
+          doesn't collect personal data. The only thing recorded for a visit is the page
+          path, anonymized referrer, anonymized country (from IP — IP itself discarded),
+          browser family, and operating system. Aggregate, never individual.
+        </p>
+      </article>
+
+      <article>
+        <h2>Cookies</h2>
+        <p>
+          We use the minimum cookies needed to make the dashboard work. None for tracking.
+        </p>
+        <ul class="bullets">
+          <li><code>jwt</code> — your authentication token. HTTP-only, Secure, SameSite=Lax. 24-hour expiry.</li>
+          <li><code>csrf_</code> — anti-CSRF token. HTTP-only, Secure, SameSite=Strict. 1-hour expiry.</li>
+          <li><code>g_oauth_state</code> — short-lived state value during Google sign-in (10 minutes max).</li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>Third parties we route data through</h2>
+        <ul class="bullets">
+          <li><strong>Cloudflare</strong> — DNS, CDN, and DDoS protection for meshwg.com. They see request metadata.</li>
+          <li><strong>Google</strong> — only if you use the "Continue with Google" sign-in flow. Google receives the fact that you signed in to MeshWG; we receive your Google profile.</li>
+          <li><strong>Stripe</strong> — payment processing for paid plans. Card details flow directly from your browser to Stripe.</li>
+        </ul>
+        <p>
+          We don't share data with anyone else.
+        </p>
+      </article>
+
+      <article>
+        <h2>Where your data lives</h2>
+        <p>
+          Account database and controller logs are stored in a single PostgreSQL
+          instance on the same VM as the controller. We don't ship data to third-party
+          databases. The controller VM's physical location is documented separately and
+          available on request — write to <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>.
+        </p>
+      </article>
+
+      <article>
+        <h2>Your rights</h2>
+        <p>
+          Regardless of where you live, you can:
+        </p>
+        <ul class="bullets">
+          <li>Get a copy of every piece of data we have about you.</li>
+          <li>Correct anything that's wrong.</li>
+          <li>Delete your account and all associated data.</li>
+          <li>Object to processing for any reason.</li>
+        </ul>
+        <p>
+          For any of these, email <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>. We
+          aim to respond within 7 days and complete the request within 30.
+        </p>
+      </article>
+
+      <article>
+        <h2>Security incidents</h2>
+        <p>
+          If we discover a breach affecting your data, we'll email you within 72 hours
+          of confirmation, with the specifics: what was accessed, what we've done, and
+          what you should do. We won't sit on bad news.
+        </p>
+        <p>
+          To report a security issue, see our <a href="/.well-known/security.txt">security.txt</a> or
+          email <a href="mailto:security@meshwg.com">security@meshwg.com</a>.
+        </p>
+      </article>
+
+      <article>
+        <h2>Changes to this policy</h2>
+        <p>
+          If we change anything material, we'll email the address on file and post a
+          notice on this page for at least 30 days before it takes effect. Cosmetic
+          changes (typos, broken links) we'll just fix; the effective date at the top
+          will move only when substance changes.
+        </p>
+      </article>
+
+      <article>
+        <h2>Contact</h2>
+        <p>
+          Privacy questions: <a href="mailto:hello@meshwg.com">hello@meshwg.com</a><br>
+          Security issues: <a href="mailto:security@meshwg.com">security@meshwg.com</a><br>
+          Mailing address available on request.
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  <Footer />
+</Base>
+
+<style>
+  .legal { padding: 64px 0 128px; }
+  .legal article { margin-bottom: 56px; max-width: 720px; }
+  .legal article:last-child { margin-bottom: 0; }
+  .legal h2 {
+    font-size: 22px; font-weight: 500;
+    letter-spacing: -.012em;
+    margin: 0 0 18px;
+  }
+  .legal h3 {
+    font-size: 15px; font-weight: 500;
+    margin: 24px 0 8px;
+    color: var(--text);
+  }
+  .legal p {
+    color: var(--text-2);
+    font-size: 15px; line-height: 1.7;
+    margin: 0 0 14px;
+  }
+  .legal p:last-child { margin-bottom: 0; }
+  .legal strong { color: var(--text); font-weight: 500; }
+  .legal a { color: var(--accent); }
+  .legal a:hover { color: var(--accent-strong); }
+  .legal code {
+    font-family: var(--font-mono);
+    font-size: .92em;
+    background: var(--bg-2);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+  }
+  .bullets {
+    list-style: none;
+    padding: 0; margin: 0 0 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .bullets li {
+    color: var(--text-2);
+    font-size: 15px; line-height: 1.65;
+    padding-left: 22px;
+    position: relative;
+  }
+  .bullets li::before {
+    content: "—";
+    position: absolute; left: 0; top: 0;
+    color: var(--text-4);
+    font-family: var(--font-mono);
+  }
+
+  @media (max-width: 980px) {
+    .legal { padding: 32px 0 64px; }
+    .legal article { margin-bottom: 40px; }
+  }
+</style>

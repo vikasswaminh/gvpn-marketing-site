@@ -1,0 +1,263 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import Footer     from "../components/Footer.astro";
+
+const title = "Cancellation and Refund Policy — MeshWG";
+const description = "MeshWG cancellation and refund policy. Cancel any paid subscription at any time from the dashboard. No refunds for unused subscription periods; exceptions for billing errors.";
+
+const effective = "2026-05-13";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <PageHero
+    eyebrow="/ cancellation and refund policy"
+    title="Cancellation and Refund Policy"
+    lede={`Effective ${effective}. This policy is incorporated into our Terms and Conditions by reference and applies to all paid subscriptions to the MeshWG service.`}
+  />
+
+  <section class="legal">
+    <div class="wrap">
+
+      <article>
+        <h2>1. Overview</h2>
+        <p>
+          This Cancellation and Refund Policy governs how subscriptions to
+          the MeshWG service (the "Service") can be cancelled and the
+          circumstances, if any, under which refunds may be granted. It is
+          published by <strong>[YOUR LEGAL ENTITY NAME]</strong> in
+          accordance with the Consumer Protection Act, 2019 and the
+          Consumer Protection (E-Commerce) Rules, 2020.
+        </p>
+      </article>
+
+      <article>
+        <h2>2. Cancellation — you can cancel anytime</h2>
+        <p>
+          You may cancel any paid subscription at any time, for any reason,
+          directly from the <code>Billing</code> section of your MeshWG
+          dashboard at <a href="https://vpn.meshwg.com/billing">vpn.meshwg.com/billing</a>,
+          or by emailing us at <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>
+          from the address registered to your account.
+        </p>
+
+        <h3>2.1 What happens when you cancel</h3>
+        <ul class="bullets">
+          <li><strong>Monthly subscriptions</strong> — your access continues at the paid tier until the end of the current billing month. No further charges occur after the cycle ends. Your account drops back to the Free tier; the first 2 machines remain free.</li>
+          <li><strong>Annual subscriptions</strong> — your access continues at the paid tier until the end of the year you paid for. No partial refund is issued for the unused remainder of the year. After the term ends your account drops back to the Free tier.</li>
+          <li><strong>Excess machines</strong> — machines beyond the free 2-machine limit go into a read-only state at the end of the paid term. Your data is retained for 30 days, after which you can either re-subscribe or remove the excess machines.</li>
+        </ul>
+
+        <h3>2.2 How to cancel</h3>
+        <ol class="numbered">
+          <li>Sign in to <a href="https://vpn.meshwg.com/login">vpn.meshwg.com/login</a>.</li>
+          <li>Navigate to the <strong>Billing</strong> section.</li>
+          <li>Click <strong>Manage subscription</strong>.</li>
+          <li>Select <strong>Cancel</strong>; confirm when prompted.</li>
+        </ol>
+        <p>
+          You will receive an email confirmation within minutes. If you do not, please contact <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>.
+        </p>
+      </article>
+
+      <article>
+        <h2>3. Refunds</h2>
+        <p>
+          MeshWG operates on a <strong>no-refund</strong> basis for
+          subscription fees that have already been billed. This applies to
+          both monthly and annual subscriptions. You are encouraged to use
+          the free 2-machine tier (which requires no payment) to evaluate
+          the Service before subscribing.
+        </p>
+
+        <h3>3.1 Exceptions where refunds will be considered</h3>
+        <p>
+          Notwithstanding the general no-refund position, we will examine
+          a refund request in good faith if any of the following apply:
+        </p>
+        <ul class="bullets">
+          <li><strong>Billing error</strong> — we have charged you an amount different from your subscribed plan, or charged you after a valid cancellation.</li>
+          <li><strong>Duplicate payment</strong> — the same invoice was charged more than once due to a payment-gateway issue.</li>
+          <li><strong>Service was undeliverable</strong> — a documented prolonged outage attributable to MeshWG infrastructure that materially prevented you from using the Service for which you paid.</li>
+          <li><strong>Unauthorised charge</strong> — a transaction was processed without your authorisation (subject to investigation and verification with the payment processor).</li>
+        </ul>
+        <p>
+          We do <strong>not</strong> issue refunds for: change of mind;
+          unused subscription period after a voluntary cancellation; loss
+          of your account credentials; or for any third-party outage
+          outside our control (your ISP, your devices, your router
+          firmware, etc.).
+        </p>
+
+        <h3>3.2 How to request a refund</h3>
+        <p>
+          Send an email to <a href="mailto:hello@meshwg.com">hello@meshwg.com</a> with:
+        </p>
+        <ul class="bullets">
+          <li>Your registered account email.</li>
+          <li>The invoice number or Razorpay payment ID of the charge in question.</li>
+          <li>A description of the reason for the refund request.</li>
+          <li>Any supporting evidence (screenshots, error reports, bank statement excerpts where relevant).</li>
+        </ul>
+        <p>
+          Refund requests must be submitted within <strong>30 (thirty) days</strong>
+          of the disputed transaction. Requests received after this window
+          will not be considered.
+        </p>
+
+        <h3>3.3 Refund processing timeline</h3>
+        <p>
+          If a refund is approved, the amount will be credited back to the
+          original payment instrument through Razorpay within
+          <strong>5–7 business days</strong> of approval. The actual time
+          for the credit to reflect in your bank or card statement depends
+          on your bank's settlement timeline and is outside our control.
+        </p>
+        <p>
+          Refunds are issued exclusively in Indian Rupees (INR) to the same
+          payment method used for the original transaction.
+        </p>
+      </article>
+
+      <article>
+        <h2>4. Free tier</h2>
+        <p>
+          The Free tier (up to 2 machines) is provided indefinitely at no
+          cost and requires no payment instrument. Cancellation of the
+          Free tier is achieved by deleting your account; see Section 7
+          of our <a href="/terms">Terms and Conditions</a>.
+        </p>
+      </article>
+
+      <article>
+        <h2>5. Disputed transactions and chargebacks</h2>
+        <p>
+          If you believe a charge on your statement is incorrect, please
+          contact us at <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>
+          <strong>before</strong> initiating a chargeback with your bank.
+          We typically resolve genuine billing disputes within 7 business
+          days, faster than the standard chargeback timeline.
+        </p>
+        <p>
+          Unwarranted chargebacks (where the underlying service was
+          delivered as described and no billing error occurred) may result
+          in suspension of your account pending resolution.
+        </p>
+      </article>
+
+      <article>
+        <h2>6. Pro tier and custom contracts</h2>
+        <p>
+          Subscriptions on the Pro tier may be governed by separately
+          negotiated terms in a master service agreement, including
+          tailored cancellation and refund provisions. Where such an
+          agreement exists, its terms supersede this policy for the
+          duration of that contract.
+        </p>
+      </article>
+
+      <article>
+        <h2>7. Changes to this policy</h2>
+        <p>
+          We may update this policy from time to time. Material changes
+          will be communicated to the email address associated with your
+          account at least 30 days before they take effect. Continued use
+          of the Service after the effective date constitutes acceptance.
+        </p>
+      </article>
+
+      <article>
+        <h2>8. Contact</h2>
+        <p>
+          For all cancellation and refund queries:
+        </p>
+        <div class="contact-block">
+          <p><strong>Email:</strong> <a href="mailto:hello@meshwg.com">hello@meshwg.com</a></p>
+          <p><strong>Subject line:</strong> "Refund Request — [your account email]"</p>
+          <p><strong>Response time:</strong> within 2 business days for acknowledgement; resolution within 7 business days for routine cases.</p>
+          <p><strong>Business hours:</strong> Mon–Fri, 10:00–18:00 IST</p>
+          <p><strong>Postal address:</strong> [YOUR LEGAL ENTITY NAME], [REGISTERED BUSINESS ADDRESS, CITY, STATE, PIN], India</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <Footer />
+</Base>
+
+<style>
+  .legal { padding: 64px 0 128px; }
+  .legal article { margin-bottom: 48px; max-width: 760px; }
+  .legal article:last-child { margin-bottom: 0; }
+  .legal h2 {
+    font-size: 20px; font-weight: 500;
+    letter-spacing: -.012em;
+    margin: 0 0 16px;
+  }
+  .legal h3 {
+    font-size: 15px; font-weight: 500;
+    margin: 22px 0 8px;
+    color: var(--text);
+  }
+  .legal p {
+    color: var(--text-2);
+    font-size: 15px; line-height: 1.7;
+    margin: 0 0 14px;
+  }
+  .legal p:last-child { margin-bottom: 0; }
+  .legal strong { color: var(--text); font-weight: 500; }
+  .legal a { color: var(--accent); }
+  .legal a:hover { color: var(--accent-strong); }
+  .legal code {
+    font-family: var(--font-mono);
+    font-size: .92em;
+    background: var(--bg-2);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+  }
+  .bullets, .numbered {
+    list-style: none;
+    padding: 0; margin: 0 0 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .bullets li, .numbered li {
+    color: var(--text-2);
+    font-size: 15px; line-height: 1.65;
+    padding-left: 28px;
+    position: relative;
+    counter-increment: num;
+  }
+  .bullets li::before {
+    content: "—";
+    position: absolute; left: 0; top: 0;
+    color: var(--text-4);
+    font-family: var(--font-mono);
+  }
+  .numbered { counter-reset: num; }
+  .numbered li::before {
+    content: counter(num) ".";
+    position: absolute; left: 0; top: 0;
+    color: var(--text-4);
+    font-family: var(--font-mono);
+  }
+  .contact-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin: 14px 0;
+  }
+  .contact-block p {
+    margin: 0 0 6px;
+    font-size: 14.5px;
+  }
+  .contact-block p:last-child { margin-bottom: 0; }
+
+  @media (max-width: 980px) {
+    .legal { padding: 32px 0 64px; }
+    .legal article { margin-bottom: 36px; }
+  }
+</style>

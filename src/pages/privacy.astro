@@ -4,193 +4,243 @@ import Nav        from "../components/Nav.astro";
 import PageHero   from "../components/PageHero.astro";
 import Footer     from "../components/Footer.astro";
 
-const title = "Privacy — MeshWG";
-const description = "What data MeshWG collects, what it never sees, and what we do with what we have. Plain language, no dark patterns.";
+const title = "Privacy Policy — MeshWG";
+const description = "MeshWG's privacy policy, compliant with India's Digital Personal Data Protection Act 2023 and the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011.";
 
-// Hand-curated effective date. Bump when the substance changes; don't
-// auto-Date.now() it because that erodes user trust ("this updated today?").
 const effective = "2026-05-13";
 ---
 
 <Base title={title} description={description}>
   <Nav />
   <PageHero
-    eyebrow="/ privacy"
-    title="What we see, what we don't, and what we do with what we have."
-    lede={`Effective ${effective}. Written in plain English instead of policy boilerplate, because that is the only honest way to explain what's actually happening.`}
+    eyebrow="/ privacy policy"
+    title="Privacy Policy"
+    lede={`Effective ${effective}. This Privacy Policy is published in accordance with the Information Technology Act, 2000, the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011, and the Digital Personal Data Protection Act, 2023 (DPDP Act).`}
   />
 
   <section class="legal">
     <div class="wrap">
 
       <article>
-        <h2>The short version</h2>
+        <h2>1. About this policy</h2>
+        <p>
+          This Privacy Policy describes how <strong>[YOUR LEGAL ENTITY NAME]</strong>
+          ("we", "us", "our", or "MeshWG") collects, uses, stores, processes,
+          discloses, and protects the personal data of users ("you", "your")
+          who access the MeshWG service through the websites
+          <strong>meshwg.com</strong> and <strong>vpn.meshwg.com</strong>
+          (collectively, the "Service").
+        </p>
+        <p>
+          By accessing or using the Service, you confirm that you have read,
+          understood, and agreed to be bound by this Privacy Policy. If you
+          do not agree, please do not use the Service.
+        </p>
+      </article>
+
+      <article>
+        <h2>2. Personal data we collect</h2>
+
+        <h3>2.1 Information you provide</h3>
         <ul class="bullets">
-          <li><strong>We cannot read your mesh traffic.</strong> It's WireGuard, end-to-end encrypted between your devices. Even if we tried, the keys aren't ours.</li>
-          <li>We collect what's needed to run your account: email, password hash, the names + public keys + overlay IPs of the machines you add, and basic billing if you pay.</li>
-          <li>Web analytics is self-hosted Plausible. No cookies, no fingerprinting, no third-party trackers. Adblockers may block it anyway and that's fine with us.</li>
-          <li>We don't sell your data. We don't have ad partners. There's no "data partner" list because there are no data partners.</li>
-          <li>If you delete your account, your data is gone within 30 days — including the encrypted hub keys we hold on your behalf.</li>
+          <li><strong>Account data:</strong> email address, password (stored as a bcrypt hash; never in plaintext), display name, and organisation name.</li>
+          <li><strong>Authentication identifiers (Google sign-in only):</strong> your Google account ID, verified email, and display name, received from Google OpenID Connect.</li>
+          <li><strong>Mesh metadata:</strong> for each device you add — the name you assign, its public WireGuard key, its assigned overlay IP address, and aggregate handshake counters (last-seen time, byte counters) used for the dashboard status indicators.</li>
+          <li><strong>Billing data:</strong> billing email, the plan you subscribe to, and machine count for invoicing. Payment card details are processed entirely by Razorpay; we never receive or store full card numbers.</li>
+          <li><strong>Communications:</strong> any emails or support messages you send to us.</li>
+        </ul>
+
+        <h3>2.2 Information collected automatically</h3>
+        <ul class="bullets">
+          <li><strong>Technical logs:</strong> HTTP method, path, response status, source IP, user agent, timestamp.</li>
+          <li><strong>Authentication cookies:</strong> see Section 6.</li>
+          <li><strong>Aggregate analytics:</strong> page paths, anonymised country (derived from IP and then discarded), browser family, operating system. Collected via self-hosted Plausible Analytics with no cookies, no PII, and no cross-site tracking.</li>
+        </ul>
+
+        <h3>2.3 What we do not see</h3>
+        <p>
+          Traffic flowing through your mesh is end-to-end encrypted using
+          standard WireGuard. The private keys required to decrypt that
+          traffic reside only on your devices and are never transmitted to
+          or stored by us.
+        </p>
+      </article>
+
+      <article>
+        <h2>3. Purpose and lawful basis of processing</h2>
+        <p>
+          Under Section 7 of the DPDP Act, we process your personal data
+          only for lawful purposes for which you have given consent or
+          which are otherwise permitted by law. Specifically:
+        </p>
+        <ul class="bullets">
+          <li>To provide and operate the Service (account access, mesh establishment, dashboard).</li>
+          <li>To process billing and issue tax-compliant invoices.</li>
+          <li>To send transactional email (verification, password reset, billing notices).</li>
+          <li>To respond to your support requests.</li>
+          <li>To prevent fraud and ensure security of the Service.</li>
+          <li>To comply with applicable laws and respond to lawful requests from authorities.</li>
         </ul>
       </article>
 
       <article>
-        <h2>What we collect, why, and how long we keep it</h2>
+        <h2>4. Sharing and disclosure</h2>
+        <p>
+          We do not sell, rent, or trade personal data. We share personal
+          data only with the following categories of recipients, only to
+          the extent necessary for the purposes listed in Section 3:
+        </p>
+        <ul class="bullets">
+          <li><strong>Payment processor — Razorpay Software Private Limited</strong> (an Indian company): card, UPI, and net-banking processing. Card details flow directly from your browser to Razorpay; we receive only a payment token and transaction status.</li>
+          <li><strong>Email delivery — our own SMTP infrastructure</strong> at mail.mailsetu.com. Transactional emails route through this infrastructure; no third-party email service receives your address.</li>
+          <li><strong>Google LLC</strong> (United States): only if you choose "Continue with Google" — receives the fact that you signed into MeshWG; we receive your Google profile basics.</li>
+          <li><strong>Cloudflare, Inc.</strong> (United States): provides DNS, CDN, and DDoS protection for our websites. Sees request metadata only; cannot decrypt mesh traffic.</li>
+          <li><strong>Law enforcement and regulatory authorities</strong> when required by Indian law or court order, after verifying the legal basis of the request.</li>
+        </ul>
+      </article>
 
-        <h3>Account information</h3>
+      <article>
+        <h2>5. Cross-border data transfer</h2>
         <p>
-          When you sign up: your email address, a bcrypt-hashed password
-          (we never store the plaintext), an optional display name, and the
-          organization name you typed on the signup form. If you use
-          "Continue with Google", we receive your Google account ID, email,
-          and display name from Google's OpenID Connect — nothing else.
-        </p>
-        <p>
-          <strong>Retention:</strong> for the life of your account, plus 30
-          days after deletion so accidental deletes are recoverable.
-        </p>
-
-        <h3>Mesh metadata (not traffic)</h3>
-        <p>
-          For each machine you add to your mesh, we store: the name you gave
-          it, its public WireGuard key, its assigned overlay IP, and
-          aggregate handshake counters (last seen time, bytes transferred —
-          for the dashboard's status indicators). <strong>We never store the
-          private keys of your devices</strong>; those are shown to you once
-          at device creation and then forgotten by us.
-        </p>
-        <p>
-          We also generate and store a per-tenant <em>hub</em> private key
-          (encrypted at rest with AES-256-GCM) that your peers use to
-          establish tunnels to the controller. The encryption key for this
-          field is held in the controller's environment and is never logged.
-        </p>
-        <p>
-          <strong>Retention:</strong> while the machine is in your mesh; deleted within minutes when you remove it.
-        </p>
-
-        <h3>What we never see</h3>
-        <p>
-          Your mesh traffic is WireGuard, encrypted peer-to-peer. The
-          controller acts as a hub for tunnel <em>establishment</em>, but
-          the data inside the tunnels is end-to-end encrypted with keys we
-          do not hold. We technically forward packets between your peers'
-          namespace and can therefore see packet sizes and IP-header
-          metadata in the kernel; the payload content is encrypted and
-          unreadable to us.
-        </p>
-
-        <h3>Billing</h3>
-        <p>
-          If you upgrade to a paid plan, we store your billing email, the
-          plan, the machine count we're invoicing for, and invoice history.
-          Card details are handled by Stripe — they never reach our servers.
-        </p>
-        <p>
-          <strong>Retention:</strong> 7 years after the last invoice, to meet tax obligations.
-        </p>
-
-        <h3>Technical logs</h3>
-        <p>
-          The controller writes operational logs: HTTP request method/path/status, source IP,
-          timestamp, and error messages. These rotate every 7 days.
-          Application errors that include user-identifying context (email addresses, etc.)
-          are scrubbed before they're written.
-        </p>
-        <p>
-          <strong>Retention:</strong> 7 days for HTTP logs; 30 days for error logs.
-        </p>
-
-        <h3>Web analytics</h3>
-        <p>
-          We use self-hosted <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a> on
-          meshwg.com. Plausible doesn't use cookies, doesn't fingerprint browsers, and
-          doesn't collect personal data. The only thing recorded for a visit is the page
-          path, anonymized referrer, anonymized country (from IP — IP itself discarded),
-          browser family, and operating system. Aggregate, never individual.
+          Some of our service providers (Google, Cloudflare) are located
+          outside India. Where personal data is transferred to such
+          providers, we ensure the transfer complies with Section 16 of
+          the DPDP Act and we apply contractual safeguards to protect
+          such data. The territories to which transfers may be made
+          are documented and updated as the Central Government may
+          notify under the DPDP Act.
         </p>
       </article>
 
       <article>
-        <h2>Cookies</h2>
+        <h2>6. Cookies</h2>
         <p>
-          We use the minimum cookies needed to make the dashboard work. None for tracking.
+          The Service uses only strictly necessary cookies:
         </p>
         <ul class="bullets">
-          <li><code>jwt</code> — your authentication token. HTTP-only, Secure, SameSite=Lax. 24-hour expiry.</li>
+          <li><code>jwt</code> — authentication token. HTTP-only, Secure, SameSite=Lax. 24-hour expiry.</li>
           <li><code>csrf_</code> — anti-CSRF token. HTTP-only, Secure, SameSite=Strict. 1-hour expiry.</li>
-          <li><code>g_oauth_state</code> — short-lived state value during Google sign-in (10 minutes max).</li>
+          <li><code>g_oauth_state</code> — Google sign-in CSRF state (10-minute maximum lifespan).</li>
         </ul>
+        <p>
+          We do not use advertising, tracking, or analytics cookies on any
+          page. Self-hosted Plausible Analytics is cookieless.
+        </p>
       </article>
 
       <article>
-        <h2>Third parties we route data through</h2>
+        <h2>7. Data retention</h2>
         <ul class="bullets">
-          <li><strong>Cloudflare</strong> — DNS, CDN, and DDoS protection for meshwg.com. They see request metadata.</li>
-          <li><strong>Google</strong> — only if you use the "Continue with Google" sign-in flow. Google receives the fact that you signed in to MeshWG; we receive your Google profile.</li>
-          <li><strong>Stripe</strong> — payment processing for paid plans. Card details flow directly from your browser to Stripe.</li>
+          <li><strong>Account data:</strong> for the life of your account; deleted within 30 days of account closure.</li>
+          <li><strong>Mesh metadata:</strong> while the corresponding device exists in your mesh; deleted within minutes of device removal.</li>
+          <li><strong>Billing data:</strong> retained for 8 financial years to comply with applicable Indian tax and accounting laws (Companies Act, 2013; Income-tax Act, 1961).</li>
+          <li><strong>HTTP request logs:</strong> 7 days.</li>
+          <li><strong>Application error logs:</strong> 30 days.</li>
         </ul>
-        <p>
-          We don't share data with anyone else.
-        </p>
       </article>
 
       <article>
-        <h2>Where your data lives</h2>
+        <h2>8. Security</h2>
         <p>
-          Account database and controller logs are stored in a single PostgreSQL
-          instance on the same VM as the controller. We don't ship data to third-party
-          databases. The controller VM's physical location is documented separately and
-          available on request — write to <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>.
-        </p>
-      </article>
-
-      <article>
-        <h2>Your rights</h2>
-        <p>
-          Regardless of where you live, you can:
+          We implement reasonable security practices and procedures as
+          contemplated under the Information Technology (Reasonable
+          Security Practices and Procedures and Sensitive Personal Data
+          or Information) Rules, 2011, including:
         </p>
         <ul class="bullets">
-          <li>Get a copy of every piece of data we have about you.</li>
-          <li>Correct anything that's wrong.</li>
-          <li>Delete your account and all associated data.</li>
-          <li>Object to processing for any reason.</li>
+          <li>Passwords stored only as bcrypt hashes (cost 10).</li>
+          <li>Tenant hub WireGuard private keys encrypted at rest using AES-256-GCM.</li>
+          <li>Each customer organisation isolated in its own Linux network namespace on the controller.</li>
+          <li>JSON Web Tokens with a server-side revocation list to support immediate session termination.</li>
+          <li>Cookie-based CSRF protection on every state-changing endpoint.</li>
+          <li>Server software updated within seven days of vendor security advisories.</li>
+          <li>Routine encrypted backups of the database, retained for 30 days.</li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>9. Your rights as a Data Principal</h2>
+        <p>
+          As a Data Principal under the DPDP Act, you have the following rights:
+        </p>
+        <ul class="bullets">
+          <li><strong>Right to access</strong> — request a summary of personal data we hold about you and the processing activities we carry out.</li>
+          <li><strong>Right to correction and erasure</strong> — request correction of inaccurate data, or deletion of personal data that is no longer necessary for the purpose for which it was collected.</li>
+          <li><strong>Right to withdraw consent</strong> — at any time, with effect from the time of withdrawal (not retroactively).</li>
+          <li><strong>Right to grievance redressal</strong> — file a complaint with our Grievance Officer (Section 11) about the processing of your data; we will respond within 30 days.</li>
+          <li><strong>Right to nominate</strong> — nominate another individual to exercise these rights in the event of your death or incapacity.</li>
         </ul>
         <p>
-          For any of these, email <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>. We
-          aim to respond within 7 days and complete the request within 30.
+          To exercise any of these rights, write to us at
+          <a href="mailto:amit@meshwg.com">amit@meshwg.com</a> or
+          <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>.
+          We may verify your identity before acting on the request.
         </p>
       </article>
 
       <article>
-        <h2>Security incidents</h2>
+        <h2>10. Children</h2>
         <p>
-          If we discover a breach affecting your data, we'll email you within 72 hours
-          of confirmation, with the specifics: what was accessed, what we've done, and
-          what you should do. We won't sit on bad news.
+          The Service is not directed at, and we do not knowingly collect
+          personal data from, children below the age of 18 years (in
+          accordance with Section 9 of the DPDP Act). If we become aware
+          that we have collected personal data from a child, we will
+          delete such data promptly.
         </p>
+      </article>
+
+      <article id="grievance">
+        <h2>11. Grievance Officer</h2>
         <p>
-          To report a security issue, see our <a href="/.well-known/security.txt">security.txt</a> or
-          email <a href="mailto:security@meshwg.com">security@meshwg.com</a>.
+          In accordance with Rule 5(9) of the Information Technology
+          (Reasonable Security Practices and Procedures and Sensitive
+          Personal Data or Information) Rules, 2011, and Section 10 of
+          the DPDP Act, 2023, the contact details of our Grievance
+          Officer are:
+        </p>
+        <div class="contact-block">
+          <p><strong>Name:</strong> Amit [LAST NAME]</p>
+          <p><strong>Designation:</strong> Grievance &amp; Data Protection Officer</p>
+          <p><strong>Email:</strong> <a href="mailto:amit@meshwg.com">amit@meshwg.com</a></p>
+          <p><strong>Address:</strong> [REGISTERED BUSINESS ADDRESS, CITY, STATE, PIN]</p>
+          <p><strong>Phone:</strong> [+91-XXXXX-XXXXX], Mon–Fri 10:00–18:00 IST</p>
+        </div>
+        <p>
+          We aim to acknowledge grievances within 48 hours and to resolve them within 30 days of receipt.
         </p>
       </article>
 
       <article>
-        <h2>Changes to this policy</h2>
+        <h2>12. Security incident notification</h2>
         <p>
-          If we change anything material, we'll email the address on file and post a
-          notice on this page for at least 30 days before it takes effect. Cosmetic
-          changes (typos, broken links) we'll just fix; the effective date at the top
-          will move only when substance changes.
+          In the event of a personal data breach affecting your data, we
+          will notify you and the Data Protection Board of India in
+          accordance with Section 8(6) of the DPDP Act and applicable
+          CERT-In directions. Notification will include the nature of
+          the breach, the data affected, mitigation steps taken, and the
+          recommended actions you should take.
         </p>
       </article>
 
       <article>
-        <h2>Contact</h2>
+        <h2>13. Changes to this policy</h2>
         <p>
-          Privacy questions: <a href="mailto:hello@meshwg.com">hello@meshwg.com</a><br>
-          Security issues: <a href="mailto:security@meshwg.com">security@meshwg.com</a><br>
-          Mailing address available on request.
+          We may update this Privacy Policy from time to time. Material
+          changes will be communicated to the email address associated
+          with your account at least 30 days before they take effect, and
+          a notice will be displayed prominently on this page. The
+          "Effective" date at the top of this page reflects the most
+          recent update.
+        </p>
+      </article>
+
+      <article>
+        <h2>14. Contact</h2>
+        <p>
+          For privacy questions or grievances:<br>
+          <strong>General privacy:</strong> <a href="mailto:hello@meshwg.com">hello@meshwg.com</a><br>
+          <strong>Grievance Officer (Amit):</strong> <a href="mailto:amit@meshwg.com">amit@meshwg.com</a><br>
+          <strong>Security issues:</strong> <a href="mailto:security@meshwg.com">security@meshwg.com</a>
         </p>
       </article>
 
@@ -202,16 +252,16 @@ const effective = "2026-05-13";
 
 <style>
   .legal { padding: 64px 0 128px; }
-  .legal article { margin-bottom: 56px; max-width: 720px; }
+  .legal article { margin-bottom: 48px; max-width: 760px; }
   .legal article:last-child { margin-bottom: 0; }
   .legal h2 {
-    font-size: 22px; font-weight: 500;
+    font-size: 20px; font-weight: 500;
     letter-spacing: -.012em;
-    margin: 0 0 18px;
+    margin: 0 0 16px;
   }
   .legal h3 {
     font-size: 15px; font-weight: 500;
-    margin: 24px 0 8px;
+    margin: 22px 0 8px;
     color: var(--text);
   }
   .legal p {
@@ -247,9 +297,21 @@ const effective = "2026-05-13";
     color: var(--text-4);
     font-family: var(--font-mono);
   }
+  .contact-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .contact-block p {
+    margin: 0 0 6px;
+    font-size: 14.5px;
+  }
+  .contact-block p:last-child { margin-bottom: 0; }
 
   @media (max-width: 980px) {
     .legal { padding: 32px 0 64px; }
-    .legal article { margin-bottom: 40px; }
+    .legal article { margin-bottom: 36px; }
   }
 </style>

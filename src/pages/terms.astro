@@ -5,7 +5,7 @@ import PageHero   from "../components/PageHero.astro";
 import Footer     from "../components/Footer.astro";
 
 const title = "Terms of Service — MeshWG";
-const description = "The terms you accept when you use MeshWG. Written to be readable, not to hide things.";
+const description = "The terms governing your use of MeshWG, in accordance with the Indian Contract Act, 1872, the Information Technology Act, 2000, and the Consumer Protection Act, 2019.";
 
 const effective = "2026-05-13";
 ---
@@ -13,176 +13,299 @@ const effective = "2026-05-13";
 <Base title={title} description={description}>
   <Nav />
   <PageHero
-    eyebrow="/ terms"
-    title="The terms you accept when you use MeshWG."
-    lede={`Effective ${effective}. By signing up or using meshwg.com, you agree to these terms. We've tried to make them readable.`}
+    eyebrow="/ terms and conditions"
+    title="Terms and Conditions"
+    lede={`Effective ${effective}. These Terms constitute a legally binding agreement between you and MeshWG and are published in accordance with the provisions of the Information Technology Act, 2000 and Rules made thereunder.`}
   />
 
   <section class="legal">
     <div class="wrap">
 
       <article>
-        <h2>1. What MeshWG is</h2>
+        <h2>1. Parties and acceptance</h2>
         <p>
-          MeshWG is a hosted mesh VPN + zero-trust access controller built on
-          WireGuard. We run a multi-tenant controller at vpn.meshwg.com; you connect
-          your routers, laptops, and servers to it; tunnels between your devices
-          establish through us and stay running on your devices.
+          These Terms and Conditions ("Terms") govern your access to and
+          use of the websites <strong>meshwg.com</strong> and
+          <strong>vpn.meshwg.com</strong> and any related services
+          (collectively, the "Service") operated by
+          <strong>[YOUR LEGAL ENTITY NAME]</strong>, a
+          <strong>[Proprietorship / Partnership / Limited Liability Partnership / Private Limited Company]</strong>
+          having its registered office at
+          <strong>[REGISTERED BUSINESS ADDRESS, CITY, STATE, PIN]</strong>,
+          India (hereinafter "we", "us", "our", or "MeshWG").
+        </p>
+        <p>
+          By accessing the Service, creating an account, or otherwise
+          using any feature of the Service, you ("you", "your", "User",
+          "Customer") confirm that you have read, understood, and agreed
+          to be bound by these Terms, our <a href="/privacy">Privacy Policy</a>, and our
+          <a href="/refund">Cancellation and Refund Policy</a>. If you do not agree, you must not use the Service.
         </p>
       </article>
 
       <article>
-        <h2>2. Account</h2>
+        <h2>2. Eligibility</h2>
         <p>
-          You're responsible for your account and its credentials. You confirm that
-          the email address you signed up with is one you control. You agree not to
-          share account credentials with people who shouldn't have them; if you need
-          to add team members, use the per-user features in the dashboard.
-        </p>
-        <p>
-          You must be 16 or older to use MeshWG. We don't knowingly serve anyone younger.
-        </p>
-      </article>
-
-      <article>
-        <h2>3. Acceptable use</h2>
-        <p>
-          MeshWG is for legitimate networking. You agree not to use it to:
+          To use the Service you must:
         </p>
         <ul class="bullets">
-          <li>Send spam, run phishing infrastructure, or distribute malware.</li>
-          <li>Conduct DDoS attacks, port-scan third parties, or any other network abuse.</li>
-          <li>Host or distribute content that's illegal where you live or where our infrastructure runs.</li>
-          <li>Circumvent the rate limits, machine quotas, or other technical controls in the product.</li>
-          <li>Reverse-engineer, decompile, or otherwise attempt to derive the source of the controller. The product is closed source.</li>
+          <li>Be 18 years of age or older and competent to contract under the Indian Contract Act, 1872.</li>
+          <li>Provide accurate, current, and complete information during account creation.</li>
+          <li>Be authorised to act on behalf of any organisation whose name you supply during signup.</li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>3. Description of Service</h2>
+        <p>
+          MeshWG is a hosted multi-tenant WireGuard mesh VPN and zero-trust
+          network access controller. Subject to these Terms and your
+          subscription plan, we grant you a limited, non-exclusive,
+          non-transferable, revocable right to use the Service for your
+          internal business or personal networking purposes.
+        </p>
+      </article>
+
+      <article>
+        <h2>4. Account, credentials, and security</h2>
+        <p>
+          You are responsible for maintaining the confidentiality of your
+          account credentials and for all activity that occurs under your
+          account. You must notify us immediately of any unauthorised use
+          at <a href="mailto:security@meshwg.com">security@meshwg.com</a>.
+          We are not liable for any loss or damage arising from your
+          failure to safeguard your credentials.
+        </p>
+      </article>
+
+      <article>
+        <h2>5. Acceptable use</h2>
+        <p>You agree not to use the Service to:</p>
+        <ul class="bullets">
+          <li>Violate any applicable law of India or any other jurisdiction where you operate, including the Information Technology Act, 2000.</li>
+          <li>Transmit any content that is unlawful, defamatory, obscene, harmful to minors, or otherwise prohibited under Rule 3(1)(b) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021.</li>
+          <li>Send unsolicited bulk email (spam), conduct phishing, distribute malware, or perform denial-of-service attacks.</li>
+          <li>Scan, probe, or attempt to test the vulnerability of third-party systems without their express authorisation.</li>
+          <li>Circumvent the rate limits, machine quotas, or other technical controls in the Service.</li>
+          <li>Reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code of the Service. MeshWG is closed-source proprietary software.</li>
+          <li>Use the Service to host or distribute content infringing the intellectual property rights of any third party.</li>
         </ul>
         <p>
-          We may suspend or terminate accounts engaged in any of the above, without notice if the abuse is ongoing.
-          We try to email first when we can.
+          We reserve the right to suspend or terminate accounts engaged
+          in any prohibited activity, and to cooperate with law enforcement
+          authorities in accordance with applicable law.
         </p>
       </article>
 
       <article>
-        <h2>4. What you own</h2>
+        <h2>6. Ownership and intellectual property</h2>
         <p>
-          You own your machines, your private keys (we never see them), and your
-          configurations. You retain all rights to the data inside your tunnels. We
-          claim no ownership over anything you put into the product.
-        </p>
-        <p>
-          We own MeshWG itself: the controller code, dashboard UI, brand, and
-          documentation. Using the product doesn't transfer any of that to you.
-        </p>
-      </article>
-
-      <article>
-        <h2>5. Pricing and payment</h2>
-        <p>
-          The Free tier covers up to 2 machines, indefinitely. No credit card required.
-        </p>
-        <p>
-          The Cloud tier is ₹349 per machine per month billed annually, or ₹499 per
-          machine per month billed monthly. The first 2 machines in any paid account
-          remain free; you only pay for the third and beyond. Billing is handled by
-          Razorpay.
-        </p>
-        <p>
-          The Pro tier is custom pricing for larger deployments, dedicated
-          infrastructure, or custom needs — contact us.
-        </p>
-        <p>
-          We reserve the right to change pricing with 30 days' notice. Existing annual
-          subscriptions are honored at their original price for the remainder of the
-          term.
+          You retain all rights to your data, configurations, and content
+          stored or transmitted through the Service. The Service itself
+          — including the controller software, dashboard UI, documentation,
+          and the "MeshWG" name and marks — is and remains the sole
+          property of [YOUR LEGAL ENTITY NAME] and is protected under the
+          Copyright Act, 1957 and the Trade Marks Act, 1999. Nothing in
+          these Terms transfers ownership of any intellectual property to you.
         </p>
       </article>
 
       <article>
-        <h2>6. Cancellation and refunds</h2>
+        <h2>7. Pricing, payment, and taxes</h2>
         <p>
-          You can cancel any paid plan from your dashboard at any time. Monthly plans
-          stop billing at the next cycle. Annual plans continue serving you at the paid
-          tier through the end of the year you've paid for; after the year, machines
-          above the free 2 go read-only until you re-subscribe or remove them. No
-          partial refunds on annual.
+          All prices on the Service are quoted in Indian Rupees (INR) and
+          are inclusive of applicable Goods and Services Tax (GST) unless
+          stated otherwise. A GST-compliant tax invoice is issued for every
+          paid transaction.
         </p>
         <p>
-          If you've been charged in error or you genuinely never used the service,
-          email <a href="mailto:hello@meshwg.com">hello@meshwg.com</a> within 30 days
-          and we'll make it right.
-        </p>
-      </article>
-
-      <article>
-        <h2>7. Service availability</h2>
-        <p>
-          MeshWG is provided <strong>as-is</strong>. We don't promise specific uptime
-          on the Free or Cloud tiers. Pro contracts can include an SLA on request.
+          <strong>Free tier:</strong> The first 2 (two) machines in any
+          account are free of charge, indefinitely. No payment instrument
+          is required.
         </p>
         <p>
-          A nice architectural property worth knowing: when MeshWG itself goes
-          offline, the tunnels between your already-onboarded peers <strong>keep
-          working</strong>, because WireGuard runs on your devices, not on our servers.
-          You can't add new peers or change rules during an outage, but existing
-          connectivity is unaffected.
+          <strong>Cloud tier:</strong> ₹349 per machine per month when
+          billed annually, or ₹499 per machine per month when billed
+          monthly. The first 2 machines remain free in any paid account;
+          only the third and subsequent machines are billed.
         </p>
-      </article>
-
-      <article>
-        <h2>8. Disclaimer of warranties</h2>
         <p>
-          MeshWG is provided without warranties of any kind, express or implied,
-          including merchantability, fitness for a particular purpose, and
-          non-infringement. We don't guarantee that the service will be uninterrupted,
-          error-free, or that defects will be corrected immediately.
+          <strong>Pro tier:</strong> Custom pricing for dedicated
+          infrastructure, custom domains, or contractual service levels.
+          Please contact <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>.
+        </p>
+        <p>
+          Payments are processed by Razorpay Software Private Limited
+          ("Razorpay"). Your use of Razorpay is subject to Razorpay's own
+          terms; we are not responsible for any payment-gateway error,
+          delay, or charge imposed by your bank or card issuer.
         </p>
       </article>
 
       <article>
-        <h2>9. Limitation of liability</h2>
+        <h2>8. Cancellation and refund</h2>
         <p>
-          To the maximum extent permitted by law: MeshWG (and its operators, employees,
-          and contractors) are not liable for indirect, incidental, special,
-          consequential, or punitive damages, including loss of profits, data,
-          goodwill, or other intangible losses. Our total aggregate liability for any
-          claim arising out of these terms or the service is limited to the amount you
-          paid us in the 12 months preceding the claim, or ₹5,000, whichever is greater.
+          You may cancel any paid subscription at any time, from the
+          <code>/billing</code> page within your dashboard. Refunds, if
+          any, are governed by our
+          <a href="/refund">Cancellation and Refund Policy</a>,
+          which is incorporated into these Terms by reference.
         </p>
       </article>
 
       <article>
-        <h2>10. Indemnity</h2>
+        <h2>9. Service availability and modifications</h2>
         <p>
-          If we're sued because of what <em>you</em> did with the service — illegal
-          use, infringement of someone else's rights, abuse of third parties — you
-          agree to defend us and cover the costs.
+          The Service is provided on an "as is" and "as available" basis.
+          We do not guarantee uninterrupted or error-free operation on the
+          Free or Cloud tier. Pro contracts may include a separately
+          negotiated service-level agreement.
+        </p>
+        <p>
+          A key architectural property: when the MeshWG control plane is
+          temporarily unavailable, the WireGuard tunnels already
+          established between your peers continue to operate — because
+          WireGuard runs on your own devices, not on our servers. You may
+          be temporarily unable to add new peers or change access policies
+          during an outage, but existing connectivity is not affected.
+        </p>
+        <p>
+          We may modify, suspend, or discontinue any aspect of the Service
+          at any time, in our reasonable discretion, with prior notice
+          where reasonably possible.
         </p>
       </article>
 
       <article>
-        <h2>11. Changes to these terms</h2>
+        <h2>10. Disclaimer of warranties</h2>
         <p>
-          We may update these terms. Material changes get emailed to the address on
-          file with at least 30 days' notice before they take effect. Continuing to use
-          the service after the effective date constitutes acceptance.
+          To the maximum extent permitted by law, the Service is provided
+          without warranties of any kind, whether express, implied,
+          statutory, or otherwise — including warranties of merchantability,
+          fitness for a particular purpose, non-infringement, and accuracy.
+          We do not warrant that the Service will be uninterrupted, secure,
+          or free of errors.
         </p>
       </article>
 
       <article>
-        <h2>12. Governing law</h2>
+        <h2>11. Limitation of liability</h2>
         <p>
-          These terms are governed by the laws of India, without regard to conflict-of-law
-          principles. Any disputes will be resolved in the courts of Mumbai, Maharashtra,
-          unless mandatory consumer-protection law in your jurisdiction says otherwise.
+          To the fullest extent permitted by applicable law (including the
+          Consumer Protection Act, 2019, the Indian Contract Act, 1872,
+          and the Sale of Goods Act, 1930, where applicable), in no event
+          shall [YOUR LEGAL ENTITY NAME], its directors, employees, agents,
+          or service providers be liable for any indirect, incidental,
+          special, consequential, exemplary, or punitive damages
+          whatsoever, including loss of profits, loss of business, loss of
+          data, or loss of goodwill, even if advised of the possibility of
+          such damages.
+        </p>
+        <p>
+          Our total aggregate liability arising out of or relating to
+          these Terms or the Service shall not exceed the amount actually
+          paid by you to us in the twelve (12) months immediately preceding
+          the event giving rise to the claim, or ₹5,000 (Indian Rupees Five
+          Thousand only), whichever is greater.
         </p>
       </article>
 
       <article>
-        <h2>13. Contact</h2>
+        <h2>12. Indemnification</h2>
         <p>
-          Questions: <a href="mailto:hello@meshwg.com">hello@meshwg.com</a><br>
-          Security: <a href="mailto:security@meshwg.com">security@meshwg.com</a>
+          You agree to defend, indemnify, and hold harmless
+          [YOUR LEGAL ENTITY NAME] and its officers, directors, employees,
+          and agents from and against any and all claims, damages,
+          obligations, losses, liabilities, costs, and expenses (including
+          reasonable attorney's fees) arising from: (a) your use of and
+          access to the Service; (b) your violation of any term of these
+          Terms; (c) your violation of any third-party right, including
+          any intellectual property, privacy, or contract right; or
+          (d) any content posted or transmitted by you.
         </p>
+      </article>
+
+      <article>
+        <h2>13. Termination</h2>
+        <p>
+          We may suspend or terminate your access to the Service, in
+          whole or in part, with or without notice, in the event of (i) a
+          material breach of these Terms by you; (ii) any unlawful activity
+          conducted through your account; (iii) non-payment of fees due;
+          or (iv) any other reason permitted by law.
+        </p>
+        <p>
+          Upon termination, your right to use the Service ceases
+          immediately. Sections that by their nature should survive
+          termination (including ownership, disclaimers, limitations of
+          liability, indemnification, and governing law) shall survive.
+        </p>
+      </article>
+
+      <article>
+        <h2>14. Force majeure</h2>
+        <p>
+          We shall not be liable for any failure or delay in performance
+          caused by circumstances beyond our reasonable control, including
+          acts of God, war, terrorism, riots, embargoes, civil or military
+          authority, fire, flood, earthquake, accidents, network failure,
+          strikes, lockouts, telecommunications failures, or government
+          orders.
+        </p>
+      </article>
+
+      <article>
+        <h2>15. Changes to these Terms</h2>
+        <p>
+          We may update these Terms from time to time. Material changes
+          will be communicated to the email address associated with your
+          account with at least 30 days' notice before they take effect.
+          Continued use of the Service after the effective date constitutes
+          acceptance of the revised Terms.
+        </p>
+      </article>
+
+      <article>
+        <h2>16. Governing law and dispute resolution</h2>
+        <p>
+          These Terms shall be governed by and construed in accordance with
+          the laws of India, without regard to its conflict-of-law principles.
+        </p>
+        <p>
+          Any dispute, controversy, or claim arising out of or relating to
+          these Terms, or the breach, termination, or validity thereof,
+          shall be subject to the exclusive jurisdiction of the competent
+          courts at <strong>[CITY OF YOUR REGISTERED OFFICE], India</strong>.
+          Before initiating any litigation, the parties shall attempt to
+          resolve the dispute in good faith by mutual discussion within
+          30 (thirty) days.
+        </p>
+      </article>
+
+      <article>
+        <h2>17. Severability and entire agreement</h2>
+        <p>
+          If any provision of these Terms is found to be unenforceable or
+          invalid, that provision shall be limited or eliminated to the
+          minimum extent necessary so that these Terms shall otherwise
+          remain in full force and effect. These Terms, together with the
+          Privacy Policy and Cancellation and Refund Policy, constitute
+          the entire agreement between you and us with respect to the
+          Service and supersede all prior agreements and understandings.
+        </p>
+      </article>
+
+      <article>
+        <h2>18. Notices and contact</h2>
+        <p>
+          Legal and contractual notices must be sent to:
+        </p>
+        <div class="contact-block">
+          <p><strong>[YOUR LEGAL ENTITY NAME]</strong></p>
+          <p>[REGISTERED BUSINESS ADDRESS, CITY, STATE, PIN]</p>
+          <p>Email: <a href="mailto:hello@meshwg.com">hello@meshwg.com</a></p>
+          <p>Phone: [+91-XXXXX-XXXXX]</p>
+        </div>
       </article>
 
     </div>
@@ -193,10 +316,10 @@ const effective = "2026-05-13";
 
 <style>
   .legal { padding: 64px 0 128px; }
-  .legal article { margin-bottom: 48px; max-width: 720px; }
+  .legal article { margin-bottom: 44px; max-width: 760px; }
   .legal article:last-child { margin-bottom: 0; }
   .legal h2 {
-    font-size: 20px; font-weight: 500;
+    font-size: 19px; font-weight: 500;
     letter-spacing: -.012em;
     margin: 0 0 16px;
   }
@@ -207,9 +330,15 @@ const effective = "2026-05-13";
   }
   .legal p:last-child { margin-bottom: 0; }
   .legal strong { color: var(--text); font-weight: 500; }
-  .legal em { color: var(--text); font-style: italic; }
   .legal a { color: var(--accent); }
   .legal a:hover { color: var(--accent-strong); }
+  .legal code {
+    font-family: var(--font-mono);
+    font-size: .92em;
+    background: var(--bg-2);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+  }
   .bullets {
     list-style: none;
     padding: 0; margin: 0 0 14px;
@@ -227,6 +356,18 @@ const effective = "2026-05-13";
     color: var(--text-4);
     font-family: var(--font-mono);
   }
+  .contact-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin: 14px 0;
+  }
+  .contact-block p {
+    margin: 0 0 6px;
+    font-size: 14.5px;
+  }
+  .contact-block p:last-child { margin-bottom: 0; }
 
   @media (max-width: 980px) {
     .legal { padding: 32px 0 64px; }

@@ -4,8 +4,8 @@
 > standard WireGuard. It turns the routers, laptops, and servers a small
 > or mid-sized organization already owns into a single private network —
 > without buying $400–$2,999 SDWAN boxes or installing an agent on every
-> device. Two machines are free forever; paid plans are $1/machine/month
-> billed annually (or $3/machine/month billed monthly).
+> device. Two machines are free forever; paid plans are ₹349/machine/month
+> billed annually (or ₹499/machine/month billed monthly), paid in INR via Razorpay.
 
 MeshWG is a closed-source SaaS product. The controller is operated by us
 at vpn.meshwg.com. There is no self-hosted, open-source, or GitHub
@@ -53,8 +53,8 @@ distribution — every signup goes through the hosted login page.
   scoped to source/destination machine, type (site/user), protocol, and
   port. Rules are enforced as iptables FORWARD chain entries in the
   tenant namespace.
-- Pricing: 2 machines free forever. $1/machine/month annual or
-  $3/machine/month monthly. Pro tier ("Talk to us") for dedicated
+- Pricing: 2 machines free forever. ₹349/machine/month annual or
+  ₹499/machine/month monthly (INR, via Razorpay). Pro tier ("Talk to us") for dedicated
   controllers, custom domains, SLA.
 - Failure mode: WireGuard runs on the user's devices. If the MeshWG
   control plane goes offline, existing tunnels keep working.

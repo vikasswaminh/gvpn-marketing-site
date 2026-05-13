@@ -5,10 +5,10 @@ import PageHero   from "../components/PageHero.astro";
 import Footer     from "../components/Footer.astro";
 import { site } from "../site";
 
-// Real prices. Free tier deducts 2 machines.
+// Real prices. Free tier deducts 2 machines. Amounts in ₹ (rupees).
 const FREE_MACHINES = 2;
-const ANNUAL_PER_MACHINE = 1;   // $/machine/month when billed annually
-const MONTHLY_PER_MACHINE = 3;  // $/machine/month when billed monthly
+const ANNUAL_PER_MACHINE = 349;   // ₹/machine/month when billed annually
+const MONTHLY_PER_MACHINE = 499;  // ₹/machine/month when billed monthly
 
 const pricingFaqs = [
   {
@@ -25,11 +25,11 @@ const pricingFaqs = [
   },
   {
     q: "Are there volume discounts?",
-    a: "Standard $1/machine/month annual up to 100 machines. Past 100, talk to us about Pro — we tune pricing for big fleets and add a dedicated controller.",
+    a: "Standard ₹349/machine/month annual up to 100 machines. Past 100, talk to us about Pro — we tune pricing for big fleets and add a dedicated controller.",
   },
   {
     q: "What payment methods do you accept?",
-    a: "Card via Stripe on the Cloud tier. Bank wire is available for annual Pro contracts. We don't accept crypto today.",
+    a: "Card, UPI, and net-banking via Razorpay on the Cloud tier. Bank transfer is available for annual Pro contracts. GST invoice provided automatically.",
   },
   {
     q: "Do free machines stack with paid ones?",
@@ -38,7 +38,7 @@ const pricingFaqs = [
 ];
 
 const title = "Pricing — MeshWG";
-const description = "$1 per machine per month, billed annually. Or $3 per machine per month, billed monthly. Two machines free, forever. No credit card to start.";
+const description = "₹349 per machine per month, billed annually. Or ₹499 per machine per month, billed monthly. Two machines free, forever. No card to start.";
 ---
 
 <Base title={title} description={description}>
@@ -46,7 +46,7 @@ const description = "$1 per machine per month, billed annually. Or $3 per machin
   <PageHero
     eyebrow="/ pricing"
     title="Pay for what you mesh."
-    lede="A machine is anything in your mesh. Two free forever. After that, $1 per machine per month on annual billing — or $3 if you'd rather pay monthly."
+    lede="A machine is anything in your mesh. Two free forever. After that, ₹349 per machine per month on annual billing — or ₹499 if you'd rather pay monthly."
   />
 
   <section class="price-section">
@@ -56,7 +56,7 @@ const description = "$1 per machine per month, billed annually. Or $3 per machin
       <div class="toggle-wrap" role="tablist" aria-label="Billing cycle">
         <button class="toggle-btn is-active" data-cycle="annual" type="button">
           Annual billing
-          <span class="save-tag">save 67%</span>
+          <span class="save-tag">save 30%</span>
         </button>
         <button class="toggle-btn" data-cycle="monthly" type="button">
           Monthly billing
@@ -68,7 +68,7 @@ const description = "$1 per machine per month, billed annually. Or $3 per machin
         <article class="plan">
           <div class="plan-name">Free</div>
           <div class="plan-price">
-            <span class="num">$0</span>
+            <span class="num">₹0</span>
             <span class="unit">forever</span>
           </div>
           <p class="plan-desc">Start meshing today. Free for as long as you stay small.</p>
@@ -84,7 +84,7 @@ const description = "$1 per machine per month, billed annually. Or $3 per machin
         <article class="plan plan-accent">
           <div class="plan-name">Cloud</div>
           <div class="plan-price">
-            <span class="num" data-cloud-price>$1</span>
+            <span class="num" data-cloud-price>₹349</span>
             <span class="unit" data-cloud-unit>/ machine / month, billed annually</span>
           </div>
           <p class="plan-desc">Same hosted product as Free. No machine limit.</p>
@@ -137,20 +137,20 @@ const description = "$1 per machine per month, billed annually. Or $3 per machin
           <div class="calc-result">
             <div class="result-card" data-cycle-card="annual">
               <div class="rc-eyebrow">Annual billing</div>
-              <div class="rc-num"><span data-annual-monthly>$8</span><span class="rc-unit">/ month</span></div>
-              <div class="rc-sub">$<span data-annual-total>96</span> billed yearly · <span data-paid-machines>8</span> paid + 2 free</div>
+              <div class="rc-num"><span data-annual-monthly>₹2,792</span><span class="rc-unit">/ month</span></div>
+              <div class="rc-sub">₹<span data-annual-total>33,504</span> billed yearly · <span data-paid-machines>8</span> paid + 2 free</div>
             </div>
 
             <div class="result-card">
               <div class="rc-eyebrow">Monthly billing</div>
-              <div class="rc-num"><span data-monthly-monthly>$24</span><span class="rc-unit">/ month</span></div>
+              <div class="rc-num"><span data-monthly-monthly>₹3,992</span><span class="rc-unit">/ month</span></div>
               <div class="rc-sub">No annual commitment · cancel anytime</div>
             </div>
           </div>
 
           <p class="calc-foot">
             <span data-foot-paid hidden>
-              Annual saves you <strong data-savings-amount>$192</strong>/year at this size.
+              Annual saves you <strong data-savings-amount>₹14,400</strong>/year at this size.
             </span>
             <span data-foot-free>
               All your machines are free at this size.
@@ -193,10 +193,10 @@ const description = "$1 per machine per month, billed annually. Or $3 per machin
       b.classList.add("is-active");
       const cycle = b.getAttribute("data-cycle");
       if (cycle === "annual") {
-        cloudPriceEl.textContent = "$1";
+        cloudPriceEl.textContent = "₹349";
         cloudUnitEl.textContent  = "/ machine / month, billed annually";
       } else {
-        cloudPriceEl.textContent = "$3";
+        cloudPriceEl.textContent = "₹499";
         cloudUnitEl.textContent  = "/ machine / month, billed monthly";
       }
     });
@@ -223,12 +223,15 @@ const description = "$1 per machine per month, billed annually. Or $3 per machin
     const monthlyMonthly = paid * MONTHLY_PER_MACHINE;
     const annualSavings  = (monthlyMonthly - annualMonthly) * 12;
 
+    // Indian number formatting — 1,00,000 style commas, ₹ prefix.
+    const fmt = (v) => "₹" + v.toLocaleString("en-IN");
+
     countEl.textContent          = String(n);
-    annualMonthlyEl.textContent  = "$" + annualMonthly;
-    annualTotalEl.textContent    = String(annualMonthly * 12);
-    monthlyMonthlyEl.textContent = "$" + monthlyMonthly;
+    annualMonthlyEl.textContent  = fmt(annualMonthly);
+    annualTotalEl.textContent    = (annualMonthly * 12).toLocaleString("en-IN");
+    monthlyMonthlyEl.textContent = fmt(monthlyMonthly);
     paidMachinesEl.textContent   = String(paid);
-    savingsAmountEl.textContent  = "$" + annualSavings;
+    savingsAmountEl.textContent  = fmt(annualSavings);
 
     if (paid === 0) {
       footPaidEl.hidden = true;

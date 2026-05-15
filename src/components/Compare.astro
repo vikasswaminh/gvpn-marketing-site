@@ -1,7 +1,41 @@
 ---
-const cols = ["Box-based SDWAN", "Tailscale / Netbird"] as const;
+// Comparison table — used on the homepage, and reusable in any blog post
+// that needs to position MeshWG against alternatives.
+//
+// Defaults preserve the exact homepage content so this component can be
+// rendered <Compare /> with no props for the index page. To customise it
+// per-post (different competitors, different criteria, different headline),
+// pass any of the props below.
 
-const rows = [
+interface Row {
+  label: string;
+  cells: readonly string[];   // one entry per non-MeshWG column, in column order
+  us: string;                  // the MeshWG cell, always rendered as the last column
+}
+
+interface Props {
+  /** Section anchor id. Used for in-page links. Defaults to "compare". */
+  id?: string;
+  /** Eyebrow text shown above the title. Defaults to "/ compare". */
+  eyebrow?: string;
+  /** Section heading. Defaults to the homepage headline. */
+  title?: string;
+  /** Lede paragraph under the heading. Defaults to the homepage lede. */
+  lede?: string;
+  /** Column headers for the non-MeshWG options (MeshWG is always the last column). */
+  cols?: readonly string[];
+  /** Rows of the table. Each row's `cells` array must be the same length as `cols`. */
+  rows?: readonly Row[];
+  /** Footer link text + href. Defaults to the homepage "How it actually works under the hood →" link. */
+  footLinkText?: string;
+  footLinkHref?: string;
+  /** Hide the footer link entirely (useful for blog posts that have their own CTA). */
+  hideFoot?: boolean;
+}
+
+const DEFAULT_COLS = ["Box-based SDWAN", "Tailscale / Netbird"] as const;
+
+const DEFAULT_ROWS: readonly Row[] = [
   {
     label: "Hardware needed",
     cells: [
@@ -43,17 +77,25 @@ const rows = [
     us: "Yes — same product",
   },
 ];
+
+const {
+  id           = "compare",
+  eyebrow      = "/ compare",
+  title        = "Why pay ₹25 lakhs for what your hardware already does?",
+  lede         = "A typical 20-branch SDWAN deployment runs ₹30 lakhs+ in hardware plus ₹30,000/month in licensing — before anything actually works. MeshWG meshes the same 20 branches for ₹7,000 a month and starts working today.",
+  cols         = DEFAULT_COLS,
+  rows         = DEFAULT_ROWS,
+  footLinkText = "How it actually works under the hood →",
+  footLinkHref = "/docs",
+  hideFoot     = false,
+} = Astro.props;
 ---
 
-<section id="compare">
+<section id={id}>
   <div class="wrap">
-    <div class="sec-eyebrow">/ compare</div>
-    <h2 class="sec-h">Why pay ₹25 lakhs for what your hardware already does?</h2>
-    <p class="sec-lede">
-      A typical 20-branch SDWAN deployment runs ₹30 lakhs+ in hardware plus
-      ₹30,000/month in licensing — before anything actually works. MeshWG
-      meshes the same 20 branches for ₹7,000 a month and starts working today.
-    </p>
+    <div class="sec-eyebrow">{eyebrow}</div>
+    <h2 class="sec-h">{title}</h2>
+    <p class="sec-lede">{lede}</p>
 
     <div class="compare-wrap">
       <table class="compare">
@@ -80,9 +122,11 @@ const rows = [
       </table>
     </div>
 
-    <div class="compare-foot">
-      <a class="cf-link" href="/docs">How it actually works under the hood →</a>
-    </div>
+    {!hideFoot && (
+      <div class="compare-foot">
+        <a class="cf-link" href={footLinkHref}>{footLinkText}</a>
+      </div>
+    )}
   </div>
 </section>
 

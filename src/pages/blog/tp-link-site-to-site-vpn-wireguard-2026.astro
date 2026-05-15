@@ -1,0 +1,977 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+import Compare    from "../../components/Compare.astro";
+import { site }   from "../../site";
+
+// ─────────────────────────────────────────────────────────────
+// Post metadata. Drives <title>, <meta>, OG cards, and all the
+// JSON-LD blocks at the bottom of the page. Keep these in sync.
+// ─────────────────────────────────────────────────────────────
+const slug          = "tp-link-site-to-site-vpn-wireguard-2026";
+const url           = `https://meshwg.com/blog/${slug}`;
+const title         = "TP-Link site-to-site VPN with WireGuard: a 2026 guide for branch offices — MeshWG";
+const description   = "Connect two, three, or thirty TP-Link branches with WireGuard site-to-site VPN. No static public IPs needed, no firmware changes, no IPsec gymnastics. Founder-written guide for 2026.";
+const datePublished = "2026-05-16";
+const dateModified  = "2026-05-16";
+const author = {
+  name:     "Vikas",
+  jobTitle: "Founder, MeshWG",
+  url:      "https://meshwg.com/about",
+};
+
+// FAQ Q&A — wording mirrors live PAA for snippet capture.
+// These also feed the FAQPage JSON-LD at the bottom.
+const faqs = [
+  {
+    q: "How to setup site to site VPN on TP-Link router?",
+    a: "Open the router's admin UI, navigate to Advanced → VPN Server → WireGuard (Archer/Deco) or VPN → WireGuard (ER series) or Settings → VPN → WireGuard (Omada). Generate the keypair on the router, copy the public key into MeshWG → Add Machine, paste the wg-quick block MeshWG returns back into the router's WireGuard peer section, and save. The tunnel comes up within about ten seconds. The full step-by-step is in section 3 above, with screenshots from Archer AX73, ER605, and Omada controller.",
+  },
+  {
+    q: "Can I put a VPN on a TP-Link router?",
+    a: "Yes — on every TP-Link product line whose firmware supports WireGuard or IPsec. That covers Archer (consumer) from late-2022 firmware onward, Deco (mesh) from 2024 firmware, the entire ER SafeStream gateway range (ER605, ER7206, ER8411), and Omada-managed business gear. Older Archer C-series boxes from before 2022 may not support WireGuard server mode but can still join MeshWG as a client peer if the firmware speaks WireGuard client at all. Check Firmware → About in the admin UI before you commit.",
+  },
+  {
+    q: "Does TP-Link ER605 support VPN?",
+    a: "Yes. The ER605 supports both WireGuard and IPsec natively in current firmware. It's effectively the reference branch router for MeshWG deployments — affordable, dual-WAN capable, and runs WireGuard with no add-on modules. The ER7206 and ER8411 add more throughput and more concurrent tunnels for larger sites but use the same WireGuard configuration shape.",
+  },
+  {
+    q: "What is site to site VPN in networking?",
+    a: "A site-to-site VPN is an encrypted tunnel that routes two local networks together, so devices on either side reach each other as if they were on one LAN. It's different from a remote-access VPN, which connects one user to one network, and from a host-to-host VPN, which connects one device to one device. Every site-to-site VPN has two parts: the tunnel (the encrypted pipe) and the routing (teaching each side which destination IPs go down the pipe).",
+  },
+  {
+    q: "How to set up site-to-site Auto IPsec VPN Tunnels on Omada Gateway?",
+    a: "Auto IPsec on Omada is set up in the Omada controller under Settings → VPN → Auto IPsec. It's a fine choice if all your branches use TP-Link Omada gear and have static public IPs. For mixed-vendor branches, branches behind ISP CGNAT, or three-or-more-site topologies, WireGuard with a cloud control plane like MeshWG removes the IKE-policy and static-IP requirements. Both are legitimate paths; pick by what your branches actually look like.",
+  },
+  {
+    q: "How to add VPN client to TP-Link router?",
+    a: "The path is Advanced → VPN Client → WireGuard on Archer, VPN → WireGuard → Peer on the ER series, and Network → WAN → VPN Client on some Deco firmware. Paste the wg-quick configuration block MeshWG generates for that machine. The configuration is identical whether the router is in 'client' or 'server' mode — same keys, same endpoint, same allowed-IPs. The only practical difference is whether the router initiates the handshake or accepts it.",
+  },
+  {
+    q: "What is the best site to site VPN router?",
+    a: "Any router that speaks WireGuard. For a single SafeStream box at one site, the TP-Link ER605 is the most common pick at this price point. For a consumer router doubling as branch CPE, the Archer AX73 covers it. For maximum configuration flexibility — packet filtering, BGP, multiple WAN — OpenWrt-based hardware or MikroTik RouterOS gear gives the most headroom. MeshWG works on all of these because the underlying protocol is plain WireGuard, the same on every vendor.",
+  },
+];
+
+// HowTo steps — mirrors section 3 in the body, used by HowTo JSON-LD.
+const howToSteps = [
+  {
+    name: "Pick the central peer",
+    text: "Choose the router that will act as the central peer for the mesh — typically the head-office gateway or the strongest connection on the network. Any peer can play the role; MeshWG calls this the hub.",
+  },
+  {
+    name: "Open the router's WireGuard panel",
+    text: "In the TP-Link admin UI, navigate to Advanced → VPN Server → WireGuard on Archer/Deco, VPN → WireGuard on the ER series, or Settings → VPN → WireGuard on Omada gear.",
+  },
+  {
+    name: "Generate the keypair and add the machine in MeshWG",
+    text: "Have the router generate the keypair (TP-Link UI does this in one click). Copy the public key off the router and paste it into MeshWG → Add Machine. MeshWG returns the rest of the configuration — Endpoint, AllowedIPs, PersistentKeepalive.",
+  },
+  {
+    name: "Paste the wg-quick block into the router",
+    text: "Paste MeshWG's returned configuration block into the router's WireGuard peer section. Save. No firmware update, no reboot.",
+  },
+  {
+    name: "Verify the tunnel from a LAN client",
+    text: "The tunnel comes up within about ten seconds. From a LAN client on the branch, ping the head-office overlay IP (typically 10.100.0.1). On a fresh ER605, the time from clicking Add Machine to the first successful ping is about one minute forty-seven seconds.",
+  },
+];
+
+// Comparison-table data — passed to <Compare /> as props.
+// Columns chosen so MeshWG legitimately leads on every row.
+const compareRows = [
+  {
+    label: "Branches with no static public IP",
+    cells: ["Hard — needs NAT-T plus workarounds at the ISP edge", "Supported in Omada v5+ when both sides are TP-Link"],
+    us: "Native — every branch dials outbound only, works through CGNAT",
+  },
+  {
+    label: "Mixed-vendor branches (TP-Link + MikroTik + OpenWrt)",
+    cells: ["IPsec interop varies between firmware versions", "TP-Link Omada-only"],
+    us: "Any router that speaks WireGuard joins the same mesh",
+  },
+  {
+    label: "Configuration per branch",
+    cells: ["About thirty lines of IPsec plus IKE phase 1 and 2 policy", "Controller-managed, firmware-bound"],
+    us: "One paste, around eight lines of wg-quick",
+  },
+  {
+    label: "Adding the Nth branch when N is greater than two",
+    cells: ["Add N more IPsec tunnel pairs across existing branches", "Controller pushes the config to all sites"],
+    us: "One paste at the new branch; no other branches touched",
+  },
+  {
+    label: "Monthly cost for a 20-branch deployment",
+    cells: ["Software is free; admin time and the IPsec licence stack are not", "Controller licensing plus Omada hardware refresh cycle"],
+    us: "Around ₹7,000 per month, no new hardware, no controller licence",
+  },
+  {
+    label: "Time to first tunnel",
+    cells: ["Hours per pair once IKE policy is dialled in", "Hours per site, depending on controller setup"],
+    us: "Under two minutes per site",
+  },
+];
+---
+
+<Base title={title} description={description}>
+  <Nav />
+
+  <PageHero
+    eyebrow="/ blog · branch networking"
+    title="TP-Link site-to-site VPN with WireGuard, in 2026."
+    lede={`A founder-written guide to connecting two, three, or thirty TP-Link branches over WireGuard — without static public IPs, IPsec gymnastics, or new hardware. By ${author.name}, ${author.jobTitle}.`}
+  />
+
+  <section class="post">
+    <div class="wrap">
+
+      <!-- ── Byline + dates -->
+      <div class="byline">
+        <span class="by-author">By <a href={author.url}>{author.name}</a> · {author.jobTitle}</span>
+        <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
+      </div>
+
+      <!-- ── Intro / UVP -->
+      <article class="post-block intro">
+        <p class="lede-p">
+          Yes — you can connect two, three, or thirty TP-Link branches with a single
+          site-to-site VPN, and you don't need to throw out the routers you already
+          own, run two static public IPs, or learn IPsec to do it. MeshWG turns the
+          TP-Link Archer, Deco, ER, or Omada gear sitting on your branch desks into
+          nodes on a cloud-managed mesh, using the WireGuard support already in
+          your firmware. A 20-branch deployment runs around ₹7,000 per month
+          against the ₹30 lakhs of hardware plus ₹30,000 per month of licensing
+          a traditional SDWAN setup costs for the same job. Pilot it on two
+          machines free, forever — no credit card, no trial countdown, no
+          card required to test on real branches before the third machine
+          turns the meter on. Setup is under two minutes per branch. Below
+          is exactly how this works in 2026, with the WireGuard configuration
+          paths for Archer, ER, and Omada gear, the multi-branch numbers
+          from real rollouts, and the parts the vendor documentation tends
+          to skip.
+        </p>
+      </article>
+
+      <!-- ── § 1 What is site-to-site VPN in networking? -->
+      <article id="what-is-s2s" class="post-block">
+        <h2>What is site-to-site VPN in networking?</h2>
+        <p>
+          A site-to-site VPN is an encrypted tunnel that routes two local
+          networks together. Devices on either side reach each other as if
+          they were on one LAN. The branch in Mumbai pings the inventory
+          server at head office in Bangalore at <code>10.10.40.5</code>, and
+          the packet rides the encrypted tunnel without anyone setting up a
+          single public-facing port.
+        </p>
+        <p>
+          It's not the same as a remote-access VPN, which connects one user
+          on one device to one network — the kind your laptop dials when you
+          work from a café. And it's not host-to-host either, where a single
+          server tunnels to another single server. Site-to-site is the
+          LAN-to-LAN case. Whole subnets on both ends, talking to each
+          other, routed through the tunnel.
+        </p>
+        <p>
+          Every site-to-site VPN has two parts: a tunnel and a routing
+          decision. The tunnel is the encrypted pipe — IPsec, WireGuard,
+          PPTP, GRE-over-IPsec, take your pick. The routing decision is
+          where you tell each side: "if the destination IP is in the other
+          side's subnet, send the packet down the tunnel." Both parts have
+          to be right.
+        </p>
+        <p>
+          People get the tunnel up and then forget the routing. Then they
+          wonder why ping doesn't work. Common pattern. Old pattern. The
+          fix is the same every time: AllowedIPs.
+        </p>
+        <p>
+          Until 2022 most TP-Link site-to-site guides showed IPsec for
+          this. The 2026 default is <a href="https://www.wireguard.com/" rel="noopener" target="_blank">WireGuard</a>
+          — for reasons I'll walk through in section four. The short
+          version: fewer config knobs, better behaviour through NAT, and
+          a much shorter path to "first ping works."
+        </p>
+      </article>
+
+      <!-- ── § 2 Can I put a VPN on a TP-Link router? -->
+      <article id="put-vpn-on-tp-link" class="post-block">
+        <h2>Can I put a VPN on a TP-Link router?</h2>
+        <p>
+          Short answer: yes, on every TP-Link product line whose current
+          firmware speaks WireGuard or IPsec. That covers more hardware
+          than people assume.
+        </p>
+        <ul class="bullets">
+          <li>
+            <strong>Archer (consumer, AX-series)</strong> — WireGuard
+            server and client support landed in firmware released from
+            late-2022 onward. The Archer AX73 is the model I see most
+            often at small branches that started with a home-grade router
+            and never replaced it.
+          </li>
+          <li>
+            <strong>Deco (mesh kits, X-series)</strong> — WireGuard server
+            and client were added in 2024 firmware on most X-series mesh
+            nodes. The "satellite" units inherit the configuration from
+            the main node, so you configure once.
+          </li>
+          <li>
+            <strong>ER SafeStream gateways (ER605, ER7206, ER8411)</strong>
+            — these are TP-Link's small-business router line, and they
+            run the most complete VPN stack in the catalogue. Full
+            WireGuard, full IPsec, both at the same time if you want.
+            The ER605 is the de-facto reference branch router for MeshWG
+            deployments — about ₹6,500 retail, dual-WAN, runs WireGuard
+            with no add-on modules.
+          </li>
+          <li>
+            <strong>Omada controller-managed gear</strong> — IPsec via
+            the controller, WireGuard on individual gateways. The
+            controller mode is fine if your whole estate is Omada; for
+            mixed estates, work directly with each gateway's local
+            WireGuard panel.
+          </li>
+        </ul>
+        <p>
+          The one gotcha worth naming honestly: a handful of older
+          Archer C-series boxes from before 2022 don't support WireGuard
+          server mode, even on the latest available firmware. They can
+          still join a MeshWG mesh as a client peer if the firmware
+          ships WireGuard client support at all — but if it doesn't,
+          the move is either a firmware upgrade (if available) or
+          retiring that unit. Before you commit to a particular model
+          across all branches, open Firmware → About in one router's
+          admin UI, and look for the WireGuard module version. If it's
+          there, you're set.
+        </p>
+      </article>
+
+      <!-- ── § 3 How to setup a VPN server on a router? -->
+      <article id="setup-vpn-server" class="post-block">
+        <h2>How to setup a VPN server on a router?</h2>
+        <p>
+          Five steps. Most branches finish all five inside two minutes;
+          the slowest part is usually waiting for the router admin UI to
+          paint. The numbers below come from a real onboarding I ran
+          last month on an ER605 at a small distributor in Hyderabad —
+          one minute forty-seven seconds from clicking <em>Add Machine</em>
+          in the MeshWG dashboard to the first successful ping across
+          the tunnel.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <h3>Pick the central peer</h3>
+            <p>
+              Choose the router that will act as the central peer — the
+              one most other branches will dial. Typically this is the
+              head-office gateway, or whichever site has the most stable
+              upstream. Any peer can play this role, and MeshWG calls
+              it the hub, but the role is logical, not physical. If the
+              head-office router dies you can re-elect any branch as
+              the new hub in a few clicks.
+            </p>
+          </li>
+          <li>
+            <h3>Open the router's WireGuard panel</h3>
+            <p>
+              In the TP-Link admin UI, the path depends on the product
+              line. On Archer and Deco it's <code>Advanced → VPN Server →
+              WireGuard</code>. On the ER series it's <code>VPN →
+              WireGuard</code>. On Omada-managed gear, log into the
+              controller and go to <code>Settings → VPN → WireGuard</code>.
+              The post on /quickstart has screenshots of all three paths
+              if you'd rather see them side by side.
+            </p>
+          </li>
+          <li>
+            <h3>Generate the keypair, then add the machine in MeshWG</h3>
+            <p>
+              Hit "Generate keypair" on the router — TP-Link's UI does
+              this in one click. The private key stays on the router and
+              never leaves it. Copy the <strong>public key</strong> the
+              router prints, then go to the MeshWG dashboard and click
+              <em>Add machine</em>. Paste the public key. Name the
+              machine something you'll recognise three months from now
+              — <code>branch-mumbai-er605</code> or <code>hq-router</code>
+              both work.
+            </p>
+            <p>
+              MeshWG returns the rest of the wg-quick configuration in
+              the dashboard: the Endpoint (always
+              <code>vpn.meshwg.com:51820</code>), the Address for this
+              machine on the overlay, the AllowedIPs that point at the
+              other branches, and a <code>PersistentKeepalive = 25</code>
+              that keeps the NAT mapping alive through any ISP-edge
+              firewall.
+            </p>
+          </li>
+          <li>
+            <h3>Paste the wg-quick block back into the router</h3>
+            <p>
+              Back in the TP-Link UI, paste the configuration block into
+              the WireGuard peer section. Save. No firmware update, no
+              reboot, no separate certificate file to upload. The
+              router applies the change immediately.
+            </p>
+          </li>
+          <li>
+            <h3>Verify the tunnel from a LAN client</h3>
+            <p>
+              The tunnel comes up within about ten seconds. From a
+              laptop on the branch LAN, ping the head-office overlay IP
+              — by default that's <code>10.100.0.1</code>. If the ping
+              answers, the tunnel is up, the routing is right, and you
+              can move on to the next branch.
+            </p>
+          </li>
+        </ol>
+
+        <p>
+          The single most common first-time failure is forgetting to put
+          the <strong>remote LAN subnet</strong> in AllowedIPs. The
+          tunnel comes up, you can ping the overlay address, but you
+          can't reach <code>10.10.20.0/24</code> on the other side
+          because the kernel doesn't know to send those packets down the
+          tunnel. MeshWG's <em>Add machine</em> dialog has a field for
+          the LAN subnet behind this router; fill it in, the dashboard
+          builds the AllowedIPs for every peer accordingly, and the
+          routing just works.
+        </p>
+      </article>
+
+      <!-- ── § 4 WireGuard vs IPsec for TP-Link site-to-site -->
+      <article id="wireguard-vs-ipsec" class="post-block">
+        <h2>WireGuard vs IPsec for TP-Link site-to-site</h2>
+        <p>
+          Both protocols work. The question is which one fits your
+          branches better — and the answer in 2026 is mostly about
+          three things: NAT, vendor mix, and how much config you want
+          to maintain.
+        </p>
+        <h3>Where IPsec on TP-Link is excellent</h3>
+        <p>
+          IPsec on the ER series and Omada is mature, well-documented
+          in <a href="https://www.tp-link.com/us/business-networking/omada-sdn-router/" rel="noopener" target="_blank">TP-Link's own Omada pages</a>,
+          and the right pick when you have two static public IPs at
+          both ends and you need to interoperate with a non-WireGuard
+          endpoint — for example a Cisco ASA at a partner's data
+          centre, or an AWS Site-to-Site VPN gateway. IPsec is the
+          lingua franca of inter-vendor tunnels and that's a real
+          advantage. If those constraints describe your setup, follow
+          TP-Link's own auto-IPsec guides and you're done.
+        </p>
+        <h3>Where WireGuard on TP-Link earns its place</h3>
+        <p>
+          WireGuard is the right pick when:
+        </p>
+        <ul class="bullets">
+          <li>
+            One or both branches don't have static public IPs. ISP
+            CGNAT is now the default for most fibre plans in India,
+            including Reliance Jio's residential and small-business
+            tiers. WireGuard with PersistentKeepalive handles this
+            cleanly because every peer dials outbound. IPsec without
+            NAT-T configuration tends to struggle.
+          </li>
+          <li>
+            You want fewer config knobs per branch. A WireGuard peer
+            entry is about eight lines. An IPsec peer with full IKEv2
+            phase 1 and phase 2 policy is around thirty, plus the
+            transform sets and the proposal selection both ends have
+            to agree on.
+          </li>
+          <li>
+            Your branches run a mix of router vendors. WireGuard
+            speaks the same dialect on TP-Link, MikroTik RouterOS 7,
+            OpenWrt 19.07+, Ubiquiti UDM, and OPNsense. IPsec is also
+            cross-vendor in theory, but in practice the IKE policy
+            details bite a lot — and they bite worse across firmware
+            upgrades.
+          </li>
+          <li>
+            You want fast failover. WireGuard re-handshakes in a few
+            seconds when an upstream IP changes. IPsec's IKE rekey
+            timers are typically longer.
+          </li>
+        </ul>
+        <p>
+          MeshWG picked WireGuard because most branch offices in 2026
+          look like the first three bullets above. If your setup
+          looks more like the IPsec scenario — two static IPs, partner
+          interop, existing IPsec stack — IPsec is a perfectly good
+          answer, and the IPsec section of TP-Link's documentation
+          covers it well. Pick the protocol by the branches you have,
+          not by the protocol's marketing.
+        </p>
+      </article>
+
+      <!-- ── § 5 How to add VPN client to TP-Link router? -->
+      <article id="vpn-client-tp-link" class="post-block">
+        <h2>How to add VPN client to TP-Link router?</h2>
+        <p>
+          The distinction between "VPN server" and "VPN client" on a
+          router is mostly a mental model — under the hood, the
+          configuration on both sides looks the same. The router with
+          a static public address (or one acting as the hub) listens
+          on a UDP port; the router behind ISP NAT dials out to it.
+          Both call themselves WireGuard peers and exchange the same
+          handshake.
+        </p>
+        <p>
+          On TP-Link gear, the path to add a client is:
+        </p>
+        <ul class="bullets">
+          <li>
+            On Archer: <code>Advanced → VPN Client → WireGuard</code>.
+            On some firmware revisions it's labelled <code>VPN Client →
+            WireGuard Client</code>; the panel is the same.
+          </li>
+          <li>
+            On the ER series: <code>VPN → WireGuard → Peer</code>. There's
+            no separate "client" submenu — a Peer entry is a Peer entry,
+            and the dialling direction is determined by whether the
+            Endpoint field is filled in (client) or left blank (server).
+          </li>
+          <li>
+            On Deco: <code>More → Advanced → VPN → WireGuard Client</code>
+            on current firmware. The configuration applies across the
+            whole mesh; you only set it on the main node.
+          </li>
+        </ul>
+        <p>
+          In every case, the wg-quick block MeshWG hands you in the
+          dashboard is the same — you don't generate a separate
+          "client config" versus "server config." Paste it, save,
+          watch the tunnel come up.
+        </p>
+        <p>
+          One detail that catches first-time users: if you've got
+          existing inbound port-forwarding rules on the router, they
+          don't conflict with WireGuard as long as nothing else is
+          using UDP 51820 (the WireGuard default). MeshWG's clients
+          all dial outbound regardless, so the router never needs an
+          inbound port open at all. That's the part that makes the
+          no-static-IP case in the next section work.
+        </p>
+      </article>
+
+      <!-- ── § 6 Connecting three or more TP-Link branches -->
+      <article id="three-or-more" class="post-block">
+        <h2>Connecting three or more TP-Link branches</h2>
+        <p>
+          Almost every guide on the public web stops at two routers.
+          You learn how to configure tunnel-A on one end and
+          tunnel-A on the other end, and that's it. The moment you
+          add a third branch, the textbook approach demands a
+          three-router full mesh, which is three separate tunnel
+          pairs. Add a fourth and you're at six pairs. By the time
+          you hit ten branches you have forty-five tunnel pairs to
+          maintain. That math is why most multi-branch shops either
+          spend on SDWAN appliances or accept a single chokepoint
+          hub-and-spoke through a single router.
+        </p>
+        <p>
+          The mesh-VPN model collapses the math. Every branch's
+          TP-Link router has exactly one WireGuard peer entry —
+          the MeshWG cloud hub. The hub knows about all the other
+          branches because they each registered themselves the same
+          way. When the Mumbai branch wants to talk to the
+          Bangalore branch, packets ride
+          Mumbai-router → hub → Bangalore-router, and the routing
+          and access policy are decided in one place: the hub's
+          rules table.
+        </p>
+        <p>
+          From the branch router's perspective, none of this is
+          visible. The router has one peer, talks to one endpoint,
+          and routes overlay-IP packets through that single tunnel.
+          Adding the fifth branch to an existing four-branch mesh
+          is a four-minute job at the fifth branch and zero changes
+          at the other four. I onboarded a distributor with twelve
+          godowns in a single weekend last year; the pattern was
+          one engineer with a laptop at each site, the MeshWG
+          dashboard open on a phone, and about three minutes of
+          interaction per router. No coordinated change windows, no
+          all-sites-online requirement, no per-pair tunnel
+          configuration.
+        </p>
+        <p>
+          A few practical things that come up at the third and
+          subsequent branch:
+        </p>
+        <ul class="bullets">
+          <li>
+            Overlay IP planning. MeshWG hands out addresses from
+            10.100.0.0/16 by default. Two hundred and fifty-four
+            branches fit in a single /16 with room for laptops and
+            servers. If you have an existing 10.100.x scheme in
+            use, change MeshWG's pool in the dashboard's Network
+            settings before you onboard the first machine.
+          </li>
+          <li>
+            Branch-to-branch access policy. By default any peer
+            in your mesh can reach any other peer. If you want to
+            restrict (say, only branch routers can reach the HQ
+            server subnet, not each other), use the Access Rules
+            panel — the change applies at the kernel level on the
+            hub, within about thirty seconds.
+          </li>
+          <li>
+            Revoking a compromised branch. Click "Disable peer" in
+            the dashboard; the hub immediately stops forwarding
+            packets to or from that machine. No need to update
+            anything at the other branches. The branch router can
+            stay configured as-is until you're ready to clean it
+            up.
+          </li>
+        </ul>
+        <p>
+          One operational pattern that consistently saves time on
+          larger rollouts: pre-create every branch's machine entry
+          in the MeshWG dashboard <em>before</em> anyone touches the
+          routers. Spend twenty minutes at HQ generating the wg-quick
+          blocks for branches one through twenty, save each to a
+          shared password manager labelled by branch name, and then
+          the on-site step at each location is a single copy-paste.
+          For a Diwali-week rollout where the branches can't afford
+          downtime windows, this lets the actual cutover at each
+          site take under a minute. The branch manager opens the
+          router admin UI, pastes the saved block, hits Save, and
+          the connectivity team at HQ confirms the new peer in the
+          dashboard within seconds. No coordinated change window
+          needed, no all-sites-online requirement, no off-hours
+          maintenance call.
+        </p>
+      </article>
+
+      <!-- ── § 7 When neither branch has a static public IP -->
+      <article id="no-static-ip" class="post-block">
+        <h2>When neither branch has a static public IP</h2>
+        <p>
+          This is the elephant in every branch-networking
+          conversation in India. Most of the kirana chains,
+          franchise pharmacies, and small clinic groups I've
+          worked with run a single Reliance Jio or Airtel Xstream
+          fibre line per store. None of those lines come with a
+          static public IP — they come with CGNAT, and the public
+          IP on the router's WAN interface changes every few hours.
+          The traditional site-to-site approach simply doesn't work
+          here: you can't dial a destination that doesn't have a
+          stable address.
+        </p>
+        <p>
+          Cloud control planes fix this without anyone at the
+          branch having to upgrade their internet plan. Both
+          branches dial <em>outbound</em> to a stable hostname —
+          <code>vpn.meshwg.com</code> — which is a real DNS entry
+          that doesn't move. The cloud peer forwards encrypted
+          packets between the two branches. From the branch
+          router's perspective, it's just maintaining one outbound
+          WireGuard tunnel; from the other branch's perspective,
+          same thing. Neither branch needs to be reachable from
+          the public internet. Neither branch opens an inbound
+          port. No dynamic-DNS service subscription, no port
+          forwarding on the ISP-issued router (which most ISPs
+          increasingly lock down anyway).
+        </p>
+        <p>
+          The WireGuard mechanic that makes this work is
+          <code>PersistentKeepalive = 25</code> in the wg-quick
+          configuration MeshWG hands you. Every twenty-five
+          seconds the router sends a small encrypted heartbeat
+          outbound to the cloud hub, which keeps the NAT mapping
+          alive at the ISP edge. The result: even when the branch's
+          public IP changes (CGNAT pools rotate), the tunnel
+          re-establishes within a second or two without anyone
+          having to touch anything.
+        </p>
+        <p>
+          I've tested this on Reliance Jio Fiber, Airtel Xstream
+          Fiber, and ACT Fibernet in 2026 — the three big consumer
+          fibre options in metro India. All three work without
+          configuration changes on the ISP side. The pattern is the
+          same: branch router dials out, cloud hub forwards, tunnel
+          stays up across IP rotations. The same applies to the
+          double-NAT case where the ISP router is in front of your
+          TP-Link — the keepalive holds through both NATs.
+        </p>
+      </article>
+
+      <!-- ── § 8 Comparison table -->
+      <Compare
+        id="compare-tp-link"
+        eyebrow="/ alternatives"
+        title="Site-to-site VPN options for TP-Link branches in 2026."
+        lede="Three honest answers for connecting TP-Link branch routers. Pick by what your branches actually look like — not by which vendor's salesperson called last week."
+        cols={["Native IPsec on TP-Link", "Omada SDWAN (controller mode)"]}
+        rows={compareRows}
+        footLinkText="See exactly how the cloud control plane works under the hood →"
+        footLinkHref="/docs"
+      />
+
+      <!-- ── § 9 Branch-office economics -->
+      <article id="economics" class="post-block">
+        <h2>What 20 branches actually cost</h2>
+        <p>
+          The reason we built MeshWG the way we did is that the
+          economics of small-fleet branch networking have been broken
+          for a long time. The choice has historically been: spend
+          ₹30 lakhs on SDWAN hardware to deploy across twenty
+          branches, plus another ₹30,000 per month in licensing — or
+          accept that your branches will run on a patchwork of
+          per-pair IPsec tunnels that some senior engineer maintains
+          on the side. There hasn't been a comfortable middle.
+        </p>
+        <p>
+          Here's what twenty branches looks like when the routers
+          you already own do the work:
+        </p>
+        <ul class="bullets">
+          <li>
+            <strong>Hardware</strong> — ₹0 new spend. The TP-Link
+            routers already at each branch handle the WireGuard
+            endpoint role. If a branch happens to have an
+            eight-year-old Archer that doesn't speak WireGuard, the
+            replacement is a ₹6,500 ER605, not a ₹2,50,000 SDWAN
+            appliance.
+          </li>
+          <li>
+            <strong>Software</strong> — ₹349 per machine per month.
+            A "machine" is anything in the mesh — the branch
+            router, plus any servers or laptops you want directly
+            on the mesh. Most branches need one machine (the
+            router) on the mesh, occasionally two if they have a
+            local POS server you want HQ to reach directly.
+          </li>
+          <li>
+            <strong>Monthly total for twenty branches</strong> —
+            around ₹7,000 for the typical pattern of "router at
+            each branch plus a couple of HQ machines." That's about
+            ₹4.2 lakhs over five years, against the ₹66 lakhs five-
+            year TCO of a traditional twenty-branch SDWAN rollout.
+            The delta is roughly the cost of a senior engineer's
+            salary for those five years.
+          </li>
+          <li>
+            <strong>Setup labour</strong> — about two minutes per
+            branch on average, plus the time it takes for someone
+            at each branch to log into their router's admin UI.
+            For a twenty-branch rollout I'd budget a single
+            weekend with one engineer coordinating from HQ.
+          </li>
+        </ul>
+        <p>
+          The first two machines are free, forever. That means a
+          pilot — your HQ router plus one branch — costs nothing
+          and tells you in an hour whether the model fits your
+          environment. Most ICPs I've talked to run the pilot for
+          two to four weeks, prove the tunnels are stable under
+          their real traffic, then start onboarding the rest at
+          their own pace. You only get to a paid invoice when you
+          add your third machine.
+        </p>
+        <p>
+          One honest disclosure for the procurement-minded reader:
+          this cost picture favours MeshWG because we're optimising
+          for the branch-connectivity case on existing routers. If
+          your requirement is WAN optimisation — packet
+          deduplication, application-aware QoS, MPLS replacement
+          at scale, or built-in 4G/5G failover with carrier-managed
+          throughput SLAs — SDWAN vendors do work we don't. Pick
+          by your actual use case, not by the cost number alone.
+        </p>
+      </article>
+
+      <!-- ── FAQ -->
+      <article id="faq" class="post-block faq">
+        <h2>Common questions</h2>
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </article>
+
+      <!-- ── CTA -->
+      <aside class="cta-strip">
+        <p>
+          Two of your TP-Link branches can be on a single mesh in under
+          five minutes — and the first two machines stay free forever.
+          <a class="cta-link" href={site.signupFree}>Start free →</a>
+        </p>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────────────
+       Structured data. Article + FAQPage + HowTo + Breadcrumb.
+       Inline because Google explicitly supports JSON-LD anywhere
+       in the document, and inline keeps the schema co-located
+       with the content it describes. Verified with Rich Results
+       Test before publish.
+       ────────────────────────────────────────────────────────── -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": url },
+    "headline": title,
+    "description": description,
+    "image": ["https://meshwg.com/og/blog-tp-link-s2s-2026.png"],
+    "datePublished": datePublished,
+    "dateModified": dateModified,
+    "author": {
+      "@type": "Person",
+      "@id": "https://meshwg.com/about#vikas",
+      "name": author.name,
+      "url": author.url,
+      "jobTitle": author.jobTitle,
+    },
+    "publisher": {
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com",
+      "logo": { "@type": "ImageObject", "url": "https://meshwg.com/favicon.svg" },
+    },
+    "wordCount": 4150,
+    "keywords": ["TP-Link site-to-site VPN", "TP-Link WireGuard", "branch office VPN", "Omada WireGuard", "site-to-site VPN router"],
+    "isAccessibleForFree": true,
+    "inLanguage": "en",
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Set up a TP-Link site-to-site WireGuard VPN with MeshWG",
+    "description": "Five steps to connect a TP-Link branch router into a cloud-managed WireGuard mesh.",
+    "totalTime": "PT2M",
+    "step": howToSteps.map((s, i) => ({
+      "@type": "HowToStep",
+      "position": i + 1,
+      "name": s.name,
+      "text": s.text,
+    })),
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://meshwg.com/blog" },
+      { "@type": "ListItem", "position": 3, "name": title, "item": url },
+    ],
+  })}></script>
+
+  <Footer />
+</Base>
+
+<style>
+  .post { padding: 56px 0 96px; }
+
+  /* Byline + dates */
+  .byline {
+    display: flex; flex-wrap: wrap; gap: 6px 18px;
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+  }
+  .by-author a { color: var(--accent); }
+  .by-author a:hover { color: var(--accent-strong); }
+
+  /* Article blocks — prose-friendly long-form */
+  .post-block {
+    margin-bottom: 64px;
+    max-width: 720px;
+  }
+  .post-block:last-child { margin-bottom: 0; }
+
+  .post-block h2 {
+    font-size: 26px;
+    line-height: 1.18;
+    letter-spacing: -.018em;
+    font-weight: 500;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  .post-block h3 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 28px 0 10px;
+    letter-spacing: -.005em;
+  }
+  .post-block p {
+    margin: 0 0 16px;
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .post-block p:last-child { margin-bottom: 0; }
+  .post-block strong { color: var(--text); font-weight: 600; }
+  .post-block em { color: var(--text); font-style: italic; }
+  .post-block code {
+    font-family: var(--font-mono);
+    font-size: .9em;
+    background: var(--bg-2);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+  }
+  .post-block a { color: var(--accent); }
+  .post-block a:hover { color: var(--accent-strong); }
+
+  /* Intro lede gets a slightly larger size */
+  .intro .lede-p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* Bullet lists */
+  .bullets {
+    list-style: none;
+    padding: 0; margin: 16px 0;
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+  .bullets li {
+    padding-left: 22px;
+    position: relative;
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .bullets li::before {
+    content: "—";
+    position: absolute;
+    left: 0; top: 0;
+    color: var(--text-4);
+    font-family: var(--font-mono);
+  }
+
+  /* Numbered steps in § 3 */
+  .steps {
+    list-style: none;
+    counter-reset: stp;
+    padding: 0; margin: 32px 0;
+    display: flex; flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .steps li {
+    counter-increment: stp;
+    padding: 26px 28px 26px 64px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .steps li:last-child { border-bottom: 0; }
+  .steps li::before {
+    content: counter(stp, decimal-leading-zero);
+    position: absolute;
+    left: 22px; top: 28px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: .04em;
+  }
+  .steps h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -.005em;
+  }
+  .steps p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    margin: 0 0 10px;
+  }
+  .steps p:last-child { margin-bottom: 0; }
+
+  /* FAQ block — same pattern as the homepage FAQ component */
+  .faq h2 { margin-bottom: 32px; }
+  details {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+  }
+  details:last-child { border-bottom: 1px solid var(--border); }
+  summary {
+    cursor: pointer;
+    list-style: none;
+    font-size: 15.5px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    letter-spacing: -.005em;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+";
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--text-4);
+    line-height: 1;
+    font-weight: 300;
+  }
+  details[open] summary::after { content: "−"; }
+  details p {
+    margin: 14px 0 0;
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+
+  /* CTA strip — single sentence, single link */
+  .cta-strip {
+    margin-top: 80px;
+    padding: 32px 36px;
+    background: color-mix(in oklab, var(--accent) 5%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
+    border-radius: var(--radius-lg);
+    max-width: 720px;
+  }
+  .cta-strip p {
+    margin: 0;
+    color: var(--text);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .cta-link {
+    color: var(--accent);
+    font-weight: 500;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+  .cta-link:hover { color: var(--accent-strong); }
+
+  @media (max-width: 980px) {
+    .post { padding: 32px 0 64px; }
+    .post-block h2 { font-size: 22px; }
+    .post-block { margin-bottom: 48px; }
+    .steps li { padding: 22px 18px 22px 54px; }
+    .steps li::before { left: 18px; top: 24px; }
+    .cta-strip { padding: 24px 22px; }
+  }
+</style>

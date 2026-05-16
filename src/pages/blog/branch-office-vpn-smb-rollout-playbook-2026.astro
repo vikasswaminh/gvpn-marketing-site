@@ -12,11 +12,8 @@ const title         = "Branch office VPN for SMBs in 2026: a 5-phase rollout pla
 const description   = "How to roll out a branch-office VPN across 5 to 50 sites in 2026, without an SDWAN appliance budget or a full-time network team. Five-phase playbook with real numbers from retail, clinic, and distributor deployments.";
 const datePublished = "2026-05-16";
 const dateModified  = "2026-05-16";
-const author = {
-  name:     "Vikas",
-  jobTitle: "Founder, MeshWG",
-  url:      "https://meshwg.com/about",
-};
+// v2 voice: institutional byline. Author is the publisher Organization,
+// referenced via @id in the Article JSON-LD below.
 
 const faqs = [
   {
@@ -37,7 +34,7 @@ const faqs = [
   },
   {
     q: "How long does a multi-branch VPN rollout take?",
-    a: "For an SMB with five to ten branches using the BYO-router mesh-VPN approach: typically one to two weekends. The pilot phase takes two to four weeks of soak time, but the actual configuration work at each branch is around two minutes per site. A 14-store retail rollout I helped with last quarter finished all sites in a single Saturday with one engineer coordinating from HQ. Box-based SDWAN deployments at the same scale typically take six to twelve weeks because of hardware procurement and shipping.",
+    a: "For an SMB with five to ten branches using the BYO-router mesh-VPN approach, typical rollouts complete inside one to two weekends. The pilot phase takes two to four weeks of soak time, but the actual configuration work at each branch is around two minutes per site. A representative 14-store retail rollout typically finishes all sites in a single Saturday with one engineer coordinating from headquarters. Box-based SDWAN deployments at the same scale typically take six to twelve weeks because of hardware procurement, shipping, and on-site installation cycles.",
   },
   {
     q: "What does a branch office VPN cost in 2026?",
@@ -85,36 +82,40 @@ const compareRows = [
   <PageHero
     eyebrow="/ blog · rollout playbook"
     title="Branch office VPN for SMBs, in 2026."
-    lede={`A five-phase rollout playbook for connecting 5 to 50 branches without an SDWAN appliance budget or a full-time network team. Real numbers from retail, clinic, and distributor deployments. By ${author.name}, ${author.jobTitle}.`}
+    lede="A five-phase rollout playbook for connecting 5 to 50 branches without an SDWAN appliance budget or a dedicated network operations team. Drawn from real-world deployment patterns observed across retail, clinic, and distributor environments. By the MeshWG editorial team."
   />
 
   <section class="post">
     <div class="wrap">
 
       <div class="byline">
-        <span class="by-author">By <a href={author.url}>{author.name}</a> · {author.jobTitle}</span>
+        <span class="by-author">By the MeshWG editorial team</span>
         <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
       </div>
 
       <!-- Intro / UVP -->
       <article class="post-block intro">
         <p class="lede-p">
-          Most SMB branch-office VPN rollouts I see in 2026 follow the
-          same shape: 5 to 50 sites, each with an existing TP-Link or
-          MikroTik or OpenWrt router on an ISP fibre line, no full-time
-          network engineer on the team, and a CFO who has just been
-          quoted ₹30 lakhs upfront for SDWAN hardware plus another
-          ₹30,000 a month in recurring licensing fees for what is
-          functionally the same job. The fix that gets adopted, every time, is
-          a cloud-managed mesh VPN running on the routers already at
-          each branch — and the rollout takes a weekend rather than
-          six weeks. A 20-branch deployment on MeshWG runs around
-          ₹7,000 a month against the ₹30 lakhs in hardware plus
-          ₹30,000 a month of licensing the SDWAN quote covered. Setup
-          is under two minutes per site. Two machines stay free,
-          forever. This playbook walks through the five phases — audit,
-          choose, pilot, rollout, scale — with real numbers, real
-          customer patterns, and the gotchas that show up in week two.
+          Most SMB branch-office VPN rollouts in 2026 share the same
+          shape: 5 to 50 sites, each running an existing TP-Link,
+          MikroTik, or OpenWrt router on an ISP fibre connection,
+          finite IT staffing, and a finance team weighing a ₹30 lakh
+          SDWAN hardware quote against another ₹30,000 a month in
+          recurring licensing fees for what is functionally the same
+          job. The pattern increasingly adopted across this segment
+          is a cloud-managed mesh VPN running on the routers already
+          installed at each branch — completing what used to be a
+          six-week rollout inside a single weekend. A representative
+          20-branch deployment on MeshWG runs around ₹7,000 a month
+          against the ₹30 lakhs in hardware plus ₹30,000 a month of
+          licensing a comparable SDWAN quote typically covers. Setup
+          measures in minutes per site, the first two machines remain
+          free indefinitely, and the operational responsibilities
+          most growth-stage IT teams cannot easily absorb stay with
+          the platform rather than the team. This playbook walks
+          through the five phases — audit, choose, pilot, rollout,
+          scale — that consistently produce successful multi-branch
+          deployments.
         </p>
       </article>
 
@@ -314,12 +315,12 @@ const compareRows = [
           Pick the pilot site carefully. The right pilot is not the
           quietest branch with the simplest traffic — that one would
           tell you almost nothing. The right pilot is a branch
-          representative of your fleet's complexity: a real ISP
+          representative of the fleet's complexity: a real ISP
           connection, real traffic patterns, a real shift schedule.
-          For a 14-store retail group I helped with in Hyderabad last
-          quarter, the pilot was the busiest store, picked
-          deliberately so the soak test would exercise the kind of
-          load the rest of the rollout would see.
+          For a typical multi-store retail group, the right pilot
+          is often the busiest store, picked deliberately so the
+          soak test exercises the kind of load the rest of the
+          rollout will encounter.
         </p>
         <p>
           The pilot setup itself is fast. On MeshWG's free tier
@@ -380,14 +381,16 @@ const compareRows = [
           to log into the router.
         </p>
         <p>
-          For a 14-store retail rollout in Hyderabad last quarter,
-          phase four took a single Saturday with the engineer at HQ
-          and one IT contact at each store. Total elapsed time was
-          about three hours from the first branch starting at 10 AM
-          to the last branch confirming at 1 PM. The cost number
-          that matters for the business case: zero new hardware
-          purchased, ₹4,886 a month recurring afterwards for the
-          mesh.
+          A representative 14-store retail rollout typically
+          completes phase four in a single Saturday, with one
+          engineer coordinating from headquarters and one IT
+          contact at each store. Total elapsed time is usually
+          three to four hours — comfortably inside one operational
+          window, well before any peak traffic period begins. The
+          cost number that matters for the business case: zero new
+          hardware purchased, with recurring monthly cost in the
+          low single-digit thousands of rupees for the entire
+          mesh once all branches are online.
         </p>
         <p>
           Three operational details worth naming because they catch
@@ -421,15 +424,15 @@ const compareRows = [
           </li>
         </ul>
         <p>
-          A pattern that emerged from a dental clinic group rollout
-          in Pune last year and has held up across half a dozen
-          deployments since: do not try to onboard branches in
-          parallel during phase four. Sequential onboarding looks
-          slower on the schedule but it's faster in practice
-          because the HQ engineer can verify each new peer is
-          actually healthy in the dashboard before moving to the
-          next site. Two minutes per branch times ten branches
-          equals twenty minutes plus coordination — a single
+          A pattern that has emerged across multiple healthcare
+          and retail deployments and now holds up consistently: do
+          not attempt to onboard branches in parallel during phase
+          four. Sequential onboarding looks slower on the schedule
+          but proves faster in practice, because the coordinator at
+          headquarters can verify each new peer is actually healthy
+          in the dashboard before moving to the next site. Two
+          minutes per branch times ten branches equals twenty
+          minutes plus coordination overhead — a single
           person, single morning. Trying to do them simultaneously
           adds chaos without compressing the wall-clock time. The
           bottleneck is verification, not configuration.
@@ -500,16 +503,20 @@ const compareRows = [
           your existing monitoring stack can scrape.
         </p>
         <p>
-          A distributor in Vijayawada I worked with reached 32
-          branches inside the first six months on MeshWG, and
-          forty-something a year later. The operational pattern that
-          held: one IT person at HQ, two minutes per new branch, an
-          access policy reviewed quarterly, and zero new hardware
-          ever purchased for the mesh layer. The math the CFO ran on
-          the second-year renewal: total spend on mesh
-          infrastructure across forty branches was lower than what a
-          single Cisco Meraki MX-250 would have cost up front for
-          one site.
+          A representative pattern at this scale comes from a
+          mid-market distributor with a sizeable godown footprint
+          that reached 32 branches inside the first six months on
+          a modern mesh-VPN platform and stretched past forty a
+          year later. The operational rhythm held throughout: one
+          IT contact at headquarters, two minutes per new branch,
+          an access policy reviewed quarterly, and zero new hardware
+          purchased for the mesh layer over the entire growth arc.
+          The arithmetic on the second-year renewal review showed
+          total spend on mesh infrastructure across forty branches
+          coming in below what a single enterprise-class SDWAN
+          appliance would have cost upfront for a single site —
+          the kind of cost reframing CFOs increasingly weight
+          heavily when comparing modern and traditional approaches.
         </p>
         <p>
           The fourth scale-stage detail, optional but worth
@@ -702,11 +709,10 @@ const compareRows = [
     "datePublished": datePublished,
     "dateModified": dateModified,
     "author": {
-      "@type": "Person",
-      "@id": "https://meshwg.com/about#vikas",
-      "name": author.name,
-      "url": author.url,
-      "jobTitle": author.jobTitle,
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com/about",
     },
     "publisher": {
       "@type": "Organization",

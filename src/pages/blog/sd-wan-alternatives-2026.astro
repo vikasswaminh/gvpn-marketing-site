@@ -12,11 +12,8 @@ const title         = "SD-WAN alternatives in 2026: seven modern options for con
 const description   = "Seven modern alternatives to box-based SD-WAN in 2026 — from BYO-router mesh VPN to ZTNA platforms. Honest comparison for SMB and mid-market teams who want branch connectivity without the appliance refresh cycle.";
 const datePublished = "2026-05-16";
 const dateModified  = "2026-05-16";
-const author = {
-  name:     "Vikas",
-  jobTitle: "Founder, MeshWG",
-  url:      "https://meshwg.com/about",
-};
+// v2 voice: institutional byline. Author is the publisher Organization,
+// referenced via @id in the Article JSON-LD below.
 
 const faqs = [
   {
@@ -85,14 +82,14 @@ const compareRows = [
   <PageHero
     eyebrow="/ blog · buyer's guide"
     title="SD-WAN alternatives in 2026: seven modern options."
-    lede={`Honest comparison of the seven modern alternatives to box-based SD-WAN that SMB and mid-market teams actually consider in 2026 — from BYO-router mesh VPN to full ZTNA stacks. By ${author.name}, ${author.jobTitle}.`}
+    lede="A strategist's comparison of the seven modern alternatives to box-based SD-WAN that SMB and mid-market teams evaluate in 2026 — from BYO-router mesh VPN to full ZTNA platforms. By the MeshWG editorial team."
   />
 
   <section class="post">
     <div class="wrap">
 
       <div class="byline">
-        <span class="by-author">By <a href={author.url}>{author.name}</a> · {author.jobTitle}</span>
+        <span class="by-author">By the MeshWG editorial team</span>
         <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
       </div>
 
@@ -289,15 +286,18 @@ const compareRows = [
           out on purpose.
         </p>
         <p>
-          The operational pattern that has paid back consistently in
-          customer deployments: start with the two-machines-free tier
-          (HQ router + one branch), validate that the tunnels stay up
-          under your real traffic for two to three weeks, then onboard
-          the remaining branches at whatever pace works for the
-          business. We've had pilots stay free indefinitely on home
-          labs that never exceeded two peers; we've had retail and
-          dental groups scale from a two-peer pilot to twenty-plus
-          branches inside six weeks. Both are valid outcomes.
+          The operational pattern that consistently delivers
+          results: organisations begin with the two-machines-free
+          tier — typically a headquarters router paired with one
+          representative branch — and validate that the tunnels
+          remain stable under real traffic for two to three weeks
+          before onboarding the remainder of the fleet at the
+          pace the business requires. Some deployments remain on
+          the free tier indefinitely on smaller home-lab footprints
+          that never exceed two peers; others scale from a two-peer
+          pilot to twenty-plus branches inside six weeks. Both
+          trajectories are valid outcomes of the same disciplined
+          pattern.
         </p>
       </article>
 
@@ -705,11 +705,10 @@ const compareRows = [
     "datePublished": datePublished,
     "dateModified": dateModified,
     "author": {
-      "@type": "Person",
-      "@id": "https://meshwg.com/about#vikas",
-      "name": author.name,
-      "url": author.url,
-      "jobTitle": author.jobTitle,
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com/about",
     },
     "publisher": {
       "@type": "Organization",

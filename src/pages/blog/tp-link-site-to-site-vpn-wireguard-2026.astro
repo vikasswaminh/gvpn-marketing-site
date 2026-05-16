@@ -16,11 +16,8 @@ const title         = "TP-Link site-to-site VPN with WireGuard: a 2026 guide for
 const description   = "Connect two, three, or thirty TP-Link branches with WireGuard site-to-site VPN. No static public IPs needed, no firmware changes, no IPsec gymnastics. Founder-written guide for 2026.";
 const datePublished = "2026-05-16";
 const dateModified  = "2026-05-16";
-const author = {
-  name:     "Vikas",
-  jobTitle: "Founder, MeshWG",
-  url:      "https://meshwg.com/about",
-};
+// v2 voice: institutional byline. Author is the publisher Organization,
+// referenced via @id in the Article JSON-LD below.
 
 // FAQ Q&A — wording mirrors live PAA for snippet capture.
 // These also feed the FAQPage JSON-LD at the bottom.
@@ -121,7 +118,7 @@ const compareRows = [
   <PageHero
     eyebrow="/ blog · branch networking"
     title="TP-Link site-to-site VPN with WireGuard, in 2026."
-    lede={`A founder-written guide to connecting two, three, or thirty TP-Link branches over WireGuard — without static public IPs, IPsec gymnastics, or new hardware. By ${author.name}, ${author.jobTitle}.`}
+    lede="A strategist's guide to connecting two, three, or thirty TP-Link branches over WireGuard — without static public IPs, IPsec gymnastics, or new hardware. By the MeshWG editorial team."
   />
 
   <section class="post">
@@ -129,7 +126,7 @@ const compareRows = [
 
       <!-- ── Byline + dates -->
       <div class="byline">
-        <span class="by-author">By <a href={author.url}>{author.name}</a> · {author.jobTitle}</span>
+        <span class="by-author">By the MeshWG editorial team</span>
         <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
       </div>
 
@@ -207,9 +204,9 @@ const compareRows = [
           <li>
             <strong>Archer (consumer, AX-series)</strong> — WireGuard
             server and client support landed in firmware released from
-            late-2022 onward. The Archer AX73 is the model I see most
-            often at small branches that started with a home-grade router
-            and never replaced it.
+            late-2022 onward. The Archer AX73 is among the most
+            commonly seen models at small branches that began with
+            home-grade equipment and never had reason to replace it.
           </li>
           <li>
             <strong>Deco (mesh kits, X-series)</strong> — WireGuard server
@@ -252,13 +249,13 @@ const compareRows = [
       <article id="setup-vpn-server" class="post-block">
         <h2>How to setup a VPN server on a router?</h2>
         <p>
-          Five steps. Most branches finish all five inside two minutes;
-          the slowest part is usually waiting for the router admin UI to
-          paint. The numbers below come from a real onboarding I ran
-          last month on an ER605 at a small distributor in Hyderabad —
-          one minute forty-seven seconds from clicking <em>Add Machine</em>
-          in the MeshWG dashboard to the first successful ping across
-          the tunnel.
+          Five steps. Most branches complete all five inside two
+          minutes; the slowest part is typically waiting for the
+          router admin interface to load. The numbers cited below
+          reflect representative onboardings on the TP-Link ER605
+          — typically under two minutes from clicking <em>Add Machine</em>
+          in the MeshWG dashboard to the first successful ping
+          across the tunnel.
         </p>
 
         <ol class="steps">
@@ -490,13 +487,15 @@ const compareRows = [
           and routes overlay-IP packets through that single tunnel.
           Adding the fifth branch to an existing four-branch mesh
           is a four-minute job at the fifth branch and zero changes
-          at the other four. I onboarded a distributor with twelve
-          godowns in a single weekend last year; the pattern was
-          one engineer with a laptop at each site, the MeshWG
-          dashboard open on a phone, and about three minutes of
-          interaction per router. No coordinated change windows, no
-          all-sites-online requirement, no per-pair tunnel
-          configuration.
+          at the other four. Representative deployment patterns at
+          this scale — a distributor network bringing twelve godowns
+          online over a single weekend, for example — typically
+          involve one engineer with a laptop at each site, the
+          MeshWG dashboard open on a phone, and around three
+          minutes of interaction per router. No coordinated change
+          windows are required, no all-sites-online prerequisite
+          applies, and no per-pair tunnel configuration is ever
+          authored by hand.
         </p>
         <p>
           A few practical things that come up at the third and
@@ -551,16 +550,16 @@ const compareRows = [
       <article id="no-static-ip" class="post-block">
         <h2>When neither branch has a static public IP</h2>
         <p>
-          This is the elephant in every branch-networking
-          conversation in India. Most of the kirana chains,
-          franchise pharmacies, and small clinic groups I've
-          worked with run a single Reliance Jio or Airtel Xstream
-          fibre line per store. None of those lines come with a
-          static public IP — they come with CGNAT, and the public
-          IP on the router's WAN interface changes every few hours.
-          The traditional site-to-site approach simply doesn't work
-          here: you can't dial a destination that doesn't have a
-          stable address.
+          This is the central reality in every branch-networking
+          conversation in India today. Most independent retail
+          chains, franchise pharmacies, and small clinic groups
+          operate on a single Reliance Jio or Airtel Xstream fibre
+          line per store. None of those lines come with a static
+          public IP — they come with CGNAT, and the public IP on
+          the router's WAN interface changes every few hours. The
+          traditional site-to-site approach simply does not work
+          here: an endpoint without a stable address cannot be
+          dialled.
         </p>
         <p>
           Cloud control planes fix this without anyone at the
@@ -589,14 +588,16 @@ const compareRows = [
           having to touch anything.
         </p>
         <p>
-          I've tested this on Reliance Jio Fiber, Airtel Xstream
-          Fiber, and ACT Fibernet in 2026 — the three big consumer
-          fibre options in metro India. All three work without
-          configuration changes on the ISP side. The pattern is the
-          same: branch router dials out, cloud hub forwards, tunnel
-          stays up across IP rotations. The same applies to the
-          double-NAT case where the ISP router is in front of your
-          TP-Link — the keepalive holds through both NATs.
+          This pattern has been validated on Reliance Jio Fiber,
+          Airtel Xstream Fiber, and ACT Fibernet in 2026 — the
+          three major consumer fibre options across metro India.
+          All three work without configuration changes on the ISP
+          side. The behaviour is consistent: branch router dials
+          out, cloud hub forwards, and the tunnel stays up across
+          IP rotations the carrier performs in the background. The
+          same applies to the double-NAT case where the ISP-issued
+          router sits in front of the TP-Link — the keepalive
+          holds through both NAT layers.
         </p>
       </article>
 
@@ -665,13 +666,14 @@ const compareRows = [
         </ul>
         <p>
           The first two machines are free, forever. That means a
-          pilot — your HQ router plus one branch — costs nothing
-          and tells you in an hour whether the model fits your
-          environment. Most ICPs I've talked to run the pilot for
-          two to four weeks, prove the tunnels are stable under
-          their real traffic, then start onboarding the rest at
-          their own pace. You only get to a paid invoice when you
-          add your third machine.
+          pilot — a headquarters router plus one branch — costs
+          nothing and reveals within an hour whether the model
+          fits the environment. Most organisations evaluating
+          this approach run the pilot for two to four weeks,
+          verify the tunnels remain stable under real traffic,
+          then onboard the remainder at the pace the business
+          allows. The meter only begins when the third machine
+          is added.
         </p>
         <p>
           One honest disclosure for the procurement-minded reader:
@@ -726,11 +728,10 @@ const compareRows = [
     "datePublished": datePublished,
     "dateModified": dateModified,
     "author": {
-      "@type": "Person",
-      "@id": "https://meshwg.com/about#vikas",
-      "name": author.name,
-      "url": author.url,
-      "jobTitle": author.jobTitle,
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com/about",
     },
     "publisher": {
       "@type": "Organization",

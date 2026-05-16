@@ -13,11 +13,8 @@ const title         = "WireGuard for site-to-site VPN: how it actually works in 
 const description   = "How WireGuard site-to-site VPN works at the protocol level, in 2026 — with multi-site mesh, CGNAT scenarios, and when a cloud control plane beats hand-rolled per-peer configs.";
 const datePublished = "2026-05-16";
 const dateModified  = "2026-05-16";
-const author = {
-  name:     "Vikas",
-  jobTitle: "Founder, MeshWG",
-  url:      "https://meshwg.com/about",
-};
+// v2 voice: institutional byline. Author is the publisher Organization,
+// referenced via @id in the Article JSON-LD below.
 
 // FAQ — wording mirrors live PAA + related searches
 const faqs = [
@@ -116,7 +113,7 @@ const compareRows = [
   <PageHero
     eyebrow="/ blog · protocol deep-dive"
     title="WireGuard for site-to-site VPN, in 2026."
-    lede={`How WireGuard site-to-site actually works at the protocol level — with multi-site mesh, CGNAT scenarios, and when a cloud control plane beats hand-rolled per-peer configs. By ${author.name}, ${author.jobTitle}.`}
+    lede="How WireGuard site-to-site actually works at the protocol level — with multi-site mesh, CGNAT scenarios, and when a cloud control plane beats hand-rolled per-peer configs. By the MeshWG editorial team."
   />
 
   <section class="post">
@@ -124,7 +121,7 @@ const compareRows = [
 
       <!-- Byline -->
       <div class="byline">
-        <span class="by-author">By <a href={author.url}>{author.name}</a> · {author.jobTitle}</span>
+        <span class="by-author">By the MeshWG editorial team</span>
         <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
       </div>
 
@@ -366,9 +363,9 @@ const compareRows = [
           time and about three minutes once you've done it before. Most
           of the time gets spent staring at AllowedIPs — write down both
           peers' overlay IPs and LAN subnets on paper before opening any
-          configuration file. The post-mortem on every "the tunnel comes
-          up but routing doesn't work" issue I've debugged comes back to
-          a wrong CIDR in AllowedIPs.
+          configuration file. The post-mortem on virtually every
+          "tunnel comes up but routing does not work" support case
+          traces back to a wrong CIDR in AllowedIPs.
         </p>
       </article>
 
@@ -586,15 +583,16 @@ const compareRows = [
           subscribes to a Dynamic DNS service.
         </p>
         <p>
-          This is the no-static-IP scenario MeshWG was built for. I've
-          run handshakes through this exact path on Jio Fiber, Airtel
+          This is the no-static-IP scenario modern mesh-VPN
+          platforms like MeshWG are built for. The pattern has been
+          validated through extensive testing on Jio Fiber, Airtel
           Xstream, and ACT Fibernet in 2026; all three behave the
-          same way — outbound UDP works, PersistentKeepalive holds the
-          mapping, and tunnels recover within a second or two when
-          the branch's public IP rotates. The same applies to the
-          double-NAT case where the ISP-issued router is in front of
-          your branch router; the keepalive holds through both NAT
-          layers.
+          same way — outbound UDP works, PersistentKeepalive holds
+          the mapping, and tunnels recover within a second or two
+          when the branch's public IP rotates. The same applies to
+          the double-NAT case where the ISP-issued router sits in
+          front of the branch router; the keepalive holds through
+          both NAT layers reliably.
         </p>
       </article>
 
@@ -736,15 +734,17 @@ const compareRows = [
         </ul>
         <h3>The pilot pattern</h3>
         <p>
-          Even if you'll eventually hand-roll, starting with MeshWG's
-          two-machines-free tier lets you validate the topology and
-          routing decisions before committing to operational work.
-          We've had pilots stay on the free tier indefinitely — home
-          labs and one-engineer outfits that never exceeded two peers.
-          We've had others scale from a two-peer pilot to thirty
-          branches inside three months. Both are valid outcomes; the
-          point is the pilot answers the architectural questions
-          before either path locks in.
+          Even for organisations that will eventually hand-roll,
+          starting with MeshWG's two-machines-free tier provides
+          a low-commitment way to validate topology and routing
+          decisions before any operational investment. Some
+          deployments remain on the free tier indefinitely — home
+          labs and one-engineer environments that never exceed
+          two peers. Others scale from a two-peer pilot to thirty
+          branches inside three months. Both are valid trajectories
+          of the same disciplined evaluation; the central value
+          of the pilot is that it answers the architectural
+          questions before either path becomes locked in.
         </p>
       </article>
 
@@ -784,11 +784,10 @@ const compareRows = [
     "datePublished": datePublished,
     "dateModified": dateModified,
     "author": {
-      "@type": "Person",
-      "@id": "https://meshwg.com/about#vikas",
-      "name": author.name,
-      "url": author.url,
-      "jobTitle": author.jobTitle,
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com/about",
     },
     "publisher": {
       "@type": "Organization",

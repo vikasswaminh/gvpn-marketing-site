@@ -779,18 +779,23 @@ const compareRows = [
   .post-block { margin-bottom: 64px; max-width: 720px; }
   .post-block:last-child { margin-bottom: 0; }
   .post-block h2 {
-    font-size: 26px;
-    line-height: 1.18;
-    letter-spacing: -.018em;
-    font-weight: 500;
-    margin: 0 0 18px;
+    font-family: var(--font-serif);
+    font-size: 36px;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    margin: 0 0 22px;
     text-wrap: balance;
+    color: var(--text);
   }
+  .post-block h2 .it { font-style: italic; color: var(--accent); }
   .post-block h3 {
-    font-size: 17px;
-    font-weight: 500;
-    margin: 28px 0 10px;
-    letter-spacing: -.005em;
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 400;
+    margin: 32px 0 12px;
+    letter-spacing: -0.01em;
+    color: var(--text);
   }
   .post-block p {
     margin: 0 0 16px;
@@ -825,12 +830,16 @@ const compareRows = [
     margin-bottom: 14px;
   }
   .opt-num {
-    font-family: var(--font-mono);
-    font-size: 12px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 42px;
+    line-height: 1;
     color: var(--accent);
-    letter-spacing: .04em;
-    margin-top: 8px;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    margin-top: 4px;
     flex-shrink: 0;
+    min-width: 56px;
   }
   .opt-head h2 {
     font-size: 22px;

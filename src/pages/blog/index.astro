@@ -188,39 +188,46 @@ const description = "Founder-written notes on branch networking, WireGuard, mesh
     display: flex; flex-wrap: wrap; align-items: center;
     gap: 0 10px;
     font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--text-3);
-    text-transform: lowercase;
-    letter-spacing: .04em;
-    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 16px;
   }
   .meta .cat { color: var(--accent); }
   .meta .dot { color: var(--text-4); }
   .meta .date, .meta .rt { color: var(--text-3); }
 
+  /* Editorial serif title — italic accents reserve for hover acid wash */
   .t {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -.018em;
-    margin: 0 0 10px;
+    font-family: var(--font-serif);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.018em;
+    margin: 0 0 12px;
     text-wrap: balance;
-    line-height: 1.2;
+    line-height: 1.08;
     color: var(--text);
+    transition: color 0.15s ease;
   }
-  .post-link:hover .t { color: var(--accent-strong); }
+  .post-link:hover .t { color: var(--accent); }
 
   .d {
-    margin: 0 0 16px;
+    margin: 0 0 18px;
     color: var(--text-2);
     font-size: 15px;
     line-height: 1.65;
     max-width: 680px;
+    font-weight: 300;
   }
 
   .arrow {
-    font-size: 13.5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
     color: var(--accent);
     font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
   .post-link:hover .arrow { color: var(--accent-strong); }
 

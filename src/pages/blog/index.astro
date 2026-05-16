@@ -1,0 +1,219 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+
+// Blog post index. Hardcoded list — matches the pattern used elsewhere in
+// the site (quickstart.astro's vendorGuides, docs.astro's archPoints). When a
+// new post ships, prepend its entry to this array; the index page rebuilds
+// automatically. Newest first.
+//
+// Keep `slug` matching the .astro filename in this directory. Keep `category`
+// short enough to fit on one line at narrow widths.
+
+interface PostMeta {
+  slug:        string;
+  title:       string;
+  description: string;
+  datePublished: string;   // ISO date
+  readMinutes: number;
+  category:    string;
+}
+
+const posts: PostMeta[] = [
+  {
+    slug:          "tp-link-site-to-site-vpn-wireguard-2026",
+    title:         "TP-Link site-to-site VPN with WireGuard: a 2026 guide for branch offices",
+    description:   "Connect two, three, or thirty TP-Link branches with WireGuard site-to-site VPN. No static public IPs needed, no firmware changes, no IPsec gymnastics.",
+    datePublished: "2026-05-16",
+    readMinutes:   16,
+    category:      "branch networking",
+  },
+];
+
+// Human-readable date formatter.
+const fmtDate = (iso: string) => {
+  const d = new Date(iso + "T00:00:00Z");
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+};
+
+const title = "Blog — MeshWG";
+const description = "Founder-written notes on branch networking, WireGuard, mesh VPN, and connecting the routers you already own. Long-form guides for the practical work of running a private network across multiple sites.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+
+  <PageHero
+    eyebrow="/ blog"
+    title="Practical notes on mesh VPN, WireGuard, and branch networking."
+    lede="Long-form, founder-written guides. The kind of detail we'd send to a friend setting up their first multi-branch deployment."
+  />
+
+  <section class="blog-index">
+    <div class="wrap">
+
+      <ol class="post-list">
+        {posts.map((p) => (
+          <li class="post-item">
+            <a class="post-link" href={`/blog/${p.slug}/`}>
+              <div class="meta">
+                <span class="cat">/ {p.category}</span>
+                <span class="dot">·</span>
+                <span class="date">{fmtDate(p.datePublished)}</span>
+                <span class="dot">·</span>
+                <span class="rt">{p.readMinutes} min read</span>
+              </div>
+              <h2 class="t">{p.title}</h2>
+              <p class="d">{p.description}</p>
+              <span class="arrow" aria-hidden="true">Read →</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <aside class="rss-strip">
+        <p>
+          More posts coming soon — branch VPN economics, WireGuard
+          site-to-site under various ISP conditions, mesh-VPN vs IPsec
+          vs SDWAN. If you'd like an email when the next one lands,
+          drop a line to <a href="mailto:hello@meshwg.com?subject=MeshWG%20blog%20updates">hello@meshwg.com</a>.
+        </p>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- ── Blog-index Breadcrumb + ItemList JSON-LD ─────────────────
+       ItemList lets Google understand this is a list of articles and
+       can surface "Blog" sitelinks once the section has a few posts.
+       Breadcrumb improves the rendered SERP appearance for this URL.
+       ──────────────────────────────────────────────────────────── -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://meshwg.com/blog/" },
+    ],
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": "https://meshwg.com/blog/#blog",
+    "name": "MeshWG Blog",
+    "description": description,
+    "url": "https://meshwg.com/blog/",
+    "publisher": {
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com",
+    },
+    "blogPost": posts.map((p) => ({
+      "@type": "BlogPosting",
+      "headline": p.title,
+      "description": p.description,
+      "url": `https://meshwg.com/blog/${p.slug}/`,
+      "datePublished": p.datePublished,
+    })),
+  })}></script>
+
+  <Footer />
+</Base>
+
+<style>
+  .blog-index { padding: 56px 0 96px; }
+
+  .post-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex; flex-direction: column;
+    gap: 14px;
+  }
+
+  .post-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .post-item:hover {
+    border-color: color-mix(in oklab, var(--accent) 35%, var(--border));
+    transform: translateY(-1px);
+  }
+
+  .post-link {
+    display: block;
+    padding: 28px 32px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .meta {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 0 10px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-3);
+    text-transform: lowercase;
+    letter-spacing: .04em;
+    margin-bottom: 12px;
+  }
+  .meta .cat { color: var(--accent); }
+  .meta .dot { color: var(--text-4); }
+  .meta .date, .meta .rt { color: var(--text-3); }
+
+  .t {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -.018em;
+    margin: 0 0 10px;
+    text-wrap: balance;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .post-link:hover .t { color: var(--accent-strong); }
+
+  .d {
+    margin: 0 0 16px;
+    color: var(--text-2);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 680px;
+  }
+
+  .arrow {
+    font-size: 13.5px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .post-link:hover .arrow { color: var(--accent-strong); }
+
+  /* RSS-coming strip */
+  .rss-strip {
+    margin-top: 48px;
+    padding: 24px 28px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .rss-strip p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  .rss-strip a {
+    color: var(--accent);
+  }
+  .rss-strip a:hover { color: var(--accent-strong); }
+
+  @media (max-width: 980px) {
+    .blog-index { padding: 32px 0 64px; }
+    .post-link { padding: 22px 22px; }
+    .t { font-size: 19px; }
+  }
+</style>

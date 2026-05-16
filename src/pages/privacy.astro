@@ -43,7 +43,7 @@ const effective = "2026-05-13";
 
         <h3>2.1 Information you provide</h3>
         <ul class="bullets">
-          <li><strong>Account data:</strong> email address, password (stored as a bcrypt hash; never in plaintext), display name, and organisation name.</li>
+          <li><strong>Account data:</strong> email address, password (stored only as a one-way cryptographic hash; never in plaintext), display name, and organisation name.</li>
           <li><strong>Authentication identifiers (Google sign-in only):</strong> your Google account ID, verified email, and display name, received from Google OpenID Connect.</li>
           <li><strong>Mesh metadata:</strong> for each device you add — the name you assign, its public WireGuard key, its assigned overlay IP address, and aggregate handshake counters (last-seen time, byte counters) used for the dashboard status indicators.</li>
           <li><strong>Billing data:</strong> billing email, the plan you subscribe to, and machine count for invoicing. Payment card details are processed entirely by Razorpay; we never receive or store full card numbers.</li>
@@ -148,13 +148,13 @@ const effective = "2026-05-13";
           or Information) Rules, 2011, including:
         </p>
         <ul class="bullets">
-          <li>Passwords stored only as bcrypt hashes (cost 10).</li>
-          <li>Tenant hub WireGuard private keys encrypted at rest using AES-256-GCM.</li>
-          <li>Each customer organisation isolated in its own Linux network namespace on the controller.</li>
-          <li>JSON Web Tokens with a server-side revocation list to support immediate session termination.</li>
-          <li>Cookie-based CSRF protection on every state-changing endpoint.</li>
-          <li>Server software updated within seven days of vendor security advisories.</li>
-          <li>Routine encrypted backups of the database, retained for 30 days.</li>
+          <li>Passwords stored only as one-way hashes using an industry-standard slow-hash function.</li>
+          <li>Server-side WireGuard keys held on your behalf are encrypted at rest with strong symmetric encryption; the service refuses to start without the unlock secret.</li>
+          <li>Each customer organisation is strictly isolated from every other organisation on the service.</li>
+          <li>Sessions can be terminated immediately on logout or revocation.</li>
+          <li>CSRF protection is enforced on every state-changing request.</li>
+          <li>Server software is updated within seven days of any vendor security advisory that applies to it.</li>
+          <li>Routine encrypted backups, retained for 30 days.</li>
         </ul>
       </article>
 

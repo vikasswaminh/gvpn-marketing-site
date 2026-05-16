@@ -515,12 +515,10 @@ const compareRows = [
           When sizing the hub, account for the aggregate bandwidth of
           cross-branch flows. A 10-branch mesh where four branches
           stream an overnight backup runs all four backups through the
-          hub. The MeshWG controller is sized for around 1 Gbps of
-          aggregate cross-tenant traffic per controller — enough for
-          most small-fleet patterns we've seen. For specific workloads
-          with sustained cross-branch streaming above that, the
-          deployment-engineering conversation gets more interesting; we
-          have it on the rare occasions it comes up.
+          hub. MeshWG's shared hub comfortably supports the small-fleet
+          patterns we see in practice; for sustained, high-throughput
+          cross-branch streaming, the right answer is a dedicated
+          deployment — talk to us and we'll size it for the workload.
         </p>
       </article>
 

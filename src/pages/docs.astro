@@ -4,28 +4,28 @@ import Nav        from "../components/Nav.astro";
 import PageHero   from "../components/PageHero.astro";
 import Footer     from "../components/Footer.astro";
 
-// Sections kept verifiable. Each architecture claim maps to a file in
-// the underlying repo; each verification claim points at the harness.
+// Architecture claims are written as customer-visible promises.
+// We describe what you get; we don't describe the inside of the box.
 const archPoints = [
   {
-    h: "Hub-and-spoke through one controller",
-    p: "All overlay traffic between your machines passes through a single controller — the one place where policy is applied. Peers don't need to discover each other; they discover the hub, and the hub decides who reaches whom.",
+    h: "One place where policy is decided",
+    p: "All overlay traffic between your machines is routed through a single managed hub — the one place where access rules are applied. Your machines don't need to discover each other directly; they reach the hub, and the hub decides who reaches whom.",
   },
   {
-    h: "Per-tenant Linux network namespace",
-    p: "Each organization runs in its own kernel network namespace on the controller. Two tenants on the same controller cannot see each other's overlay traffic, even with identical overlay IP ranges.",
+    h: "Strict isolation between organizations",
+    p: "Each organization is fully isolated from every other organization on the service. Other organizations cannot see or reach your machines, even if they happen to use overlapping private IP ranges.",
   },
   {
-    h: "iptables-enforced ACLs",
-    p: "Allow/deny policies are written into the FORWARD chain of the tenant's namespace. Rules apply at the kernel level — when a policy says deny, the kernel drops the packet before it reaches the destination.",
+    h: "Policies apply before traffic reaches the destination",
+    p: "When you set a policy to deny, packets are dropped before they ever reach the destination machine. There's no software agent on your devices to bypass and no race window — the rule applies the moment you save it.",
   },
   {
-    h: "Encrypted hub keys at rest",
-    p: "Each tenant's hub private key is generated server-side and stored AES-256-GCM encrypted in PostgreSQL. The encryption key is read from an environment variable; the controller refuses to start if it's unset.",
+    h: "Server-side keys are encrypted at rest",
+    p: "The keys MeshWG holds on your behalf are encrypted at rest. The service cannot start at all if the unlock secret is missing. Per-machine private keys are shown to you once at creation and never persisted server-side.",
   },
   {
-    h: "No internet egress through the hub",
-    p: "By design and verified: the tenant namespace has no MASQUERADE rules, no SNAT, and no path to public networks. The hub forwards overlay traffic between your peers only. Peers reach the internet via their own local network.",
+    h: "No path to the public internet through MeshWG",
+    p: "MeshWG forwards your overlay traffic between your own machines only. There is no internet egress path through us — your devices continue to reach the internet through their own local network.",
   },
 ];
 
@@ -38,18 +38,18 @@ const dontDoList = [
 ];
 
 const testCoverage = [
-  { n: "Auth flow",         what: "Real HTTP login → JWT cookie → CSRF + rate-limit checks" },
-  { n: "Tunnel handshake",  what: "Two real Ubuntu VMs do WireGuard handshakes against the controller" },
-  { n: "Policy enforcement", what: "Apply a deny rule, count actual packets dropped at the kernel" },
-  { n: "Cross-tenant isolation", what: "tcpdump in tenant B's namespace sees 0 packets while tenant A floods" },
-  { n: "Concurrent IP allocation", what: "5 parallel POSTs, verify no two devices get the same overlay IP" },
-  { n: "Policy flap soak",  what: "30 toggle cycles, every transition matches expected state" },
-  { n: "Reconciler soak",   what: "Delete the namespace 5 times, restart the service, ping must work each time" },
-  { n: "Tenant burst",      what: "8 parallel org creates, verify each gets a unique port + working wg0" },
-  { n: "Live ping flood",   what: "Flood ping during 10 policy toggles, count kernel drops vs received" },
-  { n: "Internet egress",   what: "Verify external IPs are unreachable from inside a tenant namespace" },
-  { n: "Long-name regression", what: "60-char org name with special chars must onboard without orphan interfaces" },
-  { n: "Delete-org",        what: "API delete → cascade through devices, users, namespace, no leftover state" },
+  { n: "Sign-in + abuse controls", what: "Login, session, CSRF, and rate-limit protections all behave as advertised" },
+  { n: "Tunnel handshake",         what: "Two real machines complete a WireGuard handshake against the live service" },
+  { n: "Policy enforcement",       what: "When a deny rule is set, the traffic it blocks really stops flowing" },
+  { n: "Org-to-org isolation",     what: "One organization cannot observe or reach another organization's traffic" },
+  { n: "Concurrent device adds",   what: "Many devices added in parallel never collide on an overlay address" },
+  { n: "Policy churn soak",        what: "Dozens of allow/deny flips in a row; every transition lands correctly" },
+  { n: "Self-healing",             what: "Forcefully damage internal state — connectivity recovers automatically" },
+  { n: "Onboarding burst",         what: "Many organizations created at once; each gets a working mesh" },
+  { n: "Live traffic during change", what: "Toggle policies while traffic flows; what is denied is dropped, what is allowed gets through" },
+  { n: "No internet egress",       what: "External destinations are unreachable through MeshWG by design" },
+  { n: "Edge-case names",          what: "Long names with special characters onboard cleanly with no leftover state" },
+  { n: "Delete-org cleanup",       what: "Deleting an organization removes everything that belonged to it, with no orphans" },
 ];
 
 const title = "Docs — MeshWG";
@@ -104,15 +104,15 @@ const description = "How MeshWG actually works: architecture, the wg-quick confi
           </p>
         </header>
 
-        <pre class="config-pre"><span class="hdr"># wg0.conf — generated for machine "branch-mumbai"</span>
+        <pre class="config-pre"><span class="hdr"># WireGuard config for machine "branch-mumbai"</span>
 <span class="sec">[Interface]</span>
-<span class="key">PrivateKey</span>          = <span class="val">&lt;generated server-side, returned once&gt;</span>
+<span class="key">PrivateKey</span>          = <span class="val">&lt;shown once at machine creation&gt;</span>
 <span class="key">Address</span>             = <span class="val">10.100.0.2/16</span>
 <span class="key">MTU</span>                 = <span class="val">1420</span>
 
 <span class="sec">[Peer]</span>
-<span class="hdr"># tenant hub for "acme-networks"</span>
-<span class="key">PublicKey</span>           = <span class="val">&lt;tenant hub public key&gt;</span>
+<span class="hdr"># MeshWG hub for "acme-networks"</span>
+<span class="key">PublicKey</span>           = <span class="val">&lt;your MeshWG hub public key&gt;</span>
 <span class="key">Endpoint</span>            = <span class="val">vpn.meshwg.com:51820</span>
 <span class="key">AllowedIPs</span>          = <span class="val">10.100.0.0/16</span>
 <span class="key">PersistentKeepalive</span> = <span class="val">25</span></pre>
@@ -138,12 +138,13 @@ const description = "How MeshWG actually works: architecture, the wg-quick confi
       <article id="verification" class="doc-block">
         <header>
           <div class="db-eyebrow">/ 04 how we verify it works</div>
-          <h2>An end-to-end harness with kernel-level oracles.</h2>
+          <h2>Every release is tested end-to-end against real traffic.</h2>
           <p class="db-lede">
-            Every release runs through a 24-phase test that drives the real
-            controller and two test VMs over SSH, then asserts against
-            actual kernel counters and tcpdump captures — not just HTTP
-            status codes. If anything regresses, the deploy fails.
+            Before any release ships, an automated end-to-end test drives
+            the live service the same way a customer would, and measures
+            real packet behaviour — not just API responses. If anything
+            on this page regresses, the deploy fails and the change
+            doesn't go out.
           </p>
         </header>
 
@@ -157,11 +158,11 @@ const description = "How MeshWG actually works: architecture, the wg-quick confi
         </div>
 
         <p class="cov-foot">
-          Every test asserts against actual kernel counters — packet counts on
-          iptables rules, tcpdump captures inside the tenant namespace, real
-          WireGuard handshakes from real VMs. Want to see a transcript? Email
-          <a href="mailto:hello@meshwg.com">hello@meshwg.com</a> — we'll share
-          the latest run.
+          Each test measures real packet behaviour and real handshakes — not
+          just status codes — so the claims on this page stay true release
+          after release. Want to see a recent test transcript? Email
+          <a href="mailto:hello@meshwg.com">hello@meshwg.com</a> and we'll
+          share the latest run.
         </p>
       </article>
 

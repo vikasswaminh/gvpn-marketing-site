@@ -1,12 +1,12 @@
 ---
-// Real wg-quick config that the controller actually emits today.
+// Sample of the standard WireGuard config MeshWG generates for a machine.
 ---
 <section style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="wrap">
     <div class="sec-eyebrow">/ honest engineering</div>
-    <h2 class="sec-h">It's a wg-quick config. No agent. No daemon.</h2>
+    <h2 class="sec-h">It's a standard WireGuard config. No agent. No daemon.</h2>
     <p class="sec-lede">
-      The controller emits standard WireGuard. Paste it into your router,
+      MeshWG hands you standard WireGuard. Paste it into your router,
       laptop, or server's existing WireGuard interface. The machine keeps
       doing what it does. MeshWG just brokers the tunnel.
     </p>
@@ -22,19 +22,19 @@
           <li><span class="dash">—</span>Standard WireGuard. Works on anything that supports it.</li>
           <li><span class="dash">—</span>You own the config. Export it. Audit it. Run it without MeshWG.</li>
           <li><span class="dash">—</span>Per-peer private keys are returned once and not retained.</li>
-          <li><span class="dash">—</span>If the controller is down, existing tunnels keep running.</li>
+          <li><span class="dash">—</span>If MeshWG is unreachable, established tunnels keep running.</li>
         </ul>
       </aside>
 
-      <pre class="config-pre"><span class="hdr"># wg0.conf — generated for machine "branch-mumbai"</span>
+      <pre class="config-pre"><span class="hdr"># WireGuard config for machine "branch-mumbai"</span>
 <span class="sec">[Interface]</span>
-<span class="key">PrivateKey</span>          = <span class="val">&lt;generated, returned once&gt;</span>
+<span class="key">PrivateKey</span>          = <span class="val">&lt;shown once at machine creation&gt;</span>
 <span class="key">Address</span>             = <span class="val">10.100.0.2/16</span>
 <span class="key">MTU</span>                 = <span class="val">1420</span>
 
 <span class="sec">[Peer]</span>
-<span class="hdr"># tenant hub for "acme-networks"</span>
-<span class="key">PublicKey</span>           = <span class="val">&lt;tenant hub public key&gt;</span>
+<span class="hdr"># MeshWG hub for "acme-networks"</span>
+<span class="key">PublicKey</span>           = <span class="val">&lt;your MeshWG hub public key&gt;</span>
 <span class="key">Endpoint</span>            = <span class="val">vpn.your-domain.com:51820</span>
 <span class="key">AllowedIPs</span>          = <span class="val">10.100.0.0/16</span>
 <span class="key">PersistentKeepalive</span> = <span class="val">25</span></pre>

@@ -475,10 +475,9 @@ const compareRows = [
           policy intent up front — most SMB networks land on "any
           branch can reach HQ, branches cannot reach each other
           directly" — and configure the cloud control plane to
-          enforce it. MeshWG's access rules apply at the kernel
-          level on the hub within about thirty seconds of a change;
-          you don't redeploy anything at the branches when policy
-          shifts.
+          enforce it. MeshWG applies access rule changes on the
+          managed hub within about thirty seconds — the change is
+          live without redeploying anything at the branches.
         </p>
         <p>
           The second scale-stage problem is onboarding velocity. At

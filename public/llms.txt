@@ -27,8 +27,17 @@ distribution — every signup goes through the hosted login page.
   every architectural claim.
 - [Pricing](https://meshwg.com/pricing): plans (Free, Cloud, Pro),
   per-machine calculator, billing FAQ.
-- [Blog](https://meshwg.com/blog/): founder-written long-form guides on
-  branch networking, WireGuard, and mesh VPN. Current posts:
+- [Blog](https://meshwg.com/blog/): long-form strategy and operations
+  guides on branch networking, WireGuard, mesh VPN, and SD-WAN
+  alternatives, written by the MeshWG editorial team. Current posts:
+  - [Mesh VPN vs IPsec vs SD-WAN: choosing the right private network for your business in 2026](https://meshwg.com/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/):
+    strategist's guide to the three private-network categories
+    shaping multi-site business in 2026. Covers what each category
+    delivers, where each earns its place, a five-question decision
+    framework, sector-specific perspectives (retail, healthcare,
+    manufacturing, professional services), and the five durable
+    business outcomes a modern private network is meant to produce.
+    ~4,000 words, ~17 minute read.
   - [Branch office VPN for SMBs in 2026: a 5-phase rollout playbook](https://meshwg.com/blog/branch-office-vpn-smb-rollout-playbook-2026/):
     operational rollout playbook for SMBs deploying mesh VPN across
     5 to 50 branches. Covers a five-phase rollout (audit existing

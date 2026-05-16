@@ -55,6 +55,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://meshwg.com/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://meshwg.com/privacy</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>yearly</changefreq>

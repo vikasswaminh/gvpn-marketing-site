@@ -48,35 +48,41 @@ const features = [
 </section>
 
 <style>
+  /* Editorial feature grid — hairline-divided cells on the ink canvas,
+     serif italic titles, ultra-light body. Hover ramps the surface
+     up a step (no shadow, just contrast). */
   .feature-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0;
+    gap: 1px;
     margin-top: 64px;
+    background: var(--border);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    border-radius: 0;
   }
   .feature {
-    background: var(--surface);
-    padding: 32px 28px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    transition: background .15s ease;
+    background: var(--bg);
+    padding: 36px 32px 40px;
+    transition: background 0.2s ease;
+    position: relative;
   }
   .feature:hover { background: var(--bg-2); }
-  .feature:nth-child(3n) { border-right: 0; }
-  .feature:nth-last-child(-n+3) { border-bottom: 0; }
 
   .ft-title {
-    font-size: 16px; font-weight: 500;
-    letter-spacing: -.005em;
-    margin: 0 0 10px;
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+    color: var(--text);
+    line-height: 1.1;
   }
   .ft-body {
     color: var(--text-2);
-    font-size: 14px; line-height: 1.65;
+    font-size: 14.5px;
+    line-height: 1.6;
     margin: 0;
+    font-weight: 300;
   }
 
   @media (max-width: 980px) {

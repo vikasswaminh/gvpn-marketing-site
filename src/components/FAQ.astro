@@ -71,13 +71,16 @@ const faqs = [
   summary {
     cursor: pointer;
     list-style: none;
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -.005em;
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: var(--text);
     display: flex; align-items: center; justify-content: space-between;
     gap: 16px;
+    line-height: 1.2;
   }
+  summary:hover { color: var(--accent); }
   summary::-webkit-details-marker { display: none; }
   summary::after {
     content: "+";
@@ -86,14 +89,16 @@ const faqs = [
     color: var(--text-4);
     font-weight: 300;
     line-height: 1;
-    transition: transform .2s ease;
+    flex-shrink: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
   }
-  details[open] summary::after { content: "−"; }
+  details[open] summary::after { content: "−"; color: var(--accent); }
   details p {
-    margin: 14px 0 0;
+    margin: 16px 0 0;
     color: var(--text-2);
-    font-size: 14px;
+    font-size: 14.5px;
     line-height: 1.65;
+    font-weight: 300;
   }
 
   @media (max-width: 980px) {

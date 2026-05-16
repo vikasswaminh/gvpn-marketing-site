@@ -27,51 +27,88 @@ import { site } from "../site";
 </section>
 
 <style>
-  .cta-section {
-    padding: 0 0 128px;
-  }
+  /* Editorial closing CTA — dark canvas card with a soft acid glow
+     in the upper-right corner, serif italic emphasis on the second
+     clause of the headline. */
+  .cta-section { padding: 0 0 140px; }
 
   .cta {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 80px 64px;
+    padding: 88px 72px;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
   }
-  .cta-inner { max-width: 720px; }
+  .cta::before {
+    content: "";
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    z-index: -1;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .cta-inner { max-width: 720px; position: relative; z-index: 1; }
 
   .cta-eyebrow {
     display: inline-block;
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: .04em;
-    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
   .cta-h {
-    font-size: 40px;
-    line-height: 1.1;
-    letter-spacing: -.02em;
-    margin: 0 0 16px;
-    font-weight: 500;
+    font-family: var(--font-serif);
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+    font-weight: 400;
     color: var(--text);
+    text-wrap: balance;
   }
-  .cta-h span { color: var(--text-3); }
+  .cta-h span {
+    font-style: italic;
+    color: var(--accent);
+  }
   .cta-p {
     color: var(--text-2);
-    font-size: 16px;
-    margin: 0 0 28px;
+    font-size: 16.5px;
+    margin: 0 0 32px;
     line-height: 1.6;
+    font-weight: 300;
+    max-width: 580px;
   }
   .cta-row {
     display: flex; gap: 10px;
     align-items: center;
     flex-wrap: wrap;
   }
+  /* Map .btn-primary inside the CTA to the acid pill treatment */
+  .cta-row .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+  }
+  .cta-row .btn-primary:hover {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+  }
+  .cta-row .btn:not(.btn-primary) {
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    border-radius: var(--radius-pill);
+  }
 
   @media (max-width: 980px) {
     .cta-section { padding: 0 0 64px; }
-    .cta { padding: 48px 28px; }
-    .cta-h { font-size: 28px; }
+    .cta { padding: 56px 28px; }
   }
 </style>

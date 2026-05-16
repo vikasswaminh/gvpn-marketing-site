@@ -43,5 +43,45 @@ const { title, description = "Hosted SDWAN + ZTNA on standard WireGuard. Mesh th
 </head>
 <body>
   <slot />
+
+  <!-- ── Ambient motion: scroll-reveal sections + frosted-nav-on-scroll
+       Tiny vanilla JS, no framework. Both effects respect
+       prefers-reduced-motion via the CSS in tokens.css and Nav.astro.
+       Set `js-reveal` on <html> only after this script runs so users
+       without JS see fully-visible sections immediately. -->
+  <script is:inline>
+    (function () {
+      try {
+        document.documentElement.classList.add('js-reveal');
+
+        // Scroll-reveal sections
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) {
+                e.target.classList.add('in-view');
+                io.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+          document.querySelectorAll('section').forEach(function (s) { io.observe(s); });
+        } else {
+          // No IO: reveal everything immediately as a graceful fallback.
+          document.querySelectorAll('section').forEach(function (s) { s.classList.add('in-view'); });
+        }
+
+        // Frosted-nav-on-scroll
+        var nav = document.querySelector('.nav');
+        if (nav) {
+          var onScroll = function () {
+            if (window.scrollY > 60) nav.classList.add('nav--scrolled');
+            else nav.classList.remove('nav--scrolled');
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          onScroll();
+        }
+      } catch (_) { /* fail open — better visible than broken */ }
+    })();
+  </script>
 </body>
 </html>

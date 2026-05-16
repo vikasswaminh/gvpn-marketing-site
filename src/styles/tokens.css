@@ -167,3 +167,46 @@ section + section { border-top: 1px solid var(--border); }
 
 /* Animation */
 @keyframes up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ── Scroll-reveal (IntersectionObserver-driven) ────────────────────
+ * Sections start invisible only AFTER the JS in Base.astro adds
+ * `.js-reveal` to <html>. Without JS, sections render normally — never
+ * stranded behind a missing observer. Hero is exempted because it should
+ * appear instantly. `prefers-reduced-motion` opts users back out.
+ */
+.js-reveal section:not(.hero) {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .65s cubic-bezier(.22, .61, .36, 1),
+              transform .65s cubic-bezier(.22, .61, .36, 1);
+  will-change: opacity, transform;
+}
+.js-reveal section.in-view {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal section:not(.hero) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Premium scrollbar (Linear / Stripe style) ──────────────────── */
+@supports (scrollbar-width: thin) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--accent) 35%, var(--border-strong)) transparent;
+  }
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--text-4) 75%, transparent);
+  border-radius: 999px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--accent) 55%, var(--text-3));
+}

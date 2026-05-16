@@ -26,9 +26,20 @@ import { site } from "../site";
 <style>
   .nav {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(255, 255, 255, .88);
-    backdrop-filter: saturate(180%) blur(14px);
-    border-bottom: 1px solid var(--border);
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background .25s ease, backdrop-filter .25s ease,
+                -webkit-backdrop-filter .25s ease,
+                border-bottom-color .25s ease;
+  }
+  /* After ~60 px scroll, the IntersectionObserver script in Base.astro
+     adds .nav--scrolled. Nav becomes a frosted-glass strip — the modern
+     AI-product treatment used by Anthropic, Cursor, Linear, Vercel. */
+  .nav--scrolled {
+    background: color-mix(in oklab, var(--bg) 72%, transparent);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom-color: var(--border);
   }
   .nav-inner {
     height: 64px;

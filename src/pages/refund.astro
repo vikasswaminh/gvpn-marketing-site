@@ -190,22 +190,32 @@ const effective = "2026-05-13";
 
 <style>
   .legal { padding: 64px 0 128px; }
-  .legal article { margin-bottom: 48px; max-width: 760px; }
+  .legal article { margin-bottom: 56px; max-width: 760px; }
   .legal article:last-child { margin-bottom: 0; }
   .legal h2 {
-    font-size: 20px; font-weight: 500;
-    letter-spacing: -.012em;
-    margin: 0 0 16px;
+    font-family: var(--font-serif);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 20px;
+    color: var(--text);
+    text-wrap: balance;
   }
   .legal h3 {
-    font-size: 15px; font-weight: 500;
-    margin: 22px 0 8px;
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 400;
+    margin: 28px 0 10px;
+    letter-spacing: -0.01em;
     color: var(--text);
   }
   .legal p {
     color: var(--text-2);
-    font-size: 15px; line-height: 1.7;
+    font-size: 15px;
+    line-height: 1.7;
     margin: 0 0 14px;
+    font-weight: 300;
   }
   .legal p:last-child { margin-bottom: 0; }
   .legal strong { color: var(--text); font-weight: 500; }

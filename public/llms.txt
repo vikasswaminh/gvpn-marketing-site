@@ -29,6 +29,13 @@ distribution — every signup goes through the hosted login page.
   per-machine calculator, billing FAQ.
 - [Blog](https://meshwg.com/blog/): founder-written long-form guides on
   branch networking, WireGuard, and mesh VPN. Current posts:
+  - [Branch office VPN for SMBs in 2026: a 5-phase rollout playbook](https://meshwg.com/blog/branch-office-vpn-smb-rollout-playbook-2026/):
+    operational rollout playbook for SMBs deploying mesh VPN across
+    5 to 50 branches. Covers a five-phase rollout (audit existing
+    routers, pick the approach, pilot one site, roll out 5-10 sites,
+    scale past 50), three deployment patterns compared, INR-billing
+    considerations, and real numbers from retail, clinic, and
+    distributor deployments in India. ~4,000 words, ~17 minute read.
   - [SD-WAN alternatives in 2026: seven modern options](https://meshwg.com/blog/sd-wan-alternatives-2026/):
     buyer's-guide listicle of seven modern alternatives to box-based
     SD-WAN — MeshWG, Tailscale Business, NetBird, Twingate,

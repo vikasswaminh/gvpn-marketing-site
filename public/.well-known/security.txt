@@ -8,8 +8,9 @@ Canonical: https://meshwg.com/.well-known/security.txt
 
 # Scope
 #   In scope:  meshwg.com, *.meshwg.com (including vpn.meshwg.com)
-#   Out of scope:  Third-party services we depend on (Cloudflare, Stripe,
-#                  Let's Encrypt, etc.) — report directly to the vendor.
+#   Out of scope:  Any third-party services or infrastructure providers
+#                  we may use — please report those directly to the
+#                  respective vendor's disclosure programme.
 #
 # What we ask
 #   Please report potential vulnerabilities privately by email above before

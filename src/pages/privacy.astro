@@ -54,7 +54,7 @@ const effective = "2026-05-13";
         <ul class="bullets">
           <li><strong>Technical logs:</strong> HTTP method, path, response status, source IP, user agent, timestamp.</li>
           <li><strong>Authentication cookies:</strong> see Section 6.</li>
-          <li><strong>Aggregate analytics:</strong> page paths, anonymised country (derived from IP and then discarded), browser family, operating system. Collected via self-hosted Plausible Analytics with no cookies, no PII, and no cross-site tracking.</li>
+          <li><strong>Aggregate analytics:</strong> page paths, anonymised country (derived from IP and then discarded), browser family, operating system. Collected via a self-hosted, privacy-respecting analytics platform with no cookies, no PII, and no cross-site tracking.</li>
         </ul>
 
         <h3>2.3 What we do not see</h3>
@@ -92,7 +92,7 @@ const effective = "2026-05-13";
         </p>
         <ul class="bullets">
           <li><strong>Payment processor — Razorpay Software Private Limited</strong> (an Indian company): card, UPI, and net-banking processing. Card details flow directly from your browser to Razorpay; we receive only a payment token and transaction status.</li>
-          <li><strong>Email delivery — our own SMTP infrastructure</strong> at mail.mailsetu.com. Transactional emails route through this infrastructure; no third-party email service receives your address.</li>
+          <li><strong>Email delivery — Mailsetu Communications</strong> (an Indian SMTP provider): transactional emails (sign-in links, billing receipts, security notices) are dispatched through Mailsetu's infrastructure.</li>
           <li><strong>Google LLC</strong> (United States): only if you choose "Continue with Google" — receives the fact that you signed into MeshWG; we receive your Google profile basics.</li>
           <li><strong>Cloudflare, Inc.</strong> (United States): provides DNS, CDN, and DDoS protection for our websites. Sees request metadata only; cannot decrypt mesh traffic.</li>
           <li><strong>Law enforcement and regulatory authorities</strong> when required by Indian law or court order, after verifying the legal basis of the request.</li>
@@ -118,13 +118,13 @@ const effective = "2026-05-13";
           The Service uses only strictly necessary cookies:
         </p>
         <ul class="bullets">
-          <li><code>jwt</code> — authentication token. HTTP-only, Secure, SameSite=Lax. 24-hour expiry.</li>
-          <li><code>csrf_</code> — anti-CSRF token. HTTP-only, Secure, SameSite=Strict. 1-hour expiry.</li>
-          <li><code>g_oauth_state</code> — Google sign-in CSRF state (10-minute maximum lifespan).</li>
+          <li>An authentication cookie that keeps you signed in. HTTP-only, Secure, SameSite=Lax, with a 24-hour lifespan.</li>
+          <li>An anti-CSRF cookie protecting state-changing requests. HTTP-only, Secure, SameSite=Strict, with a 1-hour lifespan.</li>
+          <li>A short-lived Google sign-in cookie (only set if you start a Google sign-in; 10-minute maximum lifespan).</li>
         </ul>
         <p>
           We do not use advertising, tracking, or analytics cookies on any
-          page. Self-hosted Plausible Analytics is cookieless.
+          page. Our analytics platform is cookieless by design.
         </p>
       </article>
 

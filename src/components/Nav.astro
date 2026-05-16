@@ -24,46 +24,71 @@ import { site } from "../site";
 </nav>
 
 <style>
+  /* Fixed, transparent at top of page; on scroll past 60 px the
+     IntersectionObserver script in Base.astro adds .nav--scrolled
+     and the strip becomes a frosted-ink bar. */
   .nav {
-    position: sticky; top: 0; z-index: 50;
-    background: transparent;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: linear-gradient(
+      to bottom,
+      rgba(11, 11, 12, 0.92),
+      rgba(11, 11, 12, 0.7) 70%,
+      transparent
+    );
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+            backdrop-filter: saturate(160%) blur(14px);
     border-bottom: 1px solid transparent;
-    transition: background .25s ease, backdrop-filter .25s ease,
-                -webkit-backdrop-filter .25s ease,
-                border-bottom-color .25s ease;
+    transition: border-bottom-color 0.25s ease, background 0.25s ease;
   }
-  /* After ~60 px scroll, the IntersectionObserver script in Base.astro
-     adds .nav--scrolled. Nav becomes a frosted-glass strip — the modern
-     AI-product treatment used by Anthropic, Cursor, Linear, Vercel. */
   .nav--scrolled {
-    background: color-mix(in oklab, var(--bg) 72%, transparent);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background: color-mix(in oklab, var(--bg) 78%, transparent);
     border-bottom-color: var(--border);
   }
+
   .nav-inner {
     height: 64px;
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 36px;
   }
+
   .brand {
     display: flex; align-items: center; gap: 10px;
-    font-weight: 500; letter-spacing: -.01em;
+    font-weight: 500;
+    letter-spacing: -0.005em;
     font-size: 15px;
+    color: var(--text);
   }
   .brand-name { color: var(--text); }
+
   .nav-links {
-    display: flex; gap: 24px;
-    font-size: 13.5px;
-    color: var(--text-3);
+    display: flex;
+    gap: 26px;
+    font-size: 13px;
+    color: var(--text-2);
   }
   .nav-links a {
-    transition: color .12s ease;
+    position: relative;
+    padding: 4px 0;
+    transition: color 0.15s ease;
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1);
   }
   .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
   .nav-spacer { flex: 1; }
-  .nav-cta { display: flex; gap: 8px; align-items: center; }
+  .nav-cta { display: flex; gap: 6px; align-items: center; }
 
   @media (max-width: 980px) {
     .nav-links { display: none; }

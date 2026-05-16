@@ -1,0 +1,496 @@
+---
+// WireGuard-compatible router inventory — v1 launch list (57 high-confidence
+// models). Lower-confidence rows (regional firmware variance, very recent
+// hardware, OpenWrt-conditional models) deliberately omitted from day-one
+// publication and held for a vendor-docs verification pass.
+//
+// Each entry: vendor + family + model + slug (drives image lookup) + shape
+// (silhouette fallback) + minFirmware (the version where WireGuard becomes
+// available out-of-box) + tier.
+//
+// Image convention:
+//   - Place product photos at  public/img/routers/{slug}.webp
+//   - Recommended size: 200×150, AVIF or WebP, ~8KB each
+//   - Missing files cleanly fall back to the vendor-tinted SVG silhouette
+//     (one of: flat, antenna, mesh, rack, minipc)
+//
+// Voice: v2 institutional. Brand: tokens.css only (one accent indigo,
+// Geist mono for model numbers, 1px borders, no shadows, sharp corners).
+
+interface Model {
+  vendor:       string;
+  family:       string;
+  model:        string;
+  slug:         string;
+  shape:        "flat" | "antenna" | "mesh" | "rack" | "minipc";
+  minFirmware:  string;
+  tier:         "consumer" | "smb" | "enterprise" | "appliance";
+}
+
+const vendorColor: Record<string, string> = {
+  "TP-Link":   "#4ACBD6",
+  "MikroTik":  "#293239",
+  "Ubiquiti":  "#0559C9",
+  "GL.iNet":   "#F08000",
+  "Asus":      "#FF1F44",
+  "Synology":  "#1A1A1A",
+  "OPNsense":  "#D94F00",
+  "pfSense":   "#212121",
+  "Generic":   "#525252",
+};
+
+const models: Model[] = [
+  // ── TP-Link Archer (consumer Wi-Fi — confirmed WG in stock firmware) ──
+  { vendor: "TP-Link", family: "Archer",  model: "AX55",     slug: "tplink-archer-ax55",  shape: "antenna", minFirmware: "Firmware 1.2.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Archer",  model: "AX72",     slug: "tplink-archer-ax72",  shape: "antenna", minFirmware: "Firmware 1.2.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Archer",  model: "AX73",     slug: "tplink-archer-ax73",  shape: "antenna", minFirmware: "Firmware 1.2.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Archer",  model: "AX75",     slug: "tplink-archer-ax75",  shape: "antenna", minFirmware: "Firmware 1.2.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Archer",  model: "AX90",     slug: "tplink-archer-ax90",  shape: "antenna", minFirmware: "Firmware 1.2.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Archer",  model: "AXE75",    slug: "tplink-archer-axe75", shape: "antenna", minFirmware: "Firmware 1.0.5+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Archer",  model: "AXE5400",  slug: "tplink-archer-axe5400",shape:"antenna", minFirmware: "Firmware 1.0.5+",        tier: "consumer" },
+
+  // ── TP-Link Deco (mesh kits — current firmware ships WireGuard) ───────
+  { vendor: "TP-Link", family: "Deco",    model: "X50",      slug: "tplink-deco-x50",     shape: "mesh",    minFirmware: "Firmware 1.6.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Deco",    model: "X55",      slug: "tplink-deco-x55",     shape: "mesh",    minFirmware: "Firmware 1.6.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Deco",    model: "X60",      slug: "tplink-deco-x60",     shape: "mesh",    minFirmware: "Firmware 1.6.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Deco",    model: "X75",      slug: "tplink-deco-x75",     shape: "mesh",    minFirmware: "Firmware 1.6.0+",        tier: "consumer" },
+  { vendor: "TP-Link", family: "Deco",    model: "X90",      slug: "tplink-deco-x90",     shape: "mesh",    minFirmware: "Firmware 1.6.0+",        tier: "consumer" },
+
+  // ── TP-Link SafeStream / Omada (SMB gateways) ─────────────────────────
+  { vendor: "TP-Link", family: "ER",      model: "ER605 v2", slug: "tplink-er605",        shape: "flat",    minFirmware: "Firmware 1.2.0+",        tier: "smb" },
+  { vendor: "TP-Link", family: "ER",      model: "ER7206",   slug: "tplink-er7206",       shape: "flat",    minFirmware: "Firmware 1.4.0+",        tier: "smb" },
+  { vendor: "TP-Link", family: "ER",      model: "ER8411",   slug: "tplink-er8411",       shape: "rack",    minFirmware: "Firmware 1.0.0+",        tier: "smb" },
+
+  // ── MikroTik (RouterOS 7+ has WireGuard as a kernel interface type) ───
+  { vendor: "MikroTik", family: "hAP",    model: "hAP ac²",      slug: "mikrotik-hap-ac2",   shape: "antenna", minFirmware: "RouterOS 7.0+", tier: "consumer" },
+  { vendor: "MikroTik", family: "hAP",    model: "hAP ac³",      slug: "mikrotik-hap-ac3",   shape: "antenna", minFirmware: "RouterOS 7.0+", tier: "consumer" },
+  { vendor: "MikroTik", family: "hAP",    model: "hAP ax²",      slug: "mikrotik-hap-ax2",   shape: "antenna", minFirmware: "RouterOS 7.1+", tier: "consumer" },
+  { vendor: "MikroTik", family: "hAP",    model: "hAP ax³",      slug: "mikrotik-hap-ax3",   shape: "antenna", minFirmware: "RouterOS 7.1+", tier: "consumer" },
+  { vendor: "MikroTik", family: "hAP",    model: "Chateau 5G ax",slug: "mikrotik-chateau-5g-ax",shape: "flat",  minFirmware: "RouterOS 7.1+", tier: "smb" },
+  { vendor: "MikroTik", family: "RB",     model: "RB4011iGS+",   slug: "mikrotik-rb4011",    shape: "rack",    minFirmware: "RouterOS 7.0+", tier: "smb" },
+  { vendor: "MikroTik", family: "RB",     model: "RB5009UG+S+IN",slug: "mikrotik-rb5009",    shape: "rack",    minFirmware: "RouterOS 7.0+", tier: "smb" },
+  { vendor: "MikroTik", family: "RB",     model: "RB5009UPr+S+IN",slug:"mikrotik-rb5009upr", shape: "rack",    minFirmware: "RouterOS 7.0+", tier: "smb" },
+  { vendor: "MikroTik", family: "CCR",    model: "CCR2004-1G-12S+2XS",slug:"mikrotik-ccr2004",shape: "rack",    minFirmware: "RouterOS 7.0+", tier: "enterprise" },
+  { vendor: "MikroTik", family: "CCR",    model: "CCR2116-12G-4S+",slug: "mikrotik-ccr2116", shape: "rack",    minFirmware: "RouterOS 7.0+", tier: "enterprise" },
+
+  // ── Ubiquiti (UDM firmware 3.x+; EdgeRouter via wireguard package) ────
+  { vendor: "Ubiquiti", family: "UDM",    model: "Dream Machine",       slug: "ubnt-udm",      shape: "flat", minFirmware: "UniFi OS 3.0+", tier: "smb" },
+  { vendor: "Ubiquiti", family: "UDM",    model: "Dream Machine Pro",   slug: "ubnt-udm-pro",  shape: "rack", minFirmware: "UniFi OS 3.0+", tier: "smb" },
+  { vendor: "Ubiquiti", family: "UDM",    model: "Dream Machine SE",    slug: "ubnt-udm-se",   shape: "rack", minFirmware: "UniFi OS 3.0+", tier: "smb" },
+  { vendor: "Ubiquiti", family: "UDM",    model: "Dream Machine Pro Max",slug:"ubnt-udm-pro-max",shape:"rack",minFirmware: "UniFi OS 4.0+", tier: "smb" },
+  { vendor: "Ubiquiti", family: "UDM",    model: "Dream Router",        slug: "ubnt-dream-router",shape:"antenna",minFirmware: "UniFi OS 3.0+",tier: "consumer" },
+  { vendor: "Ubiquiti", family: "EdgeRouter", model: "ER-X",            slug: "ubnt-er-x",     shape: "flat", minFirmware: "EdgeOS 2.0+ (wg pkg)", tier: "smb" },
+  { vendor: "Ubiquiti", family: "EdgeRouter", model: "ER-4",            slug: "ubnt-er-4",     shape: "rack", minFirmware: "EdgeOS 2.0+ (wg pkg)", tier: "smb" },
+  { vendor: "Ubiquiti", family: "EdgeRouter", model: "ER-6P",           slug: "ubnt-er-6p",    shape: "rack", minFirmware: "EdgeOS 2.0+ (wg pkg)", tier: "smb" },
+  { vendor: "Ubiquiti", family: "EdgeRouter", model: "ER-8",            slug: "ubnt-er-8",     shape: "rack", minFirmware: "EdgeOS 2.0+ (wg pkg)", tier: "smb" },
+
+  // ── GL.iNet (OpenWrt-based, WireGuard in firmware out-of-the-box) ─────
+  { vendor: "GL.iNet", family: "Travel",    model: "GL-AXT1800 (Slate AX)",slug:"glinet-slate-ax",  shape: "flat",    minFirmware: "Firmware 4.0+", tier: "consumer" },
+  { vendor: "GL.iNet", family: "Travel",    model: "GL-MT3000 (Beryl AX)", slug: "glinet-beryl-ax", shape: "flat",    minFirmware: "Firmware 4.0+", tier: "consumer" },
+  { vendor: "GL.iNet", family: "Home",      model: "GL-MT6000 (Flint 2)",  slug: "glinet-flint-2",  shape: "antenna", minFirmware: "Firmware 4.5+", tier: "consumer" },
+  { vendor: "GL.iNet", family: "SMB",       model: "GL-MV1000 (Brume)",    slug: "glinet-brume",    shape: "flat",    minFirmware: "Firmware 4.0+", tier: "smb" },
+  { vendor: "GL.iNet", family: "SMB",       model: "GL-MV1000W (Brume W)", slug: "glinet-brume-w",  shape: "flat",    minFirmware: "Firmware 4.0+", tier: "smb" },
+  { vendor: "GL.iNet", family: "4G/5G",     model: "GL-X3000 (Spitz AX)",  slug: "glinet-spitz-ax", shape: "antenna", minFirmware: "Firmware 4.0+", tier: "smb" },
+
+  // ── Asus (current ASUSWRT firmware ships WireGuard server + client) ──
+  { vendor: "Asus", family: "RT-AX",       model: "RT-AX55",         slug: "asus-rt-ax55",    shape: "antenna", minFirmware: "ASUSWRT 3.0.0.4.388+", tier: "consumer" },
+  { vendor: "Asus", family: "RT-AX",       model: "RT-AX58U",        slug: "asus-rt-ax58u",   shape: "antenna", minFirmware: "ASUSWRT 3.0.0.4.388+", tier: "consumer" },
+  { vendor: "Asus", family: "RT-AX",       model: "RT-AX68U",        slug: "asus-rt-ax68u",   shape: "antenna", minFirmware: "ASUSWRT 3.0.0.4.388+", tier: "consumer" },
+  { vendor: "Asus", family: "RT-AX",       model: "RT-AX86U",        slug: "asus-rt-ax86u",   shape: "antenna", minFirmware: "ASUSWRT 3.0.0.4.388+", tier: "consumer" },
+  { vendor: "Asus", family: "RT-AX",       model: "RT-AX88U",        slug: "asus-rt-ax88u",   shape: "antenna", minFirmware: "ASUSWRT 3.0.0.4.388+", tier: "consumer" },
+  { vendor: "Asus", family: "ROG",         model: "GT-AX6000",       slug: "asus-gt-ax6000",  shape: "antenna", minFirmware: "ASUSWRT 3.0.0.4.388+", tier: "consumer" },
+  { vendor: "Asus", family: "ROG",         model: "GT-AX11000",      slug: "asus-gt-ax11000", shape: "antenna", minFirmware: "ASUSWRT 3.0.0.4.388+", tier: "consumer" },
+
+  // ── Synology (SRM 1.3+ ships WireGuard) ───────────────────────────────
+  { vendor: "Synology", family: "RT",      model: "RT6600ax",        slug: "synology-rt6600ax",shape:"antenna", minFirmware: "SRM 1.3+",             tier: "consumer" },
+
+  // ── OPNsense (Netgate & Protectli appliances — runs the firewall OS) ─
+  { vendor: "OPNsense", family: "Netgate", model: "Netgate 1100",    slug: "netgate-1100",    shape: "minipc",  minFirmware: "OPNsense 22.1+",       tier: "appliance" },
+  { vendor: "OPNsense", family: "Netgate", model: "Netgate 2100",    slug: "netgate-2100",    shape: "minipc",  minFirmware: "OPNsense 22.1+",       tier: "appliance" },
+  { vendor: "OPNsense", family: "Netgate", model: "Netgate 4100",    slug: "netgate-4100",    shape: "minipc",  minFirmware: "OPNsense 22.1+",       tier: "appliance" },
+  { vendor: "OPNsense", family: "Netgate", model: "Netgate 6100",    slug: "netgate-6100",    shape: "rack",    minFirmware: "OPNsense 22.1+",       tier: "appliance" },
+  { vendor: "OPNsense", family: "Protectli",model: "Protectli FW4B", slug: "protectli-fw4b",  shape: "minipc",  minFirmware: "OPNsense 22.1+",       tier: "appliance" },
+  { vendor: "OPNsense", family: "Protectli",model: "Protectli FW6B", slug: "protectli-fw6b",  shape: "minipc",  minFirmware: "OPNsense 22.1+",       tier: "appliance" },
+
+  // ── pfSense Plus (Netgate appliances) ─────────────────────────────────
+  { vendor: "pfSense",  family: "Netgate", model: "Netgate 5100",    slug: "pfsense-netgate-5100",shape:"minipc",minFirmware: "pfSense Plus 23.01+", tier: "appliance" },
+  { vendor: "pfSense",  family: "Netgate", model: "Netgate 8200",    slug: "pfsense-netgate-8200",shape:"rack",  minFirmware: "pfSense Plus 23.01+", tier: "appliance" },
+
+  // ── Generic x86 mini-PCs (any Linux/BSD with WireGuard) ───────────────
+  { vendor: "Generic", family: "Mini-PC",  model: "Qotom Q330G4",    slug: "qotom-q330g4",    shape: "minipc",  minFirmware: "OpenWrt / OPNsense / pfSense", tier: "appliance" },
+];
+
+const vendorOrder = ["TP-Link","MikroTik","Ubiquiti","GL.iNet","Asus","Synology","OPNsense","pfSense","Generic"];
+const tierOrder   = { consumer: 0, smb: 1, enterprise: 2, appliance: 3 } as const;
+models.sort((a, b) => {
+  const va = vendorOrder.indexOf(a.vendor); const vb = vendorOrder.indexOf(b.vendor);
+  if (va !== vb) return va - vb;
+  const ta = tierOrder[a.tier]; const tb = tierOrder[b.tier];
+  if (ta !== tb) return ta - tb;
+  return a.model.localeCompare(b.model);
+});
+
+const grouped: { vendor: string; items: Model[] }[] = [];
+for (const m of models) {
+  const last = grouped[grouped.length - 1];
+  if (last && last.vendor === m.vendor) last.items.push(m);
+  else grouped.push({ vendor: m.vendor, items: [m] });
+}
+
+const totalCount = models.length;
+const vendorCount = grouped.length;
+---
+
+<section id="compatibility-grid">
+  <div class="wrap-wide">
+
+    <!-- Filter bar -->
+    <div class="cg-toolbar">
+      <div class="cg-counts">
+        <span class="cg-count" data-count={totalCount}>{totalCount}</span>
+        <span class="cg-counts-label">router models · {vendorCount} vendor families · WireGuard ready</span>
+      </div>
+      <div class="cg-filter">
+        <label class="cg-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="search" placeholder="Search model — e.g. ER605, RB5009, AX73…" id="cg-search-input" autocomplete="off" />
+        </label>
+        <div class="cg-chips" id="cg-chips">
+          <button class="cg-chip cg-chip--active" data-vendor="all">All</button>
+          {vendorOrder.filter(v => grouped.find(g => g.vendor === v)).map(v => (
+            <button class="cg-chip" data-vendor={v}>{v}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Vendor-grouped grid -->
+    {grouped.map(group => (
+      <div class="cg-group" data-vendor-group={group.vendor}>
+        <header class="cg-group-head">
+          <span class="cg-vendor-name" style={`--vc:${vendorColor[group.vendor] ?? "#525252"}`}>{group.vendor}</span>
+          <span class="cg-vendor-count">{group.items.length} models</span>
+        </header>
+        <div class="cg-grid">
+          {group.items.map(m => (
+            <article class="cg-card" data-search={`${m.vendor} ${m.family} ${m.model}`.toLowerCase()} data-vendor={m.vendor}>
+              <div class="cg-thumb" data-shape={m.shape} style={`--vc:${vendorColor[m.vendor] ?? "#525252"}`}>
+                <img
+                  src={`/img/routers/${m.slug}.webp`}
+                  alt={`${m.vendor} ${m.model}`}
+                  loading="lazy"
+                  width="160" height="120"
+                  onerror="this.style.display='none'; this.parentElement.classList.add('cg-thumb--silhouette');"
+                />
+                {m.shape === "flat" && (
+                  <svg class="cg-sil" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="14" width="56" height="20" rx="2"/>
+                    <circle cx="14" cy="24" r="1.5" fill="currentColor"/>
+                    <circle cx="22" cy="24" r="1.5" fill="currentColor"/>
+                    <circle cx="30" cy="24" r="1.5" fill="currentColor"/>
+                    <circle cx="50" cy="24" r="1.5" fill="currentColor"/>
+                  </svg>
+                )}
+                {m.shape === "antenna" && (
+                  <svg class="cg-sil" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="10" y="20" width="44" height="14" rx="2"/>
+                    <line x1="16" y1="20" x2="14" y2="6"/>
+                    <line x1="26" y1="20" x2="24" y2="4"/>
+                    <line x1="38" y1="20" x2="40" y2="4"/>
+                    <line x1="48" y1="20" x2="50" y2="6"/>
+                  </svg>
+                )}
+                {m.shape === "mesh" && (
+                  <svg class="cg-sil" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <ellipse cx="32" cy="22" rx="14" ry="12"/>
+                    <ellipse cx="32" cy="22" rx="14" ry="3"/>
+                    <line x1="32" y1="10" x2="32" y2="34" opacity="0.4"/>
+                  </svg>
+                )}
+                {m.shape === "rack" && (
+                  <svg class="cg-sil" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="16" width="56" height="14" rx="1"/>
+                    <line x1="10" y1="22" x2="14" y2="22"/>
+                    <line x1="18" y1="22" x2="22" y2="22"/>
+                    <line x1="26" y1="22" x2="30" y2="22"/>
+                    <line x1="34" y1="22" x2="38" y2="22"/>
+                    <line x1="42" y1="22" x2="46" y2="22"/>
+                    <line x1="50" y1="22" x2="54" y2="22"/>
+                  </svg>
+                )}
+                {m.shape === "minipc" && (
+                  <svg class="cg-sil" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="18" y="10" width="28" height="22" rx="2"/>
+                    <line x1="24" y1="14" x2="24" y2="28" opacity="0.4"/>
+                    <circle cx="32" cy="29" r="1.2" fill="currentColor"/>
+                  </svg>
+                )}
+              </div>
+              <div class="cg-meta">
+                <div class="cg-family">{m.family}</div>
+                <div class="cg-model">{m.model}</div>
+                <div class="cg-fw">{m.minFirmware}</div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    ))}
+
+    <p class="cg-foot">
+      Compatibility reflects whether the device's stock firmware ships
+      WireGuard or supports loading it as a kernel module or package.
+      Older firmware revisions may require a one-time vendor update before
+      MeshWG can configure the mesh. If a router currently in your branch
+      estate is not listed, the most likely reason is firmware vintage —
+      reach <a href="mailto:hello@meshwg.com?subject=Router%20compatibility">hello@meshwg.com</a>
+      with the exact model and firmware version, and the editorial team
+      will confirm. Additional models are added to this list as the team
+      verifies vendor documentation.
+    </p>
+
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const search   = document.getElementById('cg-search-input');
+    const chipBar  = document.getElementById('cg-chips');
+    const cards    = Array.from(document.querySelectorAll('.cg-card'));
+    const groups   = Array.from(document.querySelectorAll('.cg-group'));
+    let activeVendor = 'all';
+
+    function apply() {
+      const q = (search.value || '').trim().toLowerCase();
+      let total = 0;
+      const counts = {};
+      cards.forEach(c => {
+        const hayS = c.dataset.search || '';
+        const vendor = c.dataset.vendor || '';
+        const okV = (activeVendor === 'all') || (vendor === activeVendor);
+        const okQ = !q || hayS.includes(q);
+        const show = okV && okQ;
+        c.style.display = show ? '' : 'none';
+        if (show) {
+          total++;
+          counts[vendor] = (counts[vendor] || 0) + 1;
+        }
+      });
+      groups.forEach(g => {
+        const v = g.dataset.vendorGroup;
+        const cnt = counts[v] || 0;
+        g.style.display = cnt > 0 ? '' : 'none';
+        const head = g.querySelector('.cg-vendor-count');
+        if (head) head.textContent = cnt + ' model' + (cnt === 1 ? '' : 's');
+      });
+      const counter = document.querySelector('.cg-count');
+      if (counter) counter.textContent = total;
+    }
+
+    if (search) search.addEventListener('input', apply);
+    if (chipBar) chipBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.cg-chip');
+      if (!btn) return;
+      chipBar.querySelectorAll('.cg-chip').forEach(b => b.classList.remove('cg-chip--active'));
+      btn.classList.add('cg-chip--active');
+      activeVendor = btn.dataset.vendor;
+      apply();
+    });
+  })();
+</script>
+
+<style>
+  #compatibility-grid { padding: 64px 0 96px; }
+  .wrap-wide {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--wrap-pad-x);
+  }
+
+  /* ── Toolbar (counts + search + chips) ─────────────────────────── */
+  .cg-toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cg-counts { display: flex; align-items: baseline; gap: 12px; }
+  .cg-count {
+    font-family: var(--font-mono);
+    font-size: 44px; line-height: 1;
+    font-weight: 500; color: var(--text);
+    letter-spacing: -.02em;
+  }
+  .cg-counts-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .cg-filter { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+  .cg-search {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    width: 320px;
+    color: var(--text-3);
+  }
+  .cg-search:focus-within { border-color: var(--accent); color: var(--accent); }
+  .cg-search input {
+    flex: 1; border: 0; outline: 0;
+    background: transparent;
+    font: 13.5px var(--font-sans);
+    color: var(--text);
+  }
+  .cg-search input::placeholder { color: var(--text-4); }
+
+  .cg-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+  .cg-chip {
+    padding: 6px 11px;
+    font: 12px var(--font-mono);
+    color: var(--text-3);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .cg-chip:hover { color: var(--text); border-color: var(--border-strong); }
+  .cg-chip--active {
+    background: var(--text);
+    color: #fff;
+    border-color: var(--text);
+  }
+
+  /* ── Vendor sections ───────────────────────────────────────────── */
+  .cg-group { margin-bottom: 40px; }
+  .cg-group:last-child { margin-bottom: 0; }
+  .cg-group-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-faint);
+  }
+  .cg-vendor-name {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -.005em;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .cg-vendor-name::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    background: var(--vc, var(--accent));
+  }
+  .cg-vendor-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-4);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* ── Card grid (dense; no whitespace waste) ────────────────────── */
+  .cg-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+  }
+  .cg-card {
+    display: flex; flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: border-color .12s ease, transform .12s ease;
+  }
+  .cg-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  .cg-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, color-mix(in oklab, var(--vc, var(--text-4)) 6%, var(--bg-2)), var(--bg-2));
+    color: color-mix(in oklab, var(--vc, var(--text-3)) 70%, var(--text-3));
+    border-bottom: 1px solid var(--border-faint);
+    overflow: hidden;
+  }
+  .cg-thumb img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 8px;
+  }
+  .cg-thumb--silhouette .cg-sil { display: block; }
+  .cg-sil { width: 60%; max-width: 80px; height: auto; }
+
+  .cg-meta {
+    padding: 8px 10px 10px;
+    display: flex; flex-direction: column; gap: 2px;
+    min-height: 56px;
+  }
+  .cg-family {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-4);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .cg-model {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -.01em;
+    line-height: 1.3;
+  }
+  .cg-fw {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  /* Footnote */
+  .cg-foot {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-3);
+    max-width: 760px;
+  }
+  .cg-foot a { color: var(--accent); }
+  .cg-foot a:hover { color: var(--accent-strong); }
+
+  /* Responsive density */
+  @media (max-width: 1100px) {
+    .cg-grid { grid-template-columns: repeat(5, 1fr); }
+    .cg-toolbar { grid-template-columns: 1fr; gap: 16px; align-items: stretch; }
+    .cg-filter { align-items: stretch; }
+    .cg-search { width: 100%; }
+    .cg-chips { justify-content: flex-start; }
+  }
+  @media (max-width: 860px)  { .cg-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 640px)  {
+    .cg-grid { grid-template-columns: repeat(3, 1fr); }
+    .cg-count { font-size: 36px; }
+    .cg-meta { padding: 6px 8px 8px; min-height: 48px; }
+    .cg-model { font-size: 11.5px; }
+    .cg-fw { font-size: 9.5px; }
+  }
+  @media (max-width: 420px)  { .cg-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>

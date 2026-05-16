@@ -1,0 +1,271 @@
+---
+import Base               from "../layouts/Base.astro";
+import Nav                from "../components/Nav.astro";
+import PageHero           from "../components/PageHero.astro";
+import Footer             from "../components/Footer.astro";
+import CompatibilityGrid  from "../components/CompatibilityGrid.astro";
+import { site }           from "../site";
+
+const url           = "https://meshwg.com/compatibility/";
+const title         = "Supported routers — 57 WireGuard-ready models across 9 vendor families | MeshWG";
+const description   = "The comprehensive list of router and gateway models that work with MeshWG today — TP-Link, MikroTik, Ubiquiti, GL.iNet, Asus, Synology, OPNsense, pfSense, and more. Filter by vendor, search by model number.";
+const datePublished = "2026-05-17";
+const dateModified  = "2026-05-17";
+
+const faqs = [
+  {
+    q: "Does my router support WireGuard?",
+    a: "Most routers with firmware from late 2022 onwards support WireGuard either natively in the stock firmware or as an installable package. TP-Link Archer AX-series, MikroTik RouterOS 7+, Ubiquiti UDM with UniFi OS 3.0+, current Asus ASUSWRT, GL.iNet OpenWrt-based devices, Synology SRM 1.3+, and OPNsense/pfSense appliances all ship WireGuard support. The list on this page covers the 57 models the editorial team has independently verified. If a specific model is missing, the most likely reason is firmware vintage rather than hardware incapability.",
+  },
+  {
+    q: "What firmware version do I need?",
+    a: "Each model on this page is annotated with its minimum firmware. As a general rule: TP-Link Archer needs Firmware 1.2.0 or later (2022+ releases). MikroTik needs RouterOS 7.0 or later. Ubiquiti UDM needs UniFi OS 3.0 or later. EdgeRouter requires the wireguard package install on EdgeOS 2.0+. Asus needs ASUSWRT 3.0.0.4.388 or later (mid-2023 releases). Synology needs SRM 1.3 or later. Most routers update firmware in a few clicks from the admin interface.",
+  },
+  {
+    q: "Can MeshWG configure my router automatically?",
+    a: "MeshWG generates the wg-quick configuration block for each machine added to your mesh; the configuration is pasted into your router's WireGuard section once and never needs revisiting. The MeshWG control plane handles key distribution, peer state, and policy enforcement — your router handles the encrypted tunnel itself. Total per-router setup time on a typical SMB gateway is under two minutes.",
+  },
+  {
+    q: "What if my router model is not listed?",
+    a: "Two likely explanations: the model is supported but pending verification by the editorial team and will be added in a future revision of this list, or the model's firmware predates WireGuard support and would benefit from a vendor firmware update. Either way, the fastest path is to email hello@meshwg.com with the exact model number and the firmware version currently installed — the team will confirm compatibility within one business day.",
+  },
+  {
+    q: "Does MeshWG work with non-WireGuard routers?",
+    a: "MeshWG is built specifically on WireGuard, so the underlying device needs to speak WireGuard. For older routers without WireGuard support, three paths are typical: upgrade the firmware if a newer version with WireGuard is available, flash an OpenWrt build that includes WireGuard, or install a small gateway device (the TP-Link ER605 at around ₹6,500 is the common reference) and place it in front of the existing router as the WireGuard endpoint.",
+  },
+  {
+    q: "Are there enterprise router models on the list?",
+    a: "Yes. The MikroTik CCR2004 and CCR2116 carrier-class routers, the TP-Link ER8411 rack-mount SafeStream gateway, the Ubiquiti UDM Pro Max, and the Netgate 6100 / 8200 pfSense Plus appliances are all on the list. For organisations operating at enterprise scale with dedicated network operations teams, these models support full mesh-VPN deployments alongside their other duties.",
+  },
+];
+---
+
+<Base title={title} description={description}>
+  <Nav />
+
+  <PageHero
+    eyebrow="/ compatibility"
+    title="The routers that work with MeshWG today."
+    lede="57 router models across 9 vendor families, each independently verified by the editorial team. Filter by vendor, search by model number, and check the minimum firmware that ships WireGuard support."
+  />
+
+  <CompatibilityGrid />
+
+  <section class="addendum">
+    <div class="wrap">
+
+      <article class="addendum-block">
+        <div class="ad-eyebrow">/ how it works</div>
+        <h2>Three patterns that make this list possible.</h2>
+        <p>
+          The reason MeshWG operates across this breadth of hardware is
+          that it does not depend on any vendor's proprietary tunnel
+          protocol. The encrypted layer is standard WireGuard — the same
+          protocol every router on this page implements natively. What
+          MeshWG provides is the coordination layer above the protocol:
+          keypair distribution, peer state, policy enforcement, and the
+          dashboard that turns dozens of individual router configurations
+          into a single navigable mesh.
+        </p>
+        <p>
+          The result for an organisation evaluating mesh VPN is a
+          materially simpler decision. Existing branches with TP-Link
+          ER605 gateways slot in as easily as branches running MikroTik
+          RB5009, Ubiquiti UDM, or GL.iNet Flint 2. New branches can
+          standardise on whichever vendor procurement prefers without
+          changing the broader network architecture. Hardware refresh
+          cycles run independently of mesh-platform decisions.
+        </p>
+      </article>
+
+      <article class="addendum-block">
+        <div class="ad-eyebrow">/ the protocol layer</div>
+        <h2>Why standardising on WireGuard matters strategically.</h2>
+        <p>
+          WireGuard is not a MeshWG-specific protocol. It is the modern
+          encrypted-tunnel standard adopted by every major router vendor,
+          built into the Linux kernel since 2020, and supported by every
+          mainstream operating system. Organisations that standardise
+          their private networking on WireGuard preserve the freedom to
+          switch coordination platforms later without changing their
+          router fleet, and to introduce additional WireGuard-speaking
+          tools alongside MeshWG when specific use cases call for them.
+        </p>
+        <p>
+          That architectural openness is a deliberate choice — proprietary
+          VPN protocols deliver short-term lock-in benefits to vendors but
+          accumulate cost as the organisation grows. The 57 models on
+          this list represent infrastructure investments that remain
+          portable, durable, and aligned with where the broader
+          private-networking industry is headed.
+        </p>
+      </article>
+
+      <article id="faq" class="addendum-block faq">
+        <div class="ad-eyebrow">/ frequently asked</div>
+        <h2>Compatibility, firmware, and what to do if your model is not listed.</h2>
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </article>
+
+      <aside class="cta-strip">
+        <p>
+          If your branch routers are on this list, you can start a free
+          MeshWG trial and configure a two-site mesh in under five
+          minutes.
+          <a class="cta-link" href={site.signupFree}>Start free →</a>
+        </p>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- JSON-LD: Article + ItemList + FAQPage + Breadcrumb -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": url },
+    "headline": title,
+    "description": description,
+    "datePublished": datePublished,
+    "dateModified": dateModified,
+    "author": {
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com/about",
+    },
+    "publisher": {
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com",
+      "logo": { "@type": "ImageObject", "url": "https://meshwg.com/favicon.svg" },
+    },
+    "keywords": ["WireGuard router compatibility", "supported routers", "mesh VPN routers", "TP-Link WireGuard", "MikroTik WireGuard", "Ubiquiti WireGuard", "GL.iNet WireGuard"],
+    "isAccessibleForFree": true,
+    "inLanguage": "en",
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Compatibility", "item": url },
+    ],
+  })}></script>
+
+  <Footer />
+</Base>
+
+<style>
+  .addendum { padding: 32px 0 96px; }
+  .addendum-block {
+    margin-bottom: 64px;
+    max-width: 760px;
+  }
+  .addendum-block:last-child { margin-bottom: 0; }
+
+  .ad-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .addendum-block h2 {
+    font-size: 26px;
+    line-height: 1.18;
+    letter-spacing: -.018em;
+    font-weight: 500;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  .addendum-block p {
+    margin: 0 0 16px;
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .addendum-block p:last-child { margin-bottom: 0; }
+
+  /* FAQ */
+  .faq h2 { margin-bottom: 32px; }
+  details {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+  }
+  details:last-child { border-bottom: 1px solid var(--border); }
+  summary {
+    cursor: pointer;
+    list-style: none;
+    font-size: 15.5px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    letter-spacing: -.005em;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+";
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--text-4);
+    line-height: 1;
+    font-weight: 300;
+  }
+  details[open] summary::after { content: "−"; }
+  details p {
+    margin: 14px 0 0;
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+
+  .cta-strip {
+    margin-top: 48px;
+    padding: 32px 36px;
+    background: color-mix(in oklab, var(--accent) 5%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
+    border-radius: var(--radius-lg);
+    max-width: 720px;
+  }
+  .cta-strip p {
+    margin: 0;
+    color: var(--text);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .cta-link {
+    color: var(--accent);
+    font-weight: 500;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+  .cta-link:hover { color: var(--accent-strong); }
+
+  @media (max-width: 980px) {
+    .addendum { padding: 16px 0 64px; }
+    .addendum-block h2 { font-size: 22px; }
+    .addendum-block { margin-bottom: 48px; }
+    .cta-strip { padding: 24px 22px; }
+  }
+</style>

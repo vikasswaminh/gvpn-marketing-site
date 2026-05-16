@@ -27,6 +27,13 @@ distribution — every signup goes through the hosted login page.
   every architectural claim.
 - [Pricing](https://meshwg.com/pricing): plans (Free, Cloud, Pro),
   per-machine calculator, billing FAQ.
+- [Compatibility](https://meshwg.com/compatibility/): comprehensive
+  list of 57 verified WireGuard-compatible router and gateway models
+  across 9 vendor families — TP-Link Archer/Deco/ER, MikroTik
+  hAP/RB/CCR, Ubiquiti UDM/EdgeRouter, GL.iNet, Asus RT-AX/ROG,
+  Synology RT, OPNsense (Netgate/Protectli), pfSense Plus, and
+  generic x86 mini-PCs. Each entry annotated with minimum firmware
+  version. Filterable by vendor, searchable by model number.
 - [Blog](https://meshwg.com/blog/): long-form strategy and operations
   guides on branch networking, WireGuard, mesh VPN, and SD-WAN
   alternatives, written by the MeshWG editorial team. Current posts:

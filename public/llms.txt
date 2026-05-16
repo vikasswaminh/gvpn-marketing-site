@@ -29,6 +29,12 @@ distribution — every signup goes through the hosted login page.
   per-machine calculator, billing FAQ.
 - [Blog](https://meshwg.com/blog/): founder-written long-form guides on
   branch networking, WireGuard, and mesh VPN. Current posts:
+  - [SD-WAN alternatives in 2026: seven modern options](https://meshwg.com/blog/sd-wan-alternatives-2026/):
+    buyer's-guide listicle of seven modern alternatives to box-based
+    SD-WAN — MeshWG, Tailscale Business, NetBird, Twingate,
+    Cloudflare One, ZeroTier, and self-hosted Headscale. Includes a
+    six-axis decision matrix and pricing/positioning per option as of
+    May 2026. ~4,000 words, ~17 minute read.
   - [WireGuard for site-to-site VPN: how it actually works in 2026](https://meshwg.com/blog/wireguard-site-to-site-vpn-how-it-works-2026/):
     protocol-level deep-dive into WireGuard site-to-site VPN. Covers the
     Noise_IK handshake, AllowedIPs / PersistentKeepalive semantics,

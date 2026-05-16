@@ -29,11 +29,18 @@ distribution — every signup goes through the hosted login page.
   per-machine calculator, billing FAQ.
 - [Blog](https://meshwg.com/blog/): founder-written long-form guides on
   branch networking, WireGuard, and mesh VPN. Current posts:
+  - [WireGuard for site-to-site VPN: how it actually works in 2026](https://meshwg.com/blog/wireguard-site-to-site-vpn-how-it-works-2026/):
+    protocol-level deep-dive into WireGuard site-to-site VPN. Covers the
+    Noise_IK handshake, AllowedIPs / PersistentKeepalive semantics,
+    multi-site (3+ peer) topologies including hub-and-spoke vs full mesh,
+    CGNAT and double-NAT scenarios, WireGuard vs IPsec decision framework,
+    and when to pick a cloud control plane over hand-rolled per-peer
+    configs. ~4,540 words, ~18 minute read.
   - [TP-Link site-to-site VPN with WireGuard (2026)](https://meshwg.com/blog/tp-link-site-to-site-vpn-wireguard-2026/):
-    full guide to connecting two, three, or thirty TP-Link branches over
-    WireGuard. Covers no-static-IP scenarios, multi-site mesh,
-    WireGuard vs IPsec on TP-Link gear, and 20-branch cost economics.
-    ~4,150 words, ~16 minute read.
+    vendor-specific tactical guide for connecting two, three, or thirty
+    TP-Link branches over WireGuard. Covers Archer/Deco/ER/Omada paths,
+    no-static-IP scenarios, multi-site mesh, WireGuard vs IPsec on TP-Link
+    gear, and 20-branch cost economics. ~4,150 words, ~16 minute read.
 
 ## How signup works
 

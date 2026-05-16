@@ -45,9 +45,9 @@
   --info:           #6db6ff;
 
   /* ── Typography ─────────────────────────────────────────────────── */
-  --font-sans:      "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans:      "Lato", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono:      "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif:     "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-serif:     "Lato", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   /* ── Radii ──────────────────────────────────────────────────────── */
   --radius-sm:      6px;
@@ -240,8 +240,13 @@ section + section { border-top: 1px solid var(--border); }
   text-wrap: balance;
   color: var(--text);
 }
-.sec-h .it { font-style: italic; }
-.sec-h .acid { color: var(--accent); font-style: italic; }
+.sec-h .it { font-style: normal; }
+.sec-h .acid { color: var(--accent); font-style: normal; }
+
+/* Global italic suppression — per directive, no italic anywhere on the
+   marketing site. Overrides browser defaults on <em>, <i>, <cite>,
+   <address>, <dfn>, and any other elements UA stylesheets italicise. */
+em, i, cite, dfn, address, var { font-style: normal; }
 
 .sec-lede {
   color: var(--text-2);

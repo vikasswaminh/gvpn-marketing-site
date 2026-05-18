@@ -3,11 +3,9 @@
 // internally consistent and any change is a one-line edit.
 
 export const site = {
-  // CTAs. Every "Sign up free" and "Sign in" button on the site routes
-  // to the app login page. Today the login page also carries a
-  // contact-us line under the form; once self-serve signup ships, that
-  // line becomes a "Sign up →" link. The marketing site doesn't change.
-  signupFree: "https://vpn.meshwg.com/login",
+  // CTAs. "Sign up free" goes to the public self-serve signup form;
+  // "Sign in" goes to the password / Google / magic-link login page.
+  signupFree: "https://vpn.meshwg.com/signup",
   signIn:     "https://vpn.meshwg.com/login",
 
   // Pro / sales contact.

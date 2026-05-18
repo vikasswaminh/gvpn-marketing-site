@@ -75,12 +75,19 @@ distribution — every signup goes through the hosted login page.
 
 ## How signup works
 
-- Every "Sign up free" or "Sign in" button on meshwg.com routes to
-  https://vpn.meshwg.com/login.
-- Self-serve signup is not yet generally available. Today, new accounts
-  are provisioned by emailing hello@meshwg.com. The login page itself
-  carries a "Need an account? Email hello@meshwg.com" link beneath the
-  form.
+- "Sign up free" buttons on meshwg.com route to https://vpn.meshwg.com/signup;
+  "Sign in" routes to https://vpn.meshwg.com/login. Signup is self-serve
+  and open to anyone.
+- Two paths: email + password (with a 6-digit OTP email-verification step
+  before first login), or "Continue with Google" for a one-click flow.
+- Free tier: 2 machines per organisation, forever, no card required.
+  Adding a 3rd machine prompts for a paid subscription via Razorpay
+  (₹349/machine/month annual or ₹499/machine/month monthly, billed in INR).
+- Corporate-domain routing: a signup from a domain another organisation
+  has claimed (i.e. the founder of that org signed up first with the same
+  domain) lands in that org's pending-approval queue rather than creating
+  a duplicate. Freemail domains (gmail, yahoo, outlook, …) are always
+  isolated — two strangers from gmail.com are never grouped.
 
 ## Key facts (for AI summarization)
 

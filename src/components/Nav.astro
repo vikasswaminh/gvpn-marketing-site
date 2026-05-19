@@ -24,26 +24,21 @@ import { site } from "../site";
 </nav>
 
 <style>
-  /* Fixed, transparent at top of page; on scroll past 60 px the
-     IntersectionObserver script in Base.astro adds .nav--scrolled
-     and the strip becomes a frosted-ink bar. */
+  /* Fixed nav. Top-of-page: nearly transparent; on scroll past 60 px the
+     IntersectionObserver in Base.astro adds .nav--scrolled and the bar
+     becomes frosted white with a subtle hairline border. */
   .nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: linear-gradient(
-      to bottom,
-      rgba(11, 11, 12, 0.92),
-      rgba(11, 11, 12, 0.7) 70%,
-      transparent
-    );
+    background: rgba(255, 255, 255, 0.6);
     -webkit-backdrop-filter: saturate(160%) blur(14px);
             backdrop-filter: saturate(160%) blur(14px);
     border-bottom: 1px solid transparent;
     transition: border-bottom-color 0.25s ease, background 0.25s ease;
   }
   .nav--scrolled {
-    background: color-mix(in oklab, var(--bg) 78%, transparent);
+    background: rgba(255, 255, 255, 0.88);
     border-bottom-color: var(--border);
   }
 

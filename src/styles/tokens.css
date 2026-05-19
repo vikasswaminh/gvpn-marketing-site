@@ -1,68 +1,107 @@
 /* MeshWG marketing — design tokens
  *
- * Editorial dark canvas:
- *   • Ink-on-cream palette (near-black bg, warm-cream foreground)
- *   • Acid-lime accent used sparingly for emphasis and CTAs
- *   • Display typography: Instrument Serif (italic for emphasis)
- *   • Body typography: Geist; data/labels: Geist Mono
- *   • Subtle film-grain texture site-wide
- *   • Section padding generous; mono labels signal craft
+ * Light minimal canvas (crawlcrawl-inspired):
+ *   • Near-white surfaces, near-black ink
+ *   • Bright blue accent (#0066ff) for CTAs + emphasis
+ *   • Brand red (#DA291C) for announcement bar / strong emphasis
+ *   • Geist + Geist Mono — modern SaaS premium feel
+ *   • Tight radii (4–12 px), super-subtle shadows
+ *   • No film grain, no italics
  *
- * Replaces the prior light-theme tokens; every component reads from this
- * file so a single edit here cascades cleanly.
+ * Legacy variable names from the prior dark-theme version are kept as
+ * aliases so existing components continue to work unchanged.
  */
 
 :root {
-  /* ── Canvas + surface elevations (dark ink) ─────────────────────── */
-  --bg:             #0b0b0c;
-  --bg-2:           #131316;
-  --bg-3:           #1c1c20;
-  --surface:        #131316;
-  --surface-2:      #1c1c20;
+  /* ── Surfaces ─────────────────────────────────────────────────────── */
+  --bg:             #ffffff;
+  --bg-2:           #fafafa;
+  --bg-3:           #f4f4f5;
+  --bg-deep:        #ebebed;
+  --surface:        #fafafa;
+  --surface-2:      #f4f4f5;
 
-  /* ── Lines (very subtle on dark) ────────────────────────────────── */
-  --border-faint:   #1c1c20;
-  --border:         #26262b;
-  --border-strong:  #34343a;
+  /* ── Ink + muted ──────────────────────────────────────────────────── */
+  --text:           #0a0a0a;
+  --text-2:         #18181b;
+  --text-3:         #52525b;
+  --text-4:         #8a8a93;
+  --ink:            #0a0a0a;
+  --ink-2:          #18181b;
+  --muted:          #52525b;
+  --muted-2:        #8a8a93;
+  --muted-3:        #b4b4ba;
 
-  /* ── Foreground (4-step warm cream ramp) ────────────────────────── */
-  --text:           #f3efe6;
-  --text-2:         #d8d3c6;
-  --text-3:         #9a958a;
-  --text-4:         #6a675f;
+  /* ── Lines (super subtle on light) ────────────────────────────────── */
+  --border-faint:   #f0f0f1;
+  --border:         #e5e5e7;
+  --border-strong:  #ddddde;
+  --line:           #e5e5e7;
+  --line-2:         #ddddde;
+  --line-3:         #f0f0f1;
 
-  /* ── Accent: acid lime (used sparingly) ─────────────────────────── */
-  --accent:         #c5f23a;
-  --accent-strong:  #d4ff52;
-  --accent-soft:    rgba(197, 242, 58, .12);
-  --accent-glow:    rgba(197, 242, 58, .35);
+  /* ── Accent: bright blue ──────────────────────────────────────────── */
+  --accent:         #0066ff;
+  --accent-strong:  #0052cc;
+  --accent-soft:    #e7efff;
+  --accent-glow:    rgba(0, 102, 255, .18);
+  --accent-ink:     #ffffff;
 
-  /* ── Status colors ──────────────────────────────────────────────── */
-  --ok:             #6ee7a7;
-  --ember:          #ff7a45;
-  --warn:           #f5b342;
-  --err:            #ff6b6b;
-  --info:           #6db6ff;
+  /* ── Brand red (announcement bar + emphasis) ──────────────────────── */
+  --brand-red:      #DA291C;
+  --brand-red-2:    #b3211a;
+  --brand-red-soft: #fde8e6;
 
-  /* ── Typography ─────────────────────────────────────────────────── */
-  --font-sans:      "Lato", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono:      "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif:     "Lato", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* ── Status ───────────────────────────────────────────────────────── */
+  --ok:             #16a34a;
+  --warn:           #facc15;
+  --err:            #dc2626;
+  --info:           #0066ff;
+  --ember:          #DA291C;
 
-  /* ── Radii ──────────────────────────────────────────────────────── */
-  --radius-sm:      6px;
-  --radius:         10px;
-  --radius-lg:      14px;
-  --radius-xl:      18px;
+  /* ── Code surfaces (dark blocks on a light page) ──────────────────── */
+  --code-bg:        #0a0a0a;
+  --code-bg-2:      #141414;
+  --code-fg:        #e6e6e9;
+  --code-com:       #6b7280;
+  --code-pun:       #a1a1aa;
+  --code-key:       #93c5fd;
+  --code-str:       #86efac;
+  --code-num:       #fcd34d;
+  --code-fn:        #fda4af;
+  --code-cmd:       #ffffff;
+  --code-prompt:    #93c5fd;
+  --code-ok:        #86efac;
+
+  /* ── Typography ───────────────────────────────────────────────────── */
+  --font-sans:      "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-mono:      "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display:   "Geist", "Inter Tight", system-ui, sans-serif;
+  --font-serif:     var(--font-display);
+
+  /* ── Radii (tight — crawlcrawl-style) ─────────────────────────────── */
+  --radius-sm:      4px;
+  --radius:         6px;
+  --radius-lg:      8px;
+  --radius-xl:      12px;
   --radius-pill:    999px;
+  --r-sm:           4px;
+  --r-md:           6px;
+  --r-lg:           8px;
+  --r-xl:           12px;
 
-  /* ── Layout ─────────────────────────────────────────────────────── */
-  --wrap-max:       1240px;
-  --wrap-pad-x:     36px;
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  --wrap-max:       1180px;
+  --wrap-pad-x:     clamp(20px, 4vw, 28px);
+  --maxw-narrow:    880px;
+  --maxw:           1180px;
+  --maxw-wide:      1260px;
+  --container:      1180px;
 
-  /* ── Shadows (deeper for dark canvas) ───────────────────────────── */
-  --shadow-card:    0 12px 30px rgba(0, 0, 0, 0.45);
-  --shadow-code:    0 30px 80px -30px rgba(197, 242, 58, 0.18);
+  /* ── Shadows (super subtle for light theme) ───────────────────────── */
+  --shadow-card:    0 1px 0 rgba(10, 10, 10, 0.04);
+  --shadow-deep:    0 24px 48px -16px rgba(10, 10, 10, 0.18);
+  --shadow-code:    0 24px 48px -16px rgba(10, 10, 10, 0.18);
 }
 
 /* Reset + base */
@@ -83,25 +122,10 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
-  font-feature-settings: "ss01" on, "cv11" on;
-}
-
-/* Film grain — site-wide subtle texture overlay. Fixed-position so it
-   doesn't reflow on scroll. mix-blend overlay layers it warmly on top. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.94  0 0 0 0 0.9  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
-  mix-blend-mode: overlay;
-  opacity: 0.32;
 }
 
 a { color: inherit; text-decoration: none; }
-
-::selection { background: var(--accent); color: var(--bg); }
+::selection { background: var(--accent); color: #ffffff; }
 
 /* Layout container */
 .wrap {
@@ -110,9 +134,8 @@ a { color: inherit; text-decoration: none; }
   padding: 0 var(--wrap-pad-x);
 }
 
-/* ── Mono label primitive ──────────────────────────────────────────
-   Used throughout the site as the section eyebrow / metadata signature.
-   Tight letter-spacing, uppercase, vendor-color or accent numeric prefix. */
+/* ── Mono label primitive ───────────────────────────────────────────
+   Section eyebrow / metadata signature. Tight letter-spacing, uppercase. */
 .ml {
   display: inline-block;
   font-family: var(--font-mono);
@@ -126,15 +149,14 @@ a { color: inherit; text-decoration: none; }
 .ml .num { color: var(--accent); margin-right: 8px; }
 
 /* ── Buttons ────────────────────────────────────────────────────────
-   Pill-shaped, generous padding, accent-tinted hover lift.
-   Four variants: acid (primary), cream, line (subtle), ghost. */
+   Tight radius (6 px), blue primary, neutral secondary. */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   height: 38px;
   padding: 0 16px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   font-size: 13.5px;
   font-weight: 500;
   font-family: inherit;
@@ -144,64 +166,57 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
-              transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1);
+              box-shadow 0.15s ease;
 }
-.btn .arrow {
-  transition: transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1);
-}
+.btn .arrow { transition: transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1); }
 .btn:hover .arrow { transform: translateX(3px); }
 
-.btn-acid {
+/* Primary (blue accent) — was the lime "acid" in the dark theme */
+.btn-acid,
+.btn-primary {
   background: var(--accent);
-  color: var(--bg);
+  color: #ffffff;
   border-color: var(--accent);
   font-weight: 600;
 }
-.btn-acid:hover {
+.btn-acid:hover,
+.btn-primary:hover {
   background: var(--accent-strong);
   border-color: var(--accent-strong);
 }
 
+/* High-contrast (ink on white) — was the "cream" variant */
 .btn-cream {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+  background: var(--ink);
+  color: #ffffff;
+  border-color: var(--ink);
   font-weight: 600;
 }
 .btn-cream:hover {
-  background: #ffffff;
-  border-color: #ffffff;
+  background: var(--text-2);
+  border-color: var(--text-2);
 }
 
+/* Outline */
 .btn-line {
   border-color: var(--border-strong);
   color: var(--text);
-  background: transparent;
+  background: var(--bg);
 }
 .btn-line:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-2);
   border-color: var(--text-4);
 }
 
+/* Ghost / tertiary */
 .btn-ghost {
-  color: var(--text-2);
+  color: var(--text-3);
   background: transparent;
   border-color: transparent;
 }
 .btn-ghost:hover {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.btn-primary { /* backwards-compat alias for components still referencing it */
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
-  font-weight: 600;
-}
-.btn-primary:hover {
-  background: var(--accent-strong);
-  border-color: var(--accent-strong);
+  background: var(--bg-2);
 }
 
 .btn-lg {
@@ -210,10 +225,8 @@ a { color: inherit; text-decoration: none; }
   font-size: 14.5px;
 }
 
-/* ── Section primitives ─────────────────────────────────────────────
-   Serif headings with italic-emphasis support; mono lede for body.
-   The "split head" pattern is implemented per-component with .sec-head. */
-section { padding: 140px 0; position: relative; }
+/* ── Section primitives ───────────────────────────────────────────── */
+section { padding: 120px 0; position: relative; }
 section + section { border-top: 1px solid var(--border); }
 
 .sec-eyebrow {
@@ -230,11 +243,11 @@ section + section { border-top: 1px solid var(--border); }
 .sec-eyebrow .num { color: var(--accent); margin-right: 8px; }
 
 .sec-h {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(40px, 5.4vw, 76px);
-  line-height: 1;
+  line-height: 1.04;
   letter-spacing: -0.02em;
-  font-weight: 400;
+  font-weight: 600;
   margin: 0 0 28px;
   max-width: 880px;
   text-wrap: balance;
@@ -243,26 +256,24 @@ section + section { border-top: 1px solid var(--border); }
 .sec-h .it { font-style: normal; }
 .sec-h .acid { color: var(--accent); font-style: normal; }
 
-/* Global italic suppression — per directive, no italic anywhere on the
-   marketing site. Overrides browser defaults on <em>, <i>, <cite>,
-   <address>, <dfn>, and any other elements UA stylesheets italicise. */
+/* Global italic suppression — no italic anywhere on the marketing site */
 em, i, cite, dfn, address, var { font-style: normal; }
 
 .sec-lede {
-  color: var(--text-2);
+  color: var(--text-3);
   font-size: 17px;
   max-width: 640px;
   line-height: 1.6;
   margin: 0;
   text-wrap: pretty;
-  font-weight: 300;
+  font-weight: 400;
 }
-.sec-lede b { color: var(--text); font-weight: 500; }
+.sec-lede b { color: var(--text); font-weight: 600; }
 
-/* ── Responsive ─────────────────────────────────────────────────── */
+/* ── Responsive ───────────────────────────────────────────────────── */
 @media (max-width: 980px) {
   :root { --wrap-pad-x: 20px; }
-  section { padding: 80px 0; }
+  section { padding: 72px 0; }
   .sec-h { font-size: 36px; }
 }
 
@@ -274,10 +285,7 @@ em, i, cite, dfn, address, var { font-style: normal; }
               transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: opacity, transform;
 }
-.js-reveal section.in-view {
-  opacity: 1;
-  transform: none;
-}
+.js-reveal section.in-view { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .js-reveal section:not(.hero) {
     opacity: 1 !important;
@@ -286,20 +294,18 @@ em, i, cite, dfn, address, var { font-style: normal; }
   }
 }
 
-/* ── Scrollbar (dark canvas tuned) ───────────────────────────────── */
+/* ── Scrollbar (light canvas tuned) ───────────────────────────────── */
 @supports (scrollbar-width: thin) {
   html {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--accent) 25%, var(--border-strong)) transparent;
+    scrollbar-color: var(--border-strong) transparent;
   }
 }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--text-4) 50%, transparent);
+  background: var(--border-strong);
   border-radius: 999px;
   border: 2px solid var(--bg);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklab, var(--accent) 40%, var(--text-3));
-}
+::-webkit-scrollbar-thumb:hover { background: var(--text-4); }

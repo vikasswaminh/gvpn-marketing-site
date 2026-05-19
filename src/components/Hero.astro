@@ -79,8 +79,8 @@ const meshNodes = [
         <svg class="mesh-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="hub-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"  stop-color="#c5f23a" stop-opacity="0.4"/>
-              <stop offset="60%" stop-color="#c5f23a" stop-opacity="0"/>
+              <stop offset="0%"  stop-color="#0066ff" stop-opacity="0.4"/>
+              <stop offset="60%" stop-color="#0066ff" stop-opacity="0"/>
             </linearGradient>
           </defs>
           <!-- Static connection backbone (5 spokes hub→node) -->
@@ -154,17 +154,20 @@ const meshNodes = [
     position: relative;
     overflow: hidden;
     isolation: isolate;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
   }
-  /* Acid glow top-right and ember glow bottom-left — two large
-     radial-gradients giving the dark canvas its editorial atmosphere. */
+  /* Two very-subtle wash tints — accent (blue) top-right + brand red
+     bottom-left. Light theme keeps them barely-there so the page doesn't
+     feel busy. */
   .hero::before {
     content: "";
     position: absolute;
-    top: -100px; right: -200px;
+    top: -200px; right: -200px;
     width: 900px; height: 900px;
     z-index: -1;
-    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 55%);
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
     pointer-events: none;
+    opacity: .8;
   }
   .hero::after {
     content: "";
@@ -172,8 +175,9 @@ const meshNodes = [
     bottom: -200px; left: -200px;
     width: 700px; height: 700px;
     z-index: -1;
-    background: radial-gradient(circle, rgba(255, 122, 69, 0.08) 0%, transparent 55%);
+    background: radial-gradient(circle, var(--brand-red-soft) 0%, transparent 60%);
     pointer-events: none;
+    opacity: .65;
   }
 
   .hero-inner {
@@ -192,13 +196,13 @@ const meshNodes = [
     gap: 10px;
     padding: 7px 12px 7px 8px;
     border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--bg);
     border: 1px solid var(--border);
     margin-bottom: 32px;
   }
   .eyebrow .pill {
     background: var(--accent);
-    color: var(--bg);
+    color: #ffffff;
     padding: 3px 7px;
     border-radius: var(--radius-pill);
     font: 600 10px/1 var(--font-mono);
@@ -209,19 +213,16 @@ const meshNodes = [
     font: 500 11.5px/1 var(--font-mono);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--text-2);
+    color: var(--text-3);
   }
 
-  /* ── Editorial H1 ─────────────────────────────────────────────
-     Instrument Serif, very large, italic emphasis on the
-     'you already own' span. The rest of the headline stays in the
-     cream foreground. */
+  /* ── Display H1 (Geist, heavy weight) ────────────────────────── */
   .h1 {
-    font-family: var(--font-serif);
-    font-size: clamp(28px, 3.7vw, 54px);
-    line-height: 0.96;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4.2vw, 60px);
+    line-height: 1.04;
     letter-spacing: -0.025em;
-    font-weight: 400;
+    font-weight: 600;
     margin: 0 0 28px;
     text-wrap: balance;
     color: var(--text);
@@ -234,14 +235,14 @@ const meshNodes = [
   /* ── Lede ─────────────────────────────────────────────────────── */
   .lede {
     font-size: 18px;
-    color: var(--text-2);
+    color: var(--text-3);
     max-width: 520px;
     line-height: 1.55;
     text-wrap: pretty;
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
   }
-  .lede b { color: var(--text); font-weight: 500; }
+  .lede b { color: var(--text); font-weight: 600; }
 
   /* ── CTAs row ────────────────────────────────────────────────── */
   .hero-cta {
@@ -251,35 +252,20 @@ const meshNodes = [
     align-items: center;
     flex-wrap: wrap;
   }
-  /* Acid CTA gets a soft halo + 3.6s pulse (matches the prior pass) */
+  /* Primary CTA — subtle accent ring (light theme keeps it restrained,
+     no large glow). Hover lifts 1 px and tightens the ring. */
   .hero-cta .btn-acid {
     position: relative;
     box-shadow:
-      0 0 0 4px color-mix(in oklab, var(--accent) 8%, transparent),
-      0 0 24px color-mix(in oklab, var(--accent) 30%, transparent),
-      0 6px 18px color-mix(in oklab, var(--accent) 22%, transparent);
+      0 0 0 3px var(--accent-soft),
+      0 6px 14px color-mix(in oklab, var(--accent) 18%, transparent);
     transition: box-shadow 0.25s ease, transform 0.15s ease;
-    animation: hero-cta-pulse 3.6s ease-in-out infinite;
   }
   .hero-cta .btn-acid:hover {
     transform: translateY(-1px);
     box-shadow:
-      0 0 0 5px color-mix(in oklab, var(--accent) 12%, transparent),
-      0 0 36px color-mix(in oklab, var(--accent) 45%, transparent),
-      0 10px 28px color-mix(in oklab, var(--accent) 30%, transparent);
-  }
-  @keyframes hero-cta-pulse {
-    0%, 100% { box-shadow:
-      0 0 0 4px color-mix(in oklab, var(--accent) 8%, transparent),
-      0 0 24px color-mix(in oklab, var(--accent) 30%, transparent),
-      0 6px 18px color-mix(in oklab, var(--accent) 22%, transparent); }
-    50% { box-shadow:
-      0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent),
-      0 0 32px color-mix(in oklab, var(--accent) 40%, transparent),
-      0 6px 18px color-mix(in oklab, var(--accent) 26%, transparent); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-cta .btn-acid { animation: none; }
+      0 0 0 4px var(--accent-soft),
+      0 10px 20px color-mix(in oklab, var(--accent) 24%, transparent);
   }
 
   /* ── Hero meta row (mono uppercase + acid ticks) ─────────────── */
@@ -302,7 +288,7 @@ const meshNodes = [
     width: 14px; height: 14px;
     border-radius: 50%;
     background: var(--accent);
-    color: var(--bg);
+    color: #ffffff;
     display: grid;
     place-items: center;
     flex-shrink: 0;
@@ -319,21 +305,21 @@ const meshNodes = [
   .mesh-stage {
     position: relative;
     width: 100%; height: 100%;
-    border-radius: 24px;
+    border-radius: var(--radius-xl);
     border: 1px solid var(--border);
     overflow: hidden;
     background:
-      radial-gradient(circle at 50% 50%, rgba(197, 242, 58, 0.06), transparent 65%),
-      linear-gradient(180deg, var(--bg-2), var(--bg));
+      radial-gradient(circle at 50% 50%, var(--accent-soft), transparent 65%),
+      linear-gradient(180deg, var(--bg), var(--bg-2));
   }
-  /* subtle grid lines, masked to a soft circle in the middle */
+  /* subtle grid lines (dark-on-light), masked to a soft circle in the middle */
   .mesh-stage::before {
     content: "";
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      linear-gradient(rgba(10, 10, 10, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(10, 10, 10, 0.04) 1px, transparent 1px);
     background-size: 40px 40px;
     -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 50%, transparent 75%);
             mask-image: radial-gradient(circle at 50% 50%, #000 50%, transparent 75%);
@@ -373,9 +359,9 @@ const meshNodes = [
     width: 100%; height: 100%;
   }
   .mesh-line {
-    stroke: var(--text-4);
+    stroke: var(--border-strong);
     stroke-width: 1;
-    opacity: 0.35;
+    opacity: 0.8;
     fill: none;
   }
   .mesh-flow {
@@ -424,11 +410,11 @@ const meshNodes = [
   .mesh-node.hub {
     width: 72px; height: 72px;
     background: var(--accent);
-    color: var(--bg);
+    color: #ffffff;
     border-color: var(--accent);
     box-shadow:
-      0 0 0 6px rgba(197, 242, 58, 0.12),
-      0 0 60px var(--accent-glow);
+      0 0 0 6px var(--accent-soft),
+      0 12px 30px color-mix(in oklab, var(--accent) 30%, transparent);
     z-index: 4;
   }
   /* Pulsing ring around the hub */
@@ -438,7 +424,7 @@ const meshNodes = [
     inset: -10px;
     border-radius: 18px;
     border: 1px solid var(--accent);
-    opacity: 0.4;
+    opacity: 0.45;
     animation: mesh-hub-pulse 2.6s ease-out infinite;
   }
   @keyframes mesh-hub-pulse {
@@ -459,17 +445,17 @@ const meshNodes = [
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
     z-index: 2;
   }
   .mesh-foot > div {
-    background: rgba(11, 11, 12, 0.92);
+    background: var(--bg);
     padding: 10px 12px;
   }
   .mesh-foot .lbl {
     font: 500 9.5px/1 var(--font-mono);
-    color: var(--text-4);
+    color: var(--text-3);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     margin-bottom: 6px;
@@ -479,7 +465,7 @@ const meshNodes = [
     color: var(--text);
     font-variant-numeric: tabular-nums;
   }
-  .mesh-foot .val.ok { color: var(--accent); }
+  .mesh-foot .val.ok { color: var(--ok); }
 
   /* ── Responsive ──────────────────────────────────────────────── */
   @media (max-width: 980px) {

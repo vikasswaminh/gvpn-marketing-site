@@ -171,30 +171,32 @@ a { color: inherit; text-decoration: none; }
 .btn .arrow { transition: transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1); }
 .btn:hover .arrow { transform: translateX(3px); }
 
-/* Primary (blue accent) — was the lime "acid" in the dark theme */
-.btn-acid,
-.btn-primary {
-  background: var(--accent);
-  color: #ffffff;
-  border-color: var(--accent);
-  font-weight: 600;
-}
-.btn-acid:hover,
-.btn-primary:hover {
-  background: var(--accent-strong);
-  border-color: var(--accent-strong);
-}
-
-/* High-contrast (ink on white) — was the "cream" variant */
+/* PRIMARY = solid ink (black). Timeless, premium, matches crawlcrawl.
+   This is the default CTA used by Nav, Pricing card, and inline copy. */
+.btn-primary,
 .btn-cream {
   background: var(--ink);
   color: #ffffff;
   border-color: var(--ink);
   font-weight: 600;
 }
+.btn-primary:hover,
 .btn-cream:hover {
   background: var(--text-2);
   border-color: var(--text-2);
+}
+
+/* ACID = bright-blue accent. Use only when a moment needs to pop
+   beyond the standard ink primary (rare). Same shape, different color. */
+.btn-acid {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.btn-acid:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
 }
 
 /* Outline */

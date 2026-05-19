@@ -89,22 +89,12 @@ import { site } from "../site";
     align-items: center;
     flex-wrap: wrap;
   }
-  /* Map .btn-primary inside the CTA to the acid pill treatment */
-  .cta-row .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-    border-color: var(--accent);
-    font-weight: 600;
-    border-radius: var(--radius-pill);
-  }
-  .cta-row .btn-primary:hover {
-    background: var(--accent-strong);
-    border-color: var(--accent-strong);
-  }
+  /* Inherit global .btn-primary (ink). Override only the radius for the
+     CTA-section-specific pill shape if we want it; current direction is
+     tight rectangles so we let the global rule win. */
   .cta-row .btn:not(.btn-primary) {
     border: 1px solid var(--border-strong);
     color: var(--text);
-    border-radius: var(--radius-pill);
   }
 
   @media (max-width: 980px) {

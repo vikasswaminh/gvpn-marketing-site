@@ -21,8 +21,15 @@ const cols = [
   {
     h: "Contact",
     items: [
+      { l: "Contact us",          href: "/contact" },
       { l: "Talk to us (Pro)",    href: site.proContact, external: false },
       { l: "hello@meshwg.com",    href: "mailto:hello@meshwg.com", external: false },
+    ],
+  },
+  {
+    h: "Company",
+    items: [
+      { l: "Careers",             href: "/careers" },
     ],
   },
 ];
@@ -89,7 +96,7 @@ const year = new Date().getFullYear();
   }
   .foot-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap: 40px;
   }
   .foot-brand {

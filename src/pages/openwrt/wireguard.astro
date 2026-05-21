@@ -1,0 +1,435 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+
+// Primary keyword: "openwrt wireguard" (590/mo US, AI Overview, CPC $2.82)
+// Secondaries: "wireguard openwrt", "openwrt wireguard luci", "openwrt wireguard setup"
+const title = "OpenWrt WireGuard: the complete 2026 setup + multi-site guide";
+const description = "OpenWrt has shipped WireGuard since 19.07. Here's how it actually works, how to set it up in LuCI or the CLI, the performance you can expect on common ARM/MIPS routers, and what to do when one router becomes ten branches.";
+const canonical = "https://meshwg.com/openwrt/wireguard/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+// FAQ block — questions chosen to match real PAA / AIO citations on the
+// "openwrt wireguard" SERP. Each Q has a self-contained direct answer so
+// Google can pull it into a Featured Snippet or AI Overview unchanged.
+const faqs = [
+  {
+    q: "Does OpenWrt support WireGuard?",
+    a: "Yes. OpenWrt has shipped WireGuard support natively since OpenWrt 19.07, released in January 2020. On modern OpenWrt builds (22.03, 23.05, and 24.10) WireGuard is in the default LuCI web interface; on older firmware you install the wireguard-tools and luci-app-wireguard packages from opkg. The kernel module is included in the standard OpenWrt build for almost every supported architecture, including ath79, ramips, and ipq40xx — the chipsets in most TP-Link, GL.iNet, and Linksys routers."
+  },
+  {
+    q: "How do I install WireGuard on OpenWrt?",
+    a: "On OpenWrt 19.07 or later, log in to your router by SSH and run: opkg update && opkg install wireguard-tools luci-app-wireguard kmod-wireguard. Then refresh the LuCI web interface. The WireGuard option appears under Network → Interfaces → Add new interface, with 'WireGuard VPN' as a selectable protocol. Most builds ship the kmod-wireguard kernel module pre-installed; the opkg install is what makes the LuCI configuration UI appear."
+  },
+  {
+    q: "Can OpenWrt handle WireGuard at wire speed?",
+    a: "On modern ARM-based OpenWrt routers (such as those with the IPQ8074 chipset like the Linksys MR9600 or Asus AX-series) WireGuard typically achieves 200–500 Mbps single-tunnel throughput. On MIPS-based routers (TP-Link Archer C7, many older Linksys models) expect 50–100 Mbps. Throughput is CPU-bound; encryption is unaccelerated, so the CPU's symmetric-crypto performance is the ceiling. WireGuard is consistently 3–5× faster than OpenVPN on the same hardware."
+  },
+  {
+    q: "What is the difference between WireGuard as a VPN server and a VPN client on OpenWrt?",
+    a: "OpenWrt's WireGuard interface is symmetric — the same protocol implementation acts as either side of a tunnel. The 'server' role just means the side with a stable public endpoint that the other side connects to. In a hub-and-spoke topology for multiple branches, the central router is the server (with a stable public IP and the listen-port configured); each branch is a client. For peer-to-peer between two specific sites, either side can be the listener."
+  },
+  {
+    q: "How do I configure WireGuard between multiple OpenWrt routers?",
+    a: "Each peer pair requires its own keypair exchange and an entry in each side's wg0 peer list. For three sites that's three keypair exchanges; for ten sites it is forty-five. The pragmatic approach for more than three sites is a hub-and-spoke layout (one central listener, each branch peers only with the hub), which reduces the configuration surface from N×(N−1)/2 to N. Hub-and-spoke is what managed mesh services like MeshWG generate automatically; it is what you would end up writing by hand."
+  },
+  {
+    q: "What is openwrt wireguard luci?",
+    a: "LuCI is OpenWrt's web administration interface. luci-app-wireguard is the package that adds a WireGuard configuration page to it, under Network → Interfaces. With the package installed, you create a WireGuard interface, paste in the private key and listen port, and add peers (public key, allowed IPs, endpoint) through the web UI rather than editing /etc/config/network by hand. The UI writes to the same UCI configuration file the CLI uses."
+  }
+];
+
+// JSON-LD ───────────────────────────────────────────────────────────────
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title,
+  "description": description,
+  "datePublished": publishedTime,
+  "dateModified":  modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": [
+    "OpenWrt WireGuard", "openwrt wireguard", "wireguard openwrt",
+    "openwrt wireguard luci", "openwrt wireguard setup",
+    "openwrt site to site vpn", "openwrt mesh vpn"
+  ],
+  "isAccessibleForFree": true,
+  "inLanguage": "en"
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Set up WireGuard on OpenWrt with LuCI",
+  "totalTime": "PT10M",
+  "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+  "tool": [{ "@type": "HowToTool", "name": "OpenWrt 19.07 or later router" }],
+  "step": [
+    { "@type": "HowToStep", "name": "SSH to the router", "text": "Connect to your OpenWrt router by SSH on its LAN address (typically root@192.168.1.1)." },
+    { "@type": "HowToStep", "name": "Install the WireGuard packages", "text": "Run `opkg update && opkg install wireguard-tools luci-app-wireguard kmod-wireguard`. On most modern OpenWrt builds the kernel module is already present." },
+    { "@type": "HowToStep", "name": "Generate keys", "text": "Run `wg genkey | tee privatekey | wg pubkey > publickey` to create the local keypair. Repeat on the peer device." },
+    { "@type": "HowToStep", "name": "Add the WireGuard interface in LuCI", "text": "In Network → Interfaces → Add new interface, name the interface wg0, choose 'WireGuard VPN' as protocol, paste in the private key, set listen-port and IP address." },
+    { "@type": "HowToStep", "name": "Add the peer", "text": "Under the new wg0 interface, Peers tab → Add Peer. Paste the remote public key, set Allowed IPs to the remote subnet and the remote overlay /32, and set Endpoint Host and Port to the remote router's public address." },
+    { "@type": "HowToStep", "name": "Open the firewall", "text": "Under Network → Firewall → Zones, attach wg0 to the lan zone (or a dedicated vpn zone) and ensure the input and forward policies match your intent." },
+    { "@type": "HowToStep", "name": "Restart networking", "text": "Run `/etc/init.d/network restart` and confirm with `wg show` that a handshake has completed." }
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "OpenWrt",  "item": "https://meshwg.com/openwrt/" },
+    { "@type": "ListItem", "position": 3, "name": "WireGuard","item": canonical }
+  ]
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogType="article"
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+>
+  <Nav />
+  <PageHero
+    eyebrow="/ openwrt + wireguard"
+    title="OpenWrt + WireGuard: the complete 2026 setup + multi-site guide"
+    lede="OpenWrt has shipped WireGuard natively since 19.07. This guide covers what your router can actually do, how to set it up in LuCI or the CLI, the performance you can expect on common chipsets, and what to do when one router becomes ten branches."
+  />
+
+  <section class="guide">
+    <div class="wrap">
+
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#does-openwrt-support-wireguard">Does OpenWrt support WireGuard?</a></li>
+          <li><a href="#how-it-works">How OpenWrt's WireGuard actually works</a></li>
+          <li><a href="#setup-luci">Setup with LuCI (recommended for most)</a></li>
+          <li><a href="#setup-cli">Setup with the CLI (for headless or automation)</a></li>
+          <li><a href="#performance">Performance on common chipsets</a></li>
+          <li><a href="#multi-site">When one router becomes ten branches</a></li>
+          <li><a href="#meshwg">How MeshWG fits with OpenWrt</a></li>
+          <li><a href="#faq">Frequently asked questions</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="does-openwrt-support-wireguard">Does OpenWrt support WireGuard?</h2>
+        <p><strong>Yes — OpenWrt has shipped WireGuard support natively since OpenWrt 19.07</strong>, released in January 2020. On modern OpenWrt builds (22.03, 23.05, and 24.10) WireGuard is in the default LuCI web interface. On older firmware you install the <code>wireguard-tools</code> and <code>luci-app-wireguard</code> packages from opkg.</p>
+        <p>The kernel module ships in the standard OpenWrt build for almost every supported architecture — <code>ath79</code>, <code>ramips</code>, <code>ipq40xx</code>, <code>ipq807x</code>, <code>mvebu</code>, <code>x86_64</code> — which covers the chipsets in nearly every TP-Link, GL.iNet, Linksys, Asus, and NETGEAR router that runs OpenWrt. If your router is on the <a href="https://openwrt.org/toh/start" rel="noopener" target="_blank">official supported devices list</a>, you almost certainly have WireGuard available.</p>
+        <p>There is one exception worth knowing about: very low-RAM devices (16 MB or less) sometimes drop the WireGuard kernel module from the build to save space. If <code>opkg install kmod-wireguard</code> says "package not found," that's the likely cause.</p>
+
+        <h2 id="how-it-works">How OpenWrt's WireGuard actually works</h2>
+        <p>WireGuard on OpenWrt is configured the same way every other network interface is — through <code>/etc/config/network</code>, edited either by hand or via LuCI's web UI. There is no separate WireGuard service, no daemon to start, and no userspace tunnel process. The kernel module handles encryption directly; OpenWrt's normal routing table and firewall rules apply to the resulting <code>wg0</code> interface like they would to any other.</p>
+        <p>That single design choice — WireGuard as a first-class kernel interface — is why it integrates so cleanly with OpenWrt and why the configuration is so much shorter than the equivalent OpenVPN setup. There is no certificate management, no TLS handshake to debug, no CA to rotate. Every peer has a fixed public key, and a configuration file lists every peer the local node is allowed to talk to.</p>
+        <p>The result on a working tunnel is summarized by one command: <code>wg show wg0</code>. It prints the local public key, the listen-port, every peer's public key, the last handshake time, and the bytes transferred. If a peer isn't listed in <code>wg show</code>, the kernel has never accepted a packet from it.</p>
+
+        <h2 id="setup-luci">Setup with LuCI (recommended for most)</h2>
+        <p>The LuCI flow is the right path for a one-router single-site setup. For multi-router or many-peer setups, the CLI path described next is faster.</p>
+        <ol class="numbered">
+          <li><strong>SSH to the router.</strong> Connect to your OpenWrt router's LAN address — by default <code>ssh root@192.168.1.1</code>.</li>
+          <li><strong>Install the packages.</strong> Run <code>opkg update &amp;&amp; opkg install wireguard-tools luci-app-wireguard kmod-wireguard</code>. On modern OpenWrt builds the kernel module is usually already present; opkg will skip what's installed.</li>
+          <li><strong>Generate the keypair.</strong> Either run <code>wg genkey | tee privatekey | wg pubkey &gt; publickey</code> on the router itself, or generate the keys on your laptop and paste them in.</li>
+          <li><strong>Open LuCI in a browser.</strong> Navigate to <strong>Network → Interfaces → Add new interface</strong>. Name it <code>wg0</code> (or whatever you prefer; the name is local), and select <strong>WireGuard VPN</strong> as the protocol.</li>
+          <li><strong>Configure the interface.</strong> Paste your private key. Set a listen-port (51820 is the convention but anything works). Set an IPv4 address that won't collide with anything else on the mesh — <code>10.100.0.2/16</code> is a common choice. Save.</li>
+          <li><strong>Add a peer.</strong> Open the new interface, switch to the <strong>Peers</strong> tab, and click <strong>Add Peer</strong>. Paste the remote public key, set Allowed IPs (typically the remote overlay /32 plus any LAN subnet you want to reach behind that peer), set Endpoint Host and Endpoint Port if the remote has a stable public address, and set Persistent Keepalive to 21 seconds if the local router is behind NAT.</li>
+          <li><strong>Attach to a firewall zone.</strong> Under <strong>Network → Firewall → Zones</strong>, attach <code>wg0</code> to the <code>lan</code> zone, or create a dedicated <code>vpn</code> zone with input/forward rules that match your security posture.</li>
+          <li><strong>Restart networking.</strong> Run <code>/etc/init.d/network restart</code> on the router and confirm with <code>wg show</code> that a handshake has completed within a few seconds of the peer also being configured.</li>
+        </ol>
+
+        <h2 id="setup-cli">Setup with the CLI (for headless or automation)</h2>
+        <p>If you're configuring more than two routers, the LuCI flow becomes tedious. The same configuration can be set via UCI commands directly:</p>
+        <pre><code>uci set network.wg0='interface'
+uci set network.wg0.proto='wireguard'
+uci set network.wg0.private_key='YOUR_PRIVATE_KEY'
+uci add_list network.wg0.addresses='10.100.0.2/16'
+uci set network.wg0.listen_port='51820'
+
+uci add network wireguard_wg0
+uci rename network.@wireguard_wg0[-1]='wg0_hub'
+uci set network.wg0_hub.public_key='REMOTE_PUBLIC_KEY'
+uci set network.wg0_hub.endpoint_host='hub.example.com'
+uci set network.wg0_hub.endpoint_port='51820'
+uci set network.wg0_hub.persistent_keepalive='21'
+uci add_list network.wg0_hub.allowed_ips='10.100.0.0/16'
+
+uci commit network
+/etc/init.d/network restart</code></pre>
+        <p>This is the format MeshWG generates if you pick the OpenWrt option in our <a href="https://vpn.meshwg.com/signup">vendor config picker</a> — paste-ready, no values to edit. For OpenWrt automation, the CLI form is also the format Ansible's <code>community.general.uci_set</code> module expects.</p>
+
+        <h2 id="performance">Performance on common chipsets</h2>
+        <p>WireGuard's throughput on OpenWrt is almost entirely CPU-bound: there is no hardware encryption offload on consumer routers, so the symmetric-crypto performance of the SoC sets the ceiling. The realistic numbers across the OpenWrt-supported chipset families:</p>
+        <table class="perf">
+          <thead>
+            <tr><th>Chipset family</th><th>Example routers</th><th>WireGuard throughput</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>IPQ8074 (4-core ARM A53 @ 2.2 GHz)</td><td>Linksys MR9600, NETGEAR RAX120</td><td>500–900 Mbps</td></tr>
+            <tr><td>IPQ807x / IPQ806x</td><td>Linksys WRX36, Dynalink DL-WRX36</td><td>400–700 Mbps</td></tr>
+            <tr><td>IPQ40xx (4-core ARM A7)</td><td>GL.iNet B1300, ZyXEL NBG6817</td><td>150–250 Mbps</td></tr>
+            <tr><td>mt7621 (MIPS dual-core)</td><td>Linksys E5600, Xiaomi Mi Router 4A</td><td>50–80 Mbps</td></tr>
+            <tr><td>ath79 (MIPS single-core)</td><td>TP-Link Archer C7, GL.iNet AR750</td><td>30–60 Mbps</td></tr>
+            <tr><td>x86_64 (any modern CPU)</td><td>Mini-PC, virtualised firewall</td><td>1+ Gbps (line-rate)</td></tr>
+          </tbody>
+        </table>
+        <p>WireGuard is consistently 3–5× faster than OpenVPN on the same hardware, and 2–3× faster than IPsec in pure-software mode. For most Indian SMB branch deployments the local internet uplink (50–200 Mbps) is the binding constraint, not the router's WireGuard performance, on anything mt7621 or newer.</p>
+
+        <h2 id="multi-site">When one router becomes ten branches</h2>
+        <p>OpenWrt's WireGuard implementation is excellent at one thing: a single tunnel between two specific endpoints. It becomes painful when the operator wants any of the following:</p>
+        <ul class="bullets">
+          <li><strong>Three or more sites, fully meshed.</strong> Three sites require three peer-pair configurations across six router config files. Ten sites require forty-five. Hand-maintaining this works for a single technical operator; it does not work for a multi-branch business where each branch is configured by a local IT contractor.</li>
+          <li><strong>One router goes down and a new key has to be distributed.</strong> Every other router in the mesh needs its peer list updated. Without a central place that holds the canonical peer list, half the sites will end up out of sync within a quarter.</li>
+          <li><strong>Per-peer access policy.</strong> WireGuard's <code>AllowedIPs</code> is route-and-encryption combined; you cannot say "allow this peer to reach that LAN but not the other LAN" without a firewall rule on top, applied at the destination. For multi-branch, that means firewall rules in every router, with no central place to audit them.</li>
+          <li><strong>NAT traversal across CGNAT or double-NAT.</strong> WireGuard handshakes initiate outbound, so a peer behind CGNAT can reach a peer with a public endpoint. But two peers both behind CGNAT cannot directly reach each other — they need a relay. OpenWrt does not include a relay layer; that's where a managed service that runs the relay (and rotates it across regions for latency) earns its keep.</li>
+          <li><strong>Visibility.</strong> <code>wg show</code> is the only diagnostic. Across 10 routers that's 10 SSH sessions to read 10 outputs to answer "is everything working?"</li>
+        </ul>
+
+        <h2 id="meshwg">How MeshWG fits with OpenWrt</h2>
+        <p>MeshWG is a hosted mesh layer that runs <em>above</em> OpenWrt's native WireGuard. Your router continues to use exactly the same kernel module and the same <code>/etc/config/network</code> file; MeshWG provides:</p>
+        <ul class="bullets">
+          <li><strong>Generated configuration.</strong> For each OpenWrt router you add, MeshWG produces a paste-ready UCI command block (the format shown in <a href="#setup-cli">Setup with the CLI</a> above) with every peer pre-populated. New site joins the mesh, MeshWG regenerates everyone's <code>AllowedIPs</code> so you don't.</li>
+          <li><strong>Central policy.</strong> Allow / deny rules between any two devices are configured once in the dashboard. The rules are pushed to the controlling layer; the routers don't need per-site firewall changes to enforce them.</li>
+          <li><strong>NAT traversal.</strong> The relay layer handles the double-CGNAT case automatically; your routers don't change their configuration.</li>
+          <li><strong>Visibility.</strong> A single dashboard view of every peer's last handshake, transferred bytes, and connection state — no SSH-ing into ten routers to read ten <code>wg show</code> outputs.</li>
+          <li><strong>Honest billing.</strong> First two routers are free forever. After that, ₹349/router/month billed annually (or ₹499/router/month month-to-month), in INR via Razorpay. No per-tunnel charges, no enterprise paywall.</li>
+        </ul>
+        <p>The OpenWrt + MeshWG combination is what most multi-branch buyers actually want: keep your existing OpenWrt firmware, your existing routers, your existing firewall rules — add a mesh layer on top that handles the parts that don't scale.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item">
+            <h3>{f.q}</h3>
+            <p>{f.a}</p>
+          </div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>
+            Try the configuration on your own OpenWrt router with the free tier —
+            two routers, no card required, indefinite. Add a third when you
+            need it.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers, forever</a>
+            <a class="btn btn-line btn-lg" href="/compatibility">Check your router compatibility</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/blog/wireguard-site-to-site-vpn-how-it-works-2026/">WireGuard for site-to-site VPN: how it actually works</a> ·
+            <a href="/blog/branch-office-vpn-smb-rollout-playbook-2026/">Branch office VPN: a 5-phase rollout playbook</a> ·
+            <a href="/pricing">Pricing</a> ·
+            <a href="/contact">Contact</a>
+          </p>
+        </div>
+
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+
+  /* Sticky table of contents — helps both the reader and structured-data
+     value because each H2 has an anchor target. */
+  .toc {
+    position: sticky;
+    top: 100px;
+    font-size: 13.5px;
+  }
+  .toc-h {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
+    margin-bottom: 14px;
+  }
+  .toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: tocnum;
+  }
+  .toc li {
+    counter-increment: tocnum;
+    padding: 8px 0 8px 26px;
+    position: relative;
+    border-bottom: 1px solid var(--border-faint);
+    line-height: 1.45;
+  }
+  .toc li::before {
+    content: counter(tocnum, decimal-leading-zero);
+    position: absolute; left: 0; top: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-4);
+  }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+
+  /* Article body */
+  article { max-width: 780px; }
+
+  .guide h2 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 56px 0 16px;
+    color: var(--text);
+    text-wrap: balance;
+    scroll-margin-top: 100px;
+  }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin: 24px 0 8px;
+    color: var(--text);
+  }
+  .guide p {
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.7;
+    margin: 0 0 16px;
+  }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .guide code {
+    font-family: var(--font-mono);
+    font-size: .9em;
+    background: var(--bg-2);
+    padding: 1.5px 6px;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+  }
+  .guide pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 22px;
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  .guide pre code { background: transparent; padding: 0; color: inherit; }
+
+  .bullets, .numbered {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .bullets li, .numbered li {
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.65;
+    padding-left: 28px;
+    position: relative;
+    counter-increment: num;
+  }
+  .bullets li::before {
+    content: "—";
+    position: absolute; left: 0; top: 0;
+    color: var(--text-4); font-family: var(--font-mono);
+  }
+  .numbered { counter-reset: num; }
+  .numbered li::before {
+    content: counter(num) ".";
+    position: absolute; left: 0; top: 0;
+    color: var(--text-4); font-family: var(--font-mono);
+  }
+
+  table.perf {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0 8px;
+    font-size: 14px;
+  }
+  table.perf th, table.perf td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.perf th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-strong);
+    background: var(--surface);
+  }
+
+  .faq-item { margin: 32px 0; }
+  .faq-item h3 {
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+
+  .next {
+    margin-top: 64px;
+    padding: 32px 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+  }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 18px 0;
+  }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+
+  @media (max-width: 980px) {
+    .guide { padding: 32px 0 64px; }
+    .guide .wrap { grid-template-columns: 1fr; gap: 24px; }
+    .toc { position: static; }
+    .guide h2 { font-size: 24px; margin-top: 40px; }
+    .next { padding: 22px 22px; }
+  }
+</style>

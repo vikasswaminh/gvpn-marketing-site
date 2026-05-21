@@ -42,6 +42,24 @@ distribution — every signup goes through the hosted login page.
   and four specialized email routes (sales, support, security,
   legal/Grievance Officer). Includes SLA expectations for each
   channel.
+- [OpenWrt WireGuard guide](https://meshwg.com/openwrt/wireguard/):
+  comprehensive 2026 guide to setting up WireGuard on OpenWrt routers.
+  Covers OpenWrt 19.07+ WireGuard support, LuCI vs CLI configuration,
+  per-chipset throughput numbers (IPQ807x, IPQ8074, IPQ40xx, mt7621,
+  ath79, x86_64), hub-and-spoke vs full-mesh patterns, and what
+  changes when one router becomes ten branches. ~2,300 words.
+- [OPNsense WireGuard guide](https://meshwg.com/opnsense/wireguard/):
+  end-to-end OPNsense 24.1+ WireGuard setup guide. Covers the
+  Instances/Peers/Status web UI, the symmetric site-to-site pattern,
+  the firewall rules everyone forgets, handshake-but-no-traffic
+  troubleshooting (Allowed IPs mismatch, MTU clipping, asymmetric
+  routing), and multi-branch scaling considerations. ~2,400 words.
+- [pfSense WireGuard guide](https://meshwg.com/pfsense/wireguard/):
+  pfSense Plus + pfSense CE WireGuard setup guide. Covers the
+  package install on CE 2.7, the integrated path on Plus 22.05+,
+  the 2021 incident and what changed, real throughput numbers vs
+  OpenVPN on Netgate 1100/4100/6100/SG-3100 hardware, and
+  multi-branch scaling beyond two appliances. ~2,500 words.
 - [Careers](https://meshwg.com/careers): MeshWG is hiring 33
   people across three roles, all full-time at the Bengaluru HSR
   Layout office (no remote, no hybrid, no work-from-home). Open

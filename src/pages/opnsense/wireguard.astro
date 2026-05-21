@@ -1,0 +1,375 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+
+// Primary keyword: "opnsense wireguard" (320/mo) + "opnsense wireguard setup" (140/mo, CPC $12.29)
+// Secondaries: "wireguard opnsense", "opnsense wireguard site-to-site"
+const title = "OPNsense WireGuard setup: 2026 guide for single-site to multi-branch mesh";
+const description = "OPNsense has shipped WireGuard as a first-class kernel module since 24.1. This guide walks the setup in the web UI, the site-to-site pattern between two appliances, and what changes when one branch grows into a managed multi-site mesh.";
+const canonical = "https://meshwg.com/opnsense/wireguard/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  {
+    q: "Does OPNsense have WireGuard built in?",
+    a: "Yes. Since OPNsense 24.1 (released January 2024), WireGuard is a first-class kernel module included in the base system; no plugin install is needed. Older OPNsense versions used the os-wireguard-go (userspace) and os-wireguard (kernel) plugins, both of which are now superseded. On any currently-supported OPNsense release (24.1, 24.7, 25.1 and later), WireGuard appears under VPN → WireGuard in the web UI directly after a fresh install."
+  },
+  {
+    q: "Where is WireGuard in the OPNsense web UI?",
+    a: "Under VPN → WireGuard. The page has three tabs: Instances (each local WireGuard interface), Peers (the remote endpoints that connect to those instances), and Status (a live view of handshakes and bytes transferred). Older versions of the plugin used 'Local' and 'Endpoints'; from 24.1 onwards the menu is unified."
+  },
+  {
+    q: "How do I set up a site-to-site WireGuard tunnel between two OPNsense firewalls?",
+    a: "On each OPNsense, create a WireGuard Instance with a unique private key, a listen-port, and a tunnel address (typically a /32 in a shared overlay range, like 10.100.0.2/32 on one side and 10.100.0.3/32 on the other). Then on each side, add a Peer pointing at the other firewall's public key, the other firewall's public IP and listen-port, and the other firewall's tunnel address plus any LAN subnet behind it in Allowed IPs. Enable the instance, allow UDP 51820 inbound on the WAN firewall rule, and a handshake should appear in the Status tab within seconds."
+  },
+  {
+    q: "What firewall rules does OPNsense WireGuard require?",
+    a: "Two sets. First, a WAN-side rule allowing UDP to the WireGuard listen-port (default 51820, customisable per instance). Second, rules on the WireGuard interface itself controlling what traffic from the tunnel can reach which destinations — typically you allow tunnel-to-LAN with whatever scope your policy dictates. OPNsense automatically creates a WireGuard interface in Interfaces → Assignments once an instance is configured; you assign it (call it WG0) and apply rules to it like any other interface."
+  },
+  {
+    q: "Why does my OPNsense WireGuard tunnel show a handshake but no traffic?",
+    a: "A successful handshake means the cryptographic peer-pairing worked but does not guarantee the routing. The two most common causes when traffic isn't flowing are (1) Allowed IPs on one side does not include the destination subnet on the other side, so the packet is dropped before WireGuard sends it, and (2) firewall rules on the WireGuard interface are blocking the traffic. Check Firewall → Log Files → Live View while pinging from one side; the log will show whether the packet hit the WireGuard interface and what verdict applied."
+  },
+  {
+    q: "Can I run a multi-site mesh with OPNsense WireGuard?",
+    a: "Mechanically yes — each OPNsense firewall is a peer, and you can configure every firewall to peer with every other firewall in a full mesh. Practically the configuration overhead grows quadratically (10 sites = 45 peer configurations). The pragmatic shape for more than three sites is hub-and-spoke (one central firewall is the listener, every branch peers with the hub) or a managed mesh service that generates and synchronises the peer configurations centrally."
+  }
+];
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title,
+  "description": description,
+  "datePublished": publishedTime,
+  "dateModified":  modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": [
+    "OPNsense WireGuard", "opnsense wireguard", "wireguard opnsense",
+    "opnsense wireguard setup", "opnsense wireguard site to site",
+    "opnsense vpn", "OPNsense site to site VPN"
+  ],
+  "isAccessibleForFree": true,
+  "inLanguage": "en"
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Set up WireGuard on OPNsense",
+  "totalTime": "PT15M",
+  "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+  "tool": [{ "@type": "HowToTool", "name": "OPNsense 24.1 or later" }],
+  "step": [
+    { "@type": "HowToStep", "name": "Navigate to the WireGuard configuration", "text": "In the OPNsense web UI, go to VPN → WireGuard." },
+    { "@type": "HowToStep", "name": "Create the WireGuard instance", "text": "Under the Instances tab click '+', set a name, generate a keypair, enter a Listen Port (51820), and a Tunnel Address (e.g. 10.100.0.2/32)." },
+    { "@type": "HowToStep", "name": "Add the peer", "text": "Switch to the Peers tab, click '+', enter the remote public key, the remote endpoint host and port, and the Allowed IPs (the remote tunnel /32 and any LAN subnet behind that peer)." },
+    { "@type": "HowToStep", "name": "Bind peer to instance", "text": "Edit the instance and add the peer in the 'Peers' field; save." },
+    { "@type": "HowToStep", "name": "Enable WireGuard", "text": "On the General tab, tick Enable WireGuard and click Apply." },
+    { "@type": "HowToStep", "name": "Open the WAN firewall rule", "text": "Under Firewall → Rules → WAN, add a rule allowing inbound UDP to the listen-port." },
+    { "@type": "HowToStep", "name": "Assign the WireGuard interface", "text": "Go to Interfaces → Assignments, add the WireGuard interface (it will appear as wg0), name it (e.g. WG_LAN), and enable it." },
+    { "@type": "HowToStep", "name": "Add interface firewall rules", "text": "Under Firewall → Rules → WG_LAN, allow the traffic patterns required by your policy (typically WG_LAN net → LAN net)." },
+    { "@type": "HowToStep", "name": "Confirm handshake", "text": "Under VPN → WireGuard → Status, confirm a handshake has completed within the last minute and bytes are flowing in both directions." }
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",      "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "OPNsense",  "item": "https://meshwg.com/opnsense/" },
+    { "@type": "ListItem", "position": 3, "name": "WireGuard", "item": canonical }
+  ]
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogType="article"
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+>
+  <Nav />
+  <PageHero
+    eyebrow="/ opnsense + wireguard"
+    title="OPNsense WireGuard: 2026 setup + multi-branch guide"
+    lede="OPNsense ships WireGuard as a first-class kernel module since 24.1. This guide covers the setup in the web UI, the site-to-site pattern between two appliances, the firewall rules everyone forgets, and what changes when one branch grows into ten."
+  />
+
+  <section class="guide">
+    <div class="wrap">
+
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#built-in">Does OPNsense have WireGuard built in?</a></li>
+          <li><a href="#where">Where it lives in the OPNsense UI</a></li>
+          <li><a href="#setup">Step-by-step setup (single site)</a></li>
+          <li><a href="#site-to-site">Site-to-site between two OPNsense firewalls</a></li>
+          <li><a href="#firewall">Firewall rules that everyone forgets</a></li>
+          <li><a href="#troubleshooting">Handshake, no traffic? Troubleshooting</a></li>
+          <li><a href="#multi-branch">From two sites to ten branches</a></li>
+          <li><a href="#meshwg">When a managed mesh layer pays for itself</a></li>
+          <li><a href="#faq">Frequently asked questions</a></li>
+        </ol>
+      </aside>
+
+      <article>
+
+        <h2 id="built-in">Does OPNsense have WireGuard built in?</h2>
+        <p><strong>Yes — since OPNsense 24.1, released January 2024, WireGuard ships as a first-class kernel module in the base system.</strong> No plugin install is needed. On any currently-supported OPNsense release (24.1, 24.7, 25.1, and later), navigate to <strong>VPN → WireGuard</strong> immediately after install.</p>
+        <p>Older versions had a different story. From around OPNsense 19.1 through 23.7 there were two plugins — <code>os-wireguard-go</code> (a userspace Go implementation) and <code>os-wireguard</code> (the kernel module). Both are deprecated; if you're still on a release that uses them, you'll see a migration warning in the web UI and the canonical advice is to upgrade to 24.1 or later before continuing.</p>
+        <p>The migration matters because throughput nearly doubles when moving from the userspace implementation to the kernel module, and the configuration UI is unified under the new menu instead of split between os-wireguard and os-wireguard-go.</p>
+
+        <h2 id="where">Where it lives in the OPNsense UI</h2>
+        <p>The relevant pages, in the order you visit them on first setup:</p>
+        <ul class="bullets">
+          <li><strong>VPN → WireGuard → Instances</strong> — each local WireGuard interface lives here. Holds the private key, listen-port, and tunnel address.</li>
+          <li><strong>VPN → WireGuard → Peers</strong> — the remote endpoints that connect to your instances. Public key, endpoint, Allowed IPs.</li>
+          <li><strong>VPN → WireGuard → General</strong> — the one master Enable / Disable toggle, and the gateway monitoring options.</li>
+          <li><strong>VPN → WireGuard → Status</strong> — live view of handshakes, last-seen time, transferred bytes. This is the dashboard you'll have open while troubleshooting.</li>
+          <li><strong>Interfaces → Assignments</strong> — once an instance is up, you assign it as a regular interface (typically named <code>WG_LAN</code> or <code>WG0</code>) so firewall rules and gateway monitoring apply.</li>
+          <li><strong>Firewall → Rules → WAN</strong> — the inbound UDP rule allowing the WireGuard listen-port.</li>
+          <li><strong>Firewall → Rules → WG_LAN</strong> (or whatever you named it) — what tunnel traffic is allowed to do once it arrives.</li>
+        </ul>
+
+        <h2 id="setup">Step-by-step setup (single site)</h2>
+        <p>The numbered sequence below produces a working WireGuard server that a single road-warrior client can connect to. The site-to-site case in the next section is the same setup performed symmetrically on both firewalls.</p>
+        <ol class="numbered">
+          <li><strong>VPN → WireGuard → Instances → +.</strong> Name the instance (e.g. <code>wg0</code>). Generate a keypair using the dice icon. Set Listen Port to <code>51820</code>. Set Tunnel Address to <code>10.100.0.1/24</code> for a single-server setup, or to a /32 like <code>10.100.0.2/32</code> for a peer-to-peer site-to-site.</li>
+          <li><strong>VPN → WireGuard → Peers → +.</strong> Name the peer. Paste its public key. Set Allowed IPs to the peer's tunnel IP (<code>10.100.0.10/32</code> for a road warrior, or the whole remote tunnel + LAN subnet for a site-to-site). Leave Endpoint blank if the peer dials in; fill it in if the peer has a stable public address.</li>
+          <li><strong>Bind peer to instance.</strong> Edit the instance, add the peer in the <em>Peers</em> field, save.</li>
+          <li><strong>VPN → WireGuard → General.</strong> Tick Enable WireGuard, click Apply. The kernel interface (<code>wg0</code>) comes up immediately.</li>
+          <li><strong>Firewall → Rules → WAN.</strong> Add an inbound UDP rule on port <code>51820</code> to the WAN interface address (or the floating "any" if you're behind a single WAN). This is the most-forgotten step; a tunnel with no firewall hole gets no handshake.</li>
+          <li><strong>Interfaces → Assignments.</strong> The new <code>wg0</code> interface should appear. Add it, give it a friendly name like <code>WG_LAN</code>, enable it (no IP needed — WireGuard's tunnel address covers it).</li>
+          <li><strong>Firewall → Rules → WG_LAN.</strong> Add at minimum an allow rule for traffic <em>from</em> the WG subnet to wherever your policy says it should reach (LAN net, or a specific host).</li>
+          <li><strong>Verify under VPN → WireGuard → Status.</strong> Once the remote peer is also configured, a handshake should complete within 10 seconds and the byte counter increments.</li>
+        </ol>
+
+        <h2 id="site-to-site">Site-to-site between two OPNsense firewalls</h2>
+        <p>For a two-branch deployment you perform the setup symmetrically on both appliances. Convention is to use a /32 tunnel address on each side (so the routing is explicit) and a shared /24 overlay range, e.g. <code>10.100.0.0/24</code>:</p>
+        <table class="perf">
+          <thead>
+            <tr><th>Field</th><th>Branch A (Mumbai)</th><th>Branch B (Pune)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Instance tunnel address</td><td><code>10.100.0.2/32</code></td><td><code>10.100.0.3/32</code></td></tr>
+            <tr><td>Listen port</td><td><code>51820</code></td><td><code>51820</code></td></tr>
+            <tr><td>Peer public key</td><td>Branch B's public key</td><td>Branch A's public key</td></tr>
+            <tr><td>Peer Allowed IPs</td><td><code>10.100.0.3/32, 192.168.20.0/24</code></td><td><code>10.100.0.2/32, 192.168.10.0/24</code></td></tr>
+            <tr><td>Peer endpoint</td><td>Branch B's public address:51820</td><td>Branch A's public address:51820</td></tr>
+            <tr><td>WAN firewall rule</td><td>Allow UDP 51820</td><td>Allow UDP 51820</td></tr>
+          </tbody>
+        </table>
+        <p>Once both sides are saved and enabled, the handshake should complete within ~10 seconds. On the appliance with the more permissive Allowed IPs (or the one initiating outbound first) the handshake shows in <strong>Status</strong> as a recent timestamp on the peer row.</p>
+        <p>Persistent Keepalive matters if either side is behind NAT: set it to <code>21</code> (seconds) on the side that's behind NAT so the connection-tracking table on the intermediate router doesn't drop the UDP flow.</p>
+
+        <h2 id="firewall">Firewall rules that everyone forgets</h2>
+        <p>Three rules trip up most OPNsense WireGuard setups:</p>
+        <ol class="numbered">
+          <li><strong>WAN inbound for the listen-port.</strong> If the local firewall is the WireGuard listener, you need an inbound UDP rule on WAN for the chosen port. Without it, packets are dropped before they reach WireGuard and no handshake ever appears.</li>
+          <li><strong>WG_LAN interface rules.</strong> By default a freshly-assigned WireGuard interface has zero rules, which means deny-all. You must explicitly allow at least the source subnets and destinations your policy permits. The default Allow-LAN-to-Any pattern does <em>not</em> cover traffic arriving on the WG interface.</li>
+          <li><strong>Outbound NAT.</strong> If your branches need to reach the internet <em>through</em> the tunnel (rare for site-to-site, common for road warriors), you need an outbound NAT rule on the listener side rewriting the source IP. For pure site-to-site mesh traffic, do <strong>not</strong> add outbound NAT — it breaks return-path routing because the response goes to the NAT'd IP rather than the originating peer.</li>
+        </ol>
+
+        <h2 id="troubleshooting">Handshake, no traffic? Troubleshooting</h2>
+        <p>The most useful single page in OPNsense for diagnosing this is <strong>Firewall → Log Files → Live View</strong>, with a filter on the WireGuard interface. Ping from one side; the log shows the verdict that applied. The five most common causes:</p>
+        <ul class="bullets">
+          <li><strong>Allowed IPs mismatch.</strong> The destination IP is not in the peer's Allowed IPs list on either side, so WireGuard drops it before encrypting.</li>
+          <li><strong>WG interface firewall rule missing.</strong> The traffic reaches WireGuard but is blocked by interface-level deny.</li>
+          <li><strong>Asymmetric routing.</strong> Reply traffic exits the LAN interface instead of WG because the LAN gateway route doesn't know to send /32 destinations via the tunnel. Fix in System → Routes → Static Routes.</li>
+          <li><strong>MTU clipping.</strong> Default WireGuard MTU is 1420 (1500 minus header overhead). If the upstream ISP is doing PPPoE (1492 MTU) or CGNAT (often less), tunnel traffic gets fragmented and dropped silently. Set MTU explicitly on the WireGuard interface to <code>1380</code> to be safe under most Indian ISP conditions.</li>
+          <li><strong>NAT-related: source IP unreachable.</strong> If the side behind NAT has no Persistent Keepalive set, the handshake works once and then the upstream NAT table forgets the UDP flow. Set Persistent Keepalive to <code>21</code> on the NAT'd side.</li>
+        </ul>
+
+        <h2 id="multi-branch">From two sites to ten branches</h2>
+        <p>OPNsense WireGuard is excellent at two sites in a clean point-to-point. The shape changes when the operator needs more than that:</p>
+        <ul class="bullets">
+          <li><strong>Five sites in a full mesh = ten peer relationships.</strong> Each is configured twice (once on each side), so twenty configuration changes for one new firewall. Ten sites in full mesh = forty-five relationships, ninety changes. The number grows quadratically with site count.</li>
+          <li><strong>One peer rotates a key.</strong> Every other peer needs its peer-config updated and the OPNsense WireGuard service reloaded. There is no automated way to do this from the OPNsense UI; it's a manual visit to every firewall.</li>
+          <li><strong>Policy across the mesh.</strong> Per-peer access rules live on each firewall's WG interface. If you want to centrally enforce "no branch-to-branch traffic except via HQ," that policy has to be reproduced on every firewall and audited individually.</li>
+          <li><strong>Double-NAT branches.</strong> If two branches are both behind CGNAT (common on cellular failover and rural fibre), they can't initiate to each other; they need a relay. OPNsense doesn't ship a relay layer.</li>
+          <li><strong>Diagnostics across the mesh.</strong> <em>VPN → WireGuard → Status</em> shows one firewall's view. Across ten branches that's ten browser tabs to answer "is everything green?"</li>
+        </ul>
+
+        <h2 id="meshwg">When a managed mesh layer pays for itself</h2>
+        <p>MeshWG sits on top of the same OPNsense kernel-level WireGuard module. Your firewall keeps using the built-in implementation, the same as if you'd configured it yourself; MeshWG provides the orchestration:</p>
+        <ul class="bullets">
+          <li><strong>Generated configuration that updates automatically.</strong> Each new site joining the mesh triggers a regenerated peer list for every existing site. You don't re-edit ten firewalls; you accept the new site in the dashboard.</li>
+          <li><strong>Central policy.</strong> Allow / deny rules are configured once. The dashboard shows which device pairs are allowed to talk, by source / destination / protocol / port, without you opening ten Firewall → Rules → WG_LAN tabs.</li>
+          <li><strong>Relay layer for double-NAT.</strong> When both peers are behind CGNAT, the relay handles the path automatically. You don't choose or configure it.</li>
+          <li><strong>Single status pane.</strong> One dashboard view of last-handshake and bytes-transferred across every site. Replaces ten browser tabs.</li>
+          <li><strong>Free up to 2 sites.</strong> Two devices free forever, then ₹349/device/month annual or ₹499/device/month monthly in INR via Razorpay. The OPNsense + MeshWG buyer typically crosses the free tier at the 3rd branch.</li>
+        </ul>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item">
+            <h3>{f.q}</h3>
+            <p>{f.a}</p>
+          </div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>
+            The fastest way to validate the managed mesh shape on your own
+            OPNsense appliance is to add it to MeshWG's free tier and let
+            us generate the configuration. Two appliances are free forever;
+            no card required.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 appliances, forever</a>
+            <a class="btn btn-line btn-lg" href="/pfsense/wireguard/">Read the pfSense version of this guide</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/openwrt/wireguard/">OpenWrt WireGuard: complete 2026 guide</a> ·
+            <a href="/blog/wireguard-site-to-site-vpn-how-it-works-2026/">How WireGuard site-to-site actually works</a> ·
+            <a href="/pricing">Pricing</a> ·
+            <a href="/compatibility">Router compatibility</a>
+          </p>
+        </div>
+
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--text-3); margin-bottom: 14px;
+  }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li {
+    counter-increment: tocnum;
+    padding: 8px 0 8px 26px;
+    position: relative;
+    border-bottom: 1px solid var(--border-faint);
+    line-height: 1.45;
+  }
+  .toc li::before {
+    content: counter(tocnum, decimal-leading-zero);
+    position: absolute; left: 0; top: 8px;
+    font-family: var(--font-mono); font-size: 11px; color: var(--text-4);
+  }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+
+  article { max-width: 780px; }
+  .guide h2 {
+    font-family: var(--font-display); font-size: 28px; font-weight: 500;
+    letter-spacing: -0.02em; line-height: 1.15;
+    margin: 56px 0 16px; color: var(--text); text-wrap: balance;
+    scroll-margin-top: 100px;
+  }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 {
+    font-family: var(--font-display); font-size: 18px; font-weight: 500;
+    letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text);
+  }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .guide code {
+    font-family: var(--font-mono); font-size: .9em;
+    background: var(--bg-2); padding: 1.5px 6px;
+    border-radius: var(--radius-sm); color: var(--text);
+  }
+  .guide pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 18px 22px; border-radius: var(--radius-lg);
+    overflow-x: auto; font-family: var(--font-mono); font-size: 13px;
+    line-height: 1.6; margin: 20px 0;
+  }
+  .guide pre code { background: transparent; padding: 0; color: inherit; }
+
+  .bullets, .numbered {
+    list-style: none; padding: 0; margin: 16px 0;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .bullets li, .numbered li {
+    color: var(--text-2); font-size: 15.5px; line-height: 1.65;
+    padding-left: 28px; position: relative; counter-increment: num;
+  }
+  .bullets li::before {
+    content: "—"; position: absolute; left: 0; top: 0;
+    color: var(--text-4); font-family: var(--font-mono);
+  }
+  .numbered { counter-reset: num; }
+  .numbered li::before {
+    content: counter(num) ".";
+    position: absolute; left: 0; top: 0;
+    color: var(--text-4); font-family: var(--font-mono);
+  }
+
+  table.perf {
+    width: 100%; border-collapse: collapse;
+    margin: 18px 0 8px; font-size: 14px;
+  }
+  table.perf th, table.perf td {
+    text-align: left; padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.perf th {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-3); font-weight: 500;
+    border-bottom: 1px solid var(--border-strong);
+    background: var(--surface);
+  }
+
+  .faq-item { margin: 32px 0; }
+  .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+
+  .next {
+    margin-top: 64px; padding: 32px 36px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+  }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+
+  @media (max-width: 980px) {
+    .guide { padding: 32px 0 64px; }
+    .guide .wrap { grid-template-columns: 1fr; gap: 24px; }
+    .toc { position: static; }
+    .guide h2 { font-size: 24px; margin-top: 40px; }
+    .next { padding: 22px 22px; }
+  }
+</style>

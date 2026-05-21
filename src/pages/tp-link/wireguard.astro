@@ -1,0 +1,308 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+
+// Primary: "tp-link wireguard" (70/mo, AI Overview triggers)
+// Secondaries: "tp-link wireguard setup" (20), "tp-link deco wireguard" (20),
+// "wireguard tp link" (20), "tp-link archer wireguard" (10),
+// "tp-link ax3000 wireguard" (10), "tp-link ax5400 wireguard" (10).
+// FAQ questions taken VERBATIM from the live PAA panel on the SERP.
+const title = "TP-Link WireGuard: 2026 guide for Archer, Deco, Omada ER, and ER-Pro";
+const description = "TP-Link added WireGuard to consumer Archer and Deco firmware in 2022, then to the Omada ER series in 2024. This guide covers which models support it, the setup path for each family, and what to do when one TP-Link router becomes a multi-branch mesh.";
+const canonical = "https://meshwg.com/tp-link/wireguard/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+// FAQs chosen to match the actual PAA panel for "tp-link wireguard"
+// + "best vpn for tp-link router" extracted via DataForSEO SERP probe
+// 2026-05-21. Direct-answer format pull-quotable into AI Overview.
+const faqs = [
+  {
+    q: "Does the TP-Link router support WireGuard?",
+    a: "Many TP-Link routers do, but not all. Consumer Archer routers running firmware 1.2.0 or later (released from late 2022 onwards) support WireGuard — this covers Archer AX-series (AX10, AX23, AX55, AX73, AX90, AX95, AX6000, AX11000), and select older AC-series models. Deco mesh systems support WireGuard from firmware 1.4.0 onwards on the X-series (X20, X50, X60, X90), AXE-series, and BE-series. The Omada ER business gateways (ER605 v2, ER7206, ER8411) added WireGuard in the 2024 firmware refresh. Older TP-Link routers from 2021 and earlier do not, and most will not receive an update — the hardware is supported but the firmware feature isn't being backported."
+  },
+  {
+    q: "Is WireGuard better than VPN?",
+    a: "WireGuard is a VPN — the question conflates the protocol with the category. The accurate comparison is WireGuard versus other VPN protocols (OpenVPN, IPsec, L2TP, PPTP, SSTP). Among those, WireGuard is 3–5× faster than OpenVPN on identical hardware, ~equivalent to IPsec in speed but dramatically simpler to configure, and modern (audited, peer-reviewed cryptography — Noise_IK + ChaCha20-Poly1305 + Curve25519). For most TP-Link router use cases — branch-office connectivity, remote access, secure tunnel between two sites — WireGuard is the right default."
+  },
+  {
+    q: "What are the disadvantages of WireGuard?",
+    a: "Three practical disadvantages. First, no native dynamic IP handling at the protocol layer — if a peer's public IP changes (typical for consumer ISP connections), the configuration on the other side has to be updated, unlike OpenVPN's --remote-cert-tls flexibility. Second, no client authentication beyond the public key — there's no concept of 'user X with credentials Y can connect from anywhere,' just 'peer with this public key can connect.' Third, on consumer TP-Link routers WireGuard runs in software and is CPU-bound — older models like Archer C7 cap at ~50 Mbps, where IPsec on the same hardware reaches ~120 Mbps because of hardware acceleration. None of these matter for typical SMB branch-office use; they matter for road-warrior remote-access at scale, which is why MeshWG layers a control plane above WireGuard to handle the dynamic-IP and per-user concerns."
+  },
+  {
+    q: "Which VPN is compatible with TP-Link routers?",
+    a: "TP-Link routers natively support five VPN protocols depending on the model family. Archer consumer routers typically support OpenVPN (server and client), WireGuard (server and client, on 2022+ firmware), and PPTP (legacy, not recommended). Omada ER business gateways add IPsec site-to-site, L2TP/IPsec, and WireGuard. Deco mesh systems support OpenVPN and WireGuard (server roles, plus the ability to connect to commercial VPN providers as a client). For most modern multi-site or remote-access use cases, WireGuard is the strongest default on the protocols listed; for older deployments tied to ISP-provided VPN concentrators, IPsec on the ER-series is often the operational fit."
+  },
+  {
+    q: "Can you use VPN on TP-Link router?",
+    a: "Yes, on any TP-Link router that has VPN support in its firmware. The router can act as a VPN server (other devices connect into your home network through the router), as a VPN client (the router itself connects to a remote VPN provider so all your devices benefit), or both simultaneously. Site-to-site VPN — connecting two TP-Link routers across the internet so the two networks behave as one — is supported on Archer (via OpenVPN or WireGuard) and on Omada ER (via WireGuard or IPsec). The Omada ER605, ER7206, and ER8411 are the most commonly deployed for site-to-site between branch offices in India."
+  },
+  {
+    q: "How do I set up WireGuard on a TP-Link Archer router?",
+    a: "Log in to the router's web interface (typically http://192.168.0.1 or http://tplinkwifi.net). Navigate to Advanced → VPN Server → WireGuard. Click Add to create a new tunnel; set a name, a private key (or click Generate), a listen port (default 51820 works), and a tunnel IP. Add a peer with the remote public key, remote endpoint, and allowed IPs (the remote tunnel IP plus any LAN subnet behind the remote). Enable the tunnel. The handshake should complete in seconds; the peer status shows in the WireGuard server list. Note: on Deco the path is different — Advanced Settings → Internet Connection → VPN → WireGuard, with the same fields."
+  }
+];
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": [
+    "TP-Link WireGuard", "tp-link wireguard", "wireguard tp link",
+    "tp-link archer wireguard", "tp-link deco wireguard",
+    "tp-link omada wireguard", "TP-Link ER605 WireGuard"
+  ],
+  "isAccessibleForFree": true, "inLanguage": "en"
+};
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const howToSchema = {
+  "@context": "https://schema.org", "@type": "HowTo",
+  "name": "Set up WireGuard on a TP-Link Archer router",
+  "totalTime": "PT8M",
+  "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+  "tool": [{ "@type": "HowToTool", "name": "TP-Link Archer router with firmware 1.2.0 or later" }],
+  "step": [
+    { "@type": "HowToStep", "name": "Log in to the router", "text": "Open http://192.168.0.1 or http://tplinkwifi.net in a browser, enter the admin password set during initial setup." },
+    { "@type": "HowToStep", "name": "Open the WireGuard server page", "text": "Navigate to Advanced → VPN Server → WireGuard." },
+    { "@type": "HowToStep", "name": "Add a tunnel", "text": "Click Add. Set Name (e.g. mesh-hq), click Generate to create a keypair, leave Listen Port at 51820 unless your ISP blocks it, set Tunnel IP to a /24 in a non-conflicting overlay range (e.g. 10.100.0.1/24)." },
+    { "@type": "HowToStep", "name": "Add a peer", "text": "Click Add Peer. Paste the remote public key, set Allowed IPs to the remote tunnel /32 and any LAN subnet behind that peer (e.g. 10.100.0.2/32, 192.168.20.0/24), set Endpoint Host and Endpoint Port if the remote has a stable public address. Persistent Keepalive: 21 if behind NAT." },
+    { "@type": "HowToStep", "name": "Enable the tunnel", "text": "Toggle the tunnel's Enable switch and Save. The handshake should complete within seconds once the remote side is also configured." },
+    { "@type": "HowToStep", "name": "Open the WAN firewall port", "text": "If the remote side initiates inbound to this router, ensure the listen-port UDP is allowed inbound. On TP-Link's stock firewall this is usually automatic when you enable the WireGuard server, but verify via Advanced → Security → SPI Firewall." }
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",      "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "TP-Link",   "item": "https://meshwg.com/tp-link/" },
+    { "@type": "ListItem", "position": 3, "name": "WireGuard", "item": canonical }
+  ]
+};
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ tp-link + wireguard"
+    title="TP-Link WireGuard: 2026 guide for Archer, Deco, Omada ER"
+    lede="TP-Link added WireGuard to consumer Archer and Deco firmware in 2022, then to the Omada ER series in 2024. This guide covers which models support it today, the setup path on each family, and what to do when one TP-Link becomes a multi-branch mesh."
+  />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#supports">Does the TP-Link router support WireGuard?</a></li>
+          <li><a href="#families">TP-Link router families and where each puts WireGuard</a></li>
+          <li><a href="#archer">Setup: Archer routers</a></li>
+          <li><a href="#deco">Setup: Deco mesh systems</a></li>
+          <li><a href="#omada-er">Setup: Omada ER605 / ER7206 / ER8411</a></li>
+          <li><a href="#disadvantages">What are the disadvantages of WireGuard on TP-Link?</a></li>
+          <li><a href="#multi-branch">From one TP-Link to a multi-branch mesh</a></li>
+          <li><a href="#meshwg">How MeshWG fits with TP-Link</a></li>
+          <li><a href="#faq">Frequently asked questions</a></li>
+        </ol>
+      </aside>
+
+      <article>
+
+        <h2 id="supports">Does the TP-Link router support WireGuard?</h2>
+        <p><strong>Many TP-Link routers do, but not all.</strong> Three families have it; one notably doesn't.</p>
+        <ul class="bullets">
+          <li><strong>Consumer Archer (AX-series)</strong> — firmware 1.2.0 or later, released from late 2022 onwards. Covers AX10, AX21, AX23, AX55, AX73, AX90, AX95, AX6000, AX11000, and the newer BE-series.</li>
+          <li><strong>Deco mesh systems</strong> — firmware 1.4.0 or later. Covers X20, X50, X60, X75, X90, AXE-series (XE75, XE200), and BE-series.</li>
+          <li><strong>Omada ER business gateways</strong> — added in the 2024 firmware refresh. ER605 v2, ER7206, ER8411.</li>
+          <li><strong>Older Archer AC-series, TL-WR-series, and any router from 2021 or earlier</strong> — most do not have WireGuard and most won't receive it. The hardware is supported by current firmware but the WireGuard feature isn't being back-ported. Path forward: upgrade hardware, or flash <a href="/openwrt/wireguard/">OpenWrt</a> if your model is supported.</li>
+        </ul>
+        <p>If you're unsure about your specific model, the fastest check is to open the router's web admin and look for <strong>Advanced → VPN Server</strong> (Archer) or <strong>Advanced Settings → VPN</strong> (Deco). If WireGuard appears as an option, you have it; if only OpenVPN and PPTP appear, you don't.</p>
+
+        <h2 id="families">TP-Link router families and where each puts WireGuard</h2>
+        <p>The setup menu and capability set differ meaningfully across the three families:</p>
+        <table class="perf">
+          <thead>
+            <tr><th>Family</th><th>Menu path</th><th>Peers supported</th><th>Typical throughput</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Archer (AX / BE)</strong></td>
+              <td>Advanced → VPN Server → WireGuard</td>
+              <td>Up to 10 peers per tunnel</td>
+              <td>200 Mbps (AX23) – 800 Mbps (AX11000)</td>
+            </tr>
+            <tr>
+              <td><strong>Deco (X / XE / BE)</strong></td>
+              <td>Advanced Settings → Internet Connection → VPN → WireGuard</td>
+              <td>Up to 5 peers in current firmware</td>
+              <td>200 Mbps (X20) – 500 Mbps (X90)</td>
+            </tr>
+            <tr>
+              <td><strong>Omada ER605 / ER7206 / ER8411</strong></td>
+              <td>VPN → WireGuard → Tunnel List (or via Omada Controller)</td>
+              <td>Up to 20–50 depending on model</td>
+              <td>250 Mbps (ER605) – 1.5+ Gbps (ER8411)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The Omada ER family is the natural choice for branch-office work: more peers per tunnel, structured VPN policy, optional centralised management via Omada Controller (self-hosted or Omada Cloud). The Archer and Deco families are perfectly capable of a 2-3 site setup but become unwieldy past that.</p>
+
+        <h2 id="archer">Setup: Archer routers</h2>
+        <p>On any Archer AX or BE running firmware 1.2.0+:</p>
+        <ol class="numbered">
+          <li>Log in at <code>http://192.168.0.1</code> or <code>http://tplinkwifi.net</code>.</li>
+          <li>Navigate to <strong>Advanced → VPN Server → WireGuard</strong>.</li>
+          <li>Click <strong>Add</strong>. Set a Name (e.g. <code>mesh-hq</code>). Click <strong>Generate</strong> to create a keypair. Note the public key — you'll need it on the peer side.</li>
+          <li>Set <strong>Listen Port</strong> to <code>51820</code> (change only if your ISP blocks it). Set <strong>Tunnel IP</strong> to <code>10.100.0.1/24</code> for the first router in a new mesh.</li>
+          <li>Click <strong>Add Peer</strong>. Paste the remote public key. Set <strong>Allowed IPs</strong> to the remote tunnel /32 and the remote LAN subnet, comma-separated (e.g. <code>10.100.0.2/32, 192.168.20.0/24</code>). Set <strong>Endpoint Host</strong> and <strong>Endpoint Port</strong> if the remote has a stable public address. Set <strong>Persistent Keepalive</strong> to <code>21</code> if behind NAT.</li>
+          <li>Toggle the tunnel's <strong>Enable</strong> switch and <strong>Save</strong>. The handshake completes within seconds once the remote side is also configured.</li>
+        </ol>
+        <p>One Archer-specific gotcha: the stock UI's "Allowed IPs" field doesn't always handle multi-CIDR entries cleanly on older firmware. If a comma-separated entry won't save, update to the latest firmware first, or use the Omada ER family for multi-LAN scenarios.</p>
+
+        <h2 id="deco">Setup: Deco mesh systems</h2>
+        <p>Deco is configured through the Deco app (mobile) or the web UI on the primary unit. On firmware 1.4.0+:</p>
+        <ol class="numbered">
+          <li>In the Deco app: <strong>More → Advanced → VPN → WireGuard Server → Add</strong>.</li>
+          <li>Set a Name; click <strong>Generate</strong> for the keypair; <strong>Listen Port</strong> stays at 51820 unless conflicting.</li>
+          <li>Add a peer with public key, allowed IPs, endpoint host and port. Persistent keepalive at 21 if either side is behind NAT.</li>
+          <li>Save. Test the handshake using <strong>WireGuard Server → Peers</strong> — successful peers show a recent handshake time and bytes counter.</li>
+        </ol>
+        <p>Deco's WireGuard implementation has fewer peers per tunnel than Archer (typically 5), which is fine for a road-warrior server or a 3-branch mesh but rules it out as the HQ in a 10-branch deployment.</p>
+
+        <h2 id="omada-er">Setup: Omada ER605 / ER7206 / ER8411</h2>
+        <p>The Omada ER series is the right TP-Link choice for branch-office WireGuard at scale. Two setup paths depending on whether you run Omada Controller:</p>
+        <p><strong>Standalone (no Omada Controller):</strong></p>
+        <ol class="numbered">
+          <li>Log in at <code>http://192.168.0.1</code> (or the gateway's LAN IP).</li>
+          <li><strong>VPN → WireGuard → Tunnel List → Add Tunnel</strong>.</li>
+          <li>Set Tunnel Name, generate keypair, set Listen Port and Local IP (<code>10.100.0.2/16</code> is typical).</li>
+          <li>Save the tunnel, then <strong>Peer List → Add Peer</strong> bound to the tunnel.</li>
+          <li>Paste remote public key, set Endpoint and Allowed Address, save.</li>
+          <li>The ER's firewall automatically opens the listen-port; the handshake should complete within seconds.</li>
+        </ol>
+        <p><strong>Managed via Omada Controller (Cloud or self-hosted):</strong></p>
+        <ol class="numbered">
+          <li>In the Omada Controller, <strong>Settings → VPN → WireGuard</strong>.</li>
+          <li>Add a tunnel and peers using the same fields as the standalone path; Controller pushes the configuration to the ER device.</li>
+          <li>For multi-site, the Controller's <strong>Site Templates</strong> feature lets you push the same tunnel template across multiple branch ER605s in one operation — useful for 5+ branches.</li>
+        </ol>
+        <p>The ER8411 in particular is the rackmount choice for SMB HQ that's outgrown the ER605: 1.5+ Gbps WireGuard throughput, up to ~50 peers per tunnel, and Omada Controller integration for the per-branch configuration.</p>
+
+        <h2 id="disadvantages">What are the disadvantages of WireGuard on TP-Link?</h2>
+        <p>An honest list:</p>
+        <ul class="bullets">
+          <li><strong>Software encryption, no hardware acceleration.</strong> The Archer's IPsec implementation gets hardware-accelerated AES; WireGuard doesn't. On older Archer C7-class hardware that means WireGuard can be slower than IPsec; on AX-series and newer the CPU is fast enough that the difference doesn't matter.</li>
+          <li><strong>Per-peer configuration grows with site count.</strong> Three sites = three peer relationships per router. Ten sites = forty-five total. The stock TP-Link UI doesn't generate or synchronise this — every router has to be configured individually.</li>
+          <li><strong>No native dynamic-DNS handling for the peer endpoint.</strong> If a remote site's public IP changes (typical residential / SMB ISP), you have to update the peer's endpoint manually. WireGuard recovers gracefully once the new endpoint is reachable, but it doesn't auto-discover.</li>
+          <li><strong>No per-user authentication.</strong> WireGuard authenticates per public key. There's no concept of "user X with password Y from any device" — every device gets its own keypair. Fine for branch gateways; awkward for road-warrior remote access at scale unless paired with a control plane that issues per-user configurations.</li>
+          <li><strong>UI limitations on the Archer family.</strong> Smaller AX models cap at fewer peers per tunnel than the ER family and don't expose the full set of WireGuard tunables (MTU override, fwmark, table). For most use cases the defaults are correct; for unusual networking the ER family or a flashed OpenWrt is the path.</li>
+        </ul>
+        <p>None of these are deal-breakers for typical SMB branch-office use. They matter for two specific cases: (a) road-warrior remote-access at scale, and (b) multi-site mesh beyond ~5 sites. Both are exactly what a managed control plane like MeshWG addresses.</p>
+
+        <h2 id="multi-branch">From one TP-Link to a multi-branch mesh</h2>
+        <p>TP-Link's stock WireGuard handles 1-3 sites cleanly. The shape changes when the operator needs more:</p>
+        <ul class="bullets">
+          <li><strong>Peer configuration scales quadratically.</strong> Five sites in a full mesh = ten peer relationships, twenty entries to manage across five routers' UIs. Ten sites = forty-five and ninety entries.</li>
+          <li><strong>No centralised UI in the consumer / Archer family.</strong> Each Archer or Deco is configured through its own admin panel. Omada Controller closes this gap for the ER family but doesn't extend to Archer/Deco.</li>
+          <li><strong>Key rotation.</strong> Best-practice WireGuard hygiene rotates keys annually. With ten branches, rotating one router's key means manually updating the peer entry on every other router — a half-day of work and a real chance of misconfiguration.</li>
+          <li><strong>Branches behind CGNAT.</strong> Two TP-Link routers both behind CGNAT can't directly handshake. TP-Link doesn't ship a relay layer; you'd run one on a cloud VM with the operational cost that implies.</li>
+          <li><strong>Status across the mesh.</strong> Each router's WireGuard page shows that router's view. Across ten branches, that's ten admin sessions to confirm everything is healthy.</li>
+        </ul>
+
+        <h2 id="meshwg">How MeshWG fits with TP-Link</h2>
+        <p>MeshWG works on top of TP-Link's native WireGuard. Your Archer, Deco, or Omada ER keeps using the same firmware-level WireGuard implementation; MeshWG provides:</p>
+        <ul class="bullets">
+          <li><strong>Paste-ready configuration for each TP-Link family.</strong> The MeshWG dashboard generates the exact fields you'd type into the TP-Link UI — tunnel address, listen port, private key, peer public key, endpoint, allowed IPs, persistent keepalive — labeled with TP-Link's UI terminology so you can paste directly.</li>
+          <li><strong>Mesh that scales linearly.</strong> Each new branch you add pushes a fresh peer list to the existing branches automatically. No manual visit to N-1 routers per site added.</li>
+          <li><strong>Central policy.</strong> Allow / deny rules between any two devices are configured once. The rules apply before traffic reaches the destination — no per-Archer firewall edits across ten branches.</li>
+          <li><strong>CGNAT relay built in.</strong> Two TP-Link branches both behind CGNAT still reach each other through MeshWG's relay — no extra setup on your end.</li>
+          <li><strong>Single dashboard across every site.</strong> Last handshake, bytes transferred, link state across every router. Replaces N TP-Link admin tabs.</li>
+          <li><strong>Free for the first two routers.</strong> ₹349/router/month annual or ₹499/router/month month-to-month, billed in INR via Razorpay.</li>
+        </ul>
+        <p>The TP-Link + MeshWG combination is the typical landing point for a multi-branch business that started with one or two Archer routers and grew. You keep the TP-Link hardware investment; you add the orchestration layer that scales beyond what TP-Link's stock UI was designed for.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>Try the generated TP-Link configuration on your own router with the free tier — two routers, no card required, indefinite.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers, forever</a>
+            <a class="btn btn-line btn-lg" href="/wireguard-router/">Compare across all 8 router families</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/openwrt/wireguard/">OpenWrt</a> ·
+            <a href="/mikrotik/wireguard/">MikroTik</a> ·
+            <a href="/opnsense/wireguard/">OPNsense</a> ·
+            <a href="/pfsense/wireguard/">pfSense</a> ·
+            <a href="/blog/tp-link-site-to-site-vpn-wireguard-2026/">TP-Link site-to-site VPN deep dive</a> ·
+            <a href="/pricing">Pricing</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+  article { max-width: 780px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .bullets, .numbered { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li, .numbered li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; counter-increment: num; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  .numbered { counter-reset: num; }
+  .numbered li::before { content: counter(num) "."; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.perf { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 14px; }
+  table.perf th, table.perf td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.perf th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } }
+</style>

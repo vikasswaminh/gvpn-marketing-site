@@ -1,0 +1,306 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+
+// Primary: "mikrotik wireguard" (140/mo) + "mikrotik wireguard setup" (50/mo)
+// + "mikrotik wireguard site to site" (20/mo) — 81 unique long-tail kws
+const title = "MikroTik WireGuard: 2026 RouterOS 7 setup + site-to-site mesh guide";
+const description = "MikroTik added WireGuard in RouterOS 7. This guide covers the /interface/wireguard configuration on hAP/RB/CCR hardware, the firewall input-chain rule everyone forgets, real throughput per board, and what changes when one router becomes ten branches.";
+const canonical = "https://meshwg.com/mikrotik/wireguard/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  {
+    q: "Does MikroTik support WireGuard?",
+    a: "Yes, on RouterOS 7. WireGuard was added in RouterOS 7.0 (December 2021) as a first-class interface type alongside the existing VPN options. RouterOS 6 does not and will not support WireGuard — it is the single most-requested feature that prompted many operators to migrate to RouterOS 7. All MikroTik hardware that runs RouterOS 7 (most hAP, RB, and CCR boards from the last 5+ years) supports WireGuard."
+  },
+  {
+    q: "How do I configure WireGuard on MikroTik?",
+    a: "Three commands in the CLI: (1) /interface/wireguard add name=wg0 listen-port=51820 private-key=auto creates the interface and generates a keypair. (2) /ip/address add address=10.100.0.2/16 interface=wg0 assigns the tunnel address. (3) /interface/wireguard/peers add interface=wg0 public-key=\"PEER_PUBKEY\" endpoint-address=peer.example.com endpoint-port=51820 allowed-address=10.100.0.0/16 persistent-keepalive=21s adds the remote peer. Finally /ip/firewall/filter add chain=input action=accept protocol=udp dst-port=51820 place-before=0 opens the firewall."
+  },
+  {
+    q: "Where is WireGuard in Winbox?",
+    a: "Under the Interfaces menu. Click Add (the + icon), select WireGuard. The same fields exist in both Winbox and the terminal CLI; Winbox is just a GUI wrapper around the same RouterOS configuration. For peer management, navigate to Interfaces → WireGuard → double-click the wg0 interface → Peers tab → Add."
+  },
+  {
+    q: "What throughput can a MikroTik router achieve over WireGuard?",
+    a: "Throughput is bound by the CPU's symmetric-crypto performance. On a CCR2004-16G-2S+ (the common SMB rackmount choice), expect ~2.5 Gbps single-tunnel WireGuard. On a CCR2116 (12-core ARM), expect 5+ Gbps. On an RB5009 (ARM 4-core), ~1.5 Gbps. On the popular hAP ax² (Wi-Fi 6 SOHO router), ~700 Mbps. On older hAP ac² or RB750Gr3, 300-500 Mbps. MikroTik's hardware-accelerated IPsec does not apply to WireGuard — encryption is unaccelerated software, but WireGuard is fast enough on these chipsets that you usually saturate the internet uplink before the router."
+  },
+  {
+    q: "Why doesn't my MikroTik WireGuard tunnel connect?",
+    a: "Four most-common causes. (1) The firewall input chain is blocking UDP on the listen-port — add /ip/firewall/filter add chain=input action=accept protocol=udp dst-port=51820 place-before=0 (the place-before=0 puts it ahead of the default reject rule). (2) Allowed-address on the peer doesn't include the destination subnet you're trying to reach. (3) The remote endpoint is unreachable — verify with /tool/ping from RouterOS itself. (4) The persistent-keepalive is missing on the side behind NAT, so the UDP state in the upstream NAT table expires after 30 seconds and the tunnel falls silent until the next outbound packet."
+  },
+  {
+    q: "Can MikroTik WireGuard run a mesh of more than two sites?",
+    a: "Yes mechanically — each MikroTik router can hold many peers in /interface/wireguard/peers, and any topology is possible. The configuration burden grows quadratically with sites in a full mesh (5 sites = 10 peer relationships, 10 sites = 45). For more than three sites the practical patterns are hub-and-spoke (every branch peers only with a central router) or a managed mesh layer that generates and synchronises the per-router peer lists. Both keep individual router config small."
+  }
+];
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": [
+    "MikroTik WireGuard", "mikrotik wireguard", "wireguard mikrotik",
+    "RouterOS 7 WireGuard", "mikrotik wireguard setup",
+    "mikrotik wireguard site to site", "CCR WireGuard", "hAP WireGuard"
+  ],
+  "isAccessibleForFree": true, "inLanguage": "en"
+};
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const howToSchema = {
+  "@context": "https://schema.org", "@type": "HowTo",
+  "name": "Set up WireGuard on MikroTik RouterOS 7",
+  "totalTime": "PT10M",
+  "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+  "tool": [{ "@type": "HowToTool", "name": "MikroTik router running RouterOS 7.0 or later" }],
+  "step": [
+    { "@type": "HowToStep", "name": "Confirm RouterOS 7", "text": "Open the CLI (terminal in Winbox or SSH) and run /system/resource/print. Confirm the version is 7.0 or higher. RouterOS 6 does not support WireGuard." },
+    { "@type": "HowToStep", "name": "Create the WireGuard interface", "text": "Run /interface/wireguard add name=wg0 listen-port=51820 private-key=auto. The private-key=auto generates a keypair; capture the public key with /interface/wireguard/print." },
+    { "@type": "HowToStep", "name": "Assign tunnel address", "text": "Run /ip/address add address=10.100.0.2/16 interface=wg0 to give the tunnel its overlay IP." },
+    { "@type": "HowToStep", "name": "Open the firewall input chain", "text": "Run /ip/firewall/filter add chain=input action=accept protocol=udp dst-port=51820 place-before=0 to allow the peer's handshakes through the firewall. The place-before=0 inserts above the default reject rule." },
+    { "@type": "HowToStep", "name": "Add the peer", "text": "Run /interface/wireguard/peers add interface=wg0 public-key=\"PEER_PUBLIC_KEY\" endpoint-address=peer.example.com endpoint-port=51820 allowed-address=10.100.0.0/16,192.168.20.0/24 persistent-keepalive=21s. Replace the placeholders with your peer's actual values." },
+    { "@type": "HowToStep", "name": "Verify the handshake", "text": "Run /interface/wireguard/peers/print stats. The last-handshake column should show a recent timestamp and tx/rx counters should increment when traffic flows." }
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",      "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "MikroTik",  "item": "https://meshwg.com/mikrotik/" },
+    { "@type": "ListItem", "position": 3, "name": "WireGuard", "item": canonical }
+  ]
+};
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ mikrotik + wireguard"
+    title="MikroTik WireGuard: RouterOS 7 setup + site-to-site mesh"
+    lede="MikroTik added WireGuard in RouterOS 7. This guide walks the /interface/wireguard configuration, the firewall input-chain rule everyone forgets, real throughput numbers per board, and what changes when one router becomes ten branches."
+  />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#supported">Does MikroTik support WireGuard?</a></li>
+          <li><a href="#routeros-7">Why RouterOS 7 is the prerequisite</a></li>
+          <li><a href="#cli-setup">Setup with the RouterOS CLI</a></li>
+          <li><a href="#winbox">Setup with Winbox / WebFig</a></li>
+          <li><a href="#site-to-site">Site-to-site between two MikroTiks</a></li>
+          <li><a href="#firewall">The firewall input-chain rule everyone forgets</a></li>
+          <li><a href="#throughput">Throughput per MikroTik board</a></li>
+          <li><a href="#multi-site">From two routers to ten branches</a></li>
+          <li><a href="#meshwg">How MeshWG fits with MikroTik</a></li>
+          <li><a href="#faq">Frequently asked questions</a></li>
+        </ol>
+      </aside>
+
+      <article>
+
+        <h2 id="supported">Does MikroTik support WireGuard?</h2>
+        <p><strong>Yes, on RouterOS 7.</strong> WireGuard was added in RouterOS 7.0 (December 2021) as a first-class interface type alongside the existing IPsec, OpenVPN, L2TP, SSTP, and EoIP options. Every MikroTik board that can run RouterOS 7 supports it — that's effectively all hAP, RB, and CCR hardware from the last five years.</p>
+        <p>RouterOS 6 does <strong>not</strong> support WireGuard and will not be back-ported; this is by far the single most-requested feature that nudged operators off RouterOS 6 onto 7. If your MikroTik is still on RouterOS 6, the upgrade is the prerequisite to everything in this guide. The path is in <strong>System → Packages → Check For Updates</strong> with the <code>upgrade</code> channel set to <code>stable</code>.</p>
+        <p>WireGuard on RouterOS is the kernel-level implementation (not a userspace wrapper). The same protocol as on Linux, FreeBSD, and the official Windows/Mac/iOS/Android clients — fully interoperable.</p>
+
+        <h2 id="routeros-7">Why RouterOS 7 is the prerequisite</h2>
+        <p>This is the one point where MikroTik's situation differs from OpenWrt, OPNsense, or pfSense: RouterOS 7 is a substantial rewrite of RouterOS 6, not just a feature addition. Some configuration patterns migrated cleanly (firewall rules, interface assignments), some changed (the routing daemon was reworked), and a few RouterOS 6 features were dropped (older WiFi drivers, some legacy queuing tree behaviour).</p>
+        <p>For WireGuard specifically, the implication is simple: RouterOS 7 is required, full stop. If you're running RouterOS 6 and don't want to upgrade, your options are (a) leave WireGuard on a separate device — a small x86 mini-PC running OpenWrt is the common workaround, or (b) upgrade to RouterOS 7 and confirm any RouterOS 6-only features you depended on still work. The MikroTik docs maintain a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/250708075/RouterOS+v7" rel="noopener" target="_blank">RouterOS 7 migration guide</a> covering the gotchas.</p>
+
+        <h2 id="cli-setup">Setup with the RouterOS CLI</h2>
+        <p>The CLI is faster than Winbox for WireGuard configuration because every field is on one line. The four commands below produce a working tunnel:</p>
+        <pre><code># 1. Create the WireGuard interface (generates a keypair)
+/interface/wireguard
+add name=wg0 listen-port=51820 private-key=auto
+
+# 2. Print the public key (capture for the remote peer)
+/interface/wireguard/print
+
+# 3. Assign the tunnel address
+/ip/address
+add address=10.100.0.2/16 interface=wg0
+
+# 4. Open the firewall (place above the default drop rule)
+/ip/firewall/filter
+add chain=input action=accept protocol=udp dst-port=51820 \
+    comment="WireGuard handshake" place-before=0
+
+# 5. Add the remote peer
+/interface/wireguard/peers
+add interface=wg0 \
+    public-key="REMOTE_PUBLIC_KEY" \
+    endpoint-address=peer.example.com \
+    endpoint-port=51820 \
+    allowed-address=10.100.0.0/16,192.168.20.0/24 \
+    persistent-keepalive=21s</code></pre>
+        <p>That's the entire configuration. <code>private-key=auto</code> generates a key on the router — no need to paste one. <code>place-before=0</code> on the firewall rule is the small detail that catches most operators: without it, the rule ends up after the default <code>drop all not from connection-state=established</code> and the tunnel never handshakes.</p>
+        <p>For automation across many routers, MikroTik's <code>.rsc</code> script format is just the same CLI commands in a file — drop the snippet above into <code>tunnel-setup.rsc</code> and run <code>/import file-name=tunnel-setup.rsc</code> on each board.</p>
+
+        <h2 id="winbox">Setup with Winbox / WebFig</h2>
+        <p>For operators who prefer the GUI, the same setup in Winbox lives in four places:</p>
+        <ol class="numbered">
+          <li><strong>Interfaces → + → WireGuard.</strong> Name the interface (<code>wg0</code>), set Listen Port (51820). Save. The public key field auto-populates after save.</li>
+          <li><strong>Interfaces → wg0 → Peers tab → Add.</strong> Paste the remote public key. Set Endpoint (host) and Endpoint Port if the remote has a stable public address. Set Allowed Addresses (comma-separated CIDRs). Set Persistent Keepalive to <code>00:00:21</code> if behind NAT.</li>
+          <li><strong>IP → Addresses → Add.</strong> Address: <code>10.100.0.2/16</code>, Interface: <code>wg0</code>.</li>
+          <li><strong>IP → Firewall → Filter Rules → Add.</strong> Chain: <code>input</code>, Action: <code>accept</code>, Protocol: <code>udp</code>, Dst. Port: <code>51820</code>. Drag the new rule above the default drop rule.</li>
+        </ol>
+        <p>The same configuration applies in <strong>WebFig</strong> (RouterOS's web admin); menu structure is identical to Winbox.</p>
+
+        <h2 id="site-to-site">Site-to-site between two MikroTiks</h2>
+        <p>For two-branch deployment, run the setup symmetrically. Conventional addressing:</p>
+        <table class="perf">
+          <thead>
+            <tr><th>Field</th><th>HQ (Mumbai)</th><th>Branch (Pune)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Interface name</td><td><code>wg0</code></td><td><code>wg0</code></td></tr>
+            <tr><td>Tunnel address</td><td><code>10.100.0.2/16</code></td><td><code>10.100.0.3/16</code></td></tr>
+            <tr><td>Listen port</td><td><code>51820</code></td><td><code>51820</code></td></tr>
+            <tr><td>Peer public key</td><td>Branch's public key</td><td>HQ's public key</td></tr>
+            <tr><td>Peer endpoint-address</td><td>Branch's public IP</td><td>HQ's public IP</td></tr>
+            <tr><td>Peer allowed-address</td><td><code>10.100.0.3/32, 192.168.20.0/24</code></td><td><code>10.100.0.2/32, 192.168.10.0/24</code></td></tr>
+            <tr><td>Persistent keepalive</td><td>(set on whichever side is behind NAT)</td><td><code>21s</code> (if behind CGNAT)</td></tr>
+            <tr><td>Firewall input rule</td><td>Accept UDP 51820</td><td>Accept UDP 51820</td></tr>
+          </tbody>
+        </table>
+        <p>For routing LAN traffic across the tunnel, the kernel will automatically install routes for the <code>allowed-address</code> CIDRs — no manual <code>/ip/route</code> needed. If the side behind NAT has a dynamic public IP, omit <code>endpoint-address</code> on the static-IP side's peer record; the dynamic side dials out and the static side accepts the connection.</p>
+
+        <h2 id="firewall">The firewall input-chain rule everyone forgets</h2>
+        <p>The most common reason a freshly-configured MikroTik WireGuard tunnel never handshakes: the firewall input chain blocks UDP <code>51820</code> by default. RouterOS ships with a sensible default ruleset that drops everything not from <code>connection-state=established,related</code>. The WireGuard handshake is the new connection, so it gets dropped.</p>
+        <p>The fix is one line:</p>
+        <pre><code>/ip/firewall/filter
+add chain=input action=accept protocol=udp dst-port=51820 \
+    comment="WireGuard handshake" place-before=0</code></pre>
+        <p>The <code>place-before=0</code> matters: it inserts the rule at the top of the list, above the default drop. Without that flag, the rule lands at the bottom (after the drop) and has no effect. After running, <code>/ip/firewall/filter/print</code> should show the new rule as rule 0.</p>
+        <p>If you have other VPNs running, also confirm the input chain accepts the listen-ports for those (IPsec uses UDP 500 / 4500, OpenVPN typically TCP/UDP 1194). MikroTik's default ruleset assumes you've added these explicitly.</p>
+
+        <h2 id="throughput">Throughput per MikroTik board</h2>
+        <p>WireGuard throughput on MikroTik is bound by the CPU's symmetric-crypto performance — none of the hardware acceleration that helps IPsec on MikroTik applies to WireGuard. The realistic numbers:</p>
+        <table class="perf">
+          <thead>
+            <tr><th>Board</th><th>CPU</th><th>WireGuard single-tunnel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>CCR2116-12G-4S+</td><td>16-core ARM A72 @ 2.0 GHz</td><td>5+ Gbps (line rate on 10G)</td></tr>
+            <tr><td>CCR2004-16G-2S+</td><td>4-core ARM A72 @ 1.7 GHz</td><td>~2.5 Gbps</td></tr>
+            <tr><td>RB5009UG+S+IN</td><td>4-core ARM Cortex-A72 @ 1.4 GHz</td><td>~1.5 Gbps</td></tr>
+            <tr><td>hAP ax² (C53UiG+5HPaxD2HPaxD)</td><td>4-core ARM A53 @ 1.4 GHz</td><td>~700 Mbps</td></tr>
+            <tr><td>hAP ac² (RBD52G-5HacD2HnD)</td><td>4-core ARM A7 @ 716 MHz</td><td>~300 Mbps</td></tr>
+            <tr><td>RB750Gr3 (hEX)</td><td>2-core MIPS @ 880 MHz</td><td>~150 Mbps</td></tr>
+            <tr><td>CHR (x86 VM)</td><td>Depends on host CPU</td><td>1 Gbps+ per allocated core</td></tr>
+          </tbody>
+        </table>
+        <p>For most Indian SMB branch deployments the local internet uplink (50–300 Mbps) is the binding constraint on anything from hAP ax² upwards. The exception worth noting: on the older hAP ac² and RB750Gr3, a 1 Gbps fibre uplink will saturate the WireGuard CPU before the link, so plan an RB5009 or better if your fibre is fast.</p>
+
+        <h2 id="multi-site">From two routers to ten branches</h2>
+        <p>MikroTik WireGuard handles two-site tunnels cleanly. The shape changes when the operator needs more:</p>
+        <ul class="bullets">
+          <li><strong>Five sites in a full mesh = ten peer relationships.</strong> Each must be configured on both ends, so twenty entries to manage. Ten sites = forty-five relationships, ninety entries.</li>
+          <li><strong>Key rotation.</strong> WireGuard hygiene rotates keys periodically. With ten MikroTiks in a mesh, rotating one router's key means editing the peer entry on every other router — manually, by SSH or Winbox, on each board.</li>
+          <li><strong>Per-peer access policy.</strong> WireGuard's <code>allowed-address</code> covers route+encryption but not L4 access policy. Restricting "branch A can talk to branch B but not branch C" means firewall rules per board.</li>
+          <li><strong>Branches behind CGNAT.</strong> Two MikroTiks both behind CGNAT (common on cellular failover or rural fibre) can't directly handshake. They need an intermediary listener; MikroTik doesn't ship a relay layer, so you'd run one on a cloud VM with the operational cost that implies.</li>
+          <li><strong>Cross-router visibility.</strong> <code>/interface/wireguard/peers/print stats</code> shows one router's view. Ten branches means ten SSH sessions or ten Winbox tabs.</li>
+        </ul>
+
+        <h2 id="meshwg">How MeshWG fits with MikroTik</h2>
+        <p>MeshWG layers above the RouterOS-native WireGuard. Your MikroTik keeps using its kernel WireGuard module exactly as it does today; MeshWG provides the orchestration:</p>
+        <ul class="bullets">
+          <li><strong>Generated RouterOS scripts.</strong> For each MikroTik you add, MeshWG produces a paste-ready <code>.rsc</code> script with every peer pre-populated. New branch joins the mesh, MeshWG regenerates everyone's <code>allowed-address</code> so you don't visit each router.</li>
+          <li><strong>Central policy.</strong> Allow / deny rules between any two devices are configured once in the dashboard. The rules apply before traffic reaches the destination — no per-router firewall edits across ten boards.</li>
+          <li><strong>Relay layer for double-NAT.</strong> Two MikroTiks both behind CGNAT use a MeshWG relay automatically; no extra configuration.</li>
+          <li><strong>Single dashboard.</strong> Every router's last handshake, transferred bytes, and live state in one view. Replaces SSH-ing into each board.</li>
+          <li><strong>Honest billing.</strong> First two routers free forever. After that, ₹349/router/month annual or ₹499/router/month monthly in INR via Razorpay.</li>
+        </ul>
+        <p>The MikroTik + MeshWG combination is what most ISP-class and MSP buyers actually want: keep the RouterOS expertise, keep the existing hardware investment, add a mesh layer on top that handles the parts that don't scale.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>Try the generated RouterOS script on your own MikroTik with the free tier — two routers, no card required, indefinite.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers, forever</a>
+            <a class="btn btn-line btn-lg" href="/wireguard-router/">Compare WireGuard routers across all vendors</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/openwrt/wireguard/">OpenWrt WireGuard guide</a> ·
+            <a href="/opnsense/wireguard/">OPNsense WireGuard guide</a> ·
+            <a href="/pfsense/wireguard/">pfSense WireGuard guide</a> ·
+            <a href="/pricing">Pricing</a> ·
+            <a href="/compatibility">Compatibility</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+  article { max-width: 780px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .guide pre { background: var(--code-bg); color: var(--code-fg); padding: 18px 22px; border-radius: var(--radius-lg); overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; margin: 20px 0; }
+  .guide pre code { background: transparent; padding: 0; color: inherit; }
+  .bullets, .numbered { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li, .numbered li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; counter-increment: num; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  .numbered { counter-reset: num; }
+  .numbered li::before { content: counter(num) "."; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.perf { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 14px; }
+  table.perf th, table.perf td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.perf th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } }
+</style>

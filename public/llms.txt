@@ -60,6 +60,28 @@ distribution — every signup goes through the hosted login page.
   the 2021 incident and what changed, real throughput numbers vs
   OpenVPN on Netgate 1100/4100/6100/SG-3100 hardware, and
   multi-branch scaling beyond two appliances. ~2,500 words.
+- [MikroTik WireGuard guide](https://meshwg.com/mikrotik/wireguard/):
+  RouterOS 7 WireGuard setup guide. Covers why RouterOS 6 doesn't
+  support WireGuard, the /interface/wireguard CLI configuration,
+  the firewall input-chain rule that catches most operators,
+  Winbox / WebFig equivalent steps, per-board throughput on
+  hAP ax², RB5009, CCR2004, and CCR2116, and what changes when
+  one router becomes ten branches. ~2,400 words.
+- [WireGuard router buyer's guide](https://meshwg.com/wireguard-router/):
+  the head-term pillar covering all 8 router-firmware families
+  that natively support WireGuard in 2026 — TP-Link, MikroTik,
+  Ubiquiti, GL.iNet, OPNsense, pfSense, OpenWrt, Asus. Includes
+  a vendor comparison table with throughput / price / best-fit
+  per family, a use-case grid (home, 2–5 branches, 6–30 branches,
+  30+ / MSP, travel, repurpose), and a 6-point checklist for
+  evaluating any router not in the table. ~2,200 words.
+- [TP-Link WireGuard guide](https://meshwg.com/tp-link/wireguard/):
+  setup paths for TP-Link Archer (AX-series, firmware 1.2.0+),
+  Deco mesh systems (X / XE / BE on firmware 1.4.0+), and Omada
+  ER605 / ER7206 / ER8411 (2024 firmware). Covers the menu path
+  per family, peers-per-tunnel limits, typical throughput, and
+  honest treatment of the disadvantages of WireGuard on TP-Link
+  hardware. ~2,400 words.
 - [Careers](https://meshwg.com/careers): MeshWG is hiring 33
   people across three roles, all full-time at the Bengaluru HSR
   Layout office (no remote, no hybrid, no work-from-home). Open

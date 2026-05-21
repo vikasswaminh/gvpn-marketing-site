@@ -1,0 +1,180 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "Twingate alternatives in 2026: 6 honest options by use case";
+const description = "Looking for a Twingate alternative? Twingate's gateway-based ZTNA is excellent for per-resource access but expensive ($10/user/mo) and a poor fit for mesh / site-to-site. This guide covers MeshWG, Tailscale, NetBird, Cloudflare One, Pomerium, ZeroTier — sorted by use case.";
+const canonical = "https://meshwg.com/alternatives/twingate/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const alternatives = [
+  { name: "MeshWG",       url: "https://meshwg.com",            fit: "SMB multi-branch / BYO-router mesh",        pricing: "₹349/router/month (~$4.20); 2 free",  model: "Hosted, router-based", license: "Closed SaaS" },
+  { name: "Tailscale",    url: "https://tailscale.com",         fit: "Fully-remote team mesh access",             pricing: "Free 3 users; $6/user/month Business", model: "Hosted, agent-based",  license: "Clients open, server proprietary" },
+  { name: "NetBird",      url: "https://netbird.io",            fit: "Open-source mesh with self-host option",    pricing: "Free self-host; $5/user/month managed", model: "Hybrid",              license: "BSD 3-Clause" },
+  { name: "Cloudflare One", url: "https://www.cloudflare.com/zero-trust/", fit: "Enterprise bundle (Access + Tunnel + Gateway)", pricing: "Free up to 50 users; $7/user/mo Standard", model: "Hosted bundle",  license: "Closed SaaS" },
+  { name: "Pomerium",     url: "https://www.pomerium.com",      fit: "Self-host gateway ZTNA (Twingate-shaped)",  pricing: "Free OSS; commercial tier",            model: "Self-host",           license: "Apache 2.0" },
+  { name: "ZeroTier",     url: "https://zerotier.com",          fit: "L2 emulation (broadcast, legacy)",          pricing: "Free up to 25 nodes; $5+/mo",          model: "Hosted, own protocol", license: "BSL" },
+];
+
+const faqs = [
+  { q: "Why look for a Twingate alternative?", a: "Three common reasons. First, cost: Twingate Starter is $10/user/month — roughly 2× Tailscale's Business tier and 3× NetBird Cloud. For 50 users that's $500/month, $6,000/year. Second, model fit: Twingate's gateway-based ZTNA is excellent for per-resource access but a poor fit for site-to-site / branch-office connectivity. Third, vendor breadth: Twingate's Connectors are an additional moving part to operate; some teams prefer the simpler mesh model where every node is symmetric." },
+  { q: "What is the best Twingate alternative for small business?", a: "Depends on what you're using Twingate for. If you're using it for per-resource access (specific apps, specific databases): Pomerium is the closest analog and is open-source. If you're using it for site-to-site / branch connectivity: MeshWG is built for this and dramatically cheaper at SMB scale (per-router not per-user). If you're using it for mesh between user devices: Tailscale or NetBird matches the workload better. Twingate is not 'one tool that does everything Tailscale-like and Cloudflare-Access-like'; alternatives that cover both are typically more expensive bundles (Cloudflare One)." },
+  { q: "Is there a free Twingate alternative?", a: "Yes, several. Pomerium is fully open-source (Apache 2.0). NetBird's self-host stack is BSD-3 and free beyond infrastructure cost. Tailscale Free covers 3 users. MeshWG Free covers 2 routers indefinitely. The honest caveat: 'free' for open-source means you operate the server — Pomerium and NetBird self-host both require running a small VPS. For 'free and zero operational burden,' Tailscale's 3-user free tier is the lowest-friction." },
+  { q: "Can I migrate from Twingate to MeshWG?", a: "Yes, if your use case is site-to-site or branch-office connectivity. Twingate Connectors don't translate directly to MeshWG (different architecture — Twingate gates per-resource at the connector; MeshWG provides a network). Migration looks like: deploy MeshWG on your branch routers (one config paste per router, ~2 min per site), put critical services behind it, gradually remove Twingate's Connector reach for what's now on the mesh. Per-resource ACL replacement: MeshWG's policy is at the source/destination/protocol/port level, less granular than Twingate's identity-aware per-resource model but sufficient for most network-access use cases." },
+  { q: "Twingate vs Tailscale vs MeshWG — when to pick which?", a: "Twingate when: per-resource access with strong audit (compliance-driven, enterprise procurement, regulated industries). Tailscale when: fully-remote team mesh, every member has a laptop, per-user pricing matches the workload. MeshWG when: SMB multi-branch with physical sites, router-based instead of agent-based, per-router pricing avoids the per-user scaling problem. The three solve different problems despite often being shopped together." },
+  { q: "What about Cloudflare Access as a Twingate alternative?", a: "Cloudflare Access is the closest direct analog — both provide identity-aware per-resource access without putting users on a network. Cloudflare Zero Trust Free covers up to 50 users (vs Twingate's 5-user free tier); Cloudflare Standard is $7/user/month (vs Twingate Starter $10). For organisations already invested in Cloudflare (DNS, CDN, WAF), the bundle economics often favour Cloudflare. For organisations specifically picking a ZTNA tool independent of broader Cloudflare adoption, Twingate's UX is more polished and audit reporting is more granular." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["Twingate alternative", "twingate alternatives", "alternative to twingate", "twingate competitors"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  "name": "Twingate alternatives", "numberOfItems": alternatives.length,
+  "itemListElement": alternatives.map((a, i) => ({ "@type": "ListItem", "position": i + 1, "name": a.name, "url": a.url })) };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",         "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Alternatives", "item": "https://meshwg.com/alternatives/" },
+    { "@type": "ListItem", "position": 3, "name": "Twingate alternatives", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ alternatives · twingate"
+    title="Twingate alternatives: 6 honest options by use case"
+    lede="Twingate is strong at per-resource ZTNA but expensive and a poor fit for mesh or site-to-site. The right alternative depends on which Twingate use case you're replacing — this guide separates them."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#why">Why look for a Twingate alternative</a></li>
+          <li><a href="#table">The 6 alternatives at a glance</a></li>
+          <li><a href="#by-use-case">Pick by use case</a></li>
+          <li><a href="#meshwg">When MeshWG wins (site-to-site)</a></li>
+          <li><a href="#tailscale">When Tailscale or NetBird wins (mesh)</a></li>
+          <li><a href="#pomerium">When Pomerium wins (self-host ZTNA)</a></li>
+          <li><a href="#cf-one">When Cloudflare One wins (enterprise bundle)</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="why">Why look for a Twingate alternative</h2>
+        <p>Twingate is well-built — polished UI, strong per-resource audit, mature SSO integrations. People shop alternatives for three specific reasons:</p>
+        <ul class="bullets">
+          <li><strong>Cost.</strong> $10/user/month at Starter is 2× Tailscale Business ($6) and 3× NetBird Cloud ($5). For a 50-person team that's $500/month vs $250-300 alternatives.</li>
+          <li><strong>Wrong shape for site-to-site.</strong> Twingate's gateway-based model puts a Connector in front of each resource. For "connect two offices' LANs" this doesn't fit — there's no mesh between Connectors. Mesh products (MeshWG, Tailscale, NetBird) are the right tools for that intent.</li>
+          <li><strong>Vendor breadth.</strong> Some teams want a single tool that does both per-resource ZTNA and mesh between user devices. Twingate covers the first; you'd add Tailscale for the second, or pay for Cloudflare One's bundle.</li>
+        </ul>
+
+        <h2 id="table">The 6 alternatives at a glance</h2>
+        <table class="cmp">
+          <thead><tr><th>Product</th><th>Best for</th><th>Pricing entry</th><th>Hosting</th><th>License</th></tr></thead>
+          <tbody>
+          {alternatives.map((a) => (
+            <tr>
+              <td><strong><a href={a.url} rel="noopener" target="_blank">{a.name}</a></strong></td>
+              <td>{a.fit}</td><td>{a.pricing}</td><td>{a.model}</td><td>{a.license}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+
+        <h2 id="by-use-case">Pick by use case</h2>
+        <ul class="bullets">
+          <li><strong>You're using Twingate for site-to-site / branch VPN → MeshWG.</strong> Twingate isn't built for this; MeshWG is. Per-router pricing dramatically cheaper for branch deployments.</li>
+          <li><strong>You're using Twingate for mesh between user devices → Tailscale or NetBird.</strong> Same workload, lower cost, simpler operational model.</li>
+          <li><strong>You're using Twingate for per-resource ZTNA and want self-host → Pomerium.</strong> Apache-2.0 open-source, similar gateway-based model.</li>
+          <li><strong>You want everything Cloudflare-shaped in one bundle → Cloudflare One.</strong> Access + Tunnel + Gateway + DNS + email security; cheaper at 50+ users if you'll use the rest of the stack.</li>
+          <li><strong>You need L2 emulation (legacy / industrial) → ZeroTier.</strong> Different product class but constantly considered.</li>
+        </ul>
+
+        <h2 id="meshwg">When MeshWG wins (site-to-site / branch)</h2>
+        <p>For SMB multi-branch — physical sites with routers — Twingate's economics fall apart and its model is the wrong shape. The comparison for a 10-branch business with 100 staff:</p>
+        <table class="cmp">
+          <thead><tr><th>Cost item</th><th>Twingate Starter</th><th>MeshWG</th></tr></thead>
+          <tbody>
+            <tr><td>Subscription</td><td>$1,000/month (100 × $10)</td><td>$42/month (10 routers × ₹349)</td></tr>
+            <tr><td>Per-device install</td><td>Connector per resource zone</td><td>None — router holds the tunnel</td></tr>
+            <tr><td>POS terminals, IP cameras, printers</td><td>Each needs a Connector reach or stays inaccessible</td><td>Automatic; sits behind router</td></tr>
+            <tr><td>Free tier</td><td>5 users, 1 admin</td><td>2 routers, indefinite, no user cap</td></tr>
+            <tr><td>Support</td><td>Business hours</td><td>24/7 human, all tiers</td></tr>
+          </tbody>
+        </table>
+        <p>MeshWG works on the routers you already own — TP-Link, MikroTik, OpenWrt, OPNsense, pfSense, Ubiquiti, Asus, GL.iNet — by generating paste-ready configuration in each vendor's native format. 2 minutes per router, free for the first two.</p>
+
+        <h2 id="tailscale">When Tailscale or NetBird wins (mesh between users)</h2>
+        <p>If what you really want is "users can reach each other and shared resources from anywhere," Twingate's per-resource gating is overkill operationally. Tailscale or NetBird's mesh model is simpler — devices on the same tailnet are reachable to each other by IP, ACLs control which can talk. For 50-person fully-remote teams the per-user pricing matches the workload exactly.</p>
+        <p>See <a href="/compare/tailscale-vs-netbird/">Tailscale vs NetBird</a> for the hosted-vs-self-host trade-off between these two.</p>
+
+        <h2 id="pomerium">When Pomerium wins (self-host ZTNA)</h2>
+        <p>Pomerium is the closest open-source analog to Twingate — same gateway-based model, same per-resource access pattern, Apache 2.0 license. You run Pomerium on your infrastructure; protected resources sit behind it; users authenticate via SSO and get explicit per-resource access. Operational burden similar to Headscale or NetBird self-host.</p>
+        <p>Pick Pomerium when: Twingate's model is what you want, but the cost or vendor lock-in are blockers. Skip when: you don't have the operational capacity to run a small Go server.</p>
+
+        <h2 id="cf-one">When Cloudflare One wins (enterprise bundle)</h2>
+        <p>Cloudflare's broader Zero Trust suite (Access + Tunnel + Gateway + WARP + DNS + Email Security) covers Twingate's use case plus several adjacent ones. For organisations already invested in Cloudflare's edge / CDN / DNS, Cloudflare One often makes economic sense because you're amortising one vendor across multiple needs.</p>
+        <p>Skip Cloudflare One when: you want the simplest possible ZTNA, no bundle, no Cloudflare lock-in. Pick Twingate or Pomerium instead.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>If site-to-site / branch is what you're replacing Twingate for, MeshWG's free tier is the fastest path to validate the fit — 2 routers, no card.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/alternatives/tailscale/">Tailscale alternatives</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

@@ -1,0 +1,94 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "Mesh VPN + ZTNA alternatives: honest comparisons by use case";
+const description = "Looking for an alternative to Tailscale, Twingate, NetBird, Cloudflare One, ZeroTier, or Headscale? This index lists honest comparison guides for each, sorted by what you'd actually be replacing — mesh, per-resource ZTNA, self-host, L2 emulation.";
+const canonical = "https://meshwg.com/alternatives/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const guides = [
+  { product: "Tailscale",       url: "/alternatives/tailscale/",      summary: "Hosted WireGuard mesh by Tailscale Inc. Per-user pricing scales poorly for branch deployments with non-user devices." },
+  { product: "Twingate",        url: "/alternatives/twingate/",       summary: "Gateway-based ZTNA. Expensive at $10/user/month and a poor fit for site-to-site connectivity." },
+  { product: "NetBird",         url: "/alternatives/netbird/",        summary: "Open-source mesh with hosted SaaS. Self-host operational burden and feature lag vs Tailscale are the main switch reasons." },
+  { product: "Cloudflare One",  url: "/alternatives/cloudflare-one/", summary: "Cloudflare's Zero Trust bundle (Access + Tunnel + Gateway + WARP). Powerful but ties you to Cloudflare's edge." },
+  { product: "ZeroTier",        url: "/alternatives/zerotier/",       summary: "L2 emulation with proprietary protocol. Slower than WireGuard-based products; specific to broadcast / legacy workloads." },
+  { product: "Headscale",       url: "/alternatives/headscale/",      summary: "Open-source Tailscale-compatible coordination server. Self-host operational cost drives most switches." },
+];
+
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  "name": "Mesh VPN and ZTNA alternative guides", "numberOfItems": guides.length,
+  "itemListElement": guides.map((g, i) => ({ "@type": "ListItem", "position": i + 1,
+    "name": g.product + " alternatives", "url": "https://meshwg.com" + g.url })) };
+
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",         "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Alternatives", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical} ogType="website">
+  <Nav />
+  <PageHero
+    eyebrow="/ alternatives"
+    title="Mesh VPN + ZTNA alternatives, honestly compared"
+    lede="Pick the guide that matches what you're shopping. Each names when its target product wins, when it doesn't, and what the right alternative is by use case."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <article>
+        <h2>Honest alternative guides</h2>
+        <ul class="card-list">
+          {guides.map((g) => (
+            <li>
+              <a class="card" href={g.url}>
+                <div class="card-h">{g.product} alternatives →</div>
+                <p>{g.summary}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <h2>What unifies these guides</h2>
+        <p>Every alternative guide on this site shares the same structure: the target product's actual strengths, the three or four practical reasons people shop alternatives, a 5-6 product comparison table, use-case-by-use-case recommendations, and a clear "when MeshWG wins / when MeshWG isn't the right answer" section.</p>
+        <p>The honest position: for SMB multi-branch with physical sites and routers, MeshWG fits structurally — per-router pricing, paste-ready configuration for 8 vendor families, 24/7 support. For fully-remote teams where every member runs a laptop, Tailscale or NetBird usually fits better. For per-resource ZTNA without a network, Twingate or Pomerium. We name the cases honestly because Google's quality raters and human readers both penalise one-sided comparisons — and because the alternatives genuinely win in their use cases.</p>
+
+        <div class="next">
+          <h2>Try MeshWG free</h2>
+          <p>2 routers, no card, indefinite. Generated paste-ready configuration for TP-Link, MikroTik, OpenWrt, OPNsense, pfSense, Ubiquiti, Asus, and GL.iNet. 24/7 human support on every tier.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/wireguard-router/">Pick the right WireGuard router</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  article { max-width: 880px; margin: 0 auto; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .card-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { display: block; padding: 22px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); transition: border-color 0.15s ease, box-shadow 0.15s ease; color: inherit; text-decoration: none; }
+  .card:hover { border-color: var(--accent); box-shadow: var(--shadow-card); color: inherit; }
+  .card-h { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .card p { color: var(--text-3); font-size: 14px; line-height: 1.6; margin: 0; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 820px) { .card-list { grid-template-columns: 1fr; } .guide { padding: 32px 0 64px; } .next { padding: 22px 22px; } }
+</style>

@@ -1,0 +1,162 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "Cloudflare One alternatives in 2026: 6 honest options by use case";
+const description = "Looking for a Cloudflare One alternative? CF's Zero Trust bundle is feature-rich but tied to Cloudflare's edge and complex to wire up. This guide covers MeshWG, Tailscale, Twingate, NetBird, Pomerium, Headscale — sorted by what you'd actually be replacing.";
+const canonical = "https://meshwg.com/alternatives/cloudflare-one/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const alternatives = [
+  { name: "MeshWG",     url: "https://meshwg.com",            fit: "SMB multi-branch / BYO-router mesh",     pricing: "₹349/router/month; 2 free",        model: "Hosted, router-based", license: "Closed SaaS" },
+  { name: "Tailscale",  url: "https://tailscale.com",         fit: "User-mesh for fully-remote teams",      pricing: "$6/user/mo Business",              model: "Hosted",               license: "Clients open; server proprietary" },
+  { name: "Twingate",   url: "https://twingate.com",          fit: "Per-resource ZTNA (replaces CF Access)",  pricing: "$10/user/mo Starter",              model: "Hosted gateway",       license: "Closed SaaS" },
+  { name: "NetBird",    url: "https://netbird.io",            fit: "Open-source mesh with self-host",        pricing: "Free self-host; $5/user/mo Cloud", model: "Hybrid",               license: "BSD 3-Clause" },
+  { name: "Pomerium",   url: "https://www.pomerium.com",      fit: "Self-host gateway ZTNA",                 pricing: "Free OSS",                         model: "Self-host",            license: "Apache 2.0" },
+  { name: "Headscale",  url: "https://github.com/juanfont/headscale", fit: "Self-hosted Tailscale-compatible",  pricing: "Free (BYO server)",                model: "Self-host",            license: "BSD 3-Clause" },
+];
+
+const faqs = [
+  { q: "Why look for a Cloudflare One alternative?", a: "Three real reasons. First, Cloudflare lock-in — CF Zero Trust pairs with CF's edge / DNS / CDN; teams that don't want to consolidate everything at Cloudflare want something independent. Second, complexity — CF One is genuinely powerful (Access + Tunnel + Gateway + WARP + Email Security + DNS filtering) but you pay for that breadth with configuration surface; simpler use cases over-buy. Third, cost at scale — Cloudflare Zero Trust Standard is $7/user/month, $84/year/user. For a 50-user team that's $4,200/year. Tailscale Business covers the mesh case at $6/user; specific ZTNA tools (Twingate, Pomerium) are similar or cheaper." },
+  { q: "What is the best Cloudflare One alternative for small business?", a: "Depends on which CF One feature you actually use. If you use mostly Tunnel + Access (the most-common combo): Twingate is the closest direct analog. If you use mostly WARP-style mesh between user devices: Tailscale. If you have physical sites with routers: MeshWG, which is dramatically cheaper at SMB scale. Cloudflare One's value lies in the bundle; if you're not using 3+ of its components, you're over-buying." },
+  { q: "Is Cloudflare Tunnel the same as Cloudflare One?", a: "No. Cloudflare Tunnel is one component of the Cloudflare One bundle. Tunnel specifically lets you expose a service through Cloudflare's edge without opening firewall ports. Cloudflare One is the broader Zero Trust suite that also includes Access (per-resource auth), Gateway (DNS + HTTPS filtering), WARP (user VPN client), Email Security, and more. People often want 'a Cloudflare Tunnel alternative' specifically, which is much narrower than a full Cloudflare One replacement." },
+  { q: "Is there a free Cloudflare One alternative?", a: "Cloudflare One itself has a Free tier (up to 50 users) which is very generous; for the mesh / access use cases that's hard to beat on cost alone. Truly free alternatives that match the bundle: Pomerium for per-resource ZTNA (Apache 2.0 self-host), NetBird for mesh (BSD-3 self-host), Headscale for Tailscale-compatible self-host. The honest caveat: 'free' for open-source means you operate the server — there's no truly-free hosted alternative that bundles ZTNA + mesh + DNS filtering the way Cloudflare does." },
+  { q: "Can I migrate from Cloudflare One to MeshWG?", a: "Yes for the mesh / site-to-site use case. Cloudflare One's WARP-based mesh between user devices doesn't translate directly because MeshWG's model is router-based, not device-based — it's a re-architecture, not a config swap. Migration looks like: deploy MeshWG on your branch routers (one paste per router via the dashboard, ~2 min each), update DNS / firewall rules to route through MeshWG instead of Cloudflare's edge for relevant services, gradually decommission CF One for what's now on the mesh. For Cloudflare Tunnel and Access use cases that aren't really mesh, MeshWG is the wrong replacement; pick Twingate or Pomerium for those." },
+  { q: "Cloudflare One vs Tailscale — which is cheaper at 100 users?", a: "Cloudflare Zero Trust Standard at $7/user × 100 = $700/month, $8,400/year. Tailscale Business at $6/user × 100 = $600/month, $7,200/year. Cloudflare is ~17% more per-user but includes more (DNS filtering, email security, browser isolation). If you'd otherwise pay separately for those tools, Cloudflare's bundle wins. If you only need the mesh / access pieces, Tailscale is cheaper and simpler." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["Cloudflare One alternative", "cloudflare zero trust alternative", "cloudflare access alternative", "cloudflare tunnel alternative"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  "name": "Cloudflare One alternatives", "numberOfItems": alternatives.length,
+  "itemListElement": alternatives.map((a, i) => ({ "@type": "ListItem", "position": i + 1, "name": a.name, "url": a.url })) };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",         "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Alternatives", "item": "https://meshwg.com/alternatives/" },
+    { "@type": "ListItem", "position": 3, "name": "Cloudflare One alternatives", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ alternatives · cloudflare one"
+    title="Cloudflare One alternatives: 6 honest options by use case"
+    lede="Cloudflare One bundles Access + Tunnel + Gateway + WARP into one Zero Trust suite. Powerful, expensive, and tied to Cloudflare's edge. The right alternative depends on which of those four you're actually replacing."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#why">Why look for a Cloudflare One alternative</a></li>
+          <li><a href="#which-piece">First: which CF One piece are you replacing?</a></li>
+          <li><a href="#table">The 6 alternatives at a glance</a></li>
+          <li><a href="#meshwg">When MeshWG wins (multi-branch)</a></li>
+          <li><a href="#tailscale">When Tailscale wins (user mesh)</a></li>
+          <li><a href="#twingate">When Twingate wins (per-resource ZTNA)</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="why">Why look for a Cloudflare One alternative</h2>
+        <ul class="bullets">
+          <li><strong>Lock-in concern.</strong> CF One only makes sense paired with the rest of Cloudflare's edge (DNS, CDN, WAF). Teams that don't want everything at one vendor look for unbundled alternatives.</li>
+          <li><strong>Complexity over-buy.</strong> CF One is genuinely capable, but you pay for breadth with configuration surface. If you use 1-2 of its 6 components, simpler tools beat the bundle.</li>
+          <li><strong>Cost at scale.</strong> $7/user/month at Standard. 50 users = $350/month, $4,200/year. Specific tools (Tailscale, Twingate, NetBird) covering one piece of CF One typically cost 70-100% of that for the piece you actually use.</li>
+          <li><strong>Wrong shape for multi-branch.</strong> CF One's mesh assumes WARP on every device. SMB businesses with non-laptop devices behind branch routers don't fit; router-based MeshWG does.</li>
+        </ul>
+
+        <h2 id="which-piece">First: which CF One piece are you replacing?</h2>
+        <p>Cloudflare One is six products in a bundle. The right alternative depends on which piece you use:</p>
+        <ul class="bullets">
+          <li><strong>Cloudflare Access (per-resource auth)</strong> → Twingate, Pomerium</li>
+          <li><strong>Cloudflare Tunnel (service exposure)</strong> → Tailscale's Funnel feature; or just port-forwarding + reverse proxy</li>
+          <li><strong>WARP-based mesh (user devices)</strong> → Tailscale, NetBird</li>
+          <li><strong>Cloudflare Gateway (DNS / HTTPS filtering)</strong> → NextDNS, AdGuard DNS, ControlD</li>
+          <li><strong>Site-to-site / branch connectivity</strong> → MeshWG</li>
+          <li><strong>Cloudflare Email Security</strong> → Proofpoint, Mimecast, Microsoft Defender for Office</li>
+        </ul>
+        <p>If you're using 3+ of these, replacing CF One means assembling 3+ separate vendors — the bundle math often wins back. If you're using 1-2, the unbundled alternatives are cheaper and simpler.</p>
+
+        <h2 id="table">The 6 alternatives at a glance</h2>
+        <table class="cmp">
+          <thead><tr><th>Product</th><th>Best for</th><th>Pricing entry</th><th>Hosting</th><th>License</th></tr></thead>
+          <tbody>
+          {alternatives.map((a) => (
+            <tr><td><strong><a href={a.url} rel="noopener" target="_blank">{a.name}</a></strong></td><td>{a.fit}</td><td>{a.pricing}</td><td>{a.model}</td><td>{a.license}</td></tr>
+          ))}
+          </tbody>
+        </table>
+
+        <h2 id="meshwg">When MeshWG wins (multi-branch)</h2>
+        <p>CF One isn't built for branch-office connectivity. WARP installs on user devices; there's no router-side mesh. For SMB multi-branch deployments, MeshWG is the right shape: tunnel terminates on the router, every LAN device joins automatically, per-router pricing instead of per-user.</p>
+        <p>10-branch business with 100 staff: MeshWG $42/month (10 routers × ₹349) vs CF Zero Trust Standard $700/month (100 users × $7). CF One wins if the staff also need DNS filtering + email security + browser isolation; MeshWG wins if "we just need the branches connected" is the requirement.</p>
+
+        <h2 id="tailscale">When Tailscale wins (user mesh)</h2>
+        <p>For "I just want my team to have a private network they can reach from anywhere" — WARP's core use case — Tailscale is simpler, cheaper, and equally capable. CF One adds the rest of the Zero Trust suite that you may or may not need. If you don't, Tailscale at $6/user is the cleaner choice. See <a href="/compare/tailscale-vs-cloudflare-tunnel/">Tailscale vs Cloudflare Tunnel</a>.</p>
+
+        <h2 id="twingate">When Twingate wins (per-resource ZTNA)</h2>
+        <p>CF Access and Twingate solve the same problem in similar ways — identity-aware per-resource access without putting users on a network. CF Access is cheaper at scale (CF Zero Trust Free up to 50 users); Twingate is more polished UI, more granular audit. For organisations that don't otherwise use Cloudflare, Twingate is the cleaner standalone purchase.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/alternatives/tailscale/">Tailscale alternatives</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

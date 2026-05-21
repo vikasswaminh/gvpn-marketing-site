@@ -1,0 +1,168 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "NetBird alternatives in 2026: 6 honest options by use case";
+const description = "Looking for a NetBird alternative? Three reasons people switch: NetBird's self-host operational burden, feature gaps vs Tailscale, or wrong-fit for SMB multi-branch. This guide covers MeshWG, Tailscale, Headscale, Twingate, Cloudflare One, ZeroTier — sorted by use case.";
+const canonical = "https://meshwg.com/alternatives/netbird/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const alternatives = [
+  { name: "MeshWG",         url: "https://meshwg.com",            fit: "SMB multi-branch / BYO-router mesh",      pricing: "₹349/router/month; 2 free",         model: "Hosted, router-based", license: "Closed SaaS" },
+  { name: "Tailscale",      url: "https://tailscale.com",         fit: "Polished hosted WireGuard mesh",          pricing: "Free 3 users; $6/user/mo Business", model: "Hosted",               license: "Clients open, server proprietary" },
+  { name: "Headscale",      url: "https://github.com/juanfont/headscale", fit: "Self-host Tailscale-compatible coordination", pricing: "Free (BYO server)",         model: "Self-host",            license: "BSD 3-Clause" },
+  { name: "Twingate",       url: "https://twingate.com",          fit: "Per-resource ZTNA (different model)",      pricing: "Free 5 users; $10/user/mo",         model: "Hosted gateway",       license: "Closed SaaS" },
+  { name: "Cloudflare One", url: "https://www.cloudflare.com/zero-trust/", fit: "Enterprise CF Zero Trust bundle",   pricing: "Free 50 users; $7/user/mo",         model: "Hosted bundle",        license: "Closed SaaS" },
+  { name: "ZeroTier",       url: "https://zerotier.com",          fit: "L2 emulation (broadcast / legacy)",        pricing: "Free 25 nodes; $5+/mo",            model: "Hosted own protocol",  license: "BSL" },
+];
+
+const faqs = [
+  { q: "Why look for a NetBird alternative?", a: "Three common reasons. First, self-host operational burden — NetBird's open-source stack is one of the friendlier ones, but it's still a Go server + database + reverse proxy to operate. Some teams want fully managed. Second, feature lag vs Tailscale — Tailscale ships new features (MagicDNS improvements, new integrations) faster than NetBird matches them; if you depend on the latest features, Tailscale is the more current option. Third, model mismatch — NetBird is agent-based mesh, which works for laptop-team-shaped workloads but doesn't fit SMB multi-branch where you have routers, not just users." },
+  { q: "What is the best NetBird alternative?", a: "For 'I want a polished hosted mesh': Tailscale. For 'I want the open-source story but with commercial support': stay on NetBird's commercial plan (it exists). For 'I want self-hosted Tailscale-compatibility': Headscale. For 'I want multi-branch site-to-site': MeshWG (router-based, dramatically cheaper for branch deployments)." },
+  { q: "Is Tailscale better than NetBird?", a: "On polish and ecosystem maturity: yes. Tailscale has been at it longer, has better-funded development, more integrations (Kubernetes, GitHub Actions, AWS, Synology), and more polished mobile apps. On openness and self-host: NetBird wins — the entire stack is BSD-3 and self-host is a first-class deployment mode, not a community workaround. The 'better' answer depends on which axis matters more for your use case." },
+  { q: "Can I migrate from NetBird to MeshWG?", a: "Yes, if your use case is multi-branch / site-to-site. NetBird's agent-based model and MeshWG's router-based model are different shapes, so it's a re-architecture, not a config swap. The migration looks like: deploy MeshWG on your branch routers (one paste per router via the dashboard, ~2 min each), gradually move traffic from NetBird agents to the router-based tunnels, decommission NetBird once everything's migrated. For per-user remote access (the use case NetBird is built for), MeshWG is the wrong tool — stick with NetBird or switch to Tailscale." },
+  { q: "Is NetBird production-ready?", a: "Yes — for the use cases it's designed for (mesh between user devices, self-host or managed). Multi-100-node deployments work; commercial customers exist; the project is funded and actively developed. Where it falls short isn't readiness but breadth of integrations relative to Tailscale, and the operational lift of self-host vs hosted." },
+  { q: "Are there self-hosted Tailscale alternatives besides NetBird?", a: "Headscale is the other major option — it's an open-source re-implementation of Tailscale's coordination server, so the official Tailscale clients work against it unchanged. Compare: NetBird is its own product (own clients, own management plane, BSD-3 throughout, commercial support available); Headscale is a coordination-server replacement that works with Tailscale's clients (community-maintained, no commercial parent). Pick NetBird for 'commercial backing'; pick Headscale for 'use Tailscale's ecosystem on my server.'" }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["NetBird alternative", "netbird alternatives", "alternative to netbird"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  "name": "NetBird alternatives", "numberOfItems": alternatives.length,
+  "itemListElement": alternatives.map((a, i) => ({ "@type": "ListItem", "position": i + 1, "name": a.name, "url": a.url })) };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",         "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Alternatives", "item": "https://meshwg.com/alternatives/" },
+    { "@type": "ListItem", "position": 3, "name": "NetBird alternatives", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ alternatives · netbird"
+    title="NetBird alternatives: 6 honest options by use case"
+    lede="NetBird is a solid open-source WireGuard mesh — but self-host has operational cost, the ecosystem lags Tailscale, and the agent model doesn't fit SMB multi-branch. This guide sorts alternatives by which NetBird pain point you're solving."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#why">Why look for a NetBird alternative</a></li>
+          <li><a href="#table">The 6 alternatives at a glance</a></li>
+          <li><a href="#by-use-case">Pick by use case</a></li>
+          <li><a href="#meshwg">When MeshWG wins (multi-branch)</a></li>
+          <li><a href="#tailscale">When Tailscale wins (polish + ecosystem)</a></li>
+          <li><a href="#headscale">When Headscale wins (Tailscale UX, self-host)</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="why">Why look for a NetBird alternative</h2>
+        <p>NetBird is well-engineered and BSD-3 throughout. Reasons people shop alternatives:</p>
+        <ul class="bullets">
+          <li><strong>Self-host operational burden.</strong> Running NetBird's stack means a Go server, a database, a reverse proxy with auto-TLS, upgrades, backups. Lighter than rolling your own WireGuard mesh, heavier than just paying for Tailscale.</li>
+          <li><strong>Feature lag.</strong> Tailscale ships new features and integrations faster. If you depend on the latest Kubernetes operator, the newest AWS integration, or a specific feature that exists in Tailscale but not yet NetBird, the gap matters.</li>
+          <li><strong>Wrong shape for multi-branch.</strong> NetBird is agent-based — every device runs a client. For SMB businesses with physical sites and non-laptop devices behind each router (POS terminals, IP cameras, printers), the agent model adds friction MeshWG's router-based model avoids.</li>
+        </ul>
+
+        <h2 id="table">The 6 alternatives at a glance</h2>
+        <table class="cmp">
+          <thead><tr><th>Product</th><th>Best for</th><th>Pricing entry</th><th>Hosting</th><th>License</th></tr></thead>
+          <tbody>
+          {alternatives.map((a) => (
+            <tr><td><strong><a href={a.url} rel="noopener" target="_blank">{a.name}</a></strong></td><td>{a.fit}</td><td>{a.pricing}</td><td>{a.model}</td><td>{a.license}</td></tr>
+          ))}
+          </tbody>
+        </table>
+
+        <h2 id="by-use-case">Pick by use case</h2>
+        <ul class="bullets">
+          <li><strong>Tired of self-host, want polished hosted → Tailscale.</strong> Most direct upgrade path; per-user pricing matches the workload.</li>
+          <li><strong>Multi-branch business → MeshWG.</strong> Router-based instead of agent-based; per-router pricing.</li>
+          <li><strong>Want Tailscale's UX but on your server → Headscale.</strong> Sister project to NetBird but works with Tailscale's clients.</li>
+          <li><strong>Per-resource ZTNA, not mesh → Twingate or Cloudflare One.</strong> Different architecture entirely.</li>
+          <li><strong>L2 emulation needed → ZeroTier.</strong> Different protocol, different design.</li>
+        </ul>
+
+        <h2 id="meshwg">When MeshWG wins (multi-branch)</h2>
+        <p>For SMB multi-branch, NetBird's agent model doesn't fit:</p>
+        <table class="cmp">
+          <thead><tr><th>Cost / shape</th><th>NetBird Cloud</th><th>MeshWG</th></tr></thead>
+          <tbody>
+            <tr><td>10-branch, 100 staff cost</td><td>$500/month (100 × $5)</td><td>$42/month (10 routers × ₹349)</td></tr>
+            <tr><td>POS terminals, IP cameras</td><td>Need agent per device</td><td>Behind router; automatic</td></tr>
+            <tr><td>Free tier</td><td>5 peers</td><td>2 routers indefinite</td></tr>
+            <tr><td>Setup per site</td><td>~5 min per device</td><td>~2 min per router</td></tr>
+            <tr><td>Support</td><td>Business hours</td><td>24/7 human, all tiers</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="tailscale">When Tailscale wins (polish + ecosystem)</h2>
+        <p>If you've been running NetBird and the feature lag is what's annoying you, Tailscale is the natural upgrade. More polished clients, broader ecosystem (more integrations, more SSO providers, more platforms supported in depth), more documentation, larger community. The trade-off: proprietary coordination server vs NetBird's open-source-throughout posture. See <a href="/compare/tailscale-vs-netbird/">our detailed comparison</a>.</p>
+
+        <h2 id="headscale">When Headscale wins (Tailscale UX, self-host)</h2>
+        <p>If you specifically chose NetBird because you wanted self-host but you'd rather have Tailscale's UX, Headscale is the missing option: it's a coordination-server re-implementation that the official Tailscale clients authenticate against. You get Tailscale's polished client experience with the coordination plane on your infrastructure. Different trade-offs than NetBird (community-maintained, no commercial parent) but the same fundamental shape. See <a href="/compare/tailscale-vs-headscale/">our detailed comparison</a>.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/alternatives/tailscale/">Tailscale alternatives</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

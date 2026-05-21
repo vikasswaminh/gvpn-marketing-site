@@ -1,0 +1,155 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "ZeroTier alternatives in 2026: 5 honest options by use case";
+const description = "Looking for a ZeroTier alternative? ZeroTier's L2 emulation is unique but slower than WireGuard-based products and proprietary protocol. Most ZeroTier users would be better served by Tailscale, MeshWG, NetBird, or Headscale. This guide separates them.";
+const canonical = "https://meshwg.com/alternatives/zerotier/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const alternatives = [
+  { name: "MeshWG",     url: "https://meshwg.com",            fit: "SMB multi-branch router-based mesh",     pricing: "₹349/router/month; 2 free",        model: "Hosted, router-based", license: "Closed SaaS" },
+  { name: "Tailscale",  url: "https://tailscale.com",         fit: "Polished hosted WireGuard mesh",         pricing: "$6/user/mo Business",              model: "Hosted",               license: "Clients open" },
+  { name: "NetBird",    url: "https://netbird.io",            fit: "Open-source WireGuard mesh",             pricing: "Free self-host; $5/user/mo Cloud", model: "Hybrid",               license: "BSD 3-Clause" },
+  { name: "Headscale",  url: "https://github.com/juanfont/headscale", fit: "Self-host Tailscale-compatible",      pricing: "Free (BYO server)",                model: "Self-host",            license: "BSD 3-Clause" },
+  { name: "n2n",        url: "https://github.com/ntop/n2n",   fit: "Open-source L2 emulation (ZeroTier-shaped)", pricing: "Free OSS",                         model: "Self-host",            license: "GPL-3.0" },
+];
+
+const faqs = [
+  { q: "Why look for a ZeroTier alternative?", a: "Three reasons. First, performance — ZeroTier runs entirely in userspace on every platform, capping at 200-400 Mbps on consumer hardware where WireGuard-based products achieve 700+ Mbps on the same chips. Second, protocol concerns — ZeroTier built its own protocol rather than using WireGuard, which means smaller cryptographic review surface and the lock-in implications of a custom stack. Third, use case mismatch — most teams who picked ZeroTier years ago for ease-of-NAT-traversal would now be better served by WireGuard-based products that have caught up on NAT traversal while being faster." },
+  { q: "What is the best ZeroTier alternative?", a: "For modern L3 workloads (web, SSH, RDP, file shares, anything that survives IP routing): Tailscale, NetBird, or MeshWG. Tailscale is the polished hosted option; NetBird is the open-source-friendly option; MeshWG is the router-based option for multi-branch. For specific L2 workloads that ZeroTier was actually solving (broadcast, multicast, legacy protocols): n2n is the closest open-source analog if you must stay on L2." },
+  { q: "Do I still need L2 emulation?", a: "Less often than you think. Most workloads people deployed ZeroTier for in 2018-2020 — file sharing across sites, game LAN access, remote-access to home networks — work fine over L3 in 2026 because the protocols have evolved. Modern Windows file sharing uses SMB3 over TCP/445 (works through L3). Game LAN protocols mostly support direct-IP join now. Industrial automation is the main remaining strong-L2 use case (BACnet broadcast, Modbus UDP variants). Check what L2-specific protocol you actually need; for most users the answer is 'none.'" },
+  { q: "Is ZeroTier secure?", a: "ZeroTier's cryptography is reviewed and considered sound — Salsa20 / Poly1305 for the data plane, with a planned migration to ChaCha20. The proprietary nature of the protocol is the larger concern: fewer eyes on the code than WireGuard's audited primitives. For most use cases the practical security difference is negligible; for high-assurance scenarios WireGuard's mainstream review is the safer choice." },
+  { q: "Can I migrate from ZeroTier to MeshWG?", a: "Yes if your ZeroTier use case is mesh / site-to-site connectivity. The two products have different shapes (ZeroTier creates a virtual Ethernet; MeshWG creates a routed overlay over WireGuard), so it's a re-architecture not a config swap. Migration: deploy MeshWG on your branch routers, gradually move L3 traffic from ZeroTier to MeshWG, decommission ZeroTier once everything's migrated. If you have L2 dependencies, those don't translate — check what specifically needs L2 and decide if the protocol can be modernised or if you need to keep ZeroTier alongside MeshWG for those workloads only." },
+  { q: "What about n2n for L2 needs?", a: "n2n (ntop's network-in-network) is the closest open-source analog to ZeroTier — L2 emulation with TUNTAP, supernodes for coordination, edge nodes per site. GPL-3.0 licensed, fully self-hostable. It's less polished than ZeroTier's commercial offering but covers the same L2 protocol surface. For 'I need L2 and I don't want a SaaS vendor,' n2n is the standard answer." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["ZeroTier alternative", "zerotier alternatives", "alternative to zerotier"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  "name": "ZeroTier alternatives", "numberOfItems": alternatives.length,
+  "itemListElement": alternatives.map((a, i) => ({ "@type": "ListItem", "position": i + 1, "name": a.name, "url": a.url })) };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",         "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Alternatives", "item": "https://meshwg.com/alternatives/" },
+    { "@type": "ListItem", "position": 3, "name": "ZeroTier alternatives", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ alternatives · zerotier"
+    title="ZeroTier alternatives: 5 honest options by use case"
+    lede="ZeroTier's L2 emulation is unique. The catch: it's slower than WireGuard-based products and uses a proprietary protocol. Most ZeroTier users in 2026 would be better served by Tailscale, MeshWG, or NetBird — unless you specifically need L2."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#why">Why look for a ZeroTier alternative</a></li>
+          <li><a href="#do-you-need-l2">First: do you actually need L2?</a></li>
+          <li><a href="#table">The 5 alternatives at a glance</a></li>
+          <li><a href="#meshwg">When MeshWG wins (multi-branch)</a></li>
+          <li><a href="#tailscale">When Tailscale or NetBird wins (mesh)</a></li>
+          <li><a href="#n2n">When n2n wins (L2 needed, self-host)</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="why">Why look for a ZeroTier alternative</h2>
+        <ul class="bullets">
+          <li><strong>Throughput ceiling.</strong> ZeroTier runs entirely in userspace; no kernel implementation on any platform. On consumer hardware that caps single-tunnel throughput at 200-400 Mbps. Modern Linux with kernel WireGuard does 1 Gbps+ on the same chip.</li>
+          <li><strong>Custom protocol vs WireGuard.</strong> ZeroTier's protocol is reviewed but proprietary; WireGuard's primitives have an order of magnitude more eyes on them.</li>
+          <li><strong>Use case has moved.</strong> ZeroTier solved hard NAT-traversal problems in 2015-2020; WireGuard products have caught up while being faster. The original "ZeroTier is the only thing that works through this CGNAT" argument has weakened.</li>
+        </ul>
+
+        <h2 id="do-you-need-l2">First: do you actually need L2?</h2>
+        <p>ZeroTier's main differentiator is L2 emulation — Ethernet-layer connectivity between sites. The 2026 question: do you actually need it?</p>
+        <ul class="bullets">
+          <li><strong>Yes, if you're running:</strong> BACnet (building automation), Modbus UDP broadcast variants, certain industrial protocols, legacy Windows networking pre-SMB3, game LAN protocols that broadcast for peer discovery, Dante / AVB audio-video over IP.</li>
+          <li><strong>No, if you're doing:</strong> web, SSH, RDP, modern file shares (SMB3), backup over TCP, anything that survives IP routing. This is 90% of workloads.</li>
+        </ul>
+        <p>If you're in the "no" camp, WireGuard-based alternatives (Tailscale, MeshWG, NetBird) are faster, more secure, and operationally simpler. If you're in the "yes" camp, ZeroTier stays the right choice for those specific workloads — or n2n if you want to self-host.</p>
+
+        <h2 id="table">The 5 alternatives at a glance</h2>
+        <table class="cmp">
+          <thead><tr><th>Product</th><th>Best for</th><th>Pricing</th><th>Hosting</th><th>License</th></tr></thead>
+          <tbody>
+          {alternatives.map((a) => (
+            <tr><td><strong><a href={a.url} rel="noopener" target="_blank">{a.name}</a></strong></td><td>{a.fit}</td><td>{a.pricing}</td><td>{a.model}</td><td>{a.license}</td></tr>
+          ))}
+          </tbody>
+        </table>
+
+        <h2 id="meshwg">When MeshWG wins (multi-branch)</h2>
+        <p>For SMB multi-branch with L3-compatible workloads, MeshWG is the structural fit — router-based instead of agent-based, per-router pricing, paste-ready configuration for 8 vendor families. ZeroTier's per-device install model doesn't scale to non-laptop devices behind branch routers (POS terminals, IP cameras, printers); MeshWG handles them transparently.</p>
+
+        <h2 id="tailscale">When Tailscale or NetBird wins (mesh between users)</h2>
+        <p>If you're running ZeroTier for user-device mesh and don't need L2, Tailscale or NetBird is the faster, more polished replacement. Both use WireGuard (kernel-speed on Linux) and have richer ecosystems. Tailscale for hosted-first polish; NetBird for open-source-first flexibility. See <a href="/compare/tailscale-vs-netbird/">our detailed comparison</a>.</p>
+
+        <h2 id="n2n">When n2n wins (L2 needed, self-host)</h2>
+        <p>For self-hostable L2 emulation — same shape as ZeroTier without depending on ZeroTier's coordination service — n2n is the open-source standard. Architecturally similar (supernodes coordinate edge nodes), GPL-3.0, fully self-host. Less polished UX than ZeroTier but covers the L2 protocol surface. Pick n2n when L2 is a hard requirement and you want maximum vendor independence.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/alternatives/tailscale/">Tailscale alternatives</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

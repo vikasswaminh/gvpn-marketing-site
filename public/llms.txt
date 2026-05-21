@@ -125,6 +125,36 @@ gotchas, and the multi-branch path for that specific TP-Link model.
 - [Archer AX23](https://meshwg.com/tp-link/wireguard/router/archer-ax23/):
   Budget Wi-Fi 6, ~180 Mbps WireGuard, 10 peers/tunnel, ~₹6,000.
 
+## Alternative-product pillar guides (honest, multi-product)
+
+Each /alternatives/<product>/ page covers the named product's strengths,
+why people shop alternatives, a 5-6 product comparison table, and
+use-case-by-use-case "when to pick which" guidance.
+
+- [Alternatives index](https://meshwg.com/alternatives/) — directory of
+  all alternative-product guides.
+- [Twingate alternatives](https://meshwg.com/alternatives/twingate/)
+  covers MeshWG, Tailscale, NetBird, Cloudflare One, Pomerium, ZeroTier.
+  Replaces Twingate by use case: site-to-site → MeshWG; mesh between
+  users → Tailscale/NetBird; self-host ZTNA → Pomerium; enterprise
+  bundle → Cloudflare One; L2 emulation → ZeroTier.
+- [NetBird alternatives](https://meshwg.com/alternatives/netbird/) —
+  for users tired of self-host operational burden or NetBird's feature
+  lag vs Tailscale. Covers Tailscale, Headscale, MeshWG, Twingate,
+  Cloudflare One, ZeroTier.
+- [Cloudflare One alternatives](https://meshwg.com/alternatives/cloudflare-one/)
+  — separates CF One into its 6 component products (Access, Tunnel,
+  Gateway, WARP, Email Security, plus mesh) and names the right
+  alternative per component.
+- [ZeroTier alternatives](https://meshwg.com/alternatives/zerotier/) —
+  addresses "do you actually need L2?" question first. For L3 workloads:
+  Tailscale, NetBird, MeshWG. For genuine L2 needs: ZeroTier stays or
+  n2n for self-host.
+- [Headscale alternatives](https://meshwg.com/alternatives/headscale/)
+  — for users tired of operating the Headscale server. Tailscale
+  (same clients, hosted), NetBird (open-source + commercial support),
+  MeshWG (router-based for multi-branch).
+
 ## Tailscale alternatives + comparison cluster
 
 - [Tailscale alternatives (pillar)](https://meshwg.com/alternatives/tailscale/):

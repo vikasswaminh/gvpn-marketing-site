@@ -37,6 +37,79 @@ const { title, description = "Hosted SDWAN + ZTNA on standard WireGuard. Mesh th
     data-api="/p/event"
     src="/p/script.js"
   ></script>
+
+  {/* Canonical Organization schema. Every page's @id references this via
+     https://meshwg.com/#organization — declared here once so the link
+     actually resolves for crawlers and AEO. Includes the address +
+     phone line so direct knowledge-graph queries ("MeshWG phone number")
+     return real data instead of being inferred from the page. */}
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://meshwg.com/#organization",
+    "name": "MeshWG",
+    "url": "https://meshwg.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://meshwg.com/favicon.svg"
+    },
+    "description": "Hosted mesh VPN + zero-trust network access service built on standard WireGuard. Turns the routers, laptops, and servers an SMB already owns into a single private network — no SDWAN appliance needed.",
+    "telephone": "+91-9611027980",
+    "email": "hello@meshwg.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "L-149, Sector 6, HSR Layout",
+      "addressLocality": "Bengaluru",
+      "addressRegion": "Karnataka",
+      "postalCode": "560102",
+      "addressCountry": "IN"
+    },
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "telephone": "+91-9611027980",
+        "contactType": "sales",
+        "email": "hello@meshwg.com",
+        "areaServed": "IN",
+        "availableLanguage": ["en", "hi"],
+        "hoursAvailable": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "10:00",
+          "closes": "18:00"
+        }
+      },
+      {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "support@meshwg.com",
+        "areaServed": "IN",
+        "availableLanguage": ["en", "hi"]
+      },
+      {
+        "@type": "ContactPoint",
+        "contactType": "technical support",
+        "email": "security@meshwg.com",
+        "url": "https://meshwg.com/.well-known/security.txt",
+        "areaServed": "Worldwide"
+      },
+      {
+        "@type": "ContactPoint",
+        "contactType": "Grievance Officer",
+        "email": "amit@meshwg.com",
+        "areaServed": "IN"
+      },
+      {
+        "@type": "ContactPoint",
+        "contactType": "HR",
+        "email": "careers@meshwg.com",
+        "areaServed": "IN"
+      }
+    ],
+    "sameAs": [
+      "https://github.com/quickmesh"
+    ]
+  })} />
 </head>
 <body>
   <!-- Red announcement bar — high-contrast active-product signal. Sits

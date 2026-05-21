@@ -76,6 +76,77 @@ const roles = [
 ];
 
 const totalHeadcount = roles.reduce((sum, r) => sum + r.headcount, 0);
+
+// ── JSON-LD for Google Jobs ──────────────────────────────────────────
+// One JobPosting per role. Google's rich result requires title,
+// description, hiringOrganization, jobLocation (with full PostalAddress),
+// datePosted, validThrough, employmentType. Setting jobLocationType
+// implicitly to physical (no TELECOMMUTE) communicates "in-office only"
+// to crawlers — paired with applicantLocationRequirements=IN this is
+// the structured-data equivalent of the "no remote work" line at the
+// top of the page.
+const datePosted = "2026-05-21";
+const validThrough = "2026-08-21";  // 90-day window; refresh by re-deploying
+
+const hiringOrg = {
+  "@type": "Organization",
+  "@id": "https://meshwg.com/#organization",
+  "name": "MeshWG",
+  "sameAs": "https://meshwg.com",
+  "logo": "https://meshwg.com/favicon.svg"
+};
+
+const jobLocation = {
+  "@type": "Place",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "L-149, Sector 6, HSR Layout",
+    "addressLocality": "Bengaluru",
+    "addressRegion": "Karnataka",
+    "postalCode": "560102",
+    "addressCountry": "IN"
+  }
+};
+
+const jobPostings = roles.map((role) => ({
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  "@id": `https://meshwg.com/careers#${role.id}`,
+  "title": role.title,
+  "description":
+    `<p>${role.summary}</p>` +
+    `<h3>What you'll do</h3><ul>${role.doing.map((d) => `<li>${d}</li>`).join("")}</ul>` +
+    `<h3>What we look for</h3><ul>${role.looking.map((l) => `<li>${l}</li>`).join("")}</ul>` +
+    `<p>Location: ${role.headcount} open position${role.headcount > 1 ? "s" : ""}. Bengaluru, India. Full-time, in-office only — no remote, no hybrid.</p>`,
+  "datePosted": datePosted,
+  "validThrough": validThrough,
+  "employmentType": "FULL_TIME",
+  "hiringOrganization": hiringOrg,
+  "jobLocation": jobLocation,
+  "jobLocationType": null,  // explicit absence of TELECOMMUTE signals in-office
+  "applicantLocationRequirements": {
+    "@type": "Country",
+    "name": "IN"
+  },
+  "totalJobOpenings": role.headcount,
+  "industry": "Computer Software / Networking",
+  "directApply": true,
+  "applicationContact": {
+    "@type": "ContactPoint",
+    "contactType": "HR",
+    "email": "careers@meshwg.com"
+  },
+  "url": `https://meshwg.com/careers#${role.id}`
+}));
+
+const careersBreadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Careers", "item": "https://meshwg.com/careers" }
+  ]
+};
 ---
 
 <Base title={title} description={description}>
@@ -239,6 +310,17 @@ const totalHeadcount = roles.reduce((sum, r) => sum + r.headcount, 0);
   </section>
 
   <Footer />
+
+  {/* JSON-LD: one JobPosting per role + a BreadcrumbList. Google Jobs
+     indexes each posting separately, so the user with "sales executive
+     jobs HSR Layout" intent sees the Sales card; the user with "network
+     support engineer Bangalore" sees the NSE card. Splitting is
+     required — a single posting with totalJobOpenings=33 would not be
+     indexed correctly for differentiated keywords. */}
+  {jobPostings.map((jp) => (
+    <script type="application/ld+json" set:html={JSON.stringify(jp)} />
+  ))}
+  <script type="application/ld+json" set:html={JSON.stringify(careersBreadcrumb)} />
 </Base>
 
 <style>

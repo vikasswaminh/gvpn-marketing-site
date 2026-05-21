@@ -6,6 +6,30 @@ import Footer     from "../components/Footer.astro";
 
 const title = "Contact MeshWG — direct lines, hours, and our Bangalore campus";
 const description = "Reach the MeshWG team by phone or email. Direct line: +91-9611027980, Monday to Saturday, 10:00 AM to 6:00 PM IST. Campus: L-149, Sector 6, HSR Layout, Bengaluru 560102.";
+
+// Structured data for AEO. ContactPage explicitly declares this is the
+// canonical contact entry-point for the Organization defined in Base.astro;
+// the BreadcrumbList helps Google / Bing render the URL with a hierarchy.
+const contactSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": "https://meshwg.com/contact#contactpage",
+  "url": "https://meshwg.com/contact",
+  "name": title,
+  "description": description,
+  "inLanguage": "en",
+  "isPartOf": { "@id": "https://meshwg.com/#organization" },
+  "mainEntity": { "@id": "https://meshwg.com/#organization" }
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://meshwg.com/contact" }
+  ]
+};
 ---
 
 <Base title={title} description={description}>
@@ -128,6 +152,9 @@ const description = "Reach the MeshWG team by phone or email. Direct line: +91-9
   </section>
 
   <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(contactSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 </Base>
 
 <style>

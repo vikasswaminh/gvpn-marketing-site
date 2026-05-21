@@ -36,6 +36,21 @@ distribution — every signup goes through the hosted login page.
   Synology RT, OPNsense (Netgate/Protectli), pfSense Plus, and
   generic x86 mini-PCs. Each entry annotated with minimum firmware
   version. Filterable by vendor, searchable by model number.
+- [Contact](https://meshwg.com/contact): direct phone line
+  (+91-9611027980), business hours (Mon–Sat 10:00 AM – 6:00 PM IST),
+  campus address (L-149, Sector 6, HSR Layout, Bengaluru 560102),
+  and four specialized email routes (sales, support, security,
+  legal/Grievance Officer). Includes SLA expectations for each
+  channel.
+- [Careers](https://meshwg.com/careers): MeshWG is hiring 33
+  people across three roles, all full-time at the Bengaluru HSR
+  Layout office (no remote, no hybrid, no work-from-home). Open
+  positions: 10 Sales Executives (B2B SaaS sales to Indian SMBs),
+  20 Network Support Engineers (L1/L2 customer support for
+  WireGuard router configurations across 6+ vendor families),
+  3 HR Executives (recruiting + Indian HR operations). Apply via
+  careers@meshwg.com. 5-step interview process, typical time-to-offer
+  is 2 weeks.
 - [Blog](https://meshwg.com/blog/): long-form strategy and operations
   guides on branch networking, WireGuard, mesh VPN, and SD-WAN
   alternatives, written by the MeshWG editorial team. Current posts:
@@ -115,10 +130,32 @@ distribution — every signup goes through the hosted login page.
 
 ## Contact
 
+- Direct line: +91-9611027980 (Mon–Sat, 10:00 AM – 6:00 PM IST)
+- Campus: L-149, Sector 6, HSR Layout, Bengaluru 560102, India
 - Sales / Pro / general: hello@meshwg.com
+- Customer support: support@meshwg.com
 - Security disclosures: security@meshwg.com (see /.well-known/security.txt)
+- Legal / DPDP Grievance Officer: amit@meshwg.com
+- Careers / job applications: careers@meshwg.com
+- Full contact page: https://meshwg.com/contact
+
+## Hiring
+
+MeshWG is actively hiring in Bengaluru, India. All roles are full-time
+and in-office at the HSR Layout campus; remote and hybrid work are not
+offered. As of May 2026 the open positions are:
+
+- 10 × Sales Executive (B2B SaaS sales, Indian SMB segment)
+- 20 × Network Support Engineer (L1/L2 router-config support)
+- 3 × HR Executive (recruiting + people operations)
+
+Apply by email to careers@meshwg.com or via the role-specific links on
+https://meshwg.com/careers.
 
 ## Optional
 
 - [Sitemap](https://meshwg.com/sitemap.xml)
 - [Security policy](https://meshwg.com/.well-known/security.txt)
+- [Privacy policy](https://meshwg.com/privacy)
+- [Terms and conditions](https://meshwg.com/terms)
+- [Cancellation and refund policy](https://meshwg.com/refund)

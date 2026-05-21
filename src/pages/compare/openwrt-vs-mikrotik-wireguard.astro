@@ -1,0 +1,278 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "OpenWrt vs MikroTik for WireGuard in 2026: honest side-by-side";
+const description = "OpenWrt is firmware for routers you already own; MikroTik is purpose-built networking hardware running RouterOS. Both ship WireGuard natively, but the operator experience is very different. Side-by-side on throughput, scriptability, and multi-site fit.";
+const canonical = "https://meshwg.com/compare/openwrt-vs-mikrotik-wireguard/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  {
+    q: "Is OpenWrt or MikroTik better for WireGuard?",
+    a: "It depends on whether you're optimising for hardware cost or operator efficiency. OpenWrt on a router you already own is free; MikroTik hardware costs ₹4,000-80,000 depending on board. But MikroTik's RouterOS 7 has the cleanest WireGuard CLI on the market — three commands and you're done — whereas OpenWrt requires LuCI navigation or hand-edited UCI files. For one-time single-site setup, both are fine. For 10+ branches, MikroTik's scriptability via .rsc files makes mass deployment dramatically easier than OpenWrt's UCI manipulation. For repurposing a 5-year-old Linksys or TP-Link router you already own, OpenWrt is the only realistic path."
+  },
+  {
+    q: "Can OpenWrt and MikroTik routers form a WireGuard tunnel together?",
+    a: "Yes — WireGuard is the same protocol on both. On the OpenWrt side, configure a wg0 interface in LuCI with the MikroTik's public key, endpoint, and Allowed IPs. On the MikroTik side, /interface/wireguard add an interface and /interface/wireguard/peers add a peer pointing at the OpenWrt's public key and endpoint. Handshake completes in seconds. This is a common pattern for SMB operators running a MikroTik at HQ and OpenWrt-flashed routers at smaller branches."
+  },
+  {
+    q: "Which is faster for WireGuard, OpenWrt or MikroTik?",
+    a: "Depends on the underlying CPU. WireGuard is CPU-bound (no hardware acceleration on either platform), so the chipset determines throughput. A MikroTik CCR2116 (12-core ARM A72) does 5+ Gbps. A MikroTik hAP ax² (4-core A53) does ~700 Mbps. An OpenWrt-flashed router on an IPQ8074 (Linksys MR9600, NETGEAR RAX120 — 4-core ARM A53 @ 2.2 GHz) does 500-900 Mbps. An OpenWrt-flashed older MIPS router (TP-Link Archer C7) does 30-60 Mbps. CPU class trumps platform; among similar-chipset hardware, OpenWrt and MikroTik are roughly equivalent."
+  },
+  {
+    q: "Is RouterOS easier than OpenWrt for WireGuard?",
+    a: "For configuration: yes, materially. RouterOS 7's /interface/wireguard syntax is more compact than OpenWrt's UCI commands — same logical config, fewer lines, no firewall-zone juggling needed (RouterOS firewall lives in /ip/firewall and is one command away). For repurposing existing hardware and for deep system flexibility: OpenWrt wins because it runs on hardware MikroTik doesn't make and exposes the full Linux toolchain (custom scripts, third-party packages, Docker on some builds). For a 'just give me a config and let me deploy it' workflow, RouterOS; for 'let me hack this older router into doing something specific,' OpenWrt."
+  },
+  {
+    q: "Does MikroTik have a WireGuard equivalent of LuCI?",
+    a: "Two interfaces: Winbox (native desktop client, also installable on Wine for Linux/Mac) and WebFig (browser-based admin). Both expose the same /interface/wireguard configuration as the CLI. Most MikroTik operators prefer Winbox for its tabbed multi-router workflow; WebFig is the lighter option when you can't install Winbox. Neither is exactly equivalent to LuCI's structure, but they cover the same configuration surface."
+  },
+  {
+    q: "Can I use MikroTik scripts to automate WireGuard across many routers?",
+    a: "Yes. RouterOS exports its entire configuration as .rsc files (RouterOS script format), which can be edited, version-controlled, and re-imported on other routers with /import file-name=tunnel-config.rsc. The same .rsc imported on 10 MikroTiks produces 10 identically-configured routers. OpenWrt has an equivalent — UCI commands in a shell script, applied via SSH — but the OpenWrt path requires careful coordination of UCI commit and network restart, where MikroTik's import is one atomic operation."
+  }
+];
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": [
+    "OpenWrt vs MikroTik WireGuard", "MikroTik vs OpenWrt", "openwrt or mikrotik",
+    "RouterOS vs OpenWrt", "openwrt vs routeros"
+  ],
+  "isAccessibleForFree": true, "inLanguage": "en"
+};
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",    "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://meshwg.com/compare/" },
+    { "@type": "ListItem", "position": 3, "name": "OpenWrt vs MikroTik WireGuard", "item": canonical }
+  ]
+};
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ compare · openwrt vs mikrotik"
+    title="OpenWrt vs MikroTik for WireGuard: 2026 side-by-side"
+    lede="One is firmware for routers you already own; the other is purpose-built network hardware. Both ship WireGuard natively, but the operator experience is very different. Side-by-side on throughput, scriptability, and multi-site fit."
+  />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#short-answer">The short answer</a></li>
+          <li><a href="#table">Side-by-side comparison</a></li>
+          <li><a href="#throughput">Throughput by chipset class</a></li>
+          <li><a href="#config">Configuration: same logic, different syntax</a></li>
+          <li><a href="#scriptability">Scriptability and mass deployment</a></li>
+          <li><a href="#cost">Hardware cost</a></li>
+          <li><a href="#pick">When to pick which</a></li>
+          <li><a href="#meshwg">Where MeshWG fits</a></li>
+          <li><a href="#faq">Frequently asked questions</a></li>
+        </ol>
+      </aside>
+
+      <article>
+
+        <h2 id="short-answer">The short answer</h2>
+        <p><strong>MikroTik for new hardware purchases at scale; OpenWrt for repurposing what you already own.</strong> MikroTik has the cleaner WireGuard CLI (three commands), the better mass-deployment story (.rsc imports), and purpose-built hardware ranging from ₹4,000 SOHO boxes to 5+ Gbps carrier-class CCR appliances. OpenWrt has the broader hardware support (any of ~1,500 router models on the official list), the deeper customisation surface, and the unbeatable price point of "free firmware on a router I already have."</p>
+        <p>For 1-2 sites either works; the operator's existing comfort with each platform's idioms is the practical deciding factor. For 10+ branches with new hardware procurement, MikroTik's scriptability and SKU-consistency wins.</p>
+
+        <h2 id="table">Side-by-side comparison</h2>
+        <table class="cmp">
+          <thead>
+            <tr><th>Aspect</th><th>OpenWrt</th><th>MikroTik RouterOS 7</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>WireGuard support since</td><td>OpenWrt 19.07 (Jan 2020)</td><td>RouterOS 7.0 (Dec 2021)</td></tr>
+            <tr><td>Hardware</td><td>Bring your own (~1,500 supported models)</td><td>Purpose-built (~150 active SKUs)</td></tr>
+            <tr><td>Hardware cost</td><td>₹0 (existing router) – ₹15,000 (mini-PC)</td><td>₹4,000 (hAP ax²) – ₹80,000+ (CCR2116)</td></tr>
+            <tr><td>WireGuard CLI form</td><td>UCI commands (multi-line)</td><td>RouterOS script (single-line per resource)</td></tr>
+            <tr><td>Web UI</td><td>LuCI</td><td>Winbox / WebFig</td></tr>
+            <tr><td>Mass deployment</td><td>UCI commands via SSH / Ansible</td><td>.rsc files via /import</td></tr>
+            <tr><td>Firewall integration</td><td>Zone-based (assign wg0 to a zone)</td><td>Chain-based (/ip/firewall/filter)</td></tr>
+            <tr><td>Throughput on top-tier hardware</td><td>~900 Mbps (IPQ8074 router)</td><td>5+ Gbps (CCR2116)</td></tr>
+            <tr><td>Vendor support contracts</td><td>Community + commercial integrators</td><td>MikroTik authorised partners</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="throughput">Throughput by chipset class</h2>
+        <p>WireGuard is CPU-bound on both platforms. Comparing similar chipset tiers:</p>
+        <table class="cmp">
+          <thead>
+            <tr><th>Tier</th><th>OpenWrt example (chipset)</th><th>WG throughput</th><th>MikroTik example (chipset)</th><th>WG throughput</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Entry</td><td>TP-Link Archer C7 (ath79)</td><td>~50 Mbps</td><td>hAP ac² (ARM A7)</td><td>~300 Mbps</td></tr>
+            <tr><td>SOHO</td><td>Xiaomi Mi 4A (mt7621)</td><td>~70 Mbps</td><td>hAP ax² (ARM A53 4-core)</td><td>~700 Mbps</td></tr>
+            <tr><td>Mid</td><td>GL.iNet B1300 (IPQ40xx)</td><td>~200 Mbps</td><td>RB5009 (ARM A72 4-core)</td><td>~1.5 Gbps</td></tr>
+            <tr><td>Prosumer</td><td>Linksys MR9600 (IPQ8074)</td><td>~900 Mbps</td><td>CCR2004 (ARM A72 4-core)</td><td>~2.5 Gbps</td></tr>
+            <tr><td>Carrier</td><td>x86 mini-PC (Atom C3758)</td><td>~1.5 Gbps</td><td>CCR2116 (ARM A72 16-core)</td><td>5+ Gbps</td></tr>
+          </tbody>
+        </table>
+        <p>MikroTik's premium-tier hardware is the throughput ceiling on either platform — for 5+ Gbps WireGuard the CCR2116 has no OpenWrt-supported equivalent at consumer pricing. For sub-1-Gbps deployments (Indian SMB fibre uplinks of 100-300 Mbps), both platforms are well over what your uplink can use.</p>
+
+        <h2 id="config">Configuration: same logic, different syntax</h2>
+        <p>Same WireGuard concepts, very different command shapes. The same single-tunnel setup:</p>
+        <p><strong>OpenWrt (UCI commands):</strong></p>
+        <pre><code>uci set network.wg0='interface'
+uci set network.wg0.proto='wireguard'
+uci set network.wg0.private_key='YOUR_PRIVATE_KEY'
+uci add_list network.wg0.addresses='10.100.0.2/16'
+uci set network.wg0.listen_port='51820'
+uci add network wireguard_wg0
+uci rename network.@wireguard_wg0[-1]='wg0_hub'
+uci set network.wg0_hub.public_key='REMOTE_PUBKEY'
+uci set network.wg0_hub.endpoint_host='hub.example.com'
+uci set network.wg0_hub.endpoint_port='51820'
+uci set network.wg0_hub.persistent_keepalive='21'
+uci add_list network.wg0_hub.allowed_ips='10.100.0.0/16'
+uci commit network
+/etc/init.d/network restart</code></pre>
+        <p><strong>MikroTik (RouterOS script):</strong></p>
+        <pre><code>/interface/wireguard
+add name=wg0 listen-port=51820 private-key=auto
+
+/ip/address
+add address=10.100.0.2/16 interface=wg0
+
+/ip/firewall/filter
+add chain=input action=accept protocol=udp dst-port=51820 place-before=0
+
+/interface/wireguard/peers
+add interface=wg0 public-key="REMOTE_PUBKEY" \
+    endpoint-address=hub.example.com endpoint-port=51820 \
+    allowed-address=10.100.0.0/16 persistent-keepalive=21s</code></pre>
+        <p>Same result, RouterOS is about half the line count. OpenWrt's verbosity comes from UCI's hierarchical structure (every nested attribute is a separate uci set); RouterOS uses single-line resource declarations with key=value pairs.</p>
+        <p>For one-time configuration this barely matters. For configuration management across 20 routers, RouterOS .rsc files are dramatically faster to edit and ship.</p>
+
+        <h2 id="scriptability">Scriptability and mass deployment</h2>
+        <p>If you're deploying 10+ identical routers, scriptability matters more than CLI verbosity. Both platforms support it but with different idioms:</p>
+        <ul class="bullets">
+          <li><strong>MikroTik .rsc imports.</strong> The full configuration of any router can be exported as a single .rsc file (RouterOS script). Edit the file, copy to N routers, run /import file-name=config.rsc on each. Atomic, idempotent, no service restart needed.</li>
+          <li><strong>OpenWrt UCI scripts.</strong> The same UCI commands run via SSH against each router. Ansible's community.general.uci_set module wraps this cleanly. The catch: changes require /etc/init.d/network restart to apply, which momentarily disconnects the management session.</li>
+          <li><strong>Ansible compatibility.</strong> Both have community modules. Ansible's MikroTik collection is more mature (the routeros_command and routeros_config modules are widely used); OpenWrt support is via the generic SSH module or third-party roles.</li>
+          <li><strong>Backup and restore.</strong> MikroTik /export saves the full configuration to a single file. OpenWrt requires saving /etc/config/* directories plus /etc/dropbear/ for SSH state. Both work; MikroTik's single-file approach is operationally simpler.</li>
+        </ul>
+
+        <h2 id="cost">Hardware cost</h2>
+        <p>Practical hardware budgets for an Indian SMB branch:</p>
+        <table class="cmp">
+          <thead>
+            <tr><th>Use case</th><th>OpenWrt</th><th>MikroTik</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Single home / SOHO</td><td>Repurpose existing router: ₹0</td><td>hAP ax²: ~₹4,000</td></tr>
+            <tr><td>Single small office (5-20 staff)</td><td>x86 mini-PC: ~₹15,000</td><td>RB5009: ~₹25,000</td></tr>
+            <tr><td>Branch with multi-site VPN</td><td>x86 mini-PC: ~₹15,000</td><td>RB5009 or hEX S: ~₹15,000-25,000</td></tr>
+            <tr><td>HQ for 10-branch mesh</td><td>x86 mini-PC, more CPU: ~₹30,000</td><td>CCR2004: ~₹65,000</td></tr>
+            <tr><td>Carrier-class HQ (1+ Gbps WG)</td><td>x86 server: ~₹75,000+</td><td>CCR2116: ~₹80,000+</td></tr>
+          </tbody>
+        </table>
+        <p>The repurpose case is where OpenWrt's economics shine: ₹0 hardware cost. Every branch in a 5-branch deployment running OpenWrt on existing TP-Link or GL.iNet routers costs zero in hardware procurement — only operator time. MikroTik's value at the high end is the CCR appliances; at the low end the cost overlaps with what an x86 mini-PC running OpenWrt covers.</p>
+
+        <h2 id="pick">When to pick which</h2>
+        <ul class="bullets">
+          <li><strong>You own existing routers from the OpenWrt compatibility list → OpenWrt.</strong> Free firmware, hardware already paid for.</li>
+          <li><strong>You're buying new hardware for SMB-class WireGuard → MikroTik RB5009 or hAP ax² depending on uplink.</strong> Cleaner CLI, vendor-tested combo.</li>
+          <li><strong>You're standing up 10+ identical branches → MikroTik for SKU-consistency.</strong> .rsc deployment beats OpenWrt UCI scripting at this scale.</li>
+          <li><strong>You need 5+ Gbps WireGuard → MikroTik CCR2116.</strong> No OpenWrt equivalent at consumer pricing.</li>
+          <li><strong>You want one platform across home + office + travel → OpenWrt + GL.iNet.</strong> GL.iNet is OpenWrt-based and covers consumer/travel form factors MikroTik doesn't make.</li>
+          <li><strong>Your team already lives in RouterOS → MikroTik.</strong> Don't underestimate platform familiarity; an unfamiliar platform under deadline pressure is when production mistakes happen.</li>
+        </ul>
+
+        <h2 id="meshwg">Where MeshWG fits</h2>
+        <p>MeshWG works equally well on top of either platform. The dashboard generates UCI commands for OpenWrt and RouterOS scripts for MikroTik — same per-device flow, native format for each platform. The platform-choice decision is independent of the orchestration-layer decision.</p>
+        <p>For multi-vendor deployments (MikroTik at HQ, OpenWrt at branches, or vice versa), MeshWG handles the mixed mesh transparently — the protocol is the same on both ends. Free for the first two routers; ₹349/router/month annual or ₹499/router/month month-to-month thereafter, INR via Razorpay.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>The dashboard generates platform-native configuration for both. Try the free tier — two routers, no card required, indefinite.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/openwrt/wireguard/">Full OpenWrt guide</a>
+            <a class="btn btn-line btn-lg" href="/mikrotik/wireguard/">Full MikroTik guide</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/wireguard-router/">All 8 router families compared</a> ·
+            <a href="/compare/opnsense-vs-pfsense-wireguard/">OPNsense vs pfSense</a> ·
+            <a href="/compare/wireguard-vs-openvpn/">WireGuard vs OpenVPN</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .guide pre { background: var(--code-bg); color: var(--code-fg); padding: 18px 22px; border-radius: var(--radius-lg); overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; margin: 20px 0; }
+  .guide pre code { background: transparent; padding: 0; color: inherit; }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

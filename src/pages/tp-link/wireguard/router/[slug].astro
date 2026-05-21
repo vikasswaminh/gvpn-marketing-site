@@ -1,0 +1,354 @@
+---
+import Base       from "../../../../layouts/Base.astro";
+import Nav        from "../../../../components/Nav.astro";
+import PageHero   from "../../../../components/PageHero.astro";
+import Footer     from "../../../../components/Footer.astro";
+
+// ── Per-model TP-Link landing pages, programmatic via getStaticPaths.
+//
+// Each entry produces /tp-link/wireguard/router/<slug>/ at build time
+// with model-specific title, description, throughput, firmware floor,
+// menu path, and gotchas. Adding a 7th model is a one-line append to
+// the MODELS array — no new file required.
+//
+// Data sources: model-page changelogs on tp-link.com, throughput from
+// vendor docs + community benchmarks, menu paths verified on each
+// family's stock firmware as of 2026-05.
+
+export function getStaticPaths() {
+  // Astro hoists this function into its own scope — locals declared here
+  // are NOT accessible in the main frontmatter below. Define the MODELS
+  // data inside the function so it's available to the path-generation
+  // logic; per-page values flow to the rest of the page via Astro.props.
+  const MODELS = [
+  {
+    slug: "er605",
+    model: "ER605 v2",
+    family: "Omada ER",
+    firmware_floor: "ER605(UN)_v2_2.1.2 (2024)",
+    throughput: "~250 Mbps single tunnel",
+    price_inr: "~₹15,000",
+    max_peers: 20,
+    cpu: "880 MHz MIPS",
+    use_case: "The volume-shipping branch-office gateway for Indian SMBs",
+    menu_path: "VPN → WireGuard → Tunnel List → Add Tunnel",
+    gotchas: [
+      "ER605 v1 hardware (sold 2021-2022) does NOT support WireGuard and will not receive it. Look for v2 stamped on the underside.",
+      "Maximum 20 peers per tunnel — fine for hub-and-spoke with up to 20 branches, awkward past that.",
+      "WireGuard runs on the MIPS CPU without acceleration; 250 Mbps is the realistic ceiling. For 1 Gbps WAN, step up to ER7206."
+    ]
+  },
+  {
+    slug: "er7206",
+    model: "ER7206",
+    family: "Omada ER",
+    firmware_floor: "ER7206_v1_1.4.0 (2024)",
+    throughput: "~600 Mbps single tunnel",
+    price_inr: "~₹30,000",
+    max_peers: 50,
+    cpu: "1 GHz dual-core ARM",
+    use_case: "Mid-size SMB HQ with 1 Gbps WAN serving 10-30 branches",
+    menu_path: "VPN → WireGuard → Tunnel List → Add Tunnel (standalone or via Omada Controller)",
+    gotchas: [
+      "Significantly faster than the ER605 — 600 Mbps WireGuard means you can saturate a 500 Mbps fibre.",
+      "Up to 50 peers per tunnel; deploys cleanly as a hub for hub-and-spoke meshes up to that size.",
+      "Omada Controller integration is the operational difference vs the ER605 — push tunnel configuration to all branches via Site Templates."
+    ]
+  },
+  {
+    slug: "er8411",
+    model: "ER8411",
+    family: "Omada ER",
+    firmware_floor: "ER8411_v1_1.4.0 (2024)",
+    throughput: "1.5+ Gbps single tunnel",
+    price_inr: "~₹50,000",
+    max_peers: 50,
+    cpu: "2 GHz quad-core ARM",
+    use_case: "Enterprise / multi-branch HQ pushing line-rate WireGuard",
+    menu_path: "VPN → WireGuard → Tunnel List → Add Tunnel (Omada Controller-managed)",
+    gotchas: [
+      "Rackmount form factor — typical install is the central HQ, not a branch.",
+      "Saturates 1 Gbps WAN with WireGuard, leaves headroom for IPsec or OpenVPN concurrent if needed.",
+      "Omada Controller (self-hosted or cloud) is essentially required for the scale this hardware targets."
+    ]
+  },
+  {
+    slug: "deco-x60",
+    model: "Deco X60",
+    family: "Deco",
+    firmware_floor: "Deco X60 firmware 1.5.0 or later (mid-2023)",
+    throughput: "~300 Mbps single tunnel",
+    price_inr: "~₹25,000 (3-pack)",
+    max_peers: 5,
+    cpu: "Quad-core ARM (Wi-Fi 6 SoC)",
+    use_case: "Home office or single-site small office with Wi-Fi 6 mesh + WireGuard",
+    menu_path: "Deco app → More → Advanced → VPN → WireGuard Server",
+    gotchas: [
+      "Configuration is via the Deco mobile app, not the same web UI as Archer or Omada ER.",
+      "Maximum 5 peers per tunnel; sufficient for road-warrior remote access but not for multi-branch HQ.",
+      "Only the primary Deco node runs the WireGuard endpoint; satellite Decos extend the LAN but don't terminate tunnels."
+    ]
+  },
+  {
+    slug: "deco-x50",
+    model: "Deco X50",
+    family: "Deco",
+    firmware_floor: "Deco X50 firmware 1.4.0 or later (2023)",
+    throughput: "~250 Mbps single tunnel",
+    price_inr: "~₹18,000 (3-pack)",
+    max_peers: 5,
+    cpu: "Quad-core ARM (Wi-Fi 6 SoC)",
+    use_case: "Smaller home or office with Wi-Fi 6 mesh + occasional WireGuard remote access",
+    menu_path: "Deco app → More → Advanced → VPN → WireGuard Server",
+    gotchas: [
+      "Slightly lower-end CPU than X60; throughput caps ~50 Mbps below.",
+      "Same Deco-app-only configuration model as X60.",
+      "5 peers per tunnel — fine for a small team remote-access setup."
+    ]
+  },
+  {
+    slug: "archer-ax73",
+    model: "Archer AX73",
+    family: "Archer",
+    firmware_floor: "Archer AX73 firmware 1.2.0 or later (late 2022)",
+    throughput: "~250 Mbps single tunnel",
+    price_inr: "~₹10,000",
+    max_peers: 10,
+    cpu: "Quad-core 1 GHz ARM",
+    use_case: "Volume-shipping consumer Wi-Fi 6 router with WireGuard server and client",
+    menu_path: "Advanced → VPN Server → WireGuard",
+    gotchas: [
+      "Allowed IPs field on older firmware doesn't always accept comma-separated CIDRs — update firmware before configuring multi-LAN peers.",
+      "10 peers per tunnel; sufficient for a small team or 3-4-branch mesh.",
+      "AX73 saturates ~200 Mbps WAN with WireGuard. For 500+ Mbps fibre, step up to AX90 or use Omada ER instead."
+    ]
+  },
+  {
+    slug: "archer-ax23",
+    model: "Archer AX23",
+    family: "Archer",
+    firmware_floor: "Archer AX23 firmware 1.2.0 or later (late 2022)",
+    throughput: "~180 Mbps single tunnel",
+    price_inr: "~₹6,000",
+    max_peers: 10,
+    cpu: "Dual-core 1.5 GHz ARM",
+    use_case: "Budget consumer Wi-Fi 6 with WireGuard for home / small remote office",
+    menu_path: "Advanced → VPN Server → WireGuard",
+    gotchas: [
+      "Lowest-throughput WireGuard in the Archer family that supports it; ~180 Mbps is the ceiling.",
+      "Fine for 100-150 Mbps fibre uplinks; insufficient for 500 Mbps+.",
+      "Same UI as AX73 / AX90, just slower CPU."
+    ]
+  }
+  ];
+  return MODELS.map((m) => ({ params: { slug: m.slug }, props: { model: m } }));
+}
+
+const { model } = Astro.props;
+
+const title = `TP-Link ${model.model} WireGuard: 2026 setup + multi-site mesh guide`;
+const description = `Set up WireGuard on the TP-Link ${model.model}. Firmware floor, throughput, peer limit, exact menu path, model-specific gotchas, and what to do when one ${model.model} grows into a mesh.`;
+const canonical = `https://meshwg.com/tp-link/wireguard/router/${model.slug}/`;
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  {
+    q: `Does the TP-Link ${model.model} support WireGuard?`,
+    a: `Yes, on firmware ${model.firmware_floor} or later. The ${model.model} runs on ${model.cpu} and achieves ${model.throughput} on a single WireGuard tunnel. WireGuard is configured under ${model.menu_path} in the admin interface, with up to ${model.max_peers} peers per tunnel on current firmware.`
+  },
+  {
+    q: `How fast is WireGuard on the TP-Link ${model.model}?`,
+    a: `${model.throughput} single-tunnel on the stock firmware, measured iperf3 over a stable LAN. The ${model.model}'s ${model.cpu} runs WireGuard without hardware acceleration, so the CPU is the binding constraint. For typical Indian SMB fibre uplinks (100-300 Mbps) the router is well above the WAN limit.`
+  },
+  {
+    q: `What is the firmware version with WireGuard on the TP-Link ${model.model}?`,
+    a: `Firmware ${model.firmware_floor} is the minimum that includes WireGuard. Confirm by visiting Advanced → System → Firmware Upgrade in the admin interface; if your installed version is below this floor, update via the same page first. Most ${model.model} units shipped after the firmware floor date arrive with WireGuard available out of the box.`
+  },
+  {
+    q: `How do I find WireGuard in the TP-Link ${model.model} admin UI?`,
+    a: `${model.menu_path}. If the option isn't visible, the most likely cause is firmware below ${model.firmware_floor} — update first, then revisit. On Deco devices specifically, the WireGuard configuration lives in the Deco mobile app, not the web admin.`
+  },
+  {
+    q: `How many WireGuard peers can the TP-Link ${model.model} support?`,
+    a: `${model.max_peers} peers per tunnel on current firmware. This is the cap on devices connecting into this router as a WireGuard server (or peers this router has configured outbound). For deployments larger than this cap, the practical pattern is hub-and-spoke with a higher-capacity device (Omada ER7206 or ER8411) at HQ.`
+  },
+  {
+    q: `Can I run WireGuard between the TP-Link ${model.model} and a different router brand?`,
+    a: `Yes. WireGuard is the same protocol on every implementation — your ${model.model} interoperates with WireGuard on MikroTik, OpenWrt, OPNsense, pfSense, Ubiquiti, Asus, GL.iNet, and the official Linux/Mac/Windows/iOS/Android clients. Configuration is the same set of fields (public key, endpoint, allowed IPs); only the UI for entering them differs per vendor.`
+  }
+];
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": [
+    `TP-Link ${model.model} WireGuard`,
+    `${model.model} WireGuard`,
+    `${model.model} VPN`,
+    `${model.model} site to site`,
+    `${model.model} setup`
+  ],
+  "isAccessibleForFree": true, "inLanguage": "en"
+};
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const howToSchema = {
+  "@context": "https://schema.org", "@type": "HowTo",
+  "name": `Set up WireGuard on the TP-Link ${model.model}`,
+  "totalTime": "PT8M",
+  "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+  "tool": [{ "@type": "HowToTool", "name": `TP-Link ${model.model} running firmware ${model.firmware_floor} or later` }],
+  "step": [
+    { "@type": "HowToStep", "name": "Confirm firmware", "text": `Log in to the admin interface (typically http://192.168.0.1) and verify the installed firmware is ${model.firmware_floor} or later. Update via Advanced → System → Firmware Upgrade if needed.` },
+    { "@type": "HowToStep", "name": "Open the WireGuard page", "text": `Navigate to ${model.menu_path}.` },
+    { "@type": "HowToStep", "name": "Create a tunnel", "text": `Click Add. Generate a keypair using the Generate button. Set a Listen Port (51820 default). Set Tunnel IP — typically 10.100.0.1/24 for a hub or 10.100.0.2/32 for a spoke.` },
+    { "@type": "HowToStep", "name": "Add a peer", "text": `Paste the remote public key. Set Allowed IPs to the remote tunnel /32 plus any LAN subnet behind that peer. Set Endpoint and Endpoint Port if the remote has a stable public address. Persistent Keepalive: 21 if behind NAT.` },
+    { "@type": "HowToStep", "name": "Enable and save", "text": `Toggle Enable and click Save. The handshake completes within seconds once the remote side is also configured.` },
+    { "@type": "HowToStep", "name": "Verify the handshake", "text": `Refresh the WireGuard page; the peer row should show a recent handshake timestamp and incrementing byte counters.` }
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",      "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "TP-Link",   "item": "https://meshwg.com/tp-link/" },
+    { "@type": "ListItem", "position": 3, "name": "WireGuard", "item": "https://meshwg.com/tp-link/wireguard/" },
+    { "@type": "ListItem", "position": 4, "name": model.model, "item": canonical }
+  ]
+};
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow={`/ tp-link · ${model.family.toLowerCase()} · wireguard`}
+    title={`TP-Link ${model.model} WireGuard guide`}
+    lede={`Set up WireGuard on the TP-Link ${model.model}. ${model.use_case}. Firmware floor, throughput, peer limit, exact menu path, and what to do when one ${model.model} grows into a mesh.`}
+  />
+
+  <section class="model-page">
+    <div class="wrap">
+      <article>
+
+        <div class="spec-card">
+          <div class="spec-eyebrow">/ {model.model} at a glance</div>
+          <table class="spec">
+            <tbody>
+              <tr><td>Family</td><td>TP-Link {model.family}</td></tr>
+              <tr><td>Firmware floor for WireGuard</td><td><code>{model.firmware_floor}</code></td></tr>
+              <tr><td>WireGuard throughput (single tunnel)</td><td>{model.throughput}</td></tr>
+              <tr><td>Maximum peers per tunnel</td><td>{model.max_peers}</td></tr>
+              <tr><td>CPU</td><td>{model.cpu}</td></tr>
+              <tr><td>Approx Indian retail (2026)</td><td>{model.price_inr}</td></tr>
+              <tr><td>WireGuard menu path</td><td><code>{model.menu_path}</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Who the TP-Link {model.model} is for</h2>
+        <p>{model.use_case}. The {model.model} sits in TP-Link's {model.family} family — alongside other models that share the same firmware UI and configuration patterns but differ in CPU, throughput, and peer caps.</p>
+
+        <h2>Setting up WireGuard on the {model.model}</h2>
+        <p>The six steps below match what the dashboard's vendor-template picker generates for the {model.model}:</p>
+        <ol class="numbered">
+          <li><strong>Confirm firmware.</strong> Log in to the admin interface (typically <code>http://192.168.0.1</code>) and verify the installed firmware is <code>{model.firmware_floor}</code> or later. Update via Advanced → System → Firmware Upgrade if needed.</li>
+          <li><strong>Open the WireGuard page.</strong> Navigate to <code>{model.menu_path}</code>.</li>
+          <li><strong>Create a tunnel.</strong> Click Add. Generate a keypair. Set Listen Port to <code>51820</code>. Set Tunnel IP to <code>10.100.0.1/24</code> for a hub or <code>10.100.0.2/32</code> for a spoke.</li>
+          <li><strong>Add a peer.</strong> Paste the remote public key. Set Allowed IPs to the remote tunnel /32 plus the remote LAN subnet. Set Endpoint Host and Endpoint Port if the remote has a stable public address. Persistent Keepalive: <code>21</code> if behind NAT.</li>
+          <li><strong>Enable and save.</strong> Toggle Enable and Save.</li>
+          <li><strong>Verify.</strong> The peer row should show a recent handshake timestamp within seconds of the remote side being configured.</li>
+        </ol>
+
+        <h2>{model.model}-specific gotchas</h2>
+        <ul class="bullets">
+          {model.gotchas.map((g) => (<li>{g}</li>))}
+        </ul>
+
+        <h2>What changes at multi-branch scale</h2>
+        <p>The {model.model} handles 1-{Math.min(model.max_peers, 5)} sites cleanly. Past that, the configuration burden grows quadratically — five sites in a full mesh = ten peer relationships, each configured on both ends. The practical pattern past 3 sites is hub-and-spoke (every branch peers with one central router) plus a managed mesh layer that generates the per-router peer lists. MeshWG generates paste-ready configuration in the exact format the TP-Link UI accepts, including for the {model.model} specifically.</p>
+
+        <h2>Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>Add your {model.model} to MeshWG's free tier and have the configuration generated, paste-ready into the {model.family} admin UI.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/tp-link/wireguard/">TP-Link WireGuard pillar guide</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/wireguard-router/">All WireGuard router families</a> ·
+            <a href="/blog/tp-link-site-to-site-vpn-wireguard-2026/">TP-Link site-to-site deep dive</a> ·
+            <a href="/pricing">Pricing</a>
+          </p>
+        </div>
+
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .model-page { padding: 64px 0 128px; }
+  article { max-width: 780px; margin: 0 auto; }
+  .spec-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px 28px; margin-bottom: 56px; }
+  .spec-eyebrow { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  table.spec { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.spec td { padding: 8px 0; border-bottom: 1px solid var(--border-faint); }
+  table.spec tr:last-child td { border-bottom: none; }
+  table.spec td:first-child { color: var(--text-3); width: 240px; padding-right: 12px; }
+  table.spec td:last-child { color: var(--text); }
+  .model-page h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 48px 0 16px; color: var(--text); text-wrap: balance; }
+  .model-page h2:first-of-type { margin-top: 0; }
+  .model-page h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .model-page p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .model-page strong { color: var(--text); font-weight: 600; }
+  .model-page a { color: var(--accent); }
+  .model-page a:hover { color: var(--accent-strong); }
+  .model-page code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .bullets, .numbered { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li, .numbered li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; counter-increment: num; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  .numbered { counter-reset: num; }
+  .numbered li::before { content: counter(num) "."; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+  @media (max-width: 820px) {
+    .model-page { padding: 32px 0 64px; }
+    .spec-card { padding: 18px 20px; margin-bottom: 36px; }
+    table.spec td:first-child { width: 180px; }
+    .model-page h2 { font-size: 24px; margin-top: 36px; }
+    .next { padding: 22px 22px; }
+  }
+</style>

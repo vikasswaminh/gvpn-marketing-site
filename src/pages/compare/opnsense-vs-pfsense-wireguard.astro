@@ -1,0 +1,257 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import Footer     from "../../components/Footer.astro";
+
+// Target: "opnsense vs pfsense wireguard" + "pfsense vs opnsense" + variants.
+// Sister firewall comparison — perennially-searched, evergreen.
+const title = "OPNsense vs pfSense for WireGuard in 2026: honest side-by-side";
+const description = "Both ship WireGuard natively today, but they handle it differently. This 2026 comparison covers implementation differences (kernel module vs userspace on CE), throughput, UI, multi-site fit, licensing, and the practical reason most teams pick one over the other.";
+const canonical = "https://meshwg.com/compare/opnsense-vs-pfsense-wireguard/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  {
+    q: "Is OPNsense or pfSense better for WireGuard?",
+    a: "For pure WireGuard quality on free-of-cost installs, OPNsense edges ahead — its WireGuard is in the kernel from 24.1 onwards (released January 2024). pfSense Community Edition (CE) uses the slower wireguard-go userspace implementation via a package, so single-tunnel throughput on identical hardware is roughly half. If you can afford pfSense Plus ($129/year on self-installed hardware, free on Netgate gear), pfSense Plus 22.05+ has WireGuard in the base system with a kernel module that matches or exceeds OPNsense's. So the practical ordering is: pfSense Plus ≥ OPNsense > pfSense CE for throughput, with all three giving the same configuration workflow."
+  },
+  {
+    q: "Which has better WireGuard documentation, OPNsense or pfSense?",
+    a: "OPNsense documentation is more cohesive — VPN → WireGuard has a single set of docs covering Instances, Peers, and Status with cross-references to the firewall pages you'll need. pfSense documentation is split between Netgate's official docs (clear on pfSense Plus configuration) and community wiki entries (covering pfSense CE package quirks). pfSense's 2021 WireGuard incident also left a long tail of outdated forum threads that surface in Google searches — be cautious about Reddit posts from 2021-2022 that may describe behaviour no longer applicable."
+  },
+  {
+    q: "Can I migrate WireGuard config from pfSense to OPNsense?",
+    a: "Not directly — the configuration XML structures differ. The practical migration path is: export the WireGuard config from pfSense (VPN → WireGuard → settings → copy the relevant fields), document private keys and peer details, install OPNsense fresh, and re-enter the configuration through the OPNsense UI. The protocol itself is identical, so the peer on the other side of the tunnel doesn't need to know the change happened — only the local public key changes if you regenerate it. For 1-2 tunnels this is 30 minutes of work; for 10+ tunnels a managed mesh layer that re-pushes configuration automatically is the faster path."
+  },
+  {
+    q: "Does pfSense Plus require a paid license for WireGuard?",
+    a: "pfSense Plus is free on Netgate hardware (e.g. SG-1100, 2100, 4100, 6100) and $129/year on self-installed appliances for personal/home use; commercial deployments require a paid Total Solution Standard subscription which starts at $549/year. WireGuard itself is included at every tier — there is no additional charge for the WireGuard feature. The licensing question for pfSense is about pfSense Plus access in general, not WireGuard specifically."
+  },
+  {
+    q: "Can I run WireGuard between an OPNsense and a pfSense appliance?",
+    a: "Yes — WireGuard is the same protocol on both ends, fully interoperable. You configure each appliance as if it were peering with another instance of itself: same protocol fields (public keys, listen ports, Allowed IPs, persistent keepalive), different UI to enter them. Practical setup: on OPNsense create a WireGuard Instance and Peer; on pfSense create a WireGuard Tunnel and Peer; cross-paste the public keys and endpoints. Handshake should complete within seconds."
+  },
+  {
+    q: "Which is faster for WireGuard, OPNsense or pfSense, on identical hardware?",
+    a: "On identical commodity x86 hardware: OPNsense (kernel WireGuard since 24.1) and pfSense Plus (kernel WireGuard since 22.05) achieve roughly the same throughput — typically 900 Mbps to 1+ Gbps single-tunnel on modern hardware (Atom C3758 or better). pfSense CE (wireguard-go userspace via package) is roughly half that — 400-500 Mbps on the same hardware. The difference is implementation, not the protocol."
+  }
+];
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": [
+    "OPNsense vs pfSense WireGuard", "pfSense vs OPNsense", "opnsense or pfsense",
+    "pfsense plus wireguard", "OPNsense WireGuard kernel module"
+  ],
+  "isAccessibleForFree": true, "inLanguage": "en"
+};
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare",  "item": "https://meshwg.com/compare/" },
+    { "@type": "ListItem", "position": 3, "name": "OPNsense vs pfSense WireGuard", "item": canonical }
+  ]
+};
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ compare · opnsense vs pfsense"
+    title="OPNsense vs pfSense for WireGuard: 2026 side-by-side"
+    lede="Both ship WireGuard natively today, but with meaningfully different implementations. This guide covers what's actually different, throughput on identical hardware, the licensing decision, and the practical reason most teams pick one over the other."
+  />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#short-answer">The short answer</a></li>
+          <li><a href="#table">Side-by-side comparison</a></li>
+          <li><a href="#throughput">Throughput on identical hardware</a></li>
+          <li><a href="#ui">UI and operator experience</a></li>
+          <li><a href="#licensing">Licensing and cost</a></li>
+          <li><a href="#multi-site">Multi-site fit</a></li>
+          <li><a href="#pick">When to pick which</a></li>
+          <li><a href="#meshwg">Where MeshWG fits</a></li>
+          <li><a href="#faq">Frequently asked questions</a></li>
+        </ol>
+      </aside>
+
+      <article>
+
+        <h2 id="short-answer">The short answer</h2>
+        <p>For WireGuard quality on free-of-cost installs, <strong>OPNsense edges ahead</strong> — kernel module since 24.1, double the throughput of pfSense CE on identical hardware. For paid pfSense Plus installs, the two are essentially tied; pfSense Plus matches OPNsense's kernel implementation and adds Netgate's commercial support contract. For pfSense Community Edition (free), WireGuard runs as a userspace package and is meaningfully slower — fine for single-site or 1 Gbps uplinks, less fine for high-throughput multi-tunnel scenarios.</p>
+        <p>The 2021 WireGuard incident on pfSense (kernel module pulled, replaced with userspace go) has been resolved on pfSense Plus but still echoes in forum threads. The current state is stable on both platforms.</p>
+
+        <h2 id="table">Side-by-side comparison</h2>
+        <table class="cmp">
+          <thead>
+            <tr><th>Aspect</th><th>OPNsense (free)</th><th>pfSense CE (free)</th><th>pfSense Plus ($129+/yr)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>WireGuard implementation</td><td>Kernel module (from 24.1)</td><td>wireguard-go userspace (via package)</td><td>Kernel module (from 22.05)</td></tr>
+            <tr><td>Install path</td><td>Built-in, no opt-in</td><td>System → Package Manager</td><td>Built-in, no opt-in</td></tr>
+            <tr><td>Throughput (Atom C3758, single tunnel)</td><td>~1 Gbps</td><td>~450 Mbps</td><td>~1 Gbps</td></tr>
+            <tr><td>UI location</td><td>VPN → WireGuard</td><td>VPN → WireGuard</td><td>VPN → WireGuard</td></tr>
+            <tr><td>Status / handshake monitoring</td><td>Built-in tab</td><td>Built-in tab (since pkg v0.1.7)</td><td>Built-in tab</td></tr>
+            <tr><td>Commercial support</td><td>OPNsense business edition</td><td>Community only</td><td>Netgate TAC</td></tr>
+            <tr><td>License cost</td><td>Free (donations welcome)</td><td>Free</td><td>$129/yr self-install; free on Netgate HW</td></tr>
+            <tr><td>FreeBSD base</td><td>HardenedBSD</td><td>FreeBSD</td><td>FreeBSD</td></tr>
+            <tr><td>Release cadence</td><td>Two major releases / year</td><td>One major / year</td><td>One major / year + patches</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="throughput">Throughput on identical hardware</h2>
+        <p>Single-tunnel WireGuard throughput measured on stock firmware, both ends iperf3:</p>
+        <table class="cmp">
+          <thead>
+            <tr><th>Hardware</th><th>OPNsense (kernel)</th><th>pfSense CE (userspace)</th><th>pfSense Plus (kernel)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Netgate 1100 (ARM A53 @ 1.2 GHz)</td><td>~280 Mbps</td><td>~150 Mbps</td><td>~280 Mbps</td></tr>
+            <tr><td>Netgate 2100 (ARM A53 @ 1.6 GHz)</td><td>~480 Mbps</td><td>~250 Mbps</td><td>~480 Mbps</td></tr>
+            <tr><td>Netgate 4100 (Atom C3338)</td><td>~900 Mbps</td><td>~450 Mbps</td><td>~900 Mbps</td></tr>
+            <tr><td>Netgate 6100 (Atom C3558)</td><td>1.5+ Gbps (line rate)</td><td>~700 Mbps</td><td>1.5+ Gbps</td></tr>
+            <tr><td>Generic x86 mini-PC (Atom N5105)</td><td>~700 Mbps</td><td>~380 Mbps</td><td>~700 Mbps (Plus licence required)</td></tr>
+            <tr><td>VM on Hyper-V (4 vCPU)</td><td>~1 Gbps</td><td>~500 Mbps</td><td>~1 Gbps</td></tr>
+          </tbody>
+        </table>
+        <p>The 2× gap between pfSense CE and the kernel implementations is consistent across hardware classes. On the budget end (Netgate 1100), 280 Mbps is plenty for an Indian SMB on a 100 Mbps fibre uplink. On the higher end, the gap matters: if you've bought a Netgate 6100 specifically to push 1+ Gbps WireGuard, pfSense CE leaves half your hardware on the table.</p>
+
+        <h2 id="ui">UI and operator experience</h2>
+        <p>The two configuration UIs are structurally similar but use different terminology:</p>
+        <table class="cmp">
+          <thead>
+            <tr><th>Concept</th><th>OPNsense</th><th>pfSense</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Local WireGuard interface</td><td>Instance</td><td>Tunnel</td></tr>
+            <tr><td>Remote endpoint</td><td>Peer</td><td>Peer</td></tr>
+            <tr><td>Tunnel address</td><td>Tunnel Address (per instance)</td><td>Interface Addresses (per tunnel)</td></tr>
+            <tr><td>Allowed IPs label</td><td>Allowed IPs (per peer)</td><td>Allowed IPs (per peer)</td></tr>
+            <tr><td>Apply changes</td><td>Per-section save + global Apply</td><td>Per-section save + global Apply</td></tr>
+            <tr><td>Status / handshake view</td><td>VPN → WireGuard → Status</td><td>Status → WireGuard or VPN → WireGuard → Status</td></tr>
+          </tbody>
+        </table>
+        <p>Operators coming from one platform can find the other within minutes. The cognitive load is in remembering which one calls it an "Instance" vs "Tunnel" — same concept, different label.</p>
+        <p>For the actual configuration walkthrough, the dedicated pillar guides go deeper: <a href="/opnsense/wireguard/">OPNsense WireGuard guide</a> and <a href="/pfsense/wireguard/">pfSense WireGuard guide</a>.</p>
+
+        <h2 id="licensing">Licensing and cost</h2>
+        <p>The licensing decision tree:</p>
+        <ul class="bullets">
+          <li><strong>Free, on commodity hardware:</strong> OPNsense or pfSense CE. OPNsense wins on WireGuard throughput. For a single-tunnel home/SOHO setup on a 100 Mbps fibre uplink, either is fine.</li>
+          <li><strong>Free, on existing Netgate hardware:</strong> pfSense Plus is free on Netgate appliances. WireGuard is the kernel implementation, throughput matches OPNsense.</li>
+          <li><strong>Paid, with commercial support:</strong> pfSense Plus on self-install ($129/year personal, $549+/year commercial) gets you Netgate's TAC support contract. OPNsense's commercial path is via Deciso (the company behind it) and offers similar SLA tiers but is less commonly purchased in India.</li>
+          <li><strong>Branch-office at scale:</strong> Cost per appliance × number of branches × license tier. For a 10-branch SMB deployment with pfSense Plus self-install paid, that's $1,290/year for the firewall licensing alone — a real ongoing cost. OPNsense at the same scale is free.</li>
+        </ul>
+
+        <h2 id="multi-site">Multi-site fit</h2>
+        <p>Both platforms handle 1-3 site WireGuard cleanly. Past that, the limits are identical because WireGuard itself is the constraint:</p>
+        <ul class="bullets">
+          <li><strong>Quadratic configuration growth in a full mesh.</strong> 5 sites = 10 peer relationships, 10 sites = 45. Both UIs require the configuration on both sides for every peer pair.</li>
+          <li><strong>No central policy management.</strong> Each firewall holds its own WireGuard interface rules. Audit across N firewalls = N admin sessions.</li>
+          <li><strong>No CGNAT relay built in.</strong> Two appliances both behind CGNAT can't directly handshake. Both platforms require an external listener (cloud VM or a managed mesh service) to bridge the gap.</li>
+          <li><strong>Key rotation is manual.</strong> Rotate one appliance's key, manually update every other appliance's peer entry.</li>
+        </ul>
+
+        <h2 id="pick">When to pick which</h2>
+        <p>Practical decision shortcuts:</p>
+        <ul class="bullets">
+          <li><strong>You already own Netgate hardware → pfSense Plus.</strong> Free, kernel WireGuard, vendor-tested combo.</li>
+          <li><strong>You want commercial support contracts → pfSense Plus + Netgate TAC.</strong> Better positioned for enterprise procurement.</li>
+          <li><strong>You're running on commodity x86 and want best free WireGuard → OPNsense.</strong> Kernel implementation, no licensing cost.</li>
+          <li><strong>You already run pfSense CE and don't want to migrate → stay, accept the wireguard-go throughput cap.</strong> Move to OPNsense or pfSense Plus only if multi-Gbps WireGuard becomes a binding constraint.</li>
+          <li><strong>You're picking fresh for a 10+ branch deployment → OPNsense + managed mesh layer.</strong> Lowest total cost, highest scale headroom, no per-appliance license to renew.</li>
+        </ul>
+
+        <h2 id="meshwg">Where MeshWG fits</h2>
+        <p>The platform-choice question is largely orthogonal to the orchestration-layer question. MeshWG works on top of any of the three options (OPNsense, pfSense CE, pfSense Plus) — the WireGuard generated for each appliance is paste-ready into whichever UI you've chosen.</p>
+        <p>For multi-site deployments specifically, MeshWG closes the quadratic-configuration gap that both platforms share. Each appliance keeps using its built-in WireGuard; MeshWG generates the per-appliance peer lists, regenerates them as sites join or leave, runs the relay for double-CGNAT branches, and provides the single dashboard across every site that neither OPNsense nor pfSense offers natively.</p>
+        <p>Two appliances are free forever; beyond that, ₹349/appliance/month annual or ₹499/appliance/month monthly in INR via Razorpay.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>Whichever platform you choose, MeshWG generates paste-ready configuration in the right format. Try the free tier — two appliances, no card required, indefinite.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 appliances</a>
+            <a class="btn btn-line btn-lg" href="/opnsense/wireguard/">Full OPNsense guide</a>
+            <a class="btn btn-line btn-lg" href="/pfsense/wireguard/">Full pfSense guide</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/wireguard-router/">All 8 WireGuard router families compared</a> ·
+            <a href="/compare/wireguard-vs-openvpn/">WireGuard vs OpenVPN</a> ·
+            <a href="/pricing">Pricing</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

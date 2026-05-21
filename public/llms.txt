@@ -82,6 +82,42 @@ distribution — every signup goes through the hosted login page.
   per family, peers-per-tunnel limits, typical throughput, and
   honest treatment of the disadvantages of WireGuard on TP-Link
   hardware. ~2,400 words.
+
+## TP-Link per-model guides
+
+Each page covers firmware floor, throughput, peer cap, menu path,
+gotchas, and the multi-branch path for that specific TP-Link model.
+
+- [ER605 v2](https://meshwg.com/tp-link/wireguard/router/er605/):
+  Omada gateway, ~250 Mbps WireGuard, 20 peers/tunnel, ~₹15,000.
+- [ER7206](https://meshwg.com/tp-link/wireguard/router/er7206/):
+  Omada gateway, ~600 Mbps WireGuard, 50 peers/tunnel, ~₹30,000.
+- [ER8411](https://meshwg.com/tp-link/wireguard/router/er8411/):
+  Omada rackmount, 1.5+ Gbps WireGuard, 50 peers/tunnel, ~₹50,000.
+- [Deco X60](https://meshwg.com/tp-link/wireguard/router/deco-x60/):
+  Wi-Fi 6 mesh, ~300 Mbps WireGuard, 5 peers/tunnel, app-configured.
+- [Deco X50](https://meshwg.com/tp-link/wireguard/router/deco-x50/):
+  Budget Wi-Fi 6 mesh, ~250 Mbps WireGuard, 5 peers/tunnel.
+- [Archer AX73](https://meshwg.com/tp-link/wireguard/router/archer-ax73/):
+  Wi-Fi 6 router, ~250 Mbps WireGuard, 10 peers/tunnel, ~₹10,000.
+- [Archer AX23](https://meshwg.com/tp-link/wireguard/router/archer-ax23/):
+  Budget Wi-Fi 6, ~180 Mbps WireGuard, 10 peers/tunnel, ~₹6,000.
+
+## Side-by-side comparisons
+
+- [OPNsense vs pfSense WireGuard](https://meshwg.com/compare/opnsense-vs-pfsense-wireguard/):
+  honest comparison covering kernel module vs userspace package
+  on pfSense CE, throughput on identical hardware, licensing
+  decision tree, and migration considerations between the two.
+- [OpenWrt vs MikroTik WireGuard](https://meshwg.com/compare/openwrt-vs-mikrotik-wireguard/):
+  free firmware on existing hardware vs purpose-built network
+  hardware. Throughput by chipset class, configuration syntax
+  comparison, mass-deployment scriptability.
+- [WireGuard vs OpenVPN](https://meshwg.com/compare/wireguard-vs-openvpn/):
+  speed (3-5× WireGuard win on identical hardware), security
+  (attack surface, cryptographic primitives), configuration
+  complexity, and three specific cases where OpenVPN still wins
+  (TCP fallback, per-user auth, legacy integration).
 - [Careers](https://meshwg.com/careers): MeshWG is hiring 33
   people across three roles, all full-time at the Bengaluru HSR
   Layout office (no remote, no hybrid, no work-from-home). Open

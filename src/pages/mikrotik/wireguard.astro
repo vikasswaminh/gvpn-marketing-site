@@ -2,6 +2,7 @@
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
 import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
 import Footer     from "../../components/Footer.astro";
 
 // Primary: "mikrotik wireguard" (140/mo) + "mikrotik wireguard setup" (50/mo)
@@ -98,6 +99,7 @@ const breadcrumbSchema = {
     title="MikroTik WireGuard: RouterOS 7 setup + site-to-site mesh"
     lede="MikroTik added WireGuard in RouterOS 7. This guide walks the /interface/wireguard configuration, the firewall input-chain rule everyone forgets, real throughput numbers per board, and what changes when one router becomes ten branches."
   />
+  <ValueStrip />
 
   <section class="guide">
     <div class="wrap">

@@ -2,6 +2,7 @@
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
 import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
 import Footer     from "../../components/Footer.astro";
 
 const title = "WireGuard vs OpenVPN in 2026: speed, security, and when to use which";
@@ -79,6 +80,7 @@ const breadcrumbSchema = {
     title="WireGuard vs OpenVPN: speed, security, when to use which"
     lede="WireGuard is 3-5× faster than OpenVPN on the same hardware, has a smaller attack surface, and is much simpler to configure. But OpenVPN still wins for specific use cases. This honest 2026 comparison covers what each does best."
   />
+  <ValueStrip />
 
   <section class="guide">
     <div class="wrap">

@@ -2,6 +2,7 @@
 import Base       from "../../../../layouts/Base.astro";
 import Nav        from "../../../../components/Nav.astro";
 import PageHero   from "../../../../components/PageHero.astro";
+import ValueStrip from "../../../../components/ValueStrip.astro";
 import Footer     from "../../../../components/Footer.astro";
 
 // ── Per-model TP-Link landing pages, programmatic via getStaticPaths.
@@ -241,6 +242,7 @@ const breadcrumbSchema = {
     title={`TP-Link ${model.model} WireGuard guide`}
     lede={`Set up WireGuard on the TP-Link ${model.model}. ${model.use_case}. Firmware floor, throughput, peer limit, exact menu path, and what to do when one ${model.model} grows into a mesh.`}
   />
+  <ValueStrip />
 
   <section class="model-page">
     <div class="wrap">

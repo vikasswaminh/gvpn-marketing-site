@@ -2,6 +2,7 @@
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
 import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
 import Footer     from "../../components/Footer.astro";
 
 // Target: "opnsense vs pfsense wireguard" + "pfsense vs opnsense" + variants.
@@ -81,6 +82,7 @@ const breadcrumbSchema = {
     title="OPNsense vs pfSense for WireGuard: 2026 side-by-side"
     lede="Both ship WireGuard natively today, but with meaningfully different implementations. This guide covers what's actually different, throughput on identical hardware, the licensing decision, and the practical reason most teams pick one over the other."
   />
+  <ValueStrip />
 
   <section class="guide">
     <div class="wrap">

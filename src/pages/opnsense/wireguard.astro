@@ -2,6 +2,7 @@
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
 import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
 import Footer     from "../../components/Footer.astro";
 
 // Primary keyword: "opnsense wireguard" (320/mo) + "opnsense wireguard setup" (140/mo, CPC $12.29)
@@ -114,6 +115,7 @@ const breadcrumbSchema = {
     title="OPNsense WireGuard: 2026 setup + multi-branch guide"
     lede="OPNsense ships WireGuard as a first-class kernel module since 24.1. This guide covers the setup in the web UI, the site-to-site pattern between two appliances, the firewall rules everyone forgets, and what changes when one branch grows into ten."
   />
+  <ValueStrip />
 
   <section class="guide">
     <div class="wrap">

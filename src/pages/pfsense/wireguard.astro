@@ -2,6 +2,7 @@
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
 import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
 import Footer     from "../../components/Footer.astro";
 
 // Primary: "pfsense wireguard" (210/mo, KD 2) + "pfsense wireguard site-to-site" (30/mo)
@@ -114,6 +115,7 @@ const breadcrumbSchema = {
     title="pfSense WireGuard: 2026 site-to-site + multi-branch mesh guide"
     lede="pfSense WireGuard has had a turbulent history but is stable on current releases. This guide covers the package install on pfSense CE 2.7, the integrated path on pfSense Plus 22.05+, the site-to-site pattern, and what changes when two appliances become ten branches."
   />
+  <ValueStrip />
 
   <section class="guide">
     <div class="wrap">

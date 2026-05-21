@@ -4,8 +4,8 @@ import Nav        from "../components/Nav.astro";
 import PageHero   from "../components/PageHero.astro";
 import Footer     from "../components/Footer.astro";
 
-const title = "Contact MeshWG — direct lines, hours, and our Bangalore campus";
-const description = "Reach the MeshWG team by phone or email. Direct line: +91-9611027980, Monday to Saturday, 10:00 AM to 6:00 PM IST. Campus: L-149, Sector 6, HSR Layout, Bengaluru 560102.";
+const title = "Contact MeshWG — 24/7 support, direct lines, and our Bangalore campus";
+const description = "MeshWG runs 24/7 human support — round-the-clock incident response for paid and free tiers alike. Direct line: +91-9611027980. Sales / billing / careers: Mon–Sat 10:00 AM – 6:00 PM IST. Campus: L-149, Sector 6, HSR Layout, Bengaluru 560102.";
 
 // Structured data for AEO. ContactPage explicitly declares this is the
 // canonical contact entry-point for the Organization defined in Base.astro;
@@ -37,7 +37,7 @@ const breadcrumbSchema = {
   <PageHero
     eyebrow="/ contact us"
     title="Talk to a human, not a ticket queue."
-    lede="Real numbers, real hours, real people. Pick the line that fits why you're reaching out — most replies land the same business day."
+    lede="Technical support runs 24/7 — there is always a human on call when a tunnel goes down. Sales, billing, and careers run Mon–Sat 10:00 AM – 6:00 PM IST. Pick the line that fits."
   />
 
   <section class="contact">
@@ -47,26 +47,27 @@ const breadcrumbSchema = {
       <div class="lead-grid">
 
         <div class="lead-card">
-          <div class="lead-eyebrow">📞 Direct line</div>
+          <div class="lead-eyebrow">🛟 24/7 support</div>
+          <a class="lead-h" href="mailto:support@meshwg.com">support@meshwg.com</a>
+          <div class="lead-meta">
+            <strong>Always on</strong> · acknowledgement within 30 minutes, any hour
+          </div>
+          <p class="lead-body">
+            Best for: tunnel down, handshake failure, branch can't reach HQ —
+            anything stopping your business right now. A human responds 24/7.
+          </p>
+        </div>
+
+        <div class="lead-card">
+          <div class="lead-eyebrow">📞 Sales &amp; billing</div>
           <a class="lead-h" href="tel:+919611027980">+91-9611027980</a>
           <div class="lead-meta">
             <strong>Mon–Sat</strong>, 10:00 AM – 6:00 PM IST
           </div>
           <p class="lead-body">
             Best for: sales conversations, pricing questions for &gt; 50 machines,
-            partner inquiries, urgent issues for paying customers.
-          </p>
-        </div>
-
-        <div class="lead-card">
-          <div class="lead-eyebrow">✉ Email</div>
-          <a class="lead-h" href="mailto:hello@meshwg.com">hello@meshwg.com</a>
-          <div class="lead-meta">
-            Acknowledgement within <strong>2 business hours</strong>; resolution typically same day.
-          </div>
-          <p class="lead-body">
-            Best for: anything that needs a paper trail — support tickets, billing,
-            account changes, security reports, press, partnerships.
+            partner inquiries, billing questions. Also reachable at
+            <a href="mailto:hello@meshwg.com">hello@meshwg.com</a>.
           </p>
         </div>
 
@@ -89,11 +90,12 @@ const breadcrumbSchema = {
           </div>
 
           <div class="route">
-            <div class="route-h">Customer support</div>
+            <div class="route-h">Customer support · 24/7</div>
             <a href="mailto:support@meshwg.com">support@meshwg.com</a>
-            <p>Router configs, mesh connectivity issues, anything that's stopping
-              your business from getting work done. Include your tenant email so
-              we can find your account fast.</p>
+            <p>Router configs, mesh connectivity issues, tunnel down — anything
+              stopping your business. <strong>Round-the-clock human response</strong>;
+              free and paid tiers alike. Include your tenant email so we find your
+              account immediately.</p>
           </div>
 
           <div class="route">
@@ -125,14 +127,16 @@ const breadcrumbSchema = {
         <div class="contact-block">
           <p><strong>📍 Address:</strong> L-149, Sector 6, HSR Layout, Bengaluru 560102, India</p>
           <p><strong>📞 Phone:</strong> <a href="tel:+919611027980">+91-9611027980</a></p>
-          <p><strong>🕘 Hours:</strong> Monday–Saturday, 10:00 AM – 6:00 PM IST</p>
+          <p><strong>🕘 Campus hours (sales, billing, careers):</strong> Mon–Sat, 10:00 AM – 6:00 PM IST</p>
+          <p><strong>🛟 Technical support:</strong> 24/7, <a href="mailto:support@meshwg.com">support@meshwg.com</a></p>
           <p><strong>✉ Reception:</strong> <a href="mailto:hello@meshwg.com">hello@meshwg.com</a></p>
         </div>
 
         <p class="muted">
-          <strong>Closed:</strong> Sundays and all gazetted holidays observed in
-          Karnataka. Outside hours, email lands in the same queue and is picked up
-          the next working day.
+          <strong>Campus visits:</strong> by appointment, during campus hours.
+          <strong>Technical support never closes</strong> — an on-call engineer
+          is reachable at <a href="mailto:support@meshwg.com">support@meshwg.com</a> any
+          hour, including Sundays and gazetted holidays.
         </p>
       </article>
 
@@ -140,11 +144,11 @@ const breadcrumbSchema = {
       <article>
         <h2>What to expect from us</h2>
         <ul class="bullets">
-          <li><strong>Acknowledgement</strong> — within 2 business hours on every channel during stated hours.</li>
-          <li><strong>Routine resolution</strong> — same business day for the majority of inbound queries.</li>
-          <li><strong>Sales follow-up</strong> — same business day for inquiries above 10 machines; a working-day later for general questions.</li>
-          <li><strong>Security disclosures</strong> — initial response within 24 hours, fix-or-mitigate plan within 5 business days.</li>
+          <li><strong>Technical support</strong> — 24/7. Acknowledgement within <strong>30 minutes</strong> any hour, resolution typically same day for routine issues, escalation path documented for outages.</li>
+          <li><strong>Sales / billing</strong> — acknowledgement within 2 business hours during campus hours (Mon–Sat 10:00–18:00 IST). Sales follow-up same business day for inquiries above 10 machines.</li>
+          <li><strong>Security disclosures</strong> — initial response within 24 hours, fix-or-mitigate plan within 5 business days. See <a href="/.well-known/security.txt">our security policy</a>.</li>
           <li><strong>Refund requests</strong> — see our <a href="/refund">cancellation and refund policy</a> for the exact timeline.</li>
+          <li><strong>Free tier vs paid tier</strong> — 24/7 support is identical for both. We don't gatekeep operational help behind a paywall.</li>
         </ul>
       </article>
 

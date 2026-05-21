@@ -109,6 +109,19 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
     "contactPoint": [
       {
         "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "support@meshwg.com",
+        "areaServed": "Worldwide",
+        "availableLanguage": ["en", "hi"],
+        "hoursAvailable": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      },
+      {
+        "@type": "ContactPoint",
         "telephone": "+91-9611027980",
         "contactType": "sales",
         "email": "hello@meshwg.com",
@@ -120,13 +133,6 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
           "opens": "10:00",
           "closes": "18:00"
         }
-      },
-      {
-        "@type": "ContactPoint",
-        "contactType": "customer support",
-        "email": "support@meshwg.com",
-        "areaServed": "IN",
-        "availableLanguage": ["en", "hi"]
       },
       {
         "@type": "ContactPoint",

@@ -1,0 +1,192 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "Tailscale vs NetBird in 2026: hosted-first vs self-host-first WireGuard mesh";
+const description = "Tailscale and NetBird both wrap WireGuard with managed coordination. Tailscale is hosted-first with Headscale for self-host. NetBird is self-host-first with managed SaaS. This honest comparison covers pricing, hosting model, and ecosystem.";
+const canonical = "https://meshwg.com/compare/tailscale-vs-netbird/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  { q: "Is NetBird a Tailscale clone?", a: "NetBird is a spiritual analog rather than a clone. Both wrap WireGuard with a managed coordination layer that handles key exchange, peer discovery, and NAT traversal. The technical surface is similar — both have official clients on macOS/Windows/Linux/iOS/Android, both rely on STUN/relay servers for double-NAT scenarios, both support ACL policies. The differentiation is at the product centre: NetBird's entire stack (clients + management plane) is BSD-3-licensed and self-host friendly by design; Tailscale's clients are open source but its coordination server is proprietary, with Headscale as a community-maintained open re-implementation." },
+  { q: "Which is cheaper, Tailscale or NetBird?", a: "Free self-host NetBird is cheapest by definition (only your server cost, typically $5-20/month on a small VPS). For managed: Tailscale Business is $6/user/month; NetBird Cloud is $5/user/month. Per-user pricing means both scale linearly with team size, so for a 50-person company you're looking at $250-300/month either way. The substantive difference for cost-sensitive operators is the self-host path — NetBird's official one-command install (Docker Compose) is the friendliest; Tailscale-via-Headscale requires running a third-party project the parent vendor doesn't formally support." },
+  { q: "Can NetBird and Tailscale interoperate?", a: "No. They use WireGuard at the data plane but their coordination layers are entirely separate. A device on Tailscale's tailnet cannot directly join a NetBird network and vice versa. Some operators run both for different purposes (Tailscale for personal, NetBird for work; or vice versa) but the two networks remain disjoint. Where interoperation matters — a branch office in one ecosystem talking to an HQ in another — the right answer is to standardise on one." },
+  { q: "Is NetBird production-ready?", a: "Yes — NetBird Cloud has paying business customers, the open-source stack has been deployed at multi-100-node scale by community members, and the project receives steady development. Where NetBird trails Tailscale is breadth of integrations (Kubernetes operators, CI/CD plugins, vendor partnerships) and depth of documentation. Tailscale has a larger ecosystem because it's been at it longer and is better funded. Both are production-grade for the core mesh use case." },
+  { q: "Why pick NetBird over Tailscale?", a: "Three real reasons. First, you want fully open-source from clients to control plane — NetBird is BSD-3 end to end, Tailscale's coordination server is proprietary. Second, you want self-host as a first-class option, not a community workaround — NetBird's docs and installer prioritise self-host; Tailscale's prioritise hosted. Third, you have data residency requirements that the Tailscale hosted offering can't meet — running NetBird on your own infrastructure puts every byte of coordination metadata under your control." },
+  { q: "Is there a third option that fits multi-branch SMBs better than either?", a: "Yes — both Tailscale and NetBird are agent-based, meaning every device that joins the mesh needs the client installed. For a multi-branch business with non-laptop devices behind each site router (POS terminals, IP cameras, printers, IoT), per-device install isn't viable and per-user pricing scales badly. MeshWG puts the WireGuard tunnel on the router itself so the entire LAN joins automatically; pricing is per-router (₹349 ≈ $4.20/month, 2 free). For 'I have routers at multiple sites and want them on one network,' MeshWG wins over both. For 'I have users with laptops and want them on one network,' Tailscale or NetBird wins." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["Tailscale vs NetBird", "netbird vs tailscale", "netbird open source", "self-hosted tailscale alternative"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",    "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://meshwg.com/compare/" },
+    { "@type": "ListItem", "position": 3, "name": "Tailscale vs NetBird", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ compare · tailscale vs netbird"
+    title="Tailscale vs NetBird: hosted-first vs self-host-first"
+    lede="Both wrap WireGuard with managed coordination. The honest difference: Tailscale is hosted-first with Headscale as the community self-host path. NetBird is self-host-first with a hosted SaaS layer."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#short-answer">The short answer</a></li>
+          <li><a href="#table">Side-by-side comparison</a></li>
+          <li><a href="#license">Open source: client vs server</a></li>
+          <li><a href="#self-host">The self-host path</a></li>
+          <li><a href="#pricing">Pricing at SMB scale</a></li>
+          <li><a href="#pick">When to pick which</a></li>
+          <li><a href="#third">When to pick neither</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="short-answer">The short answer</h2>
+        <p><strong>Tailscale and NetBird are spiritual analogs — both wrap WireGuard with a managed coordination layer.</strong> The substantive differences:</p>
+        <ul class="bullets">
+          <li><strong>NetBird is fully open-source (BSD-3) clients <em>and</em> control plane.</strong> Tailscale's clients are open; its coordination server is proprietary.</li>
+          <li><strong>NetBird's self-host story is first-class.</strong> One-command Docker install, official documentation, paid commercial support if you want it. Tailscale's self-host path goes through Headscale, a community-maintained re-implementation.</li>
+          <li><strong>Tailscale has a larger ecosystem.</strong> More integrations (Kubernetes, GitHub Actions, AWS, Synology), more polished clients, broader documentation. NetBird is catching up but is several years behind.</li>
+          <li><strong>Pricing is similar at SMB scale.</strong> NetBird Cloud $5/user/month, Tailscale Business $6/user/month. Self-host NetBird is free beyond infrastructure cost.</li>
+        </ul>
+
+        <h2 id="table">Side-by-side comparison</h2>
+        <table class="cmp">
+          <thead><tr><th>Aspect</th><th>Tailscale</th><th>NetBird</th></tr></thead>
+          <tbody>
+            <tr><td>Data plane</td><td>WireGuard</td><td>WireGuard</td></tr>
+            <tr><td>Coordination server</td><td>Proprietary (or Headscale for self-host)</td><td>BSD-3, official self-host supported</td></tr>
+            <tr><td>Official clients</td><td>macOS, Windows, Linux, iOS, Android, Apple TV</td><td>macOS, Windows, Linux, iOS, Android</td></tr>
+            <tr><td>Free tier</td><td>3 users, personal use</td><td>Free self-host; cloud free up to 5 peers</td></tr>
+            <tr><td>Paid tier</td><td>$6/user/month (Business)</td><td>$5/user/month (Cloud)</td></tr>
+            <tr><td>Self-host model</td><td>Headscale (community)</td><td>NetBird stack (official)</td></tr>
+            <tr><td>SSO</td><td>Google, Microsoft, Okta, custom OIDC</td><td>Google, Microsoft, Okta, Keycloak, custom OIDC</td></tr>
+            <tr><td>ACLs</td><td>JSON-based ACL DSL</td><td>JSON-based ACL DSL</td></tr>
+            <tr><td>Subnet routing</td><td>Subnet router feature</td><td>Routing peers</td></tr>
+            <tr><td>NAT traversal</td><td>DERP relay servers</td><td>STUN/TURN + custom relays</td></tr>
+            <tr><td>Mobile UX</td><td>More polished</td><td>Functional, improving</td></tr>
+            <tr><td>Ecosystem maturity</td><td>Established (2019+)</td><td>Growing (2022+)</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="license">Open source: client vs server</h2>
+        <p>Both products' <strong>clients</strong> are open-source — you can read the code, build it yourself, audit the cryptography. The difference is in the <strong>coordination server</strong>:</p>
+        <ul class="bullets">
+          <li><strong>Tailscale's coordination server is proprietary.</strong> Tailscale Inc. operates it; you can't run their server code yourself. <a href="https://github.com/juanfont/headscale" rel="noopener" target="_blank">Headscale</a> is a community re-implementation that the Tailscale clients can authenticate against — but it's not maintained by Tailscale and behaves like a separate project.</li>
+          <li><strong>NetBird's entire stack is BSD-3.</strong> The management plane, the signal server, the relay (TURN), the clients — all licensed the same way. The hosted NetBird Cloud runs this same code; you can run it yourself on a $5/month VPS and get the same functionality.</li>
+        </ul>
+        <p>For most operators this distinction doesn't matter — you're going to use the hosted version of either. For organisations with policy requirements around fully-FOSS infrastructure (regulated industries, sovereign-cloud requirements, security-conscious enterprises), NetBird's structure is materially easier to defend in an audit.</p>
+
+        <h2 id="self-host">The self-host path</h2>
+        <p>NetBird self-host: one <code>docker-compose up</code> on a small server, configure DNS for your management URL, point clients at it. The whole stack including the management UI runs in containers. NetBird documents this as the default path; commercial support is available from the company that develops the project.</p>
+        <p>Tailscale self-host: install <a href="https://github.com/juanfont/headscale" rel="noopener" target="_blank">Headscale</a> (a Go binary), configure auth, point the official Tailscale clients at your Headscale instance instead of Tailscale's. Works correctly; community-maintained; you'll occasionally hit edge cases where new Tailscale client features lag in Headscale support. Tailscale Inc. doesn't formally support Headscale users; it's tolerated.</p>
+        <p>If self-host is your primary deployment mode, NetBird is the lower-friction path. If hosted is your primary deployment mode and self-host is an option you want to keep in your back pocket, Tailscale + Headscale works.</p>
+
+        <h2 id="pricing">Pricing at SMB scale</h2>
+        <p>For a 25-person team across one office, all managed:</p>
+        <table class="cmp">
+          <thead><tr><th>Option</th><th>Monthly cost</th><th>What you get</th></tr></thead>
+          <tbody>
+            <tr><td>Tailscale Business</td><td>$150 (25 × $6)</td><td>Hosted; full feature set; commercial support</td></tr>
+            <tr><td>NetBird Cloud</td><td>$125 (25 × $5)</td><td>Hosted; full feature set; commercial support</td></tr>
+            <tr><td>NetBird self-host on a $5 VPS</td><td>$5 (just the VPS)</td><td>You operate it; community support; no commercial SLA</td></tr>
+            <tr><td>Tailscale via Headscale</td><td>$5 (just the VPS)</td><td>You operate Headscale; community support; Tailscale's UX</td></tr>
+          </tbody>
+        </table>
+        <p>Tailscale Business is 20% more expensive than NetBird Cloud for the same workload at this scale. For a 50-person company that's $50/month difference; for a 200-person company it's $200/month.</p>
+
+        <h2 id="pick">When to pick which</h2>
+        <ul class="bullets">
+          <li><strong>Pick Tailscale</strong> when: you want the most polished clients and broadest ecosystem; you're okay with proprietary coordination; you'll likely never self-host.</li>
+          <li><strong>Pick NetBird</strong> when: open-source is a hard requirement; self-host is a serious deployment option; cost matters at 50+ users.</li>
+          <li><strong>Pick Headscale</strong> when: you specifically want Tailscale's client UX with a self-hosted coordination server. You're effectively running Tailscale's protocol on your terms.</li>
+        </ul>
+
+        <h2 id="third">When to pick neither</h2>
+        <p>Both are agent-based — every device joining the mesh runs a client. For SMB multi-branch businesses with devices that can't run an agent (POS terminals, IP cameras, printers, BACnet thermostats), the agent model doesn't fit. The right shape is router-based managed WireGuard: the tunnel terminates on the router so every LAN device joins automatically.</p>
+        <p>MeshWG is built for that shape specifically. Per-router pricing instead of per-user, generated paste-ready config for 8 router-firmware families, CGNAT relay built in. 10 branches with 100 staff = $42/month on MeshWG vs $600/month on Tailscale Business or $500/month on NetBird Cloud.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>For router-based multi-branch deployments, MeshWG's free tier is the fastest way to evaluate — two routers, no card.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/alternatives/tailscale/">All 6 Tailscale alternatives</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/compare/tailscale-vs-wireguard/">Tailscale vs WireGuard</a> ·
+            <a href="/compare/tailscale-vs-headscale/">Tailscale vs Headscale</a> ·
+            <a href="/wireguard-router/">WireGuard router buyer's guide</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

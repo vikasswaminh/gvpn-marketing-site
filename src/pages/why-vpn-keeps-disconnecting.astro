@@ -1,0 +1,183 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import ValueStrip from "../components/ValueStrip.astro";
+import Footer     from "../components/Footer.astro";
+
+// Problem-driven page: "why does my vpn keeps disconnecting" (590 vol, AIO, KD 6)
+const title = "Why does my VPN keep disconnecting? 7 causes and how to fix them in 2026";
+const description = "VPN dropping every few minutes? This honest 2026 troubleshooting guide covers the seven most common causes — NAT timeout, MTU mismatch, ISP throttling, kernel bugs, DNS, MTU clipping, protocol issues — and the exact fix for each.";
+const canonical = "https://meshwg.com/why-vpn-keeps-disconnecting/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  { q: "Why does my VPN keep disconnecting every few minutes?", a: "The most common cause is NAT-table timeout on a router between you and the VPN server. UDP-based VPN protocols (WireGuard, OpenVPN-UDP) rely on a NAT entry being active in every intermediate router; if no packet flows for ~30 seconds, that entry expires and the tunnel falls silent until the next outbound packet re-establishes it. Set PersistentKeepalive=21 (seconds) on your VPN client to send a tiny keepalive packet every 21 seconds. This is the single most common cause of 'VPN disconnects every few minutes,' and the fix is one configuration line." },
+  { q: "Why does my VPN disconnect when I move between WiFi networks?", a: "Most VPN clients re-establish the tunnel when the underlying network interface changes. WireGuard handles this well — it sends new handshakes from the new IP automatically. OpenVPN typically takes 2-30 seconds depending on its keepalive settings. IPsec is the worst case, often requiring a full re-IKE which takes longer. If roaming is your primary use case, WireGuard-based VPNs (Tailscale, MeshWG, raw WireGuard) handle it most cleanly." },
+  { q: "Why does my VPN slow down before disconnecting?", a: "Two common patterns. First, MTU clipping: if the VPN's packet size exceeds the underlying network MTU (typical on PPPoE / CGNAT), large packets are dropped silently, retransmits accumulate, throughput collapses, and the connection appears to die. Fix by setting your VPN client's MTU to ~1380 (vs the default 1420). Second, ISP throttling: some ISPs detect VPN UDP flows and rate-limit them; this manifests as 'works fine for a minute then crawls.' Switch to a different listen port (not 1194 or 51820), or use TCP-based VPN if available." },
+  { q: "Why does my VPN disconnect overnight?", a: "Three common causes. (1) ISP-side IP rotation: residential and CGNAT ISPs sometimes rotate your public IP overnight; if your VPN config has a static endpoint pointing at a similarly-affected server, both sides need to discover the new IPs. (2) ISP-level keep-alive timeout: some ISPs reset long-running UDP flows after 12-24 hours regardless of activity. (3) Router reboot: some consumer routers auto-reboot nightly for firmware update reasons. Persistent keepalive on the VPN client side handles (1) and (2); enabling auto-reconnect on the router handles (3)." },
+  { q: "How do I tell what's causing my VPN to disconnect?", a: "Start with the VPN client's logs. WireGuard: 'wg show' shows last-handshake timestamps per peer — a stale timestamp means the tunnel has been silent. OpenVPN: the client log shows 'TLS Error' or 'Connection reset' messages with timestamps. Correlate with what was happening on the network at that moment (laptop sleep, network interface change, ISP outage). If the disconnects are periodic (every N minutes consistently), the cause is almost always NAT timeout — fix with PersistentKeepalive=21. If they're random / correlated with traffic spikes, suspect MTU clipping or ISP throttling." },
+  { q: "Does MeshWG help with these disconnect issues?", a: "Yes, structurally. MeshWG's defaults handle the four most common disconnect causes automatically: persistent keepalive set to 21 seconds on every generated configuration, MTU set to 1380 (safe under most Indian ISP PPPoE / CGNAT conditions), CGNAT relay built in for double-NAT scenarios where peers can't directly handshake, and 24/7 support if a disconnect pattern doesn't match these common causes. For SMB multi-branch deployments where 'why does the VPN keep dropping at branch 3?' is the recurring question, MeshWG's defaults eliminate most of those calls." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["VPN keeps disconnecting", "VPN disconnects", "why does my VPN drop", "VPN troubleshooting"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const howToSchema = { "@context": "https://schema.org", "@type": "HowTo",
+  "name": "Diagnose why your VPN keeps disconnecting",
+  "totalTime": "PT15M",
+  "step": [
+    { "@type": "HowToStep", "name": "Check the VPN client logs", "text": "WireGuard: 'wg show' to see last-handshake per peer. OpenVPN: review client log for TLS errors. Note the disconnect timestamps." },
+    { "@type": "HowToStep", "name": "Check pattern: periodic vs random", "text": "Periodic (every N minutes consistently) usually means NAT timeout. Random / traffic-correlated usually means MTU clipping or ISP throttling." },
+    { "@type": "HowToStep", "name": "If periodic: set PersistentKeepalive", "text": "Add PersistentKeepalive=21 to your WireGuard client config, or --keepalive 10 60 to OpenVPN. This sends a tiny packet every 21 seconds to keep NAT entries alive." },
+    { "@type": "HowToStep", "name": "If random with traffic correlation: lower MTU", "text": "Set the VPN client's MTU to 1380 (vs default 1420). Common on PPPoE / CGNAT ISP paths." },
+    { "@type": "HowToStep", "name": "If still flapping: switch listen port", "text": "Some ISPs rate-limit known VPN ports (1194 for OpenVPN, 51820 for WireGuard). Try a non-standard port like 51847 or 51842." },
+    { "@type": "HowToStep", "name": "If overnight only: check router auto-reboot", "text": "Some consumer routers auto-reboot nightly. Disable or schedule the VPN to auto-reconnect after." }
+  ]
+};
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Why VPN keeps disconnecting", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ troubleshooting · vpn disconnects"
+    title="Why does my VPN keep disconnecting?"
+    lede="VPN dropping every few minutes? This guide covers the seven most common causes — NAT timeout, MTU mismatch, ISP throttling, DNS, kernel bugs, packet loss, and ISP-side rotation — and the exact fix for each."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#diagnose">First: diagnose the pattern</a></li>
+          <li><a href="#nat-timeout">Cause 1: NAT-table timeout (most common)</a></li>
+          <li><a href="#mtu">Cause 2: MTU clipping on PPPoE / CGNAT</a></li>
+          <li><a href="#isp-throttle">Cause 3: ISP rate-limiting VPN UDP</a></li>
+          <li><a href="#wifi-roam">Cause 4: WiFi network change</a></li>
+          <li><a href="#kernel">Cause 5: Kernel bugs or client version</a></li>
+          <li><a href="#dns">Cause 6: DNS resolution failures</a></li>
+          <li><a href="#overnight">Cause 7: Overnight IP rotation</a></li>
+          <li><a href="#switch">When to switch VPN tools</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="diagnose">First: diagnose the pattern</h2>
+        <p>Before fixing anything, identify the pattern. Look at the VPN client's logs (WireGuard: <code>wg show</code> + system log; OpenVPN: the client log file). Note the disconnect timestamps. Three patterns map to three different causes:</p>
+        <ul class="bullets">
+          <li><strong>Periodic, predictable</strong> (every N minutes, consistent): NAT-table timeout. <a href="#nat-timeout">See Cause 1</a>.</li>
+          <li><strong>Random, correlated with traffic spikes</strong> (large downloads, video calls): MTU clipping. <a href="#mtu">See Cause 2</a>.</li>
+          <li><strong>Random, not correlated with anything</strong>: ISP throttling or kernel issues. <a href="#isp-throttle">See Cause 3</a>.</li>
+        </ul>
+
+        <h2 id="nat-timeout">Cause 1: NAT-table timeout (most common, ~60% of cases)</h2>
+        <p><strong>What's happening:</strong> your VPN traffic transits at least one router with NAT (Network Address Translation). Every NAT entry has a timeout — if no packet flows for ~30 seconds, the entry is evicted. When the tunnel tries to send packets again, the NAT box doesn't know where to send return traffic and the tunnel appears broken until a new entry is established.</p>
+        <p><strong>Symptom:</strong> VPN drops every 1-5 minutes, very consistently. <code>wg show</code> shows the last-handshake timestamp growing stale.</p>
+        <p><strong>Fix:</strong> add <code>PersistentKeepalive = 21</code> to your WireGuard config (or <code>--keepalive 10 60</code> to OpenVPN). This sends a tiny ~32-byte packet every 21 seconds to keep the NAT entry alive. 21 seconds is the sweet spot — most consumer NAT timeouts are 30+ seconds, so 21 gives 9 seconds of slack; bandwidth cost is negligible (~1.5 bits/second).</p>
+
+        <h2 id="mtu">Cause 2: MTU clipping on PPPoE / CGNAT</h2>
+        <p><strong>What's happening:</strong> your underlying network has a smaller MTU than your VPN client assumes. WireGuard's default MTU is 1420 (1500 - 80 bytes of WG headers). If your ISP runs PPPoE (1492 MTU underneath), CGNAT (often less), or any path with smaller MTU, large packets get fragmented or dropped silently. Small packets work; large packets (video, file transfers) hang.</p>
+        <p><strong>Symptom:</strong> VPN works for SSH and chat but breaks during downloads / video / large file transfers. Connection appears to "freeze."</p>
+        <p><strong>Fix:</strong> set MTU explicitly in your VPN client config. <code>MTU = 1380</code> in WireGuard config is safe for most Indian ISP PPPoE / CGNAT conditions. Less aggressive than the maximum, but more reliable. MeshWG generates configs with MTU=1280 by default for this exact reason.</p>
+
+        <h2 id="isp-throttle">Cause 3: ISP rate-limiting VPN UDP</h2>
+        <p><strong>What's happening:</strong> some ISPs detect known VPN UDP flows (typically port 1194 for OpenVPN, 51820 for WireGuard) and rate-limit them aggressively. The tunnel doesn't necessarily disconnect, but it slows to single-digit Mbps and may appear unstable.</p>
+        <p><strong>Symptom:</strong> tunnel works perfectly on one network, abysmally on another (same hardware, same config). Throughput tests inside the tunnel show 1-5 Mbps despite a much faster underlying WAN.</p>
+        <p><strong>Fix:</strong> change the VPN's listen port to something non-default. <code>ListenPort = 51847</code> or <code>51842</code> instead of 51820 typically avoids the throttle. Some ISPs are more aggressive and require switching to TCP-based VPN (OpenVPN/TCP over 443) entirely.</p>
+
+        <h2 id="wifi-roam">Cause 4: WiFi network change</h2>
+        <p><strong>What's happening:</strong> you move between WiFi networks (home → coffee shop → office) and the VPN doesn't re-establish cleanly on the new network's underlying interface.</p>
+        <p><strong>Symptom:</strong> VPN works on the old network, doesn't work on the new one until you manually disconnect / reconnect.</p>
+        <p><strong>Fix:</strong> use a VPN client that handles network changes well. WireGuard and Tailscale handle this elegantly; OpenVPN takes 2-30 seconds depending on keepalive settings; IPsec is the worst case. If you roam often, prefer WireGuard-based products.</p>
+
+        <h2 id="kernel">Cause 5: Kernel bugs or client version</h2>
+        <p><strong>What's happening:</strong> the WireGuard kernel module on your OS has a known issue. Common on older Linux kernels (5.5-5.8 had a couple of edge-case bugs around peer rotation) and certain combinations of Windows + specific VPN clients.</p>
+        <p><strong>Symptom:</strong> disconnects correlate with specific kernel events (sleep/wake, fast NIC failover, system updates).</p>
+        <p><strong>Fix:</strong> update to current kernel / current VPN client. Most kernel-side WG issues are resolved by 5.15+; on Windows, use the official WireGuard for Windows client v0.5.x or later. Avoid running multiple WireGuard implementations simultaneously (kernel module + wireguard-go) — they sometimes fight over the same interface.</p>
+
+        <h2 id="dns">Cause 6: DNS resolution failures</h2>
+        <p><strong>What's happening:</strong> your VPN endpoint is specified as a hostname (e.g. <code>peer.example.com</code>) and DNS resolution fails — perhaps because the VPN tunnel is supposed to handle DNS but it's down, creating a chicken-and-egg loop.</p>
+        <p><strong>Symptom:</strong> initial tunnel fails to come up; reconnect attempts also fail. Pings to the hostname time out.</p>
+        <p><strong>Fix:</strong> in your VPN client config, use an IP address rather than a hostname for the endpoint — or ensure DNS resolution works without the VPN being up (don't put your only DNS server behind the VPN).</p>
+
+        <h2 id="overnight">Cause 7: Overnight IP rotation or router reboot</h2>
+        <p><strong>What's happening:</strong> your ISP rotates your public IP overnight (common on residential / CGNAT), or your router auto-reboots for firmware updates.</p>
+        <p><strong>Symptom:</strong> VPN works during the day, disconnects between 2-5 AM, comes back on its own (or doesn't until manual reconnect in the morning).</p>
+        <p><strong>Fix:</strong> persistent keepalive + auto-reconnect on the VPN client side handles IP rotation transparently for WireGuard. For OpenVPN, ensure <code>--persist-tun</code> and <code>--ping-restart</code> are set. For router auto-reboots, schedule them outside business hours or disable the auto-reboot feature.</p>
+
+        <h2 id="switch">When to switch VPN tools</h2>
+        <p>If you've tried all seven fixes and the VPN still drops, the problem may be the VPN product itself:</p>
+        <ul class="bullets">
+          <li><strong>Frequent issues on OpenVPN → switch to WireGuard.</strong> WireGuard's connection model is structurally less prone to the disconnects this guide covers.</li>
+          <li><strong>Frequent issues on a router-vendor's own VPN UI → consider a managed mesh.</strong> Consumer router VPN implementations are highly variable in quality; managed mesh products (MeshWG, Tailscale, NetBird) ship more reliable defaults.</li>
+          <li><strong>Frequent issues across multi-branch deployments → consider router-based managed mesh.</strong> For SMB multi-site, MeshWG's defaults (persistent keepalive 21s, MTU 1280, CGNAT relay built in) eliminate the four most common branch-VPN disconnect causes structurally.</li>
+        </ul>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>If you're tired of debugging VPN disconnects across branches, MeshWG's defaults handle them automatically — free for 2 routers, indefinite.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/what-is-wireguard/">What is WireGuard?</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/wireguard-router/">8 router families that ship WireGuard</a> ·
+            <a href="/compare/wireguard-vs-openvpn/">WireGuard vs OpenVPN</a> ·
+            <a href="/contact">Contact 24/7 support</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; } .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } }
+</style>

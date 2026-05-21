@@ -1,0 +1,149 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "Tailscale vs ZeroTier in 2026: L3 WireGuard mesh vs L2 Ethernet emulation";
+const description = "Tailscale uses WireGuard at Layer 3. ZeroTier emulates Ethernet at Layer 2. Different protocols, different design philosophies, different right answers. This honest comparison covers what each does and when each makes sense.";
+const canonical = "https://meshwg.com/compare/tailscale-vs-zerotier/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  { q: "What is the difference between Tailscale and ZeroTier?", a: "Tailscale uses the WireGuard protocol and operates at Layer 3 (IP). ZeroTier built its own protocol and operates at Layer 2 (Ethernet emulation). The practical implication: ZeroTier carries protocols that need Layer 2 — broadcast, multicast, older Windows file sharing, certain industrial / IoT protocols — that Tailscale's L3 model can't transport. Tailscale typically has higher throughput on modern hardware because WireGuard has kernel implementations on most platforms; ZeroTier runs in userspace." },
+  { q: "Is ZeroTier faster than Tailscale?", a: "On modern Linux with kernel WireGuard, Tailscale is consistently faster — 2-3× single-tunnel throughput on identical hardware because WireGuard runs in the kernel and ZeroTier runs in userspace. On platforms where Tailscale also runs in userspace (older macOS, Windows pre-kernel-WG), the gap narrows but Tailscale typically still wins on throughput. Where ZeroTier wins on performance is latency for very small packets — its protocol is leaner than WireGuard's wrapper for tiny payloads, relevant for some industrial control workloads." },
+  { q: "Why would I pick ZeroTier over Tailscale?", a: "Three real reasons. First, Layer-2 protocols: you need broadcast, multicast, or older Windows file-sharing to traverse the VPN, and these don't survive Layer-3 routing. Second, true bridged networks: you want devices on different sites to appear on the same Ethernet segment (relevant for some legacy enterprise and industrial deployments). Third, specific legacy software that hard-codes broadcast discovery (some game LAN protocols, some industrial automation, some MDNS-heavy applications). For modern protocols that work over plain L3, Tailscale's WireGuard data plane usually wins." },
+  { q: "Is ZeroTier open source?", a: "ZeroTier's code is dual-licensed: BSL (Business Source License) for the core, with an Apache transition after 4 years. The hosted coordination server (my.zerotier.com) is proprietary, similar to Tailscale's setup. A self-hostable controller called ztncui exists; ZeroTier also offers paid self-host plans. Tailscale's clients are open (BSD), coordination server is proprietary; Headscale is community-built open-source coordination. The licensing pictures are similar enough that license choice isn't usually the deciding factor." },
+  { q: "Can ZeroTier and Tailscale run side by side?", a: "Yes — they don't conflict at the network stack because they create separate virtual interfaces. Some operators run Tailscale for cross-platform user access and ZeroTier for specific L2 workloads on the same machines. The cognitive cost of running two mesh products is real, though; for new deployments, picking one and matching the workload to its strengths is the cleaner path." },
+  { q: "What if I want neither Tailscale nor ZeroTier?", a: "For SMB multi-branch use cases (offices with routers, mixed laptop / desktop / printer / camera workloads, all over standard L3 protocols) MeshWG is the better fit. Router-based instead of per-device-agent, per-router pricing instead of per-user, generated paste-ready config in each vendor's native format. Built specifically for the shape neither Tailscale nor ZeroTier is optimised for." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["Tailscale vs ZeroTier", "zerotier vs tailscale", "tailscale zerotier comparison"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",    "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://meshwg.com/compare/" },
+    { "@type": "ListItem", "position": 3, "name": "Tailscale vs ZeroTier", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ compare · tailscale vs zerotier"
+    title="Tailscale vs ZeroTier: L3 WireGuard vs L2 Ethernet emulation"
+    lede="Different protocols, different design philosophies, different right answers. Tailscale uses WireGuard at Layer 3. ZeroTier emulates Ethernet at Layer 2. The choice depends on what protocols you need the VPN to carry."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#short-answer">The short answer</a></li>
+          <li><a href="#table">Side-by-side comparison</a></li>
+          <li><a href="#l2-vs-l3">Layer 2 vs Layer 3: what it means in practice</a></li>
+          <li><a href="#perf">Throughput</a></li>
+          <li><a href="#pick">When to pick which</a></li>
+          <li><a href="#third">When to pick neither</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="short-answer">The short answer</h2>
+        <p><strong>If you need Layer 2 (broadcast, multicast, MDNS-heavy apps, legacy Windows file sharing across sites): ZeroTier. Otherwise: Tailscale.</strong> The protocols themselves are unrelated — Tailscale wraps WireGuard; ZeroTier built its own Layer-2 emulation. Throughput on modern Linux favours Tailscale (kernel WireGuard); workload compatibility for legacy / industrial / gaming protocols favours ZeroTier.</p>
+
+        <h2 id="table">Side-by-side comparison</h2>
+        <table class="cmp">
+          <thead><tr><th>Aspect</th><th>Tailscale</th><th>ZeroTier</th></tr></thead>
+          <tbody>
+            <tr><td>Protocol</td><td>WireGuard (Noise_IK)</td><td>Proprietary L2 emulation</td></tr>
+            <tr><td>OSI layer</td><td>Layer 3 (IP routing)</td><td>Layer 2 (Ethernet emulation)</td></tr>
+            <tr><td>Throughput, modern Linux</td><td>~1 Gbps (kernel)</td><td>~300-500 Mbps (userspace)</td></tr>
+            <tr><td>Throughput, macOS / Windows</td><td>~300-500 Mbps (userspace)</td><td>~250-400 Mbps (userspace)</td></tr>
+            <tr><td>Carries L2 protocols</td><td>No (broadcast, multicast filtered)</td><td>Yes (full Ethernet emulation)</td></tr>
+            <tr><td>License (client)</td><td>BSD</td><td>BSL (transitions to Apache 2.0)</td></tr>
+            <tr><td>License (server)</td><td>Proprietary (Headscale alt)</td><td>Proprietary (ztncui alt)</td></tr>
+            <tr><td>Free tier</td><td>3 users, personal</td><td>25 devices, any use</td></tr>
+            <tr><td>Paid entry</td><td>$6/user/month</td><td>$5/month at first paid tier</td></tr>
+            <tr><td>SSO / ACL</td><td>Strong</td><td>Available; less polished UI</td></tr>
+            <tr><td>NAT traversal</td><td>DERP relays</td><td>Direct UDP, with relay fallback</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="l2-vs-l3">Layer 2 vs Layer 3: what it means in practice</h2>
+        <p>Tailscale operates at Layer 3: each device gets an IP, packets are routed between IPs. Anything that requires sharing a broadcast domain (mDNS, NetBIOS, some discovery protocols, some game LAN auto-discovery, broadcast-based industrial protocols like BACnet) doesn't work across a Tailscale connection without an extra mechanism (mDNS reflector, broadcast relay, etc).</p>
+        <p>ZeroTier emulates Ethernet: devices in a ZeroTier network see each other as if they were on the same physical LAN. Broadcasts work natively. mDNS announcements propagate. Old Windows file shares using legacy NetBIOS discovery just work. The trade-off is performance overhead and broadcast traffic on the WAN.</p>
+        <p>Workloads where this distinction matters: industrial automation (BACnet, Modbus broadcast variants), older Windows networks pre-2010, certain game LAN protocols, AV/video deployments using mDNS-based discovery (Dante, AVB).</p>
+
+        <h2 id="perf">Throughput</h2>
+        <p>WireGuard's kernel implementation is the fastest mainstream userspace-or-kernel VPN protocol available. Tailscale on Linux with kernel WireGuard gets the full benefit. ZeroTier runs entirely in userspace on every platform and carries Ethernet framing overhead. On a typical 200-Mbps SMB fibre uplink the difference doesn't matter (both saturate the WAN); on 1 Gbps+ uplinks Tailscale meaningfully outperforms ZeroTier.</p>
+
+        <h2 id="pick">When to pick which</h2>
+        <ul class="bullets">
+          <li><strong>Pick Tailscale</strong> for modern L3 workloads — web apps, SSH, RDP, modern file shares, anything that survives IP routing.</li>
+          <li><strong>Pick ZeroTier</strong> when you have specific L2 requirements — industrial protocols, legacy Windows networking, broadcast-based discovery you can't refactor.</li>
+        </ul>
+
+        <h2 id="third">When to pick neither</h2>
+        <p>For SMB multi-branch with standard L3 workloads, MeshWG fits better than either: router-based instead of per-device-agent, per-router pricing instead of per-user, generated paste-ready config in each vendor's native format. 10 branches with 100 staff = $42/month on MeshWG vs $600/month on Tailscale Business or roughly $250-400/month on ZeroTier Business.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>For L3-compatible multi-branch use cases, MeshWG's free tier covers 2 routers — fastest path to evaluate.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/alternatives/tailscale/">All 6 Tailscale alternatives</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

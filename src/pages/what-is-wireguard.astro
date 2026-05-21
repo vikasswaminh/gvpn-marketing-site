@@ -1,0 +1,210 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import ValueStrip from "../components/ValueStrip.astro";
+import Footer     from "../components/Footer.astro";
+
+// Head-term fundamentals pillar: "what is wireguard" (1,300 vol, AI Overview, KD 30)
+const title = "What is WireGuard? A 2026 plain-English guide to the protocol";
+const description = "WireGuard is a modern VPN protocol — faster than OpenVPN, simpler than IPsec, baked into the Linux kernel since 2020. This plain-English guide covers what it does, how it works, where it's used, and the honest trade-offs versus older protocols.";
+const canonical = "https://meshwg.com/what-is-wireguard/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  { q: "What is WireGuard in simple terms?", a: "WireGuard is a VPN protocol — a set of rules for two computers to send encrypted packets to each other through an untrusted network. Compared to older VPN protocols (OpenVPN, IPsec, L2TP), WireGuard is simpler (about 4,000 lines of code vs OpenVPN's 120,000), faster (3-5× the throughput on the same hardware), and uses only modern cryptography (ChaCha20-Poly1305, Curve25519, BLAKE2s). It was created by Jason A. Donenfeld and merged into the Linux kernel in 2020." },
+  { q: "Is WireGuard a VPN?", a: "WireGuard is the underlying protocol that VPN products use. Calling WireGuard 'a VPN' is like calling HTTP 'a website' — accurate in casual conversation, imprecise technically. A VPN product (Mullvad, NordVPN, Tailscale, MeshWG) wraps WireGuard with the user-facing features: account management, server selection, kill switches, mesh coordination, etc. WireGuard itself is just the encrypted tunnel between two endpoints." },
+  { q: "Is WireGuard better than OpenVPN?", a: "For most modern use cases, yes. WireGuard is 3-5× faster than OpenVPN on the same hardware, uses about 30× less code (smaller attack surface, easier to audit), reconnects in ~50ms vs OpenVPN's 200-800ms, and is built around modern audited cryptography rather than the configurable cipher suites that OpenVPN inherits from TLS. The exceptions where OpenVPN still wins: when you need TCP fallback (UDP-blocking networks), when you need username/password authentication, or when you're integrating with legacy systems." },
+  { q: "Is WireGuard secure?", a: "WireGuard's cryptographic design is widely regarded as strong — it uses only modern, audited primitives (ChaCha20-Poly1305 AEAD, Curve25519 ECDH, BLAKE2s, HKDF) with no negotiation surface to misconfigure. The Noise_IK handshake authenticates peer identities immediately. There's no certificate management to get wrong. The codebase is small enough that independent audits cover the entirety of it. The honest caveat: WireGuard doesn't itself manage identity beyond 'you possess this private key,' so deployments need to layer identity / access control on top." },
+  { q: "What does WireGuard run on?", a: "Everywhere modern. The Linux kernel module (in-tree since 5.6, 2020), the FreeBSD kernel module (since FreeBSD 13.1, 2022), the OpenBSD kernel module, the OpenWrt firmware, the MikroTik RouterOS 7 firmware, the official Tailscale clients, the official WireGuard apps on Windows / macOS / iOS / Android, and most consumer router firmware from late 2022 onwards (TP-Link Archer, Asus, GL.iNet, Ubiquiti UDM, OPNsense, pfSense). It's the most-supported VPN protocol in 2026." },
+  { q: "How fast is WireGuard?", a: "WireGuard's throughput is CPU-bound by the symmetric encryption cost. On modern Linux with the kernel module, typical numbers: 1-2 Gbps on commodity x86 hardware (Intel/AMD with AES-NI), 500-900 Mbps on prosumer ARM routers (IPQ8074, RB5009), 200-500 Mbps on consumer routers (TP-Link AX73, Asus RT-AX). These are 3-5× faster than OpenVPN on the same hardware. For typical 100-300 Mbps SMB fibre uplinks, WireGuard on any modern router saturates the WAN." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["what is WireGuard", "WireGuard protocol", "WireGuard explained", "WireGuard vs OpenVPN"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const definedTermSchema = { "@context": "https://schema.org", "@type": "DefinedTerm",
+  "name": "WireGuard", "@id": canonical + "#term",
+  "description": "WireGuard is a modern VPN protocol designed by Jason A. Donenfeld, merged into the Linux kernel in 2020. It is significantly smaller and faster than OpenVPN and IPsec, uses fixed modern cryptographic primitives (ChaCha20-Poly1305, Curve25519, BLAKE2s), and runs natively on Linux, FreeBSD, OpenBSD, Windows, macOS, iOS, Android, OpenWrt, and most modern router firmwares.",
+  "inDefinedTermSet": { "@type": "DefinedTermSet", "name": "Network protocols" } };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "What is WireGuard", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ what is wireguard"
+    title="What is WireGuard? A plain-English 2026 guide"
+    lede="WireGuard is a modern VPN protocol — faster than OpenVPN, simpler than IPsec, baked into the Linux kernel since 2020. This guide covers what it does, how it works, and where it's used, without the marketing fluff."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#definition">What WireGuard is, in one sentence</a></li>
+          <li><a href="#history">A brief history</a></li>
+          <li><a href="#how">How WireGuard works</a></li>
+          <li><a href="#crypto">The cryptographic choices, and why they matter</a></li>
+          <li><a href="#vs">Compared to OpenVPN and IPsec</a></li>
+          <li><a href="#where">Where WireGuard runs</a></li>
+          <li><a href="#products">WireGuard-based products</a></li>
+          <li><a href="#trade-offs">Honest trade-offs</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="definition">What WireGuard is, in one sentence</h2>
+        <p><strong>WireGuard is a VPN protocol — a small, modern, kernel-resident set of rules for two computers to send encrypted packets to each other.</strong> About 4,000 lines of code (vs OpenVPN's ~120,000), uses only modern cryptographic primitives with no negotiation surface, and consistently 3-5× faster than older VPN protocols on the same hardware.</p>
+
+        <h2 id="history">A brief history</h2>
+        <p>WireGuard was designed by <strong>Jason A. Donenfeld</strong> starting around 2016, originally for Linux. The design goals were explicit: dramatically smaller code surface, modern cryptography only, no configurable cipher suites, kernel-resident for performance. The protocol stabilised in 2018-2019.</p>
+        <p>Linus Torvalds <a href="https://lore.kernel.org/lkml/CAHk-=wgomG7DhYpAJSsjVTL5L4pOnS5x3DAdtBN9SyzcdyFZQA@mail.gmail.com/" rel="noopener" target="_blank">famously praised WireGuard's code quality</a> in 2018 ("Can I just once again state my love for it and hope it gets merged soon?"). It was merged into the Linux kernel mainline in <strong>5.6 (March 2020)</strong>, became the default in most Linux distributions soon after, and was subsequently ported to FreeBSD, OpenBSD, Windows, macOS, iOS, and Android.</p>
+        <p>As of 2026, WireGuard is the dominant modern VPN protocol — supported in virtually every consumer router firmware released after 2022, every major open-source firewall (OPNsense, pfSense), and underneath every major mesh-VPN product (Tailscale, NetBird, MeshWG, Headscale).</p>
+
+        <h2 id="how">How WireGuard works</h2>
+        <p>WireGuard's design has three core elements:</p>
+        <ul class="bullets">
+          <li><strong>Public-key cryptography for identity.</strong> Each peer has a public key. The local peer's configuration lists every remote peer's public key, the IPs that peer is allowed to source traffic from (<code>AllowedIPs</code>), and where to reach them (<code>Endpoint</code>). There's no certificate authority, no PKI, no separate authentication mechanism. The public key IS the identity.</li>
+          <li><strong>UDP transport, no TCP.</strong> WireGuard runs over UDP. The handshake is three messages (Noise_IK protocol). Once the handshake completes, encrypted packets flow as opaque UDP datagrams.</li>
+          <li><strong>Fixed cryptographic primitives.</strong> ChaCha20-Poly1305 for symmetric encryption + authentication, Curve25519 for Elliptic Curve Diffie-Hellman key exchange, BLAKE2s for hashing, HKDF for key derivation. No negotiation. No downgrade attack surface.</li>
+        </ul>
+        <p>A complete WireGuard configuration looks like this:</p>
+        <pre><code>[Interface]
+PrivateKey = aBcDeFgHi...
+Address = 10.100.0.2/16
+ListenPort = 51820
+
+[Peer]
+PublicKey = ZyXwVuTsR...
+Endpoint = peer.example.com:51820
+AllowedIPs = 10.100.0.0/16
+PersistentKeepalive = 21</code></pre>
+        <p>That's the entire protocol's user surface. Compare to a typical OpenVPN config, which runs 40-80 lines plus four separate certificate/key files.</p>
+
+        <h2 id="crypto">The cryptographic choices, and why they matter</h2>
+        <p>WireGuard's "no negotiation" stance is unusual among VPN protocols. The deliberate trade-off:</p>
+        <ul class="bullets">
+          <li><strong>What you give up:</strong> the ability to gracefully upgrade if a primitive is ever broken. Every WireGuard deployment uses the same primitives; a break in ChaCha20 (hypothetical, unlikely) would require synchronous upgrade across every deployment.</li>
+          <li><strong>What you get:</strong> no misconfiguration surface, no downgrade attacks, no negotiation rounds, no cipher-suite parsing bugs. The entire class of "TLS 1.0 with RC4 was a valid config for too long" mistakes is structurally impossible.</li>
+        </ul>
+        <p>The primitives chosen (ChaCha20-Poly1305, Curve25519, BLAKE2s) are well-studied, fast in software, and resist all known attacks. They were modern when WireGuard was designed and remain modern. The bet that they'll stay safe for the protocol's intended lifetime has held up so far.</p>
+
+        <h2 id="vs">Compared to OpenVPN and IPsec</h2>
+        <table class="cmp">
+          <thead><tr><th>Aspect</th><th>WireGuard</th><th>OpenVPN</th><th>IPsec</th></tr></thead>
+          <tbody>
+            <tr><td>Released</td><td>2017 (mainline 2020)</td><td>2001</td><td>1995</td></tr>
+            <tr><td>Code size</td><td>~4,000 lines</td><td>~120,000 lines</td><td>varies wildly (strongSwan ~400,000)</td></tr>
+            <tr><td>Transport</td><td>UDP only</td><td>UDP or TCP</td><td>UDP (with ESP)</td></tr>
+            <tr><td>Cipher choice</td><td>Fixed (ChaCha20-Poly1305)</td><td>Configurable</td><td>Configurable</td></tr>
+            <tr><td>Throughput on same HW</td><td>baseline (fastest)</td><td>~30% of WG</td><td>~50-90% of WG (with HW offload)</td></tr>
+            <tr><td>Configuration LoC</td><td>~10</td><td>~50-100 + 4 cert files</td><td>~30-200 + complex IKE</td></tr>
+            <tr><td>Reconnect time</td><td>~50ms</td><td>200-800ms</td><td>1-10s (IKE renegotiation)</td></tr>
+            <tr><td>Mobile / NAT-friendly</td><td>Yes (PersistentKeepalive)</td><td>Yes</td><td>Tricky (NAT-T workarounds)</td></tr>
+            <tr><td>Per-user auth</td><td>No (public-key only)</td><td>Yes (cert + username/pass)</td><td>Yes (XAuth, certificate)</td></tr>
+          </tbody>
+        </table>
+        <p>The honest summary: WireGuard wins on simplicity, speed, and modern security posture. OpenVPN wins on TCP fallback and per-user authentication. IPsec wins on hardware-accelerated throughput at the very high end (line-rate 10Gbps+ on dedicated hardware) and in legacy enterprise deployments where it's already entrenched.</p>
+
+        <h2 id="where">Where WireGuard runs</h2>
+        <ul class="bullets">
+          <li><strong>Linux kernel:</strong> in-tree since 5.6 (March 2020). Every modern Linux distro has it.</li>
+          <li><strong>FreeBSD kernel:</strong> in-tree since FreeBSD 13.1 (2022). Used by OPNsense, pfSense Plus.</li>
+          <li><strong>OpenBSD:</strong> kernel module since 2020.</li>
+          <li><strong>Windows / macOS:</strong> official user-space implementations.</li>
+          <li><strong>iOS / Android:</strong> official apps.</li>
+          <li><strong>OpenWrt:</strong> since 19.07 (2020).</li>
+          <li><strong>MikroTik RouterOS:</strong> since 7.0 (December 2021).</li>
+          <li><strong>Most consumer router firmware:</strong> TP-Link Archer (firmware 1.2.0+), Asus AsusWRT (3.0.0.4.388+), Ubiquiti UDM (UniFi OS 3.0+), GL.iNet, and many others, all from late 2022 onwards.</li>
+        </ul>
+
+        <h2 id="products">WireGuard-based products</h2>
+        <p>WireGuard is a protocol; commercial and open-source products build on top of it to provide UX and operational tooling:</p>
+        <ul class="bullets">
+          <li><strong>Mesh VPN products</strong> — Tailscale, NetBird, MeshWG, Headscale all use WireGuard as their data plane and add managed coordination, key exchange, NAT traversal, and access control.</li>
+          <li><strong>Commercial VPN providers</strong> — Mullvad, IVPN, ProtonVPN, NordVPN, ExpressVPN, Surfshark all support WireGuard alongside their older protocol options.</li>
+          <li><strong>Router firmware</strong> — WireGuard is bundled in every modern router OS, configurable directly through the device's admin UI.</li>
+        </ul>
+        <p>If you want a mesh VPN for SMB multi-branch deployments specifically (per-router pricing, paste-ready config for 8 vendor families, 24/7 support), <a href="/">MeshWG</a> is built for that shape. For the alternatives, see <a href="/alternatives/tailscale/">our Tailscale alternatives guide</a>.</p>
+
+        <h2 id="trade-offs">Honest trade-offs</h2>
+        <p>Where WireGuard doesn't fit:</p>
+        <ul class="bullets">
+          <li><strong>UDP-blocked networks.</strong> WireGuard runs over UDP only; if your network blocks UDP outbound, WireGuard cannot connect. OpenVPN over TCP/443 looks like HTTPS and survives.</li>
+          <li><strong>Per-user authentication at scale.</strong> WireGuard has no concept of "user X with password Y" — every device is a separate keypair. For large remote-access deployments, you need either a layer above (SSO + mesh product) or OpenVPN's username/password support.</li>
+          <li><strong>Roaming with the same identity across many networks.</strong> WireGuard handles peer endpoint updates automatically when packets arrive from a new source IP, but the underlying assumption is one peer = one key. Mobile-first deployments use mesh products that automate per-device keypair management.</li>
+        </ul>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>If you want a managed mesh VPN built on WireGuard for SMB multi-branch deployments, MeshWG's free tier covers 2 routers indefinitely.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/wireguard-router/">8 router families that ship WireGuard</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/compare/wireguard-vs-openvpn/">WireGuard vs OpenVPN</a> ·
+            <a href="/compare/tailscale-vs-wireguard/">Tailscale vs WireGuard</a> ·
+            <a href="/openwrt/wireguard/">WireGuard on OpenWrt</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(definedTermSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .guide pre { background: var(--code-bg); color: var(--code-fg); padding: 18px 22px; border-radius: var(--radius-lg); overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; margin: 20px 0; }
+  .guide pre code { background: transparent; padding: 0; color: inherit; }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; } .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

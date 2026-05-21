@@ -1,0 +1,151 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "Tailscale vs Cloudflare Tunnel in 2026: bidirectional mesh vs one-way exposure";
+const description = "Tailscale and Cloudflare Tunnel both let you reach things behind NAT — but they solve different problems. Tailscale is a bidirectional mesh between devices. Cloudflare Tunnel is one-way: Cloudflare reaches your service. This guide separates them.";
+const canonical = "https://meshwg.com/compare/tailscale-vs-cloudflare-tunnel/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  { q: "What is the difference between Tailscale and Cloudflare Tunnel?", a: "Tailscale is a bidirectional mesh VPN — any device on your tailnet can route packets to any other device on the tailnet, peer-to-peer. Cloudflare Tunnel is one-directional: Cloudflare's edge can reach your service through a tunnel originating from your network. Users access your service via a public Cloudflare URL (or via Cloudflare Access for authentication-gated access). They are not the same product class; they're constantly compared because both let you 'reach things behind NAT,' but the directionality is opposite." },
+  { q: "Can Cloudflare Tunnel replace Tailscale?", a: "Only for the use case of 'expose a single web service through a public URL.' Cloudflare Tunnel does this very well — install cloudflared, point it at your local service, get a public hostname, no firewall ports opened. It doesn't replace Tailscale for network access (SSH-ing into a remote machine, reaching multiple services on an internal network, peer-to-peer between devices, site-to-site connectivity). Cloudflare's broader Zero Trust suite (Access + Tunnel + WARP) starts to overlap more with Tailscale, but vanilla Cloudflare Tunnel does not." },
+  { q: "Is Cloudflare Tunnel cheaper than Tailscale?", a: "For single-service exposure, Cloudflare Tunnel's free tier is essentially unlimited and free. For per-user access policies (Access + Tunnel together), Cloudflare's Zero Trust is $7/user/month at Standard; cheaper than Tailscale Business ($6/user/month) only for the first 50 users (where Cloudflare Zero Trust Free covers up to 50 users free). For Tailscale-equivalent network access (mesh between devices) Cloudflare WARP is the closest match and pricing models diverge significantly." },
+  { q: "What is the difference between Tailscale and Cloudflare WARP?", a: "WARP is Cloudflare's consumer-grade VPN client (formerly 1.1.1.1) — it tunnels your device's traffic through Cloudflare's network for privacy, but it's not a peer-to-peer mesh between your devices. Cloudflare Zero Trust extends WARP with private network connectivity (a tailnet-equivalent), but you're paying for Cloudflare's enterprise Zero Trust suite to get there. Tailscale's mesh model is more direct for the 'I want my devices to talk to each other' use case." },
+  { q: "When should I pick Cloudflare Tunnel over Tailscale?", a: "Specifically when: you have one or more web services running behind NAT or a firewall, you want them reachable at a public URL, you don't want to manage firewall rules or port forwards, and you don't need bidirectional network access. Common scenarios: exposing a self-hosted application (Plex, Nextcloud, Home Assistant) to family / friends; serving a dev environment to a colleague for review; surfacing an internal admin panel for occasional remote troubleshooting." },
+  { q: "Can I use both together?", a: "Yes — they're not in conflict. Cloudflare Tunnel for public-service exposure, Tailscale for internal network access between your devices. Many homelab operators run exactly this combination. The configuration boundary is clear: Cloudflare Tunnel goes in front of services that should be Internet-accessible (with optional Cloudflare Access gating); Tailscale goes between devices that should only talk to each other." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["Tailscale vs Cloudflare Tunnel", "cloudflare tunnel vs tailscale", "cloudflared vs tailscale"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",    "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://meshwg.com/compare/" },
+    { "@type": "ListItem", "position": 3, "name": "Tailscale vs Cloudflare Tunnel", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ compare · tailscale vs cloudflare tunnel"
+    title="Tailscale vs Cloudflare Tunnel: mesh vs one-way exposure"
+    lede="Both let you reach things behind NAT — but they solve different problems. Tailscale is a bidirectional mesh between your devices. Cloudflare Tunnel is one-way: it lets Cloudflare reach your service. This guide separates them."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#short-answer">The short answer</a></li>
+          <li><a href="#directionality">Directionality is the key difference</a></li>
+          <li><a href="#table">Side-by-side comparison</a></li>
+          <li><a href="#warp">What about Cloudflare WARP / Zero Trust?</a></li>
+          <li><a href="#pick">When to pick which</a></li>
+          <li><a href="#both">When to use both</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="short-answer">The short answer</h2>
+        <p><strong>Cloudflare Tunnel exposes a single service publicly through Cloudflare's edge. Tailscale connects your devices to each other privately.</strong> They are not competing products; they solve different problems. Most "Cloudflare Tunnel vs Tailscale" comparisons assume they're alternatives to each other — they're not, except in the narrow case where the underlying intent is "make my home server reachable somehow."</p>
+
+        <h2 id="directionality">Directionality is the key difference</h2>
+        <p>Cloudflare Tunnel runs a client (<code>cloudflared</code>) on your network that initiates an outbound connection to Cloudflare's edge. Inbound traffic to your public hostname is routed by Cloudflare through that pre-established tunnel to your service. End users connect to the Cloudflare URL — not to a private network.</p>
+        <p>Tailscale runs an agent on each device. Devices on the same tailnet can route IP packets to each other peer-to-peer (or via DERP relay when direct connection fails). There's no "Cloudflare equivalent" intermediary; the tunnels are between your devices.</p>
+        <p>The implication: if you want your colleague to access your dev server through a URL, Cloudflare Tunnel. If you want your laptop to SSH into your dev server when you're on a coffee shop WiFi, Tailscale.</p>
+
+        <h2 id="table">Side-by-side comparison</h2>
+        <table class="cmp">
+          <thead><tr><th>Aspect</th><th>Tailscale</th><th>Cloudflare Tunnel</th></tr></thead>
+          <tbody>
+            <tr><td>Directionality</td><td>Bidirectional</td><td>One-way (Cloudflare → your service)</td></tr>
+            <tr><td>Architecture</td><td>Peer-to-peer mesh</td><td>Service exposure through CF edge</td></tr>
+            <tr><td>End-user access</td><td>Install Tailscale on every device</td><td>Open a public URL in any browser</td></tr>
+            <tr><td>Authentication</td><td>SSO at device level</td><td>SSO at access level (with CF Access)</td></tr>
+            <tr><td>Protocol</td><td>WireGuard</td><td>HTTP/2 multiplexed over TLS</td></tr>
+            <tr><td>Free tier</td><td>3 users / 100 devices</td><td>Unlimited tunnels, free</td></tr>
+            <tr><td>Site-to-site</td><td>Subnet routers</td><td>Not the use case</td></tr>
+            <tr><td>Latency to user</td><td>Direct UDP / DERP relay</td><td>User → CF edge → tunnel → service</td></tr>
+            <tr><td>Best for</td><td>"My devices need to talk to each other"</td><td>"My service needs a public URL"</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="warp">What about Cloudflare WARP / Zero Trust?</h2>
+        <p>If you're comparing Tailscale to Cloudflare's broader Zero Trust suite (WARP + Access + Tunnel + Gateway), the comparison shifts. Cloudflare's WARP client gives users a virtual network they can be added to; combined with Access policies, this approaches Tailscale's mesh model. Cloudflare Zero Trust Free covers up to 50 users; paid starts at $7/user/month.</p>
+        <p>The honest assessment: for "I want a network for my team," Tailscale is simpler and more direct. For "I want network access + DNS filtering + browser isolation + email security + secure gateway all in one console," Cloudflare's bundle is more capable and at scale potentially cheaper. Different product strategies; different right answers.</p>
+
+        <h2 id="pick">When to pick which</h2>
+        <ul class="bullets">
+          <li><strong>Cloudflare Tunnel</strong> for: exposing a self-hosted service publicly, ad-hoc demo/share links, replacing port-forwarding, public-facing apps with optional auth via Cloudflare Access.</li>
+          <li><strong>Tailscale</strong> for: device-to-device private network, SSH/RDP into remote machines, multi-site mesh with subnet routers, anything that requires bidirectional traffic.</li>
+          <li><strong>Both together</strong> for: hybrid setups — Tailscale for internal access between devices, Cloudflare Tunnel for the few services that need public URLs.</li>
+        </ul>
+
+        <h2 id="both">When to use both</h2>
+        <p>Common homelab and small-business pattern: Tailscale for internal access (so admins can reach the homelab from anywhere) plus Cloudflare Tunnel for the one or two services that should be publicly reachable (a family-facing Nextcloud, a dev-environment review URL). The two don't conflict; they cover different exposure modes.</p>
+        <p>For SMB multi-branch operators, neither tool is built for the shape — Tailscale's per-device model and per-user pricing don't fit branches with non-laptop devices; Cloudflare Tunnel doesn't do branch-to-branch connectivity. MeshWG's router-based mesh is the natural fit for that case.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>For SMB multi-branch — neither Tailscale's per-device nor Cloudflare Tunnel's public-exposure model fits cleanly. MeshWG is built for that shape.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/alternatives/tailscale/">All 6 Tailscale alternatives</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

@@ -125,6 +125,35 @@ gotchas, and the multi-branch path for that specific TP-Link model.
 - [Archer AX23](https://meshwg.com/tp-link/wireguard/router/archer-ax23/):
   Budget Wi-Fi 6, ~180 Mbps WireGuard, 10 peers/tunnel, ~₹6,000.
 
+## Tailscale alternatives + comparison cluster
+
+- [Tailscale alternatives (pillar)](https://meshwg.com/alternatives/tailscale/):
+  honest comparison of MeshWG, NetBird, Headscale, ZeroTier, Twingate,
+  Cloudflare Tunnel sorted by use case. Multi-branch SMB, fully-remote
+  team, self-host, per-resource ZTNA, L2 emulation, public exposure.
+- [Tailscale vs WireGuard](https://meshwg.com/compare/tailscale-vs-wireguard/):
+  protocol vs product. Tailscale IS WireGuard at the data plane.
+- [Tailscale vs NetBird](https://meshwg.com/compare/tailscale-vs-netbird/):
+  hosted-first vs self-host-first WireGuard mesh.
+- [Tailscale vs ZeroTier](https://meshwg.com/compare/tailscale-vs-zerotier/):
+  L3 WireGuard vs L2 Ethernet emulation; different design philosophies.
+- [Tailscale vs Twingate](https://meshwg.com/compare/tailscale-vs-twingate/):
+  mesh-first vs gateway-based ZTNA.
+- [Tailscale vs Cloudflare Tunnel](https://meshwg.com/compare/tailscale-vs-cloudflare-tunnel/):
+  bidirectional mesh vs one-way exposure.
+- [Tailscale vs Headscale](https://meshwg.com/compare/tailscale-vs-headscale/):
+  hosted Tailscale vs open-source self-hosted coordination.
+
+## WireGuard fundamentals + troubleshooting
+
+- [What is WireGuard?](https://meshwg.com/what-is-wireguard/):
+  plain-English explainer of the protocol; history; how it works;
+  cryptographic choices (ChaCha20-Poly1305, Curve25519, BLAKE2s);
+  vs OpenVPN and IPsec; supported platforms.
+- [Why does my VPN keep disconnecting?](https://meshwg.com/why-vpn-keeps-disconnecting/):
+  seven most common causes (NAT timeout, MTU clipping, ISP throttle,
+  WiFi roam, kernel bugs, DNS, overnight rotation) with exact fixes.
+
 ## Side-by-side comparisons
 
 - [OPNsense vs pfSense WireGuard](https://meshwg.com/compare/opnsense-vs-pfsense-wireguard/):

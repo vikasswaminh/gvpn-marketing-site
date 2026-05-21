@@ -1,0 +1,283 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+// Primary: "tailscale alternative" (590 vol, AI Overview, $6.84 CPC)
+const title = "Tailscale alternatives in 2026: 6 honest options sorted by use case";
+const description = "Looking for a Tailscale alternative? Here are six options compared honestly — MeshWG, NetBird, Headscale, ZeroTier, Twingate, Cloudflare Tunnel — with a use-case grid so you can pick the right one for SMB multi-branch, self-host, or zero-trust deployments.";
+const canonical = "https://meshwg.com/alternatives/tailscale/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+// Data structure drives both the table + ItemList schema
+const alternatives = [
+  { name: "MeshWG",            url: "https://meshwg.com",                    fit: "SMB multi-branch / BYO-router",       pricing: "₹349/router/month (~$4.20); 2 free", model: "Hosted, vendor-agnostic", license: "Closed SaaS" },
+  { name: "NetBird",           url: "https://netbird.io",                     fit: "Self-host with optional managed",      pricing: "Free self-host; $5/user managed",  model: "Hybrid hosted/self-host", license: "BSD 3-Clause" },
+  { name: "Headscale",         url: "https://github.com/juanfont/headscale",  fit: "Self-host Tailscale on your own server", pricing: "Free (BYO server cost)",         model: "Self-host only",          license: "BSD 3-Clause" },
+  { name: "ZeroTier",          url: "https://zerotier.com",                   fit: "Layer-2 emulation; gaming, legacy",    pricing: "Free up to 25 nodes; $5+/mo",      model: "Hosted, own protocol",    license: "Business Source License" },
+  { name: "Twingate",          url: "https://twingate.com",                   fit: "Zero-trust per-resource access (ZTNA)", pricing: "Free up to 5 users; $10/user", model: "Hosted, gateway-based",   license: "Closed SaaS" },
+  { name: "Cloudflare Tunnel", url: "https://www.cloudflare.com/products/tunnel/", fit: "Public-facing services through CF",  pricing: "Free up to a point; pay for usage", model: "Hosted, one-way only",   license: "Closed SaaS" },
+];
+
+const faqs = [
+  {
+    q: "What is the best Tailscale alternative?",
+    a: "It depends on what specifically you're trying to replace. For multi-branch SMB connectivity with existing routers, MeshWG fits best (per-router pricing, no agent on every device). For self-hosting the same protocol Tailscale uses, Headscale is the direct open-source equivalent. For self-hosted-with-managed-option flexibility, NetBird. For Layer-2 emulation (older protocols, gaming), ZeroTier. For per-resource zero-trust access without site-to-site mesh, Twingate. For exposing a single web service through Cloudflare, Cloudflare Tunnel."
+  },
+  {
+    q: "Why look for a Tailscale alternative?",
+    a: "Three common reasons. First, Tailscale's per-user pricing scales linearly with team size — a 50-employee SMB pays roughly $300/month for Business tier before adding any device beyond people. Second, Tailscale requires an agent on every device — printers, POS terminals, IP cameras, and most embedded devices can't run one. Third, Tailscale's coordination plane is proprietary; some organisations require fully open-source or self-host infrastructure. Each alternative addresses a different one of those pain points."
+  },
+  {
+    q: "Is MeshWG a direct Tailscale alternative?",
+    a: "Yes for SMB multi-branch use cases; not for personal/single-team remote access. MeshWG runs on the router (TP-Link, MikroTik, OpenWrt, OPNsense, pfSense, Ubiquiti, Asus, GL.iNet) so every device on the LAN — including those that can't run a Tailscale agent — joins the mesh through the router's WireGuard tunnel. Pricing is per-router (₹349/month or roughly $4.20), so a 5-branch business pays about $21/month for the entire mesh. Tailscale at 5 users would be $30/month minimum, and that's before counting non-user devices. Tailscale wins for fully-remote teams where every member already has a laptop; MeshWG wins for businesses with physical sites."
+  },
+  {
+    q: "Can I self-host Tailscale?",
+    a: "Tailscale's official clients can authenticate against a self-hosted coordination server called Headscale, an open-source re-implementation. You run Headscale on your own infrastructure; Tailscale clients connect to it instead of Tailscale's hosted control plane. The protocol surface is the same; the trust boundary changes from 'Tailscale Inc.' to 'you and your server.' Most operators who self-host go to Headscale; a smaller subset uses NetBird's self-host option for similar reasons."
+  },
+  {
+    q: "Which Tailscale alternative is best for branch offices?",
+    a: "MeshWG is purpose-built for the multi-branch SMB use case. The reason: branch offices typically have routers but few staff, so per-user pricing (Tailscale, Twingate) compounds badly while per-router pricing (MeshWG) stays predictable. A 10-branch retail chain with 100 staff pays $42/month on MeshWG (10 routers × $4.20) vs $600/month on Tailscale Business (100 users × $6). For branches with stable public IPs and dedicated firewalls (OPNsense, pfSense, Ubiquiti), MeshWG generates paste-ready configuration in each vendor's native format."
+  },
+  {
+    q: "What does Tailscale do that the alternatives don't?",
+    a: "Tailscale has the strongest per-device client UX of any option here — the official apps on iOS, Android, macOS, Windows, and Linux are polished, well-maintained, and trivially deployable. Tailscale also has the largest ecosystem of integrations (Kubernetes, GitHub Actions, AWS, Synology, etc.) and the most extensive documentation. For personal or single-team fully-remote use where you'll install the agent on every device anyway, Tailscale's per-device experience is genuinely the best. The alternatives win when the use case doesn't match that shape: router-based, self-host, per-resource gating, or layer-2 emulation."
+  }
+];
+
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+  "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author":    { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["Tailscale alternative", "tailscale alternatives", "alternative to tailscale", "tailscale competitors"],
+  "isAccessibleForFree": true, "inLanguage": "en"
+};
+
+const itemListSchema = {
+  "@context": "https://schema.org", "@type": "ItemList",
+  "name": "Tailscale alternatives sorted by use case",
+  "numberOfItems": alternatives.length,
+  "itemListElement": alternatives.map((a, i) => ({
+    "@type": "ListItem", "position": i + 1,
+    "name": a.name, "url": a.url
+  }))
+};
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question", "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",         "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Alternatives", "item": "https://meshwg.com/alternatives/" },
+    { "@type": "ListItem", "position": 3, "name": "Tailscale alternatives", "item": canonical }
+  ]
+};
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ alternatives · tailscale"
+    title="Tailscale alternatives: 6 honest options sorted by use case"
+    lede="Most 'Tailscale alternative' searches are really three different questions in one. This guide separates them — multi-branch SMB, self-host, zero-trust per-resource, layer-2 emulation, single-service exposure — and names the right tool for each."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#why">Why look for a Tailscale alternative?</a></li>
+          <li><a href="#table">The 6 alternatives at a glance</a></li>
+          <li><a href="#by-use-case">Pick by use case</a></li>
+          <li><a href="#meshwg">When MeshWG wins</a></li>
+          <li><a href="#netbird">When NetBird wins</a></li>
+          <li><a href="#headscale">When Headscale wins</a></li>
+          <li><a href="#zerotier">When ZeroTier wins</a></li>
+          <li><a href="#twingate">When Twingate wins</a></li>
+          <li><a href="#cloudflare-tunnel">When Cloudflare Tunnel wins</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="why">Why look for a Tailscale alternative?</h2>
+        <p>Tailscale is a strong product — well-built, well-documented, polished clients on every platform. People shop for alternatives for three specific reasons, and each reason points to a different replacement:</p>
+        <ul class="bullets">
+          <li><strong>Per-user pricing scales badly for businesses with non-user devices.</strong> Tailscale Business is $6/user/month. For a 50-employee SMB that's $300/month before you've installed the agent on the office printers, IP cameras, POS terminals, or any of the embedded devices that can't run a Tailscale client. <a href="#meshwg">Router-based alternatives</a> sidestep this by putting the tunnel on the router instead of every device.</li>
+          <li><strong>Proprietary coordination plane.</strong> Tailscale's clients are open-source, but the central coordination server is proprietary. Some operators want fully open-source or self-hosted infrastructure. <a href="#headscale">Headscale</a> and <a href="#netbird">NetBird</a> address this directly.</li>
+          <li><strong>Different access model.</strong> Tailscale is mesh-first peer-to-peer. If you actually want gateway-based per-resource ZTNA (where every protected resource sits behind a connector), Twingate's model is different and probably what you want.</li>
+        </ul>
+
+        <h2 id="table">The 6 alternatives at a glance</h2>
+        <table class="cmp">
+          <thead><tr><th>Product</th><th>Best for</th><th>Pricing entry</th><th>Hosting model</th><th>License</th></tr></thead>
+          <tbody>
+          {alternatives.map((a) => (
+            <tr>
+              <td><strong><a href={a.url} rel="noopener" target="_blank">{a.name}</a></strong></td>
+              <td>{a.fit}</td>
+              <td>{a.pricing}</td>
+              <td>{a.model}</td>
+              <td>{a.license}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+
+        <h2 id="by-use-case">Pick by use case</h2>
+        <div class="use-case">
+          <h3>SMB / multi-branch with existing routers</h3>
+          <p>You have 2-30 physical sites (offices, branches, retail stores, clinics), each with a router, and you want them on one private network. Per-user pricing makes no sense here because you have devices, not just users.</p>
+          <p><strong>Pick:</strong> MeshWG. Router-based, per-router pricing (₹349 ≈ $4.20/month per router, 2 free), works with TP-Link, MikroTik, OpenWrt, OPNsense, pfSense, Ubiquiti, Asus, GL.iNet.</p>
+        </div>
+        <div class="use-case">
+          <h3>Fully-remote team, every member has a laptop, no physical sites</h3>
+          <p>5-50 fully-remote employees, no offices, no LAN-side devices.</p>
+          <p><strong>Honest answer:</strong> Tailscale is excellent for this. The per-user pricing matches the workload exactly. If cost matters, NetBird's open-source self-host plus a small VPS gets you close at lower marginal cost.</p>
+        </div>
+        <div class="use-case">
+          <h3>Self-host the same protocol Tailscale uses</h3>
+          <p>You want Tailscale's user experience but with the coordination server on your own infrastructure (compliance, sovereignty, cost).</p>
+          <p><strong>Pick:</strong> Headscale. Open-source re-implementation of Tailscale's coordination server. The official Tailscale clients work against it unchanged.</p>
+        </div>
+        <div class="use-case">
+          <h3>Per-resource zero-trust access</h3>
+          <p>You want users to access specific internal applications (Jira, an internal admin panel, a database) without putting them on a network mesh — explicit allow per resource.</p>
+          <p><strong>Pick:</strong> Twingate. Gateway-based ZTNA model is built for this; Tailscale's mesh model is a poor fit.</p>
+        </div>
+        <div class="use-case">
+          <h3>Expose a single web service through Cloudflare without opening firewall ports</h3>
+          <p>You have an HTTP service running behind NAT or a firewall and you want it reachable at a public URL without port-forwarding.</p>
+          <p><strong>Pick:</strong> Cloudflare Tunnel. One-way (Cloudflare → your service); not a mesh. Different category from the others on this list, but constantly searched as a "Tailscale alternative" because both let you reach things behind NAT.</p>
+        </div>
+        <div class="use-case">
+          <h3>Layer-2 emulation (legacy, gaming, broadcast)</h3>
+          <p>You need protocols that don't survive Layer-3 routing — old game LAN protocols, Windows file sharing across sites without VPN, broadcast/multicast applications.</p>
+          <p><strong>Pick:</strong> ZeroTier. Emulates Ethernet at L2; Tailscale and the WireGuard-based options operate at L3 and won't carry these protocols.</p>
+        </div>
+
+        <h2 id="meshwg">When MeshWG wins</h2>
+        <p>For multi-branch SMB connectivity, MeshWG's economics dominate Tailscale's. The numbers, side by side, for a 10-branch retail chain with 100 staff:</p>
+        <table class="cmp">
+          <thead><tr><th>Cost item</th><th>Tailscale Business</th><th>MeshWG</th></tr></thead>
+          <tbody>
+            <tr><td>Subscription</td><td>$600/month (100 users × $6)</td><td>$42/month (10 routers × ₹349)</td></tr>
+            <tr><td>Agent install per device</td><td>Required on every laptop, phone, server</td><td>None — router holds the tunnel</td></tr>
+            <tr><td>POS terminals, IP cameras, printers</td><td>Each device needs a per-machine licence or stays off the mesh</td><td>Automatic; sits behind the router</td></tr>
+            <tr><td>Free tier</td><td>3 users, personal use only</td><td>2 routers, no user cap, indefinite</td></tr>
+            <tr><td>Support hours</td><td>Business hours (paid plans)</td><td>24/7 human, all tiers</td></tr>
+            <tr><td>Onboarding time</td><td>~5 min per device installed</td><td>~2 min per router (one paste of generated config)</td></tr>
+          </tbody>
+        </table>
+        <p>The same math works in the other direction: for a single-developer self-hosting their homelab and three laptops, Tailscale's free tier costs nothing and works in minutes. MeshWG would still work but the router-centric model is overkill for that shape.</p>
+        <p>The dividing line is roughly: <strong>do you have physical sites with routers, or just users with laptops?</strong> Routers → MeshWG. Just laptops → Tailscale.</p>
+
+        <h2 id="netbird">When NetBird wins</h2>
+        <p>NetBird is the closest spiritual analog to Tailscale in 2026 — both wrap WireGuard with a managed coordination layer, both have official clients on the same platforms, both offer a free tier. NetBird differentiates on two axes:</p>
+        <ul class="bullets">
+          <li><strong>Open-source coordination server.</strong> The entire NetBird stack including the management plane is BSD-3-licensed and self-hostable. Tailscale's clients are open but its control plane is closed (Headscale closes that gap from a different angle).</li>
+          <li><strong>Self-host as the default story.</strong> NetBird's hosted SaaS exists but the project's centre of gravity is on operators running their own. Tailscale is the inverse — hosted-first with Headscale as the community-maintained self-host path.</li>
+        </ul>
+        <p>For organisations that want a single vendor offering both managed and self-hosted modes without forking, NetBird is the natural fit. See <a href="/compare/tailscale-vs-netbird/">our Tailscale vs NetBird detailed comparison</a>.</p>
+
+        <h2 id="headscale">When Headscale wins</h2>
+        <p>Headscale isn't a separate product — it's an open-source re-implementation of Tailscale's coordination server. The official Tailscale clients authenticate against it the same way they authenticate against Tailscale's hosted control plane. You get the entire Tailscale client experience with the coordination server under your control.</p>
+        <p>Pick Headscale when: you want Tailscale's UX but the control plane must be on your infrastructure (compliance, data residency, vendor risk), and you're comfortable running a small Go server. See <a href="/compare/tailscale-vs-headscale/">our Tailscale vs Headscale detailed comparison</a>.</p>
+
+        <h2 id="zerotier">When ZeroTier wins</h2>
+        <p>ZeroTier is a genuinely different beast: not a WireGuard product, not even Layer-3 routing. It emulates an Ethernet switch — devices on a ZeroTier network see each other as if they were on the same physical LAN at Layer 2. That enables protocols Tailscale/MeshWG/WireGuard can't carry: broadcast/multicast, older Windows file sharing protocols, certain game LAN protocols, some industrial automation.</p>
+        <p>The trade-off: ZeroTier's protocol is proprietary, throughput is typically lower than WireGuard (no kernel implementation on most platforms), and the SaaS-only coordination model has its own constraints. For modern protocols that work over plain L3, WireGuard-based products usually win. For specific L2-required workloads, ZeroTier is often the only practical option. See <a href="/compare/tailscale-vs-zerotier/">our Tailscale vs ZeroTier detailed comparison</a>.</p>
+
+        <h2 id="twingate">When Twingate wins</h2>
+        <p>Twingate is the most "different" product on this list relative to Tailscale despite often being compared. Twingate's model is gateway-based ZTNA — each protected resource sits behind a Twingate Connector, and the policy engine grants user-to-resource access explicitly. There is no mesh; there are no IP routes; there's no peer-to-peer connectivity.</p>
+        <p>This is the right model when: you want users to reach specific internal applications without putting them on a network. Wrong model when: you want sites or devices to talk to each other peer-to-peer. See <a href="/compare/tailscale-vs-twingate/">our Tailscale vs Twingate detailed comparison</a>.</p>
+
+        <h2 id="cloudflare-tunnel">When Cloudflare Tunnel wins</h2>
+        <p>Cloudflare Tunnel is one-directional: it lets you expose a service behind a firewall as a public Cloudflare URL without port-forwarding. It is not a VPN. It is not a mesh. It is constantly compared to Tailscale because both involve "reaching something behind NAT," but they solve different problems.</p>
+        <p>Pick Cloudflare Tunnel when: you have a single web service (admin panel, internal app, dev environment) that needs a public URL without opening your firewall. Pick Tailscale or MeshWG or NetBird when: you want network connectivity between sites or between users and resources. See <a href="/compare/tailscale-vs-cloudflare-tunnel/">our Tailscale vs Cloudflare Tunnel detailed comparison</a>.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>If MeshWG looks like the right fit, two routers are free forever — no card required.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/compare/tailscale-vs-wireguard/">Tailscale vs WireGuard deep dive</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/wireguard-router/">8 router families that ship WireGuard</a> ·
+            <a href="/pricing">Pricing</a> ·
+            <a href="/contact">Contact</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; }
+  .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; }
+  .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; }
+  .guide a { color: var(--accent); }
+  .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .use-case { margin: 24px 0; padding: 18px 22px; background: var(--bg-2); border-radius: var(--radius-lg); border-left: 3px solid var(--accent); }
+  .use-case h3 { margin: 0 0 8px; }
+  .use-case p { margin-bottom: 10px; }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; }
+  .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

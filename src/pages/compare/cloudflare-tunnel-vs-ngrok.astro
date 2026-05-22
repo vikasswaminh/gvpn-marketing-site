@@ -1,0 +1,152 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "Cloudflare Tunnel vs ngrok in 2026: persistent exposure vs instant dev tunnels";
+const description = "Cloudflare Tunnel is for persistent service exposure on your own domain; ngrok is for instant, often-temporary dev tunnels. This honest comparison covers pricing, use cases, and when neither fits — because a private network beats public exposure.";
+const canonical = "https://meshwg.com/compare/cloudflare-tunnel-vs-ngrok/";
+const publishedTime = "2026-05-22T00:00:00Z";
+const modifiedTime  = "2026-05-22T00:00:00Z";
+
+const faqs = [
+  { q: "What is the difference between Cloudflare Tunnel and ngrok?", a: "Both expose a service behind NAT or a firewall to the public internet without port-forwarding, by running a small agent that makes an outbound connection to the provider's edge. The difference is positioning. Cloudflare Tunnel is built for persistent production exposure on your own domain, integrated with Cloudflare's DNS / CDN / WAF / Access — and it's free. ngrok is built for instant developer tunnels: one command, a URL in seconds, ideal for testing webhooks, demoing work, or sharing a local dev server temporarily. Cloudflare Tunnel is the 'leave it running' tool; ngrok is the 'spin it up for an hour' tool — though both can do either job." },
+  { q: "Is Cloudflare Tunnel or ngrok cheaper?", a: "Cloudflare Tunnel is free, with no usage caps that matter for typical use — it's part of Cloudflare's free Zero Trust tier. ngrok has a free tier (with a random URL that changes each session and a request-rate limit) and paid plans starting around $8-10/month for a static domain and higher limits. For persistent, cost-sensitive exposure Cloudflare Tunnel wins clearly. For developers who value ngrok's instant-tunnel UX and request inspection tooling, the paid plan is modest." },
+  { q: "Is ngrok or Cloudflare Tunnel better for webhooks?", a: "ngrok is the more popular webhook-testing tool — its request inspection UI (replay requests, view payloads) is purpose-built for exactly that workflow, and the one-command startup suits the iterate-quickly nature of webhook development. Cloudflare Tunnel can also receive webhooks and is fine for a persistent webhook endpoint, but it lacks ngrok's built-in request inspector. For active webhook development: ngrok. For a permanent production webhook receiver: either, with Cloudflare Tunnel free." },
+  { q: "Can Cloudflare Tunnel or ngrok connect two networks?", a: "No — and this is the key limitation both share. Both are service-exposure tools: they make one service reachable at a public URL. Neither connects networks to each other, neither gives you a private mesh, neither does site-to-site. If your actual need is 'my branch office network should reach my head-office network,' or 'my devices should reach each other privately,' an exposure tool is the wrong category entirely. You want a VPN or mesh VPN." },
+  { q: "When should I use a private network instead of Cloudflare Tunnel or ngrok?", a: "Whenever the thing you're connecting shouldn't be public at all. Exposure tools put a service on the internet (optionally gated by auth). If you're connecting internal systems — branch offices, back-office servers, devices that should only be reachable by your own people — putting them behind a public URL is the wrong shape even with authentication in front. A private network (mesh VPN) keeps internal things internal: reachable by your authorised devices, invisible to everyone else. For SMB multi-branch, that's MeshWG's job, not an exposure tool's." },
+  { q: "Cloudflare Tunnel vs ngrok for a small business?", a: "If the small business genuinely needs to expose a service publicly — a customer-facing web app, a public webhook endpoint — Cloudflare Tunnel is the better default: free, persistent, on your own domain, with Cloudflare's security stack available. ngrok suits the developer-workflow slice (testing, demos, temporary shares). But if the small-business need is actually 'connect our offices and internal systems' — which it usually is — neither tool fits. A managed mesh VPN (MeshWG, per-router pricing) connects the sites privately without ever making anything public." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["Cloudflare Tunnel vs ngrok", "ngrok vs Cloudflare Tunnel", "cloudflared vs ngrok"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",    "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://meshwg.com/compare/" },
+    { "@type": "ListItem", "position": 3, "name": "Cloudflare Tunnel vs ngrok", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ compare · cloudflare tunnel vs ngrok"
+    title="Cloudflare Tunnel vs ngrok: persistent exposure vs instant dev tunnels"
+    lede="Both expose a service behind NAT to a public URL. Cloudflare Tunnel is the free, persistent, own-domain choice. ngrok is the instant developer tunnel. This guide covers both — and the case where neither fits, because internal systems shouldn't be public at all."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#short-answer">The short answer</a></li>
+          <li><a href="#same-job">Same job, different temperament</a></li>
+          <li><a href="#table">Side-by-side comparison</a></li>
+          <li><a href="#pick">When to pick which</a></li>
+          <li><a href="#wrong-tool">When an exposure tool is the wrong tool</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="short-answer">The short answer</h2>
+        <p><strong>Cloudflare Tunnel</strong> for persistent service exposure on your own domain — and it's free. <strong>ngrok</strong> for instant developer tunnels — webhook testing, demos, temporary shares — where its request-inspection tooling and one-command UX shine. <strong>Neither</strong> if what you actually need is a private network rather than public exposure.</p>
+
+        <h2 id="same-job">Same job, different temperament</h2>
+        <p>Mechanically, Cloudflare Tunnel and ngrok do the same thing: run a small agent that opens an outbound connection to the provider's edge, so a service behind NAT or a firewall becomes reachable at a public URL — no port-forwarding, no inbound firewall rule.</p>
+        <p>The difference is temperament. <strong>Cloudflare Tunnel</strong> is built to be left running: persistent, on your own domain, wired into Cloudflare's DNS, CDN, WAF, and Access. It's infrastructure. <strong>ngrok</strong> is built for the developer inner loop: <code>ngrok http 3000</code>, a URL in two seconds, a request inspector to replay and debug traffic. It's a tool you reach for and put down.</p>
+        <p>Either can do the other's job — ngrok has static domains and persistent tunnels on paid plans; Cloudflare Tunnel can serve a quick share — but each is sharpest at its native role.</p>
+
+        <h2 id="table">Side-by-side comparison</h2>
+        <table class="cmp">
+          <thead><tr><th>Aspect</th><th>Cloudflare Tunnel</th><th>ngrok</th></tr></thead>
+          <tbody>
+            <tr><td>Primary use</td><td>Persistent production exposure</td><td>Instant developer tunnels</td></tr>
+            <tr><td>Cost</td><td>Free (part of CF Zero Trust Free)</td><td>Free tier + paid from ~$8-10/mo</td></tr>
+            <tr><td>Custom domain</td><td>Yes, your own (via Cloudflare DNS)</td><td>Free: random URL; paid: static domain</td></tr>
+            <tr><td>Request inspection</td><td>No built-in inspector</td><td>Yes, purpose-built UI</td></tr>
+            <tr><td>Startup speed</td><td>Configure once, then persistent</td><td>One command, seconds</td></tr>
+            <tr><td>Auth gating</td><td>Cloudflare Access integration</td><td>OAuth / basic auth on paid plans</td></tr>
+            <tr><td>Security stack</td><td>Cloudflare WAF / DDoS available</td><td>ngrok edge features on paid</td></tr>
+            <tr><td>Ecosystem lock-in</td><td>Cloudflare (DNS at minimum)</td><td>ngrok account</td></tr>
+            <tr><td>Connects networks</td><td>No</td><td>No</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="pick">When to pick which</h2>
+        <ul class="bullets">
+          <li><strong>Cloudflare Tunnel</strong> — a self-hosted app you want permanently reachable on your domain (Nextcloud, a status page, an internal admin panel with Access in front); cost matters; you're already using Cloudflare DNS.</li>
+          <li><strong>ngrok</strong> — webhook development and testing; demoing a local build to a colleague or client; temporary shares; any workflow where the request inspector and instant startup earn their keep.</li>
+        </ul>
+
+        <h2 id="wrong-tool">When an exposure tool is the wrong tool</h2>
+        <p>Both Cloudflare Tunnel and ngrok make a service <em>public</em> — reachable from the internet, optionally behind auth. That's the right shape when the thing genuinely should be Internet-facing.</p>
+        <p>It's the wrong shape when the thing should stay internal. Connecting branch offices, letting back-office systems at different sites reach each other, giving your own devices private access to internal resources — none of that should involve a public URL, even an authenticated one. The correct tool is a private network: a VPN or mesh VPN, where internal systems are reachable by your authorised devices and invisible to everyone else.</p>
+        <p>For SMB multi-branch, that's MeshWG: a managed WireGuard mesh on the router, connecting sites privately, priced per router (₹349 ≈ $4.20/month, 2 free). If you've been reaching for an exposure tool to solve a connectivity problem, the mesh-VPN category is what you actually want — see <a href="/ztna-vs-vpn/">ZTNA vs VPN</a> and <a href="/what-is-wireguard/">what is WireGuard</a> for the background.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>If your need is connectivity (not public exposure), a mesh VPN is the right category — MeshWG's free tier covers 2 routers.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/compare/tailscale-vs-cloudflare-tunnel/">Tailscale vs Cloudflare Tunnel</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/alternatives/cloudflare-one/">Cloudflare One alternatives</a> ·
+            <a href="/what-is-wireguard/">What is WireGuard?</a> ·
+            <a href="/wireguard-router/">WireGuard router buyer's guide</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .guide code { font-family: var(--font-mono); font-size: .9em; background: var(--bg-2); padding: 1.5px 6px; border-radius: var(--radius-sm); color: var(--text); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; } .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

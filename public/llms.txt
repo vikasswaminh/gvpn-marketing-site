@@ -201,6 +201,23 @@ use-case-by-use-case "when to pick which" guidance.
   seven most common causes (NAT timeout, MTU clipping, ISP throttle,
   WiFi roam, kernel bugs, DNS, overnight rotation) with exact fixes.
 
+## Competitor-vs-competitor comparisons (the matrix)
+
+- [NetBird vs Headscale](https://meshwg.com/compare/netbird-vs-headscale/):
+  two self-host WireGuard mesh paths — NetBird (complete BSD-3 product,
+  commercial backing) vs Headscale (Tailscale-coordination re-implementation).
+- [ZeroTier vs WireGuard](https://meshwg.com/compare/zerotier-vs-wireguard/):
+  L2 Ethernet emulation vs the modern L3 kernel protocol; the
+  "do you need Layer 2" decision.
+- [Twingate vs NetBird](https://meshwg.com/compare/twingate-vs-netbird/):
+  gateway ZTNA vs WireGuard mesh; per-resource access vs private network.
+- [Twingate vs Cloudflare](https://meshwg.com/compare/twingate-vs-cloudflare/):
+  focused best-of-breed ZTNA vs the Cloudflare One bundle;
+  Cloudflare's free-50-user tier reshapes the decision.
+- [Cloudflare Tunnel vs ngrok](https://meshwg.com/compare/cloudflare-tunnel-vs-ngrok/):
+  persistent service exposure vs instant dev tunnels; and when neither
+  fits because internal systems need a private network, not public exposure.
+
 ## Side-by-side comparisons
 
 - [OPNsense vs pfSense WireGuard](https://meshwg.com/compare/opnsense-vs-pfsense-wireguard/):

@@ -1,0 +1,154 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "ZeroTier vs WireGuard in 2026: L2 emulation vs the modern L3 protocol";
+const description = "ZeroTier built its own Layer-2 protocol; WireGuard is a Layer-3 protocol in the Linux kernel. This honest comparison covers throughput, the L2-vs-L3 difference that decides most cases, security, and when each is the right foundation.";
+const canonical = "https://meshwg.com/compare/zerotier-vs-wireguard/";
+const publishedTime = "2026-05-22T00:00:00Z";
+const modifiedTime  = "2026-05-22T00:00:00Z";
+
+const faqs = [
+  { q: "What is the difference between ZeroTier and WireGuard?", a: "WireGuard is a Layer-3 (IP) VPN protocol, merged into the Linux kernel in 2020, using fixed modern cryptography. ZeroTier is a Layer-2 (Ethernet) virtual network with its own protocol, running entirely in userspace. The defining practical difference: ZeroTier emulates an Ethernet switch, so broadcast/multicast and legacy protocols traverse it; WireGuard routes IP packets, so it carries anything that works over normal L3 but not raw Ethernet protocols. WireGuard is faster (kernel implementation); ZeroTier carries protocols WireGuard can't." },
+  { q: "Is WireGuard faster than ZeroTier?", a: "Yes, consistently — on modern Linux, WireGuard's kernel implementation does 1 Gbps+ single-tunnel where ZeroTier's userspace implementation typically caps at 200-400 Mbps on the same hardware. WireGuard also has lower latency overhead per packet. ZeroTier's userspace design and Ethernet framing both cost performance. For modern workloads that work over Layer 3, WireGuard's speed advantage is real and consistent." },
+  { q: "Is ZeroTier built on WireGuard?", a: "No. ZeroTier built its own protocol from scratch — it predates WireGuard's mainstream adoption and made different design choices (Layer-2 emulation, its own cryptographic transport originally using Salsa20/Poly1305). Tailscale, NetBird, and MeshWG are built on WireGuard; ZeroTier is not. This is the most common misconception about ZeroTier — it is its own independent stack." },
+  { q: "Should I choose ZeroTier or WireGuard?", a: "Decide by one question: do you need Layer 2? If you need broadcast, multicast, legacy Windows networking, certain industrial protocols (BACnet, some Modbus variants), or game LAN auto-discovery to traverse the VPN, ZeroTier's L2 emulation is the practical choice. If your workloads are modern and work over IP routing — web, SSH, RDP, SMB3 file sharing, backups — WireGuard is faster, more secure, and more widely supported. About 90% of use cases fall in the WireGuard column in 2026." },
+  { q: "Is ZeroTier or WireGuard more secure?", a: "WireGuard has the stronger security posture for mainstream use. Its cryptographic primitives (ChaCha20-Poly1305, Curve25519, BLAKE2s) are fixed, modern, and have extensive independent review; its ~4,000-line codebase is small enough to audit fully. ZeroTier's protocol is reviewed and considered sound, but it's proprietary with fewer eyes on it, and the larger userspace codebase is a bigger surface. For high-assurance scenarios WireGuard's mainstream scrutiny is the safer pick; for typical use both are adequately secure." },
+  { q: "What products are built on WireGuard?", a: "WireGuard is a protocol, so products layer coordination on top of it. Tailscale, NetBird, MeshWG, and Headscale all use WireGuard as their data plane and add managed key exchange, peer discovery, NAT traversal, and policy. Commercial VPN providers (Mullvad, ProtonVPN, NordVPN) offer WireGuard alongside older protocols. For SMB multi-branch mesh specifically, MeshWG is a managed WireGuard mesh that runs on the router rather than requiring an agent on every device." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["ZeroTier vs WireGuard", "WireGuard vs ZeroTier", "zerotier wireguard comparison"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",    "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://meshwg.com/compare/" },
+    { "@type": "ListItem", "position": 3, "name": "ZeroTier vs WireGuard", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ compare · zerotier vs wireguard"
+    title="ZeroTier vs WireGuard: L2 emulation vs the modern L3 protocol"
+    lede="ZeroTier built its own Layer-2 protocol. WireGuard is a Layer-3 protocol in the Linux kernel. One question — do you need Layer 2? — decides most cases. This guide covers throughput, security, and when each is the right foundation."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#short-answer">The short answer</a></li>
+          <li><a href="#not-related">They're not related products</a></li>
+          <li><a href="#l2-l3">Layer 2 vs Layer 3 — the deciding question</a></li>
+          <li><a href="#table">Side-by-side comparison</a></li>
+          <li><a href="#perf">Throughput and latency</a></li>
+          <li><a href="#pick">When to pick which</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="short-answer">The short answer</h2>
+        <p><strong>Need Layer 2 (broadcast, multicast, legacy protocols)? ZeroTier. Everything else? WireGuard.</strong> WireGuard is faster, more widely supported, and has stronger mainstream security review. ZeroTier's one durable advantage is Ethernet-layer emulation, which carries protocols WireGuard structurally cannot.</p>
+
+        <h2 id="not-related">They're not related products</h2>
+        <p>A common misconception: that ZeroTier is built on WireGuard, or that they're variants of the same idea. They are independent stacks. WireGuard is a protocol designed by Jason Donenfeld, merged into the Linux kernel. ZeroTier is a separate project with its own protocol, predating WireGuard's mainstream adoption. Products like Tailscale, NetBird, and MeshWG are built on WireGuard; ZeroTier is built on ZeroTier.</p>
+
+        <h2 id="l2-l3">Layer 2 vs Layer 3 — the deciding question</h2>
+        <p><strong>WireGuard operates at Layer 3.</strong> Each peer has an IP; packets are routed between IPs. This carries everything that works over normal IP networking — which in 2026 is almost everything: web, SSH, RDP, modern SMB3 file sharing, databases, backups.</p>
+        <p><strong>ZeroTier emulates Layer 2.</strong> Devices on a ZeroTier network behave as if plugged into the same Ethernet switch. Broadcasts propagate. Multicast works. Legacy protocols that depend on a shared broadcast domain — old Windows NetBIOS discovery, some industrial automation (BACnet, certain Modbus variants), game LAN auto-discovery, AV-over-IP discovery protocols — function across sites.</p>
+        <p>The decision is binary: if a protocol you depend on needs Layer 2, WireGuard cannot carry it and ZeroTier can. If everything you run works over Layer 3, WireGuard is the better foundation on every other axis.</p>
+
+        <h2 id="table">Side-by-side comparison</h2>
+        <table class="cmp">
+          <thead><tr><th>Aspect</th><th>WireGuard</th><th>ZeroTier</th></tr></thead>
+          <tbody>
+            <tr><td>OSI layer</td><td>Layer 3 (IP)</td><td>Layer 2 (Ethernet emulation)</td></tr>
+            <tr><td>Implementation</td><td>Linux kernel + userspace ports</td><td>Userspace, all platforms</td></tr>
+            <tr><td>Throughput (modern Linux)</td><td>1 Gbps+</td><td>200-400 Mbps</td></tr>
+            <tr><td>Cryptography</td><td>ChaCha20-Poly1305, Curve25519 (fixed)</td><td>Own transport (Salsa20/Poly1305 era)</td></tr>
+            <tr><td>Carries broadcast/multicast</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Codebase size</td><td>~4,000 lines (core)</td><td>Larger, proprietary</td></tr>
+            <tr><td>Kernel-resident</td><td>Yes (Linux, FreeBSD, OpenBSD)</td><td>No</td></tr>
+            <tr><td>Configuration footprint</td><td>~10 lines</td><td>Network ID + member auth</td></tr>
+            <tr><td>Ecosystem</td><td>Tailscale, NetBird, MeshWG, distros</td><td>ZeroTier SaaS + ztncui self-host</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="perf">Throughput and latency</h2>
+        <p>WireGuard's kernel implementation is the fastest mainstream VPN protocol. On modern Linux it routinely saturates 1 Gbps links and pushes well beyond on capable hardware. ZeroTier runs entirely in userspace on every platform — there is no kernel ZeroTier — and additionally carries Ethernet framing overhead, so single-tunnel throughput typically lands at 200-400 Mbps on the same hardware.</p>
+        <p>For a typical SMB on a 100-300 Mbps fibre uplink, both saturate the WAN and the difference is invisible. On 1 Gbps+ links, or for high-throughput inter-site transfer, WireGuard's headroom is a real advantage.</p>
+
+        <h2 id="pick">When to pick which</h2>
+        <ul class="bullets">
+          <li><strong>WireGuard</strong> — modern L3 workloads, you want maximum throughput, you want kernel-grade performance and mainstream security review, you want the broad ecosystem of products built on it.</li>
+          <li><strong>ZeroTier</strong> — you have a hard Layer-2 requirement: broadcast/multicast protocols, legacy Windows networking, industrial automation, or game LAN protocols that must traverse the VPN.</li>
+        </ul>
+        <p>If you've landed on WireGuard and want a managed mesh rather than hand-rolling configs: MeshWG runs a WireGuard mesh on the router (8 supported firmware families), priced per router, with a 2-minute onboarding and 24/7 support. See <a href="/what-is-wireguard/">our WireGuard explainer</a> and <a href="/alternatives/zerotier/">ZeroTier alternatives</a>.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/what-is-wireguard/">What is WireGuard?</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/compare/tailscale-vs-zerotier/">Tailscale vs ZeroTier</a> ·
+            <a href="/alternatives/zerotier/">ZeroTier alternatives</a> ·
+            <a href="/compare/wireguard-vs-openvpn/">WireGuard vs OpenVPN</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; } .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

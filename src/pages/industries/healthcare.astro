@@ -1,0 +1,153 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "VPN for clinics & diagnostic labs in 2026: connect sites, keep patient data private";
+const description = "How multi-location healthcare practices — clinics, diagnostic labs, polyclinics — connect their sites with MeshWG. Central practice-management access, patient data on a private overlay, per-router pricing, no SD-WAN appliance.";
+const canonical = "https://meshwg.com/industries/healthcare/";
+const publishedTime = "2026-05-22T00:00:00Z";
+const modifiedTime  = "2026-05-22T00:00:00Z";
+
+const faqs = [
+  { q: "How do multi-location clinics connect their sites securely?", a: "A healthcare group with multiple clinics or labs needs every site to reach the central practice-management or lab-information system, while keeping patient data off the open internet. The right tool is a private network — a mesh VPN — that links each site's router into one encrypted overlay. MeshWG does this on the routers each clinic already has: every site joins a private network, patient data travels encrypted, and nothing is exposed publicly. It avoids both the cost of SD-WAN appliances and the exposure risk of opening systems to the internet." },
+  { q: "Is a mesh VPN safe for patient data?", a: "A properly configured mesh VPN is the safer option compared to the common alternatives. The risky pattern is exposing a practice-management system to the internet with a password — that puts patient data one credential away from anyone. A mesh VPN keeps those systems on a private overlay: encrypted end to end with standard WireGuard, reachable only by your authorised clinic devices, invisible to the public internet. Each healthcare organisation gets its own isolated overlay. Policy rules can further restrict which devices reach the patient-records system." },
+  { q: "Do diagnostic labs need a special network to share results?", a: "Not a special network — a private one. A diagnostic lab chain typically has collection centres and processing labs that all feed one central lab-information system (LIS). Those sites need to reach the LIS reliably and privately so reports move from lab to collection centre to the patient portal. A mesh VPN connecting each site's router gives exactly that: collection centres reach the central LIS over an encrypted private overlay, with no per-device software and no public exposure of the LIS." },
+  { q: "What does it cost to network a 6-clinic healthcare group?", a: "With MeshWG: 6 site routers at ₹349/month each, first 2 free, is about ₹1,400/month — roughly $17 — for the whole group, using the routers each clinic already has. The SD-WAN appliance approach for 6 sites typically runs several lakh in hardware plus a monthly licensing and managed-service cost. For an independent healthcare group without an IT department, the mesh-VPN approach is the difference between centralising the practice systems and leaving each clinic isolated." },
+  { q: "Can clinic staff access the central system from home?", a: "Yes — a doctor or administrator can be added to the mesh as an individual device (a laptop running the standard WireGuard app) and reach the central practice-management system from home with the same private, encrypted connection the clinics use. The clinic sites join via their routers; individual remote staff join via the WireGuard app. Both are on the same private overlay, governed by the same access policy." },
+  { q: "Does MeshWG help with healthcare data compliance?", a: "MeshWG provides the network-layer controls that healthcare data handling depends on: encryption in transit (standard WireGuard), strict isolation of your organisation's overlay from every other organisation on the service, policy rules limiting which devices reach patient systems, and no public exposure of those systems. Compliance is broader than networking — it also covers data-at-rest, access logging in your applications, staff training, and your jurisdiction's specific rules — so MeshWG is one necessary layer, not the whole compliance picture. For specifics, consult your compliance advisor; we are happy to answer network-architecture questions at support@meshwg.com." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["VPN for clinics", "healthcare VPN", "diagnostic lab network", "clinic site-to-site VPN", "multi-location healthcare network"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",       "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Industries", "item": "https://meshwg.com/industries/" },
+    { "@type": "ListItem", "position": 3, "name": "Healthcare", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ industries · healthcare"
+    title="VPN for clinics & diagnostic labs: connect sites, keep patient data private"
+    lede="A multi-location practice needs every clinic and lab to reach the central system — without putting patient data on the open internet. Here is how MeshWG connects healthcare sites into one private network."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#problem">The healthcare networking problem</a></li>
+          <li><a href="#connecting">What you're connecting</a></li>
+          <li><a href="#wrong-ways">The two wrong ways to solve it</a></li>
+          <li><a href="#meshwg">How MeshWG connects healthcare sites</a></li>
+          <li><a href="#privacy">Patient-data privacy on the overlay</a></li>
+          <li><a href="#cost">The cost, for a real practice size</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="problem">The healthcare networking problem</h2>
+        <p>A single clinic runs fine on its own. A group — several clinics, a diagnostic lab or two, perhaps a polyclinic — has a connectivity problem the moment it wants one shared patient record, one appointment system, or one lab-information system. Every site needs to reach the central system, reliably, and the data moving between them is the most sensitive a small business handles: patient records.</p>
+        <p>That combination — multi-site connectivity plus genuinely sensitive data plus, usually, no IT department — is the healthcare networking problem. Solve the connectivity carelessly and you expose patient data; solve it expensively and the practice can't afford it.</p>
+
+        <h2 id="connecting">What you're connecting</h2>
+        <ul class="bullets">
+          <li><strong>Practice-management / EMR systems</strong> — every clinic reaching the shared patient record, appointments, and billing.</li>
+          <li><strong>Lab-information systems (LIS)</strong> — collection centres and processing labs feeding one central results system.</li>
+          <li><strong>Diagnostic equipment</strong> — imaging and analyser machines that export results to the central system.</li>
+          <li><strong>Reception / billing computers</strong> — at each site, reaching central billing and insurance workflows.</li>
+          <li><strong>Remote clinicians</strong> — doctors reviewing records or reports from home.</li>
+        </ul>
+
+        <h2 id="wrong-ways">The two wrong ways to solve it</h2>
+        <p><strong>Wrong way one: expose the central system to the internet.</strong> The quickest fix — put the practice-management system on a public IP with a login — is the most dangerous. It places every patient record one stolen or guessed credential away from anyone on the internet. This is how small healthcare providers end up in breach notifications.</p>
+        <p><strong>Wrong way two: buy enterprise SD-WAN.</strong> The safe-but-unaffordable option. SD-WAN appliances at every site solve the connectivity correctly but cost several lakh in hardware plus ongoing licensing and a managed-service contract — a budget an independent practice group rarely has.</p>
+        <p>The right way is a private network that's neither exposed nor enterprise-priced: a managed mesh VPN.</p>
+
+        <h2 id="meshwg">How MeshWG connects healthcare sites</h2>
+        <p>MeshWG runs on the router each clinic and lab already has. Per site: add it in the dashboard, paste the generated configuration into the router's admin page (about two minutes), and the site joins the practice's private mesh. The central practice-management or lab system stays where it is — at head office or a main clinic — reachable by every site over the encrypted overlay, never exposed to the public internet.</p>
+        <p>Remote clinicians join the same overlay as individual devices using the standard WireGuard app. Policy rules control access: reception computers might reach billing but not the full clinical record; the imaging machines might reach only the central archive. One dashboard shows every site's link status, and 24/7 support covers the practice when something needs attention.</p>
+
+        <h2 id="privacy">Patient-data privacy on the overlay</h2>
+        <p>What the private overlay gives you, concretely:</p>
+        <ul class="bullets">
+          <li><strong>Encryption in transit</strong> — all traffic between sites is encrypted with standard WireGuard.</li>
+          <li><strong>No public exposure</strong> — the practice-management and lab systems are reachable only from your authorised clinic devices, not from the internet.</li>
+          <li><strong>Organisation isolation</strong> — your practice's overlay is strictly isolated from every other organisation on MeshWG.</li>
+          <li><strong>Policy control</strong> — rules limit which devices reach the patient-records system, so a compromised reception PC can't be a path to the full clinical database.</li>
+        </ul>
+        <p>Networking is one layer of healthcare data protection — data-at-rest encryption, application access logging, staff practices, and your jurisdiction's rules are the others. MeshWG handles the network layer well; consult your compliance advisor for the full picture.</p>
+
+        <h2 id="cost">The cost, for a real practice size</h2>
+        <table class="cmp">
+          <thead><tr><th>6-site healthcare group</th><th>SD-WAN appliances</th><th>MeshWG</th></tr></thead>
+          <tbody>
+            <tr><td>Hardware</td><td>Several lakh</td><td>₹0 (uses existing routers)</td></tr>
+            <tr><td>Monthly cost</td><td>Licensing + managed service</td><td>~₹1,400 (6 routers, 2 free)</td></tr>
+            <tr><td>IT department needed</td><td>Typically yes</td><td>No; 24/7 support included</td></tr>
+            <tr><td>New site onboarding</td><td>Days</td><td>~2 minutes</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>Connect head office and your first clinic free — two routers, no card.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/industries/">All industries</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

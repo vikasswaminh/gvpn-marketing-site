@@ -1,0 +1,159 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import PageHero   from "../../components/PageHero.astro";
+import ValueStrip from "../../components/ValueStrip.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title = "VPN for retail chains in 2026: connect every store without SD-WAN appliances";
+const description = "How multi-store retail chains connect point-of-sale, back-office, and CCTV across locations with MeshWG — central inventory and reporting, private data, per-router pricing, and no SD-WAN appliance at each store.";
+const canonical = "https://meshwg.com/industries/retail/";
+const publishedTime = "2026-05-22T00:00:00Z";
+const modifiedTime  = "2026-05-22T00:00:00Z";
+
+const faqs = [
+  { q: "How do retail chains connect their stores into one network?", a: "The three common approaches are: (1) traditional SD-WAN — a dedicated appliance at every store plus a licensing contract, the enterprise default but expensive; (2) per-store consumer VPN configured by hand — cheap but unmanageable past a few stores; (3) a managed mesh VPN like MeshWG that runs on the router each store already has, turning every store into one private network with central management. For chains of 3-50 stores, the managed mesh approach gives the central control of SD-WAN at a fraction of the cost." },
+  { q: "Do I need an SD-WAN box at every store?", a: "No. SD-WAN appliances are one way to connect stores, not the only way. A managed mesh VPN runs as software on the router each store already has — TP-Link, MikroTik, OpenWrt, and others. There's no appliance to buy, ship, install, or replace when it fails. For a chain that doesn't have a dedicated network team, removing the appliance removes the single biggest operational and capital cost of multi-store networking." },
+  { q: "Can MeshWG connect my point-of-sale systems across stores?", a: "Yes. Once each store's router is on the MeshWG mesh, every device behind that router — POS terminals, the back-office PC, barcode systems, CCTV recorders — is reachable on the private overlay according to your policy. Head office can pull sales and inventory data from every store's POS in real time; the POS systems themselves need no software installed, because the tunnel lives on the store router, not on each device." },
+  { q: "Is store data secure on a retail mesh VPN?", a: "Yes. MeshWG builds each retail chain its own isolated private overlay — your stores' traffic is encrypted end to end with standard WireGuard and is invisible to other organisations on the service. Policy rules control which devices can talk to which: the POS network can be made unreachable from the guest WiFi, CCTV can be restricted to head-office monitoring only. Nothing is exposed to the public internet; the store systems are reachable only by your authorised devices." },
+  { q: "How much does it cost to network a 20-store retail chain?", a: "With MeshWG: 20 store routers at ₹349/month each (first 2 free) is about ₹6,300/month — roughly $75 — for the whole chain, with no hardware purchase. The traditional SD-WAN comparison for the same 20 stores typically runs ₹25-35 lakh in appliance hardware plus ₹25,000-40,000/month in licensing. The mesh-VPN approach is the reason a growing chain doesn't have to choose between central visibility and budget." },
+  { q: "What happens to a store if its internet goes down?", a: "The store's local network keeps working — POS terminals continue to process sales offline if the POS software supports it, which most modern retail POS does. When the internet returns, the MeshWG tunnel re-establishes automatically (persistent keepalive handles the reconnection) and queued data syncs to head office. The mesh tunnel going down never takes down a store's ability to operate locally; it only pauses the central sync." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["VPN for retail chains", "retail store network", "multi-store VPN", "retail SD-WAN alternative", "connect retail stores"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",       "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Industries", "item": "https://meshwg.com/industries/" },
+    { "@type": "ListItem", "position": 3, "name": "Retail",     "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ industries · retail"
+    title="VPN for retail chains: connect every store, skip the SD-WAN box"
+    lede="A growing retail chain needs central inventory, central reporting, and CCTV head office can see — without buying an appliance for every store. Here is how MeshWG connects retail stores into one private network."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#problem">The retail networking problem</a></li>
+          <li><a href="#connecting">What you're actually connecting</a></li>
+          <li><a href="#sdwan">Why SD-WAN doesn't fit a growing chain</a></li>
+          <li><a href="#meshwg">How MeshWG connects retail stores</a></li>
+          <li><a href="#cost">The cost, for a real chain size</a></li>
+          <li><a href="#rollout">Rolling it out across stores</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="problem">The retail networking problem</h2>
+        <p>One store is simple — a router, a POS, an internet connection. The problem starts at the second store, and compounds at the tenth: head office needs one view of inventory and sales across every location, the accounts team needs back-office systems to reach the central books, and the owner wants to see every store's CCTV from one screen. None of that works if each store is an island.</p>
+        <p>The retail chain's specific constraints make this harder than generic multi-site networking: stores open and close, store managers are not IT people, store internet is whatever the local ISP offers, and margins don't leave room for an enterprise networking budget.</p>
+
+        <h2 id="connecting">What you're actually connecting</h2>
+        <p>Across a typical retail chain the systems that need to reach each other:</p>
+        <ul class="bullets">
+          <li><strong>Point-of-sale terminals</strong> — so head office pulls live sales and the POS reaches central inventory and pricing.</li>
+          <li><strong>Back-office computers</strong> — store-level admin reaching the central ERP, accounting, and HR systems.</li>
+          <li><strong>CCTV / NVR recorders</strong> — so the owner or a security desk at head office can view any store's cameras.</li>
+          <li><strong>Barcode / label printers and stock scanners</strong> — pulling product data from the central catalogue.</li>
+          <li><strong>Digital signage</strong> — updated centrally, displayed per store.</li>
+        </ul>
+        <p>Most of these devices cannot run VPN software themselves — a POS terminal, an NVR, a label printer. That single fact rules out per-device VPN products and points to a router-based approach.</p>
+
+        <h2 id="sdwan">Why SD-WAN doesn't fit a growing chain</h2>
+        <p>Box-based SD-WAN is the enterprise answer, and for a 200-store national chain with a network team it's a reasonable one. For a chain growing from 5 to 50 stores it doesn't fit:</p>
+        <ul class="bullets">
+          <li><strong>Capital cost</strong> — a dedicated appliance per store, ₹25-35 lakh for a 20-store chain before anything is connected.</li>
+          <li><strong>Licensing</strong> — ₹25,000-40,000/month ongoing on top of the hardware.</li>
+          <li><strong>Operational dependency</strong> — usually a managed-service provider, because the appliances need configuring and the chain has no network engineer.</li>
+          <li><strong>Slow store openings</strong> — every new store waits on an appliance being procured, shipped, and configured.</li>
+        </ul>
+
+        <h2 id="meshwg">How MeshWG connects retail stores</h2>
+        <p>MeshWG runs on the router each store already has. There is no appliance. The setup per store:</p>
+        <ol class="numbered">
+          <li>Add the store in the MeshWG dashboard — it generates a paste-ready configuration for that store's router brand.</li>
+          <li>The store manager (or a visiting technician) pastes the config into the router's admin page. About two minutes.</li>
+          <li>The store joins the chain's private mesh. Every device behind that router is now reachable on the overlay according to your policy.</li>
+        </ol>
+        <p>From head office you get: one private network spanning every store, central policy (the POS network unreachable from guest WiFi, CCTV restricted to the security desk), a single dashboard showing every store's link status, and 24/7 support when a store has an issue. It works with TP-Link, MikroTik, OpenWrt, and the other router brands stores typically already run — see the <a href="/wireguard-router/">supported router families</a>.</p>
+
+        <h2 id="cost">The cost, for a real chain size</h2>
+        <table class="cmp">
+          <thead><tr><th>20-store chain</th><th>Box-based SD-WAN</th><th>MeshWG</th></tr></thead>
+          <tbody>
+            <tr><td>Appliance hardware</td><td>₹25-35 lakh</td><td>₹0 (uses existing routers)</td></tr>
+            <tr><td>Monthly cost</td><td>₹25,000-40,000 licensing</td><td>~₹6,300 (20 routers, 2 free)</td></tr>
+            <tr><td>Network engineer / MSP</td><td>Typically required</td><td>Not required; 24/7 support included</td></tr>
+            <tr><td>New store onboarding</td><td>Days (procure + ship + configure)</td><td>~2 minutes (paste config)</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="rollout">Rolling it out across stores</h2>
+        <p>The practical sequence: connect head office and one pilot store first, confirm the central systems see the pilot store's POS and CCTV, then roll out the remaining stores in batches. Because each store is a two-minute paste, a chain can bring 20 stores onto the mesh in an afternoon of coordinated calls — no truck rolls, no appliance logistics. The detailed step-by-step is in our <a href="/blog/branch-office-vpn-smb-rollout-playbook-2026/">branch-office rollout playbook</a>.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>Connect head office and your first store free — two routers, no card. Add stores as you grow.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/industries/">All industries</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets, .numbered { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li, .numbered li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; counter-increment: num; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  .numbered { counter-reset: num; }
+  .numbered li::before { content: counter(num) "."; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; color: var(--text); }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

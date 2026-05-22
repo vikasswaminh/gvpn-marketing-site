@@ -1,0 +1,179 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import ValueStrip from "../components/ValueStrip.astro";
+import Footer     from "../components/Footer.astro";
+
+const title = "What is ZTNA? Zero Trust Network Access explained for 2026";
+const description = "ZTNA (Zero Trust Network Access) replaces the implicit trust of a traditional VPN with explicit per-request authorisation. This plain-English 2026 guide covers what ZTNA is, how it differs from a VPN, the NIST 800-207 model, and the honest trade-offs.";
+const canonical = "https://meshwg.com/what-is-ztna/";
+const publishedTime = "2026-05-21T00:00:00Z";
+const modifiedTime  = "2026-05-21T00:00:00Z";
+
+const faqs = [
+  { q: "What is ZTNA in simple terms?", a: "ZTNA (Zero Trust Network Access) is a security model where no user or device is trusted by default — every request to reach a resource is authenticated and authorised explicitly, regardless of whether the request comes from inside or outside the corporate network. It contrasts with the traditional VPN model, where connecting to the VPN places you 'on the network' and grants broad implicit access. ZTNA's principle: there is no inside; every access is verified per-request." },
+  { q: "What does ZTNA stand for?", a: "ZTNA stands for Zero Trust Network Access. It's a category of security product that implements the 'zero trust' principle for network access specifically. The broader 'zero trust' concept (covering identity, devices, data, and workloads, not just network access) is formalised in NIST Special Publication 800-207. ZTNA is the network-access slice of that model." },
+  { q: "What is the difference between ZTNA and VPN?", a: "A traditional VPN authenticates you once at connection time, then places you on a network where you can reach many resources — implicit trust after the initial check. ZTNA authenticates and authorises every request to every resource individually — there is no network to be 'on,' just per-resource access grants. Practical implication: if a VPN credential is stolen, the attacker reaches everything the VPN reaches; if a ZTNA credential is stolen, the attacker reaches only the specific resources that identity was explicitly granted. Modern mesh VPNs (Tailscale, MeshWG) sit between the two — network connectivity like a VPN, but with per-flow ACL policy that approaches ZTNA's granularity." },
+  { q: "Is ZTNA better than a VPN?", a: "For large enterprises with many internal applications and a compliance mandate, ZTNA's per-resource model is genuinely better — it limits blast radius and maps cleanly to audit frameworks. For small businesses connecting a few branch offices, a managed VPN with good policy controls is usually simpler, cheaper, and sufficient — the per-resource granularity of full ZTNA is operational overhead they don't need. 'Better' depends entirely on organisation size, compliance requirements, and the number of resources being protected." },
+  { q: "What are examples of ZTNA products?", a: "Pure-play ZTNA products include Twingate, Cloudflare Access (part of Cloudflare One / Zero Trust), Zscaler Private Access, Palo Alto Prisma Access, and Pomerium (open-source). Mesh VPN products like Tailscale and NetBird implement ZTNA-adjacent policy (per-flow ACLs) but are architecturally mesh networks rather than per-resource gateways. The distinction matters: pure ZTNA gates per-resource; mesh VPN with ACLs gates per-flow on a network." },
+  { q: "Do small businesses need ZTNA?", a: "Most small businesses need good access control, not necessarily full ZTNA. The pure-ZTNA model — every resource behind a connector, every request individually authorised — solves a problem that large enterprises with hundreds of internal applications have. A 5-branch retail business connecting its point-of-sale systems and back-office network needs reliable connectivity with sensible policy, which a managed mesh VPN delivers at a fraction of ZTNA pricing. Adopt full ZTNA when a compliance framework requires it or when you genuinely have many internal applications with differentiated access needs." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["what is ZTNA", "zero trust network access", "ZTNA meaning", "ZTNA vs VPN", "ZTNA explained"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const definedTermSchema = { "@context": "https://schema.org", "@type": "DefinedTerm",
+  "name": "ZTNA (Zero Trust Network Access)", "@id": canonical + "#term",
+  "description": "ZTNA (Zero Trust Network Access) is a security model and product category where no user or device is trusted by default; every request to reach a resource is authenticated and authorised explicitly, regardless of network location. It replaces the implicit trust of traditional VPNs and is the network-access component of the broader zero trust architecture formalised in NIST SP 800-207.",
+  "inDefinedTermSet": { "@type": "DefinedTermSet", "name": "Network security concepts" } };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "What is ZTNA", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ what is ztna"
+    title="What is ZTNA? Zero Trust Network Access explained"
+    lede="ZTNA replaces the implicit trust of a traditional VPN with explicit per-request authorisation. This guide covers what ZTNA actually is, how it differs from a VPN, the NIST model behind it, and the honest trade-offs — without the enterprise-vendor jargon."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#definition">What ZTNA is, in one sentence</a></li>
+          <li><a href="#vpn-problem">The problem ZTNA solves</a></li>
+          <li><a href="#how">How ZTNA works</a></li>
+          <li><a href="#nist">ZTNA and NIST 800-207</a></li>
+          <li><a href="#vs-vpn">ZTNA vs VPN vs mesh VPN</a></li>
+          <li><a href="#products">ZTNA products in 2026</a></li>
+          <li><a href="#do-you-need">Do you actually need ZTNA?</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="definition">What ZTNA is, in one sentence</h2>
+        <p><strong>ZTNA — Zero Trust Network Access — is a security model where every request to reach a resource is authenticated and authorised explicitly, with no implicit trust granted by network location.</strong> "Zero trust" means exactly that: being inside the corporate network, or connected to the VPN, grants you nothing. Each access is verified on its own.</p>
+
+        <h2 id="vpn-problem">The problem ZTNA solves</h2>
+        <p>The traditional security model is a perimeter: a firewall around the corporate network, a VPN to let remote users inside that perimeter. Once you're inside — physically in the office, or connected through the VPN — you're trusted. You can reach the file server, the internal admin panels, the databases, the printers, often everything.</p>
+        <p>The problem: a single compromised credential or device breaches the entire perimeter. A stolen VPN password gives an attacker the same broad access a legitimate employee has. Lateral movement — an attacker hopping from one internal system to the next — is easy once they're "inside," because inside means trusted.</p>
+        <p>ZTNA removes the concept of "inside." There is no perimeter to breach because there is no perimeter. Every request — from the office, from home, from a coffee shop — is authenticated and authorised the same way: explicitly, per-resource, every time.</p>
+
+        <h2 id="how">How ZTNA works</h2>
+        <p>A ZTNA deployment has three moving parts:</p>
+        <ul class="bullets">
+          <li><strong>The connector.</strong> A small software component runs next to each protected resource (an application, a server, a database). The connector establishes an outbound connection to the ZTNA control plane — crucially, the resource itself never has an inbound port open to the internet.</li>
+          <li><strong>The policy engine.</strong> The control plane evaluates every access request against policy: is this user, on this device, in this posture, authorised to reach this specific resource right now? Policies can incorporate identity (via SSO), device posture (is the OS patched, is disk encryption on), time, location, and more.</li>
+          <li><strong>The client.</strong> The user's device runs an agent (or, for web apps, just uses a browser) that brokers each request through the policy engine. The user never gets "network access" — they get authorised access to specific resources.</li>
+        </ul>
+        <p>The result: the user reaches exactly the resources policy permits, and nothing else. There's no network to scan, no lateral movement, no implicit trust to exploit.</p>
+
+        <h2 id="nist">ZTNA and NIST 800-207</h2>
+        <p>The authoritative reference for zero trust is <strong>NIST Special Publication 800-207</strong>, "Zero Trust Architecture," published 2020. It defines zero trust broadly — covering identity, devices, applications, data, and network — across seven tenets. The core principle: "never trust, always verify."</p>
+        <p>ZTNA is specifically the <em>network access</em> slice of NIST 800-207. A full zero trust architecture also addresses identity governance, device management, data classification, and workload security. ZTNA products handle the "how does a user reach a resource" question; they're a component of zero trust, not the whole of it.</p>
+        <p>For organisations being audited against a zero trust framework, this distinction matters: deploying a ZTNA product is necessary but not sufficient for "we have zero trust." It's one pillar of several.</p>
+
+        <h2 id="vs-vpn">ZTNA vs VPN vs mesh VPN</h2>
+        <p>The three models, honestly compared:</p>
+        <table class="cmp">
+          <thead><tr><th>Aspect</th><th>Traditional VPN</th><th>Mesh VPN (Tailscale, MeshWG)</th><th>Pure ZTNA (Twingate, Zscaler)</th></tr></thead>
+          <tbody>
+            <tr><td>Trust model</td><td>Implicit after connect</td><td>Per-flow ACL on a network</td><td>Per-resource, per-request</td></tr>
+            <tr><td>Unit of access</td><td>"on the network"</td><td>device-to-device, ACL-gated</td><td>user-to-resource</td></tr>
+            <tr><td>Lateral movement risk</td><td>High</td><td>Limited by ACLs</td><td>Minimal by design</td></tr>
+            <tr><td>Inbound ports on resources</td><td>VPN concentrator exposed</td><td>None (outbound handshake)</td><td>None (connector outbound)</td></tr>
+            <tr><td>Operational complexity</td><td>Low</td><td>Low-medium</td><td>Medium-high</td></tr>
+            <tr><td>Cost</td><td>Low</td><td>Low-medium</td><td>High ($7-15/user/month)</td></tr>
+            <tr><td>Best for</td><td>Simple single-site remote access</td><td>Multi-site / branch connectivity</td><td>Many internal apps, compliance mandate</td></tr>
+          </tbody>
+        </table>
+        <p>The honest middle ground: <strong>mesh VPN with strong ACL policy</strong> gives most of ZTNA's blast-radius reduction (no implicit broad trust, no exposed inbound ports, per-flow policy) without the operational cost of a per-resource connector model. For organisations that aren't large enterprises with a compliance mandate, that middle ground is often the right answer.</p>
+
+        <h2 id="products">ZTNA products in 2026</h2>
+        <ul class="bullets">
+          <li><strong>Twingate</strong> — gateway-based ZTNA, strong per-resource model, $10/user/month. <a href="/alternatives/twingate/">See alternatives</a>.</li>
+          <li><strong>Cloudflare Access</strong> — part of Cloudflare One / Zero Trust; free up to 50 users. <a href="/alternatives/cloudflare-one/">See alternatives</a>.</li>
+          <li><strong>Zscaler Private Access (ZPA)</strong> — enterprise-scale, the category's biggest vendor, priced for large organisations.</li>
+          <li><strong>Palo Alto Prisma Access</strong> — enterprise SASE platform with ZTNA as a component.</li>
+          <li><strong>Pomerium</strong> — open-source (Apache 2.0) gateway ZTNA, self-hostable.</li>
+          <li><strong>Mesh VPN with ACLs</strong> — Tailscale, NetBird, MeshWG implement per-flow policy that covers many of the same threats without a per-resource connector model.</li>
+        </ul>
+
+        <h2 id="do-you-need">Do you actually need ZTNA?</h2>
+        <p>An honest decision framework:</p>
+        <ul class="bullets">
+          <li><strong>You probably need full ZTNA</strong> if: you're a mid-to-large enterprise, you have dozens of internal applications with differentiated access requirements, you're being audited against a zero trust mandate (compliance, government, regulated industry), or you have a workforce large enough that per-user device posture checks materially reduce risk.</li>
+          <li><strong>You probably need a good mesh VPN instead</strong> if: you're an SMB connecting a handful of sites, your "internal applications" are a file server and a few back-office systems, you want reliable connectivity with sensible policy, and ZTNA's $7-15/user/month pricing is hard to justify against the actual risk reduction for your size.</li>
+        </ul>
+        <p>MeshWG is in the second category: a managed mesh VPN for SMB multi-branch, with per-flow policy (allow / deny by source, destination, protocol, port) that covers the practical blast-radius concerns without the operational weight of a per-resource ZTNA deployment. For genuine enterprise ZTNA needs, the pure-play products above are the right tools — and we'll say so.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>If you're an SMB weighing ZTNA against a managed mesh VPN, start with the honest decision guide for your size — or try MeshWG's free tier (2 routers, no card).</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/ztna-for-small-business/">ZTNA for small business</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/ztna-vs-vpn/">ZTNA vs VPN</a> ·
+            <a href="/what-is-wireguard/">What is WireGuard?</a> ·
+            <a href="/alternatives/twingate/">Twingate alternatives</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(definedTermSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; } .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12px; } table.cmp th, table.cmp td { padding: 7px 7px; } }
+</style>

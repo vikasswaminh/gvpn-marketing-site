@@ -1,0 +1,179 @@
+---
+import Base       from "../layouts/Base.astro";
+import Nav        from "../components/Nav.astro";
+import PageHero   from "../components/PageHero.astro";
+import ValueStrip from "../components/ValueStrip.astro";
+import Footer     from "../components/Footer.astro";
+
+const title = "ZTNA for small business in 2026: do you need it, and what to buy";
+const description = "Does a small business actually need ZTNA, or a managed mesh VPN? This honest 2026 guide covers when full ZTNA is worth the $7-15/user/month, the SMB-friendly options (Twingate, Cloudflare Access, NetBird, MeshWG), and a decision framework by company size.";
+const canonical = "https://meshwg.com/ztna-for-small-business/";
+const publishedTime = "2026-05-22T00:00:00Z";
+const modifiedTime  = "2026-05-22T00:00:00Z";
+
+const faqs = [
+  { q: "Does a small business need ZTNA?", a: "Most small businesses need good access control, not necessarily full ZTNA. Pure ZTNA — every resource behind a connector, every request individually authorised — solves a problem large enterprises with hundreds of internal applications have. A small business connecting a few branch offices and a handful of internal systems usually gets better value from a managed mesh VPN with sensible policy controls, at a fraction of ZTNA pricing. Adopt full ZTNA when a compliance framework requires it, when you have many internal applications with differentiated access needs, or when you handle data sensitive enough that per-request authorisation is genuinely warranted." },
+  { q: "How much does ZTNA cost for a small business?", a: "Pure-play ZTNA runs $7-15 per user per month. Twingate Starter is $10/user/month; Cloudflare Zero Trust Standard is $7/user/month (with a generous free tier up to 50 users); Zscaler and Palo Alto are priced for enterprise and typically require a sales conversation. For a 25-person business, Twingate is $250/month / $3,000/year. A managed mesh VPN priced per-machine rather than per-user — MeshWG at ₹349 (~$4.20) per router — covers a 5-branch business for around $21/month, because branches have routers, not dozens of users each." },
+  { q: "What is the best ZTNA for small business?", a: "Cloudflare Access is the strongest free option — Cloudflare Zero Trust Free covers up to 50 users, which covers most genuine small businesses at zero cost. Twingate is the most polished paid option if you want per-resource ZTNA specifically. Pomerium is the best self-hosted open-source choice. But for the common SMB shape — connecting branch offices and their devices — a managed mesh VPN (MeshWG) is usually the better-fitting and cheaper answer than any pure ZTNA product, because the SMB problem is typically 'connect my sites securely' rather than 'gate hundreds of apps per-resource.'" },
+  { q: "What is the difference between ZTNA and a business VPN?", a: "A business VPN authenticates a user once, then places them on a network with broad access. ZTNA authorises every request to every resource individually — no network, just per-resource grants. For a small business the practical question is rarely 'VPN or ZTNA' in the abstract; it's 'what access does my team actually need?' If the answer is 'reach the systems at our other offices,' a managed mesh VPN delivers that directly. If it's 'give 12 contractors access to exactly 3 internal apps and nothing else,' ZTNA's per-resource model fits better." },
+  { q: "Can I get ZTNA-level security without paying ZTNA prices?", a: "Largely, yes — a modern managed mesh VPN delivers most of ZTNA's blast-radius reduction without the per-resource connector model. No inbound ports exposed on your resources (the tunnel handshake is outbound), no implicit broad trust (per-flow ACL policy controls which device can reach which), and a much smaller attack surface than a traditional VPN concentrator. MeshWG's policy model — allow/deny by source device, destination device, protocol, and port — covers the practical SMB threat model. It's not per-resource ZTNA, but for most small businesses the gap doesn't change the real-world security outcome." },
+  { q: "When should a small business upgrade from mesh VPN to full ZTNA?", a: "Three triggers. First, compliance: a customer contract, a regulator, or a certification (SOC 2, ISO 27001 with a zero-trust control, an industry mandate) explicitly requires per-resource authorisation. Second, scale: you've grown past ~50 employees and accumulated enough internal applications that per-resource device-posture policy genuinely reduces risk. Third, workforce shape: you have a large contractor / third-party population that should reach specific apps and nothing else. Until one of those is true, a managed mesh VPN with good ACLs is usually the right level of control for a small business." }
+];
+
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", "@id": canonical + "#article",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }, "headline": title, "description": description,
+  "datePublished": publishedTime, "dateModified": modifiedTime,
+  "author": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "publisher": { "@type": "Organization", "@id": "https://meshwg.com/#organization" },
+  "image": "https://meshwg.com/favicon.svg",
+  "keywords": ["ZTNA for small business", "small business ZTNA", "ZTNA SMB", "affordable ZTNA", "ZTNA pricing"],
+  "isAccessibleForFree": true, "inLanguage": "en" };
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })) };
+const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "ZTNA for small business", "item": canonical } ] };
+---
+
+<Base title={title} description={description} canonical={canonical}
+      ogType="article" publishedTime={publishedTime} modifiedTime={modifiedTime}>
+  <Nav />
+  <PageHero
+    eyebrow="/ ztna for small business"
+    title="ZTNA for small business: do you need it, and what to buy"
+    lede="Pure ZTNA is built for large enterprises. Most small businesses get better value from a managed mesh VPN with good policy controls. This guide gives an honest decision framework by company size — and names what to buy in each case."
+  />
+  <ValueStrip />
+
+  <section class="guide">
+    <div class="wrap">
+      <aside class="toc">
+        <div class="toc-h">In this guide</div>
+        <ol>
+          <li><a href="#honest">The honest answer first</a></li>
+          <li><a href="#what-smb-needs">What a small business access problem looks like</a></li>
+          <li><a href="#cost">The cost reality</a></li>
+          <li><a href="#options">SMB-friendly options</a></li>
+          <li><a href="#framework">Decision framework by size</a></li>
+          <li><a href="#meshwg">Where MeshWG fits</a></li>
+          <li><a href="#upgrade">When to upgrade to full ZTNA</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <h2 id="honest">The honest answer first</h2>
+        <p><strong>Most small businesses do not need full ZTNA. They need good access control — which a managed mesh VPN delivers at a fraction of ZTNA pricing.</strong></p>
+        <p>The ZTNA category is marketed hard, and the marketing implies every organisation should adopt it. The reality: pure ZTNA's per-resource connector model solves a problem large enterprises with hundreds of internal applications have. A small business connecting a few sites and a handful of systems is paying for granularity it won't use. This guide is the honest version: when ZTNA is worth it for an SMB, when it isn't, and what to buy either way.</p>
+
+        <h2 id="what-smb-needs">What a small business access problem looks like</h2>
+        <p>The typical SMB network-access need, concretely:</p>
+        <ul class="bullets">
+          <li><strong>Connect 2-10 branch offices</strong> so point-of-sale systems, back-office computers, and shared drives at each site can reach each other and HQ.</li>
+          <li><strong>Let a small remote / hybrid team</strong> reach internal systems from home or on the road.</li>
+          <li><strong>Keep some separation</strong> — the POS network shouldn't be reachable from the guest WiFi; contractors shouldn't reach finance systems.</li>
+          <li><strong>Not hire a network engineer</strong> to run it.</li>
+        </ul>
+        <p>That's a connectivity problem with a policy layer. It is <em>not</em> "we have 200 internal SaaS-style apps and need per-app per-user device-posture-aware authorisation," which is what pure ZTNA is built for. Matching the tool to the actual problem is the whole game.</p>
+
+        <h2 id="cost">The cost reality</h2>
+        <p>Pure-play ZTNA is priced per user. For an SMB that's the wrong unit — branches have routers and devices, not just named users. The comparison for a 5-branch business with 40 staff:</p>
+        <table class="cmp">
+          <thead><tr><th>Option</th><th>Monthly</th><th>Annual</th><th>Pricing unit</th></tr></thead>
+          <tbody>
+            <tr><td>Twingate Starter</td><td>$400 (40 × $10)</td><td>$4,800</td><td>per user</td></tr>
+            <tr><td>Cloudflare Zero Trust</td><td>$0 (free ≤50 users)</td><td>$0</td><td>per user (free tier)</td></tr>
+            <tr><td>Zscaler / Palo Alto</td><td>Enterprise quote</td><td>typically $5,000+</td><td>per user, enterprise contract</td></tr>
+            <tr><td>MeshWG</td><td>~$21 (5 routers × ₹349)</td><td>~$252</td><td>per router</td></tr>
+          </tbody>
+        </table>
+        <p>Cloudflare's free tier is genuinely competitive for SMBs that fit the per-resource model. For the connect-my-branches model, per-router pricing is structurally cheaper because you have far fewer routers than users.</p>
+
+        <h2 id="options">SMB-friendly options</h2>
+        <ul class="bullets">
+          <li><strong>Cloudflare Access</strong> — free up to 50 users; the strongest free pure-ZTNA option. Good if your problem genuinely is per-resource access and you don't mind the Cloudflare ecosystem.</li>
+          <li><strong>Twingate</strong> — most polished pure ZTNA; $10/user/month. Worth it if per-resource granularity is a real requirement.</li>
+          <li><strong>Pomerium</strong> — open-source self-host ZTNA; free software, you run the server.</li>
+          <li><strong>MeshWG</strong> — managed mesh VPN with per-flow ACL policy; per-router pricing; built for the connect-my-branches SMB shape.</li>
+          <li><strong>Tailscale / NetBird</strong> — mesh VPN with ACLs; per-user pricing; good for fully-remote teams without physical branches.</li>
+        </ul>
+
+        <h2 id="framework">Decision framework by size</h2>
+        <table class="cmp">
+          <thead><tr><th>Your situation</th><th>Recommendation</th></tr></thead>
+          <tbody>
+            <tr><td>2-15 staff, 1-3 sites, a few shared systems</td><td>Managed mesh VPN (MeshWG). Full ZTNA is overkill.</td></tr>
+            <tr><td>15-50 staff, multiple branches, POS / back-office separation needed</td><td>Managed mesh VPN with ACL policy (MeshWG). Cloudflare Access free tier if the problem is per-app access specifically.</td></tr>
+            <tr><td>50+ staff, many internal apps, contractors needing scoped access</td><td>Evaluate pure ZTNA (Twingate, Cloudflare Access paid). The per-resource model starts earning its cost here.</td></tr>
+            <tr><td>Any size, but a compliance framework mandates per-resource authorisation</td><td>Pure ZTNA, regardless of size. The mandate decides.</td></tr>
+            <tr><td>Fully remote, no physical sites, every member has a laptop</td><td>Mesh VPN priced per-user (Tailscale, NetBird) or Cloudflare Access free tier.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="meshwg">Where MeshWG fits</h2>
+        <p>MeshWG is a managed mesh VPN built for the SMB multi-branch shape — the middle three rows of that table. It's not pure ZTNA and we won't claim it is. What it provides:</p>
+        <ul class="bullets">
+          <li><strong>Per-flow policy</strong> — allow / deny rules by source device, destination device, protocol, and port. The POS network can be made unreachable from guest WiFi; contractors can be denied finance systems. Enforced before traffic reaches the destination.</li>
+          <li><strong>No exposed inbound ports</strong> — the WireGuard handshake is outbound from each router; resources are never directly internet-reachable. This closes the same attack surface ZTNA's connector model closes.</li>
+          <li><strong>Per-router pricing</strong> — ₹349 (~$4.20) per router per month, 2 free. A 5-branch business pays ~$21/month for the whole mesh.</li>
+          <li><strong>24/7 support, 2-minute onboarding</strong> — no network engineer required.</li>
+        </ul>
+        <p>For an SMB whose real problem is "connect my branches securely with sensible separation," this covers it. For an SMB with a genuine per-resource-authorisation mandate, the pure-ZTNA products are the right tools — and that's the honest recommendation when it applies.</p>
+
+        <h2 id="upgrade">When to upgrade to full ZTNA</h2>
+        <p>Three triggers, any one of which justifies the move from mesh VPN to pure ZTNA: a compliance framework explicitly requires per-resource authorisation; you've grown past ~50 staff with many internal applications; or you have a large third-party / contractor population needing tightly-scoped access. Until one fires, a managed mesh VPN with good ACLs is the right level of control — and the right level of spend — for a small business.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        {faqs.map((f) => (<div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>))}
+
+        <div class="next">
+          <h2>Next steps</h2>
+          <p>If your problem is connecting branches securely, MeshWG's free tier is the fastest way to validate — 2 routers, no card, indefinite.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+            <a class="btn btn-line btn-lg" href="/what-is-ztna/">What is ZTNA?</a>
+          </div>
+          <p class="related">
+            See also:
+            <a href="/ztna-vs-vpn/">ZTNA vs VPN</a> ·
+            <a href="/alternatives/twingate/">Twingate alternatives</a> ·
+            <a href="/pricing">Pricing</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+</Base>
+
+<style>
+  .guide { padding: 64px 0 128px; } .guide .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+  .toc { position: sticky; top: 100px; font-size: 13.5px; }
+  .toc-h { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 14px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: tocnum; }
+  .toc li { counter-increment: tocnum; padding: 8px 0 8px 26px; position: relative; border-bottom: 1px solid var(--border-faint); line-height: 1.45; }
+  .toc li::before { content: counter(tocnum, decimal-leading-zero); position: absolute; left: 0; top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--text-4); }
+  .toc a { color: var(--text-2); transition: color 0.15s ease; } .toc a:hover { color: var(--accent); }
+  article { max-width: 820px; }
+  .guide h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 56px 0 16px; color: var(--text); text-wrap: balance; scroll-margin-top: 100px; }
+  .guide h2:first-child { margin-top: 0; }
+  .guide h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin: 24px 0 8px; color: var(--text); }
+  .guide p { color: var(--text-2); font-size: 15.5px; line-height: 1.7; margin: 0 0 16px; }
+  .guide strong { color: var(--text); font-weight: 600; } .guide a { color: var(--accent); } .guide a:hover { color: var(--accent-strong); }
+  .bullets { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+  .bullets li { color: var(--text-2); font-size: 15.5px; line-height: 1.65; padding-left: 28px; position: relative; }
+  .bullets li::before { content: "—"; position: absolute; left: 0; top: 0; color: var(--text-4); font-family: var(--font-mono); }
+  table.cmp { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-strong); background: var(--surface); }
+  .faq-item { margin: 32px 0; } .faq-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .next { margin-top: 64px; padding: 32px 36px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+  .next h2 { margin-top: 0; font-size: 24px; } .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+  .related { font-size: 14px; color: var(--text-3); margin-top: 24px; } .related a { margin: 0 4px; }
+  @media (max-width: 980px) { .guide { padding: 32px 0 64px; } .guide .wrap { grid-template-columns: 1fr; gap: 24px; } .toc { position: static; } .guide h2 { font-size: 24px; margin-top: 40px; } .next { padding: 22px 22px; } table.cmp { font-size: 12.5px; } table.cmp th, table.cmp td { padding: 8px 8px; } }
+</style>

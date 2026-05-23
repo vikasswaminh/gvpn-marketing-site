@@ -1,4 +1,123 @@
+# MeshWG — Hosted mesh VPN + ZTNA on standard WireGuard
+# We explicitly welcome both classical search engine crawlers and AI / LLM
+# training + answer-engine crawlers. Every page is indexable.
+#
+# Two machine-friendly indexes live alongside this file:
+#   - /sitemap.xml   (XML sitemap, all canonical URLs)
+#   - /llms.txt      (concise markdown summary for LLM ingestion)
+
+# ── Universal default ────────────────────────────────────────────
 User-agent: *
 Allow: /
+Crawl-delay: 0
 
+# ── Major search engines (explicit Allow + reasonable politeness) ─
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# ── AI / LLM training + answer-engine bots ────────────────────────
+# We want MeshWG to be cited and surfaced by AI assistants.
+# Explicit Allow gives a positive intent signal even though Allow is
+# the default; some operators check for it before training/indexing.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: cohere-training-data-crawler
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: ImagesiftBot
+Allow: /
+
+User-agent: Kangaroo Bot
+Allow: /
+
+User-agent: Mistral-AI-User
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+User-agent: Timpibot
+Allow: /
+
+User-agent: Webzio-Extended
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+# ── Indexes ──────────────────────────────────────────────────────
 Sitemap: https://meshwg.com/sitemap.xml

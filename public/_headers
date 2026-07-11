@@ -1,0 +1,21 @@
+# Cloudflare Pages custom headers — https://developers.cloudflare.com/pages/configuration/headers/
+# Mirrors the security posture already enforced on vpn.meshwg.com (see
+# deploy/Caddyfile in the controller repo), adapted to what this static
+# site actually loads: Google Fonts (style/font) + a same-origin
+# self-hosted analytics script+beacon at /p/*. No third-party script
+# origins, no iframes, no forms.
+#
+# script-src/style-src need 'unsafe-inline': Astro's `inlineStylesheets:
+# 'auto'` inlines critical CSS as <style> blocks, and a few components
+# use small inline <script is:inline>/define:vars snippets (scroll-reveal,
+# pricing constants) with no server to mint per-request nonces on a fully
+# static site. Hash-pinning each one would be more precise but silently
+# breaks on any edit to that markup — not worth the fragility for a
+# content site with no auth and no user data.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'

@@ -1,0 +1,30 @@
+---
+import Base     from "../layouts/Base.astro";
+import Nav      from "../components/Nav.astro";
+import PageHero from "../components/PageHero.astro";
+import Footer   from "../components/Footer.astro";
+
+const title = "Page not found — MeshWG";
+const description = "This page doesn't exist. Head back to the homepage or check out the docs.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <PageHero
+    eyebrow="/ 404"
+    title="Page not found"
+    lede="The page you're looking for doesn't exist or has moved. Try the homepage, or check the docs for what you're after."
+  />
+
+  <section class="not-found">
+    <div class="wrap">
+      <a class="btn btn-primary btn-lg" href="/">Back to homepage</a>
+      <a class="btn btn-line btn-lg" href="/docs">Browse docs</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found { padding: 8px 0 120px; }
+  .wrap { display: flex; gap: 10px; flex-wrap: wrap; }
+</style>

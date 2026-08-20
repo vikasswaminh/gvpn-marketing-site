@@ -114,7 +114,10 @@ const description = "Founder-written notes on branch networking, WireGuard, mesh
                 <span class="rt">{p.readMinutes} min read</span>
               </div>
               <h2 class="t">{p.title}</h2>
-              <p class="d">{p.description}</p>
+              <div class="tldr">
+                <span class="tldr-label">TL;DR</span>
+                <p class="d">{p.description}</p>
+              </div>
               <span class="arrow" aria-hidden="true">Read →</span>
             </a>
           </li>
@@ -228,8 +231,26 @@ const description = "Founder-written notes on branch networking, WireGuard, mesh
   }
   .post-link:hover .t { color: var(--accent); }
 
+  .tldr {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0 0 20px;
+    padding: 14px 18px;
+    background: var(--bg-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .tldr-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
   .d {
-    margin: 0 0 18px;
+    margin: 0;
     color: var(--text-2);
     font-size: 15px;
     line-height: 1.65;

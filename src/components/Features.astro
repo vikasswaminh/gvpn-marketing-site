@@ -63,10 +63,17 @@ const features = [
   .feature {
     background: var(--bg);
     padding: 36px 32px 40px;
-    transition: background 0.2s ease;
+    transition: background 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
     position: relative;
+    z-index: 1;
   }
-  .feature:hover { background: var(--bg-2); }
+  .feature:hover { 
+    background: var(--bg);
+    transform: scale(1.03);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+    z-index: 2;
+    border-radius: var(--radius-lg);
+  }
 
   .ft-title {
     font-family: var(--font-serif);

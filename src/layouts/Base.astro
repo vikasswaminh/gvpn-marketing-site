@@ -209,13 +209,13 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
     .announce-link:hover { opacity: 1; }
     /* Push the fixed nav below the announcement bar */
     .nav { top: 40px !important; }
-    /* And give the page extra top-padding so the hero clears both */
-    .hero { padding-top: 200px !important; }
+    /* And give the page extra top-padding so the hero clears both cleanly */
+    .hero { padding-top: 124px !important; }
     @media (max-width: 720px) {
       .announce-inner { gap: 8px; padding: 8px var(--wrap-pad-x); font-size: 12px; }
       .announce-link { margin-left: 0; }
       .nav { top: 64px !important; }
-      .hero { padding-top: 168px !important; }
+      .hero { padding-top: 112px !important; }
     }
   </style>
   <slot />

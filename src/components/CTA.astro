@@ -2,103 +2,82 @@
 import { site } from "../site";
 ---
 
-<section class="cta-section">
-  <div class="wrap">
-    <div class="cta">
-      <div class="cta-inner">
-        <div class="cta-eyebrow">/ get started</div>
-        <h2 class="cta-h">Connect your business. <span>Your home. Or both.</span></h2>
-        <p class="cta-p">
-          Sign up free in under a minute. Two machines free, forever. No
-          card, no agent install, no waiting on hardware.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary btn-lg" href={site.signupFree} target="_blank" rel="noopener">
-            Sign up free
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
-          <a class="btn btn-lg" href={site.proContact}>
-            Talk to us
-          </a>
-        </div>
-      </div>
-    </div>
+<div class="cta-block">
+  <div class="cta-eyebrow">READY TO CONNECT YOUR NETWORK?</div>
+  <h2 class="cta-h">Start free.<br/><span>No credit card.</span></h2>
+
+  <ul class="cta-list">
+    <li>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      2 machines free forever
+    </li>
+    <li>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Set up in minutes
+    </li>
+    <li>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Upgrade anytime
+    </li>
+  </ul>
+
+  <div class="cta-btns">
+    <a class="btn btn-primary" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+    <a class="btn btn-line" href={site.proContact}>Talk to us</a>
   </div>
-</section>
+</div>
 
 <style>
-  /* Editorial closing CTA — dark canvas card with a soft acid glow
-     in the upper-right corner, serif italic emphasis on the second
-     clause of the headline. */
-  .cta-section { padding: 0 0 140px; }
-
-  .cta {
+  .cta-block {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 88px 72px;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
+    padding: 40px 36px;
+    position: sticky;
+    top: 100px;
   }
-  .cta::before {
-    content: "";
-    position: absolute;
-    top: -120px; right: -120px;
-    width: 500px; height: 500px;
-    z-index: -1;
-    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .cta-inner { max-width: 720px; position: relative; z-index: 1; }
 
   .cta-eyebrow {
-    display: inline-block;
     font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    color: var(--text-3);
-    text-transform: uppercase;
-    margin-bottom: 22px;
-  }
-  .cta-h {
-    font-family: var(--font-serif);
-    font-size: clamp(36px, 5vw, 64px);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin: 0 0 20px;
-    font-weight: 400;
-    color: var(--text);
-    text-wrap: balance;
-  }
-  .cta-h span {
-    font-style: normal;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     color: var(--accent);
-  }
-  .cta-p {
-    color: var(--text-2);
-    font-size: 16.5px;
-    margin: 0 0 32px;
-    line-height: 1.6;
-    font-weight: 400;
-    max-width: 580px;
-  }
-  .cta-row {
-    display: flex; gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  /* Inherit global .btn-primary (ink). Override only the radius for the
-     CTA-section-specific pill shape if we want it; current direction is
-     tight rectangles so we let the global rule win. */
-  .cta-row .btn:not(.btn-primary) {
-    border: 1px solid var(--border-strong);
-    color: var(--text);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
   }
 
-  @media (max-width: 980px) {
-    .cta-section { padding: 0 0 64px; }
-    .cta { padding: 56px 28px; }
+  .cta-h {
+    font-family: var(--font-sans);
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .cta-h span {
+    color: var(--text-3);
+    font-weight: 400;
+  }
+
+  .cta-list {
+    list-style: none;
+    padding: 0; margin: 0 0 28px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .cta-list li {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .cta-list svg { color: var(--text); flex-shrink: 0; }
+
+  .cta-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 </style>

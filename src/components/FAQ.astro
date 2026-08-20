@@ -1,68 +1,66 @@
 ---
 const faqs = [
-  [
-    {
-      q: "How is this different from Tailscale?",
-      a: "Tailscale needs its software on every device. We work with whatever WireGuard is already on your router — so you can mesh in branch routers, home routers, and even older hardware without installing anything. We also charge per machine, not per user, which is closer to how you'd actually count.",
-      open: true,
-    },
-    {
-      q: "Do I need to install software or replace anything?",
-      a: "No. If your router supports WireGuard (most modern routers do), you paste the config we generate. The router does the rest. No firmware changes, no agent install.",
-    },
-    {
-      q: "Is the encryption strong?",
-      a: "Yes — it's standard WireGuard, the same protocol used by every major VPN service today. Your private keys never leave your device.",
-    },
-  ],
-  [
-    {
-      q: "What happens if MeshWG goes down?",
-      a: "Your tunnels keep working. WireGuard lives on your devices, not on our servers, so an outage on our side doesn't disconnect your branches.",
-    },
-    {
-      q: "Do I have to pay a credit card up front?",
-      a: "No. The first 2 machines are free forever — sign up with email or Google, mesh them, and we never ask for a card. You only enter billing when you add machine #3.",
-    },
-    {
-      q: "Is this for businesses or homes?",
-      a: "Both. A homelabber meshing their VPS, home network, and remote cabin uses it the same way a 20-branch retailer does. The product doesn't care what you call yourself.",
-    },
-  ],
+  {
+    q: "How is MeshWG different from Tailscale?",
+    a: "Tailscale needs its software on every device. We work with whatever WireGuard is already on your router — so you can mesh in branch routers, home routers, and even older hardware without installing anything. We also charge per machine, not per user, which is closer to how you'd actually count.",
+    open: true,
+  },
+  {
+    q: "Do I need to install software on my devices?",
+    a: "No. If your router supports WireGuard (most modern routers do), you paste the config we generate. The router does the rest. No firmware changes, no agent install.",
+  },
+  {
+    q: "Is my data encrypted?",
+    a: "Yes — it's standard WireGuard, the same protocol used by every major VPN service today. Your private keys never leave your device.",
+  },
+  {
+    q: "What happens if MeshWG goes down?",
+    a: "Your tunnels keep working. WireGuard lives on your devices, not on our servers, so an outage on our side doesn't disconnect your branches.",
+  },
+  {
+    q: "Is MeshWG for businesses or home users?",
+    a: "Both. A homelabber meshing their VPS, home network, and remote cabin uses it the same way a 20-branch retailer does.",
+  },
+  {
+    q: "Can I use my own domain / SSO?",
+    a: "Custom domains and enterprise SSO integrations are available on our Pro plan. Talk to us for details.",
+  },
 ];
 ---
 
-<section id="faq" style="background: var(--bg-2);">
-  <div class="wrap">
-    <div class="sec-eyebrow">/ faq</div>
-    <h2 class="sec-h">Straight answers.</h2>
-
-    <div class="faq-grid">
-      {faqs.map((col) => (
-        <div>
-          {col.map((f) => (
-            <details open={f.open}>
-              <summary>{f.q}</summary>
-              <p>{f.a}</p>
-            </details>
-          ))}
-        </div>
-      ))}
-    </div>
+<div class="faq-block">
+  <h2 class="faq-h">Frequently asked questions</h2>
+  <div class="faq-list">
+    {faqs.map((f) => (
+      <details open={f.open}>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
   </div>
-</section>
+  <a class="faq-all" href="/docs">View all FAQs →</a>
+</div>
 
 <style>
-  .faq-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 56px;
-    margin-top: 64px;
+  .faq-block {}
+
+  .faq-h {
+    font-family: var(--font-sans);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+    color: var(--text);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
   }
 
   details {
     border-top: 1px solid var(--border);
-    padding: 22px 0;
+    padding: 16px 0;
   }
   details:last-child {
     border-bottom: 1px solid var(--border);
@@ -71,37 +69,41 @@ const faqs = [
   summary {
     cursor: pointer;
     list-style: none;
-    font-family: var(--font-serif);
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-size: 14.5px;
+    font-weight: 600;
     color: var(--text);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 16px;
-    line-height: 1.2;
+    line-height: 1.4;
   }
   summary:hover { color: var(--accent); }
   summary::-webkit-details-marker { display: none; }
   summary::after {
     content: "+";
     font-family: var(--font-mono);
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-4);
-    font-weight: 400;
-    line-height: 1;
     flex-shrink: 0;
-    transition: color 0.2s ease, transform 0.2s ease;
   }
-  details[open] summary::after { content: "−"; color: var(--accent); }
+  details[open] summary::after { content: "−"; color: var(--text); }
   details p {
-    margin: 16px 0 0;
-    color: var(--text-2);
-    font-size: 14.5px;
-    line-height: 1.65;
-    font-weight: 400;
+    margin: 10px 0 0;
+    color: var(--text-3);
+    font-size: 13.5px;
+    line-height: 1.6;
   }
 
-  @media (max-width: 980px) {
-    .faq-grid { grid-template-columns: 1fr; gap: 0; }
+  .faq-all {
+    display: inline-block;
+    margin-top: 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
   }
+  .faq-all:hover { color: var(--accent-strong); }
 </style>

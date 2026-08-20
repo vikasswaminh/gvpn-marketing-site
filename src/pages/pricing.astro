@@ -65,7 +65,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 
       <!-- Plans -->
       <div class="plans">
-        <article class="plan">
+        <article class="plan hover-card">
           <div class="plan-name">Free</div>
           <div class="plan-price">
             <span class="num">₹0</span>
@@ -81,7 +81,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
           <a class="btn btn-line plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
         </article>
 
-        <article class="plan plan-accent">
+        <article class="plan plan-accent hover-card">
           <div class="plan-name">Cloud</div>
           <div class="plan-price">
             <span class="num" data-cloud-price>₹349</span>
@@ -97,7 +97,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
           <a class="btn btn-primary plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
         </article>
 
-        <article class="plan">
+        <article class="plan hover-card">
           <div class="plan-name">Pro</div>
           <div class="plan-price">
             <span class="num">Custom</span>
@@ -135,13 +135,13 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
           <input id="machines" type="range" min="0" max="100" value="10" step="1" data-slider />
 
           <div class="calc-result">
-            <div class="result-card" data-cycle-card="annual">
+            <div class="result-card hover-card" data-cycle-card="annual">
               <div class="rc-eyebrow">Annual billing</div>
               <div class="rc-num"><span data-annual-monthly>₹2,792</span><span class="rc-unit">/ month</span></div>
               <div class="rc-sub">₹<span data-annual-total>33,504</span> billed yearly · <span data-paid-machines>8</span> paid + 2 free</div>
             </div>
 
-            <div class="result-card">
+            <div class="result-card hover-card">
               <div class="rc-eyebrow">Monthly billing</div>
               <div class="rc-num"><span data-monthly-monthly>₹3,992</span><span class="rc-unit">/ month</span></div>
               <div class="rc-sub">No annual commitment · cancel anytime</div>
@@ -247,7 +247,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 </script>
 
 <style>
-  .price-section { padding: 64px 0 128px; }
+  .price-section { padding: 24px 0 48px; }
 
   /* Toggle */
   .toggle-wrap {
@@ -510,7 +510,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 
   /* Billing FAQ */
   .pfaq { margin-top: 96px; }
-  .pfaq-head { margin-bottom: 32px; }
+  .pfaq-head { margin-bottom: 16px; }
   .pfaq-head h2 {
     font-size: 28px;
     font-weight: 500;

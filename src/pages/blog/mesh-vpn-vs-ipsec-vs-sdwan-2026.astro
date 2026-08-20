@@ -91,13 +91,12 @@ const compareRows = [
     lede="A strategist's guide to the three private-network categories shaping multi-site business today. By the MeshWG editorial team."
   />
 
-  <section class="post">
-    <div class="wrap">
-
+  <main class="post">
+    <div class="wrap post-symmetric">
       <div class="byline">
-        <span class="by-author">By the MeshWG editorial team</span>
-        <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
-      </div>
+            <span class="by-author">By the MeshWG editorial team</span>
+            <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
+          </div>
 
       <!-- Intro -->
       <article class="post-block intro">
@@ -124,8 +123,8 @@ const compareRows = [
       </article>
 
       <!-- § 1 The landscape -->
-      <article id="landscape" class="post-block">
-        <h2>How modern businesses think about private networks today</h2>
+      <article class="tldr-box">
+  <h3>⚡ TL;DR</h3>
         <p>
           The question every multi-branch leader has historically
           asked — "How do my locations talk to each other privately?"
@@ -669,7 +668,7 @@ const compareRows = [
       </aside>
 
     </div>
-  </section>
+  </main>
 
   <!-- JSON-LD: Article + FAQPage + Breadcrumb -->
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -725,18 +724,58 @@ const compareRows = [
 </Base>
 
 <style>
-  .post { padding: 56px 0 96px; }
+  .post { padding: 48px 0 64px; background-color: var(--bg-2, #fafafa); }
+  .post-symmetric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .byline {
-    display: flex; flex-wrap: wrap; gap: 6px 18px;
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 18px;
     margin-bottom: 48px;
     padding-bottom: 16px;
     border-bottom: 1px solid var(--border);
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-3);
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
   }
-  .by-author { color: var(--accent); }
-  .post-block { margin-bottom: 64px; max-width: 720px; }
+  .by-author a { color: var(--accent); }
+  .by-author a:hover { color: var(--accent-strong); }
+  
+  .post-block {
+    margin: 0 auto 32px;
+    max-width: 800px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 48px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+  
+  .tldr-box {
+    margin: 0 auto 48px;
+    max-width: 800px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-left: 4px solid #ff66cc;
+    border-radius: 12px;
+    padding: 32px 48px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+  
+  .tldr-box h3 {
+    color: #ff66cc;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    margin-top: 0;
+    font-family: var(--font-sans);
+  }
   .post-block:last-child { margin-bottom: 0; }
   .post-block h2 {
     font-family: var(--font-serif);
@@ -789,7 +828,7 @@ const compareRows = [
     border-radius: var(--radius-sm);
   }
 
-  .faq h2 { margin-bottom: 32px; }
+  .faq h2 { margin-bottom: 16px; }
   details {
     border-top: 1px solid var(--border);
     padding: 20px 0;
@@ -812,7 +851,7 @@ const compareRows = [
     font-size: 18px;
     color: var(--text-4);
     line-height: 1;
-    font-weight: 300;
+    font-weight: 400;
   }
   details[open] summary::after { content: "−"; }
   details p {
@@ -823,7 +862,7 @@ const compareRows = [
   }
 
   .cta-strip {
-    margin-top: 80px;
+    margin-top: 32px;
     padding: 32px 36px;
     background: color-mix(in oklab, var(--accent) 5%, var(--surface));
     border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
@@ -847,7 +886,7 @@ const compareRows = [
   @media (max-width: 980px) {
     .post { padding: 32px 0 64px; }
     .post-block h2 { font-size: 22px; }
-    .post-block { margin-bottom: 48px; }
+    .post-block { margin-bottom: 20px; }
     .cta-strip { padding: 24px 22px; }
   }
 </style>

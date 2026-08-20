@@ -2,19 +2,6 @@
 import BrandMark from "./BrandMark.astro";
 import { site } from "../site";
 ---
-<div class="topbar">
-  <div class="wrap topbar-inner">
-    <div class="topbar-left">
-      <span>Status: <span class="status-ok">All systems operational</span></span>
-    </div>
-    <div class="topbar-right">
-      <a href="/docs">Documentation</a>
-      <a href="/support">Support</a>
-      <a href="https://github.com/vikasswaminh/gvpn-marketing-site" target="_blank">GitHub</a>
-    </div>
-  </div>
-</div>
-
 <nav class="nav">
   <div class="wrap nav-inner">
     <a class="brand" href="/">
@@ -22,24 +9,11 @@ import { site } from "../site";
       <span class="brand-name">{site.productName}</span>
     </a>
     <div class="nav-links">
-      <div class="nav-item group">
-        <button class="nav-btn">Products <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
-        <div class="dropdown">
-          <div class="dropdown-inner">
-            <a href="/quickstart" class="drop-link">
-              <span class="drop-title">Mesh VPN <span class="badge">CORE</span></span>
-              <span class="drop-desc">Connect all your devices in seconds.</span>
-            </a>
-            <a href="/compatibility" class="drop-link">
-              <span class="drop-title">Router Support <span class="badge new">NEW</span></span>
-              <span class="drop-desc">Works with TP-Link, OpenWrt, and more.</span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <a href="/docs" class="nav-btn">Docs</a>
-      <a href="/blog" class="nav-btn">Blog</a>
-      <a href="/pricing" class="nav-btn">Pricing</a>
+      <a href="/quickstart">Quickstart</a>
+      <a href="/docs">Docs</a>
+      <a href="/compatibility">Compatibility</a>
+      <a href="/blog">Blog</a>
+      <a href="/pricing">Pricing</a>
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-cta">
@@ -87,118 +61,27 @@ import { site } from "../site";
 
   .nav-links {
     display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-  .nav-item { position: relative; }
-  .nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 13.5px;
-    font-weight: 500;
+    gap: 26px;
+    font-size: 13px;
     color: var(--text-2);
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    transition: background 0.15s ease, color 0.15s ease;
-    border: none;
-    background: transparent;
-    cursor: pointer;
   }
-  .nav-btn:hover {
-    color: var(--text);
-    background: rgba(0,0,0,0.04);
-  }
-  .dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    padding-top: 8px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(4px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-  }
-  .group:hover .dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-  .dropdown-inner {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-    width: 260px;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .drop-link {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 12px;
-    border-radius: var(--radius);
-    transition: background 0.15s ease;
-  }
-  .drop-link:hover { background: var(--bg-2); }
-  .drop-title {
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .drop-desc {
-    font-size: 12px;
-    color: var(--text-3);
-    margin-top: 2px;
-  }
-  .badge {
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 4px;
-    border-radius: 4px;
-    background: var(--border-strong);
-    color: var(--text-2);
-    letter-spacing: 0.05em;
-  }
-  .badge.new {
-    background: var(--accent-soft);
-    color: var(--accent-strong);
-  }
-
-  .topbar {
-    background: var(--ink);
-    color: var(--text-4);
-    font-size: 11px;
-    font-weight: 500;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    z-index: 101;
+  .nav-links a {
     position: relative;
+    padding: 4px 0;
+    transition: color 0.15s ease;
   }
-  .topbar-inner {
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .topbar-left span { display: flex; align-items: center; gap: 6px; }
-  .status-ok::before {
+  .nav-links a::after {
     content: "";
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--ok);
-    display: inline-block;
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1);
   }
-  .status-ok { color: var(--border-strong); }
-  .topbar-right { display: flex; gap: 16px; }
-  .topbar-right a { transition: color 0.15s ease; }
-  .topbar-right a:hover { color: #fff; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { transform: scaleX(1); }
 
   .nav-spacer { flex: 1; }
   .nav-cta { display: flex; gap: 6px; align-items: center; }

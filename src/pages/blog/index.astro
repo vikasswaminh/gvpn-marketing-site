@@ -23,22 +23,6 @@ interface PostMeta {
 
 const posts: PostMeta[] = [
   {
-    slug:          "manage-multiple-wireguard-tunnels-mesh-vpn-2026",
-    title:         "How to Manage Multiple WireGuard Tunnels and Build a WireGuard Mesh VPN",
-    description:   "Master WireGuard mesh networking and multi-tunnel management in 2026. Learn architecture, full-mesh topologies, automated configs, BGP routing, and scaling strategies.",
-    datePublished: "2026-08-20",
-    readMinutes:   25,
-    category:      "engineering guide",
-  },
-  {
-    slug:          "wireguard-site-to-site-vpn-setup-guide-2026",
-    title:         "WireGuard Site-to-Site VPN: A Complete Setup Guide for 2026",
-    description:   "A complete setup guide for WireGuard site-to-site VPNs in 2026. Covers TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense, pfSense, and more.",
-    datePublished: "2026-08-20",
-    readMinutes:   20,
-    category:      "setup guide",
-  },
-  {
     slug:          "mesh-vpn-vs-ipsec-vs-sdwan-2026",
     title:         "Mesh VPN vs IPsec vs SD-WAN: choosing the right private network for your business in 2026",
     description:   "A strategist's guide to the three private-network categories shaping multi-site business today. Compare mesh VPN, IPsec, and SD-WAN by what each delivers.",
@@ -105,7 +89,7 @@ const description = "Founder-written notes on branch networking, WireGuard, mesh
       <ol class="post-list">
         {posts.map((p) => (
           <li class="post-item">
-            <a class="post-link hover-card" href={`/blog/${p.slug}/`}>
+            <a class="post-link" href={`/blog/${p.slug}/`}>
               <div class="meta">
                 <span class="cat">/ {p.category}</span>
                 <span class="dot">·</span>

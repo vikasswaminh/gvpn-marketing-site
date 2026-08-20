@@ -76,6 +76,8 @@
   /* ── Typography ───────────────────────────────────────────────────── */
   --font-sans:      "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
   --font-mono:      "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display:   "Geist", "Inter Tight", system-ui, sans-serif;
+  --font-serif:     var(--font-display);
 
   /* ── Radii (tight — crawlcrawl-style) ─────────────────────────────── */
   --radius-sm:      4px;
@@ -90,7 +92,7 @@
 
   /* ── Layout ───────────────────────────────────────────────────────── */
   --wrap-max:       1180px;
-  --wrap-pad-x:     clamp(16px, 4vw, 24px);
+  --wrap-pad-x:     clamp(20px, 4vw, 28px);
   --maxw-narrow:    880px;
   --maxw:           1180px;
   --maxw-wide:      1260px;
@@ -114,13 +116,8 @@ html {
 body {
   font-family: var(--font-sans);
   color: var(--text);
-  background-color: var(--bg);
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-  background-size: 80px 80px;
-  background-attachment: local;
-  line-height: 1.6;
+  background: var(--bg);
+  line-height: 1.5;
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -143,9 +140,9 @@ a { color: inherit; text-decoration: none; }
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-3);
 }
@@ -157,25 +154,22 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 36px;
-  padding: 0 14px;
+  height: 38px;
+  padding: 0 16px;
   border-radius: var(--radius);
   font-size: 13.5px;
-  font-weight: 600;
+  font-weight: 500;
   font-family: inherit;
   border: 1px solid transparent;
   background: transparent;
   color: var(--text);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform, box-shadow;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+              box-shadow 0.15s ease;
 }
-.btn:hover {
-  transform: translateY(-2px);
-}
-.btn .arrow { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.btn:hover .arrow { transform: translateX(4px); }
+.btn .arrow { transition: transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1); }
+.btn:hover .arrow { transform: translateX(3px); }
 
 /* PRIMARY = solid ink (black). Timeless, premium, matches crawlcrawl.
    This is the default CTA used by Nav, Pricing card, and inline copy. */
@@ -184,12 +178,12 @@ a { color: inherit; text-decoration: none; }
   background: var(--ink);
   color: #ffffff;
   border-color: var(--ink);
+  font-weight: 600;
 }
 .btn-primary:hover,
 .btn-cream:hover {
   background: var(--text-2);
   border-color: var(--text-2);
-  box-shadow: 0 8px 24px -8px rgba(10, 10, 10, 0.25);
 }
 
 /* ACID = bright-blue accent. Use only when a moment needs to pop
@@ -198,11 +192,11 @@ a { color: inherit; text-decoration: none; }
   background: var(--accent);
   color: #ffffff;
   border-color: var(--accent);
+  font-weight: 600;
 }
 .btn-acid:hover {
   background: var(--accent-strong);
   border-color: var(--accent-strong);
-  box-shadow: 0 8px 24px -8px var(--accent-glow);
 }
 
 /* Outline */
@@ -228,35 +222,35 @@ a { color: inherit; text-decoration: none; }
 }
 
 .btn-lg {
-  height: 44px;
-  padding: 0 18px;
+  height: 48px;
+  padding: 0 22px;
   font-size: 14.5px;
 }
 
 /* ── Section primitives ───────────────────────────────────────────── */
-section { padding: 16px 0; position: relative; }
+section { padding: 120px 0; position: relative; }
 section + section { border-top: 1px solid var(--border); }
 
 .sec-eyebrow {
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 12px;
+  margin-bottom: 24px;
 }
 .sec-eyebrow .num { color: var(--accent); margin-right: 8px; }
 
 .sec-h {
-  font-family: var(--font-sans);
-  font-size: clamp(24px, 3vw, 40px);
-  line-height: 1.1;
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5.4vw, 76px);
+  line-height: 1.04;
   letter-spacing: -0.02em;
-  font-weight: 700;
-  margin: 0 0 12px;
+  font-weight: 600;
+  margin: 0 0 28px;
   max-width: 880px;
   text-wrap: balance;
   color: var(--text);
@@ -269,7 +263,7 @@ em, i, cite, dfn, address, var { font-style: normal; }
 
 .sec-lede {
   color: var(--text-3);
-  font-size: 16px;
+  font-size: 17px;
   max-width: 640px;
   line-height: 1.6;
   margin: 0;
@@ -280,9 +274,9 @@ em, i, cite, dfn, address, var { font-style: normal; }
 
 /* ── Responsive ───────────────────────────────────────────────────── */
 @media (max-width: 980px) {
-  :root { --wrap-pad-x: 16px; }
-  section { padding: 12px 0; }
-  .sec-h { font-size: 32px; }
+  :root { --wrap-pad-x: 20px; }
+  section { padding: 72px 0; }
+  .sec-h { font-size: 36px; }
 }
 
 /* ── Scroll-reveal (preserved from prior visual pass) ─────────────── */
@@ -317,14 +311,3 @@ em, i, cite, dfn, address, var { font-style: normal; }
   border: 2px solid var(--bg);
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-4); }
-
-/* ── Hover Card Dynamics ──────────────────────────────────────────── */
-.hover-card {
-  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform, box-shadow, border-color;
-}
-.hover-card:hover {
-  transform: translateY(-4px) scale(1.005);
-  box-shadow: var(--shadow-deep);
-  border-color: var(--border-strong);
-}

@@ -1,253 +1,98 @@
 ---
-const checks = [
-  "Identity based access",
-  "Policy based control",
-  "End-to-end encryption (WireGuard®)",
-  "No open ports. No public exposure.",
+const features = [
+  {
+    title: "Connect any device",
+    body: "Routers, laptops, phones, servers. If it speaks WireGuard, it joins your mesh in seconds.",
+  },
+  {
+    title: "One-click access rules",
+    body: "Decide who reaches what — by machine, port, or protocol. Updates apply instantly across your whole network.",
+  },
+  {
+    title: "Built-in isolation",
+    body: "Each organization lives in its own private network. Different teams or clients can't see each other, ever.",
+  },
+  {
+    title: "Encrypted end-to-end",
+    body: "Standard WireGuard. We can't read your traffic. Your ISP can't read it. No one can.",
+  },
+  {
+    title: "Survives our outages",
+    body: "If MeshWG goes offline, your tunnels keep running. WireGuard lives on your devices, not on our servers.",
+  },
+  {
+    title: "Two machines free, forever",
+    body: "Mesh your laptop and your home router at ₹0/month. No trial countdown, no card. Pay only when you add a third.",
+  },
 ];
-
-const leftNodes = ["User", "Device", "Branch", "Remote"];
-const rightNodes = ["Server", "Database", "NAS", "Application"];
 ---
 
 <section id="features">
   <div class="wrap">
-    <div class="zt-layout">
+    <div class="sec-eyebrow">/ features</div>
+    <h2 class="sec-h">Everything you need. Nothing you don't.</h2>
+    <p class="sec-lede">
+      A small, focused product instead of an enterprise checklist with
+      a hundred boxes you'll never tick.
+    </p>
 
-      <!-- Left: Network Diagram (pure SVG for pixel-perfect layout) -->
-      <div class="zt-diagram" aria-hidden="true">
-        <div class="zt-frame">
-          <!--
-            Coordinate system (340 × 340):
-            Left nodes:  x=20–100,  y evenly spaced (55,115,175,235)
-            Center hub:  cx=170,    cy=145
-            Right nodes: x=240–320, y evenly spaced (55,115,175,235)
-          -->
-          <svg class="zt-svg" viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <!-- accent glow for hub -->
-              <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#0066ff" stop-opacity="0.18"/>
-                <stop offset="100%" stop-color="#0066ff" stop-opacity="0"/>
-              </radialGradient>
-              <!-- subtle grid pattern inside the frame -->
-              <pattern id="ztGrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(0,0,0,0.04)" stroke-width="0.5"/>
-              </pattern>
-            </defs>
-
-            <!-- Background + grid -->
-            <rect x="0" y="0" width="340" height="300" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1"/>
-            <rect x="0" y="0" width="340" height="300" rx="12" fill="url(#ztGrid)"/>
-
-            <!-- ─── Connector lines: left nodes → hub ─── -->
-            <line class="flow-line" x1="104" y1="55"  x2="154" y2="145" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3"/>
-            <line class="flow-line" x1="104" y1="115" x2="154" y2="145" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3"/>
-            <line class="flow-line" x1="104" y1="175" x2="154" y2="145" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3"/>
-            <line class="flow-line" x1="104" y1="235" x2="154" y2="145" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4 3"/>
-
-            <!-- ─── Connector lines: hub → right nodes ─── -->
-            <line class="flow-line" x1="186" y1="145" x2="236" y2="55"  stroke="#0066ff" stroke-width="1" stroke-dasharray="4 3" stroke-opacity="0.5"/>
-            <line class="flow-line" x1="186" y1="145" x2="236" y2="115" stroke="#0066ff" stroke-width="1" stroke-dasharray="4 3" stroke-opacity="0.5"/>
-            <line class="flow-line" x1="186" y1="145" x2="236" y2="175" stroke="#0066ff" stroke-width="1" stroke-dasharray="4 3" stroke-opacity="0.5"/>
-            <line class="flow-line" x1="186" y1="145" x2="236" y2="235" stroke="#0066ff" stroke-width="1" stroke-dasharray="4 3" stroke-opacity="0.5"/>
-
-            <!-- ─── Left nodes ─── -->
-            <!-- User -->
-            <rect x="14" y="40" width="90" height="28" rx="5" fill="white" stroke="#e5e7eb" stroke-width="1"/>
-            <text x="59" y="59" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#374151">User</text>
-
-            <!-- Device -->
-            <rect x="14" y="100" width="90" height="28" rx="5" fill="white" stroke="#e5e7eb" stroke-width="1"/>
-            <text x="59" y="119" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#374151">Device</text>
-
-            <!-- Branch -->
-            <rect x="14" y="160" width="90" height="28" rx="5" fill="white" stroke="#e5e7eb" stroke-width="1"/>
-            <text x="59" y="179" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#374151">Branch</text>
-
-            <!-- Remote -->
-            <rect x="14" y="220" width="90" height="28" rx="5" fill="white" stroke="#e5e7eb" stroke-width="1"/>
-            <text x="59" y="239" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#374151">Remote</text>
-
-            <!-- ─── Central Hub ─── -->
-            <!-- outer glow ring -->
-            <circle cx="170" cy="145" r="30" fill="url(#hubGlow)"/>
-            <!-- ring border -->
-            <circle cx="170" cy="145" r="22" fill="white" stroke="#0066ff" stroke-width="1.5"/>
-            <!-- fill -->
-            <circle cx="170" cy="145" r="21" fill="#eff6ff"/>
-            <!-- shield icon centred on hub -->
-            <path d="M170 133 l-10 4 v8 c0 6 10 11 10 11 s10-5 10-11 v-8 z"
-                  fill="none" stroke="#0066ff" stroke-width="1.5"
-                  stroke-linecap="round" stroke-linejoin="round"/>
-            <!-- hub label -->
-            <text x="170" y="163" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" fill="#0066ff" font-weight="600">MeshWG</text>
-
-            <!-- ─── Right nodes ─── -->
-            <!-- Server -->
-            <rect x="236" y="40" width="90" height="28" rx="5" fill="#f0f9ff" stroke="#bae6fd" stroke-width="1"/>
-            <text x="281" y="59" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#0369a1">Server</text>
-
-            <!-- Database -->
-            <rect x="236" y="100" width="90" height="28" rx="5" fill="#f0f9ff" stroke="#bae6fd" stroke-width="1"/>
-            <text x="281" y="119" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#0369a1">Database</text>
-
-            <!-- NAS -->
-            <rect x="236" y="160" width="90" height="28" rx="5" fill="#f0f9ff" stroke="#bae6fd" stroke-width="1"/>
-            <text x="281" y="179" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#0369a1">NAS</text>
-
-            <!-- Application -->
-            <rect x="236" y="220" width="90" height="28" rx="5" fill="#f0f9ff" stroke="#bae6fd" stroke-width="1"/>
-            <text x="281" y="239" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#0369a1">Application</text>
-
-            <!-- ─── Bottom label ─── -->
-            <text x="170" y="286" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#9ca3af" letter-spacing="0.08em">ZERO TRUST · EVERY CONNECTION</text>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Right: Content -->
-      <div class="zt-content">
-        <div class="sec-eyebrow">/ zero trust</div>
-        <h2 class="sec-h">Zero Trust Network Access</h2>
-        <p class="zt-lede">
-          MeshWG enforces identity and policy for every connection.
-          Only authorized users and devices can access your resources.
-        </p>
-
-        <ul class="zt-checks">
-          {checks.map((c) => (
-            <li>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              {c}
-            </li>
-          ))}
-        </ul>
-
-        <!-- Preserved full feature list below -->
-        <div class="ft-subgrid">
-          <div class="ft-item">
-            <strong>Connect any device</strong>
-            <p>Routers, laptops, phones, servers. If it speaks WireGuard, it joins your mesh in seconds.</p>
-          </div>
-          <div class="ft-item">
-            <strong>One-click access rules</strong>
-            <p>Decide who reaches what — by machine, port, or protocol. Updates apply instantly.</p>
-          </div>
-          <div class="ft-item">
-            <strong>Built-in isolation</strong>
-            <p>Each organization lives in its own private network. Different teams can't see each other.</p>
-          </div>
-          <div class="ft-item">
-            <strong>Survives our outages</strong>
-            <p>If MeshWG goes offline, your tunnels keep running. WireGuard lives on your devices.</p>
-          </div>
-          <div class="ft-item">
-            <strong>Two machines free, forever</strong>
-            <p>Mesh your laptop and home router at ₹0/month. No trial countdown, no card required.</p>
-          </div>
-        </div>
-      </div>
-
+    <div class="feature-grid">
+      {features.map((f) => (
+        <article class="feature">
+          <h4 class="ft-title">{f.title}</h4>
+          <p class="ft-body">{f.body}</p>
+        </article>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
-  .zt-layout {
+  /* Editorial feature grid — hairline-divided cells on the ink canvas,
+     serif italic titles, ultra-light body. Hover ramps the surface
+     up a step (no shadow, just contrast). */
+  .feature-grid {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 20px;
-    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 64px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 0;
   }
-
-  /* Diagram column */
-  .zt-diagram { width: 100%; }
-
-  .zt-frame {
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px #e5e7eb;
+  .feature {
+    background: var(--bg);
+    padding: 36px 32px 40px;
+    transition: background 0.2s ease;
+    position: relative;
   }
+  .feature:hover { background: var(--bg-2); }
 
-  .zt-svg {
-    width: 100%;
-    height: auto;
-    display: block;
+  .ft-title {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+    color: var(--text);
+    line-height: 1.1;
   }
-
-  .flow-line {
-    animation: flow 1.5s linear infinite;
-  }
-  @keyframes flow {
-    to {
-      stroke-dashoffset: -14;
-    }
-  }
-
-  /* Content column */
-  .zt-content {}
-
-  .sec-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-3);
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .zt-lede {
+  .ft-body {
     color: var(--text-2);
-    font-size: 15px;
+    font-size: 14.5px;
     line-height: 1.6;
-    margin: 0 0 24px;
-  }
-
-  .zt-checks {
-    list-style: none;
-    padding: 0; margin: 0 0 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .zt-checks li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 600;
-  }
-  .zt-checks svg { color: var(--ok); flex-shrink: 0; }
-
-  /* Sub-grid of remaining features */
-  .ft-subgrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px 24px;
-    border-top: 1px solid var(--border);
-    padding-top: 24px;
-  }
-  .ft-item strong {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .ft-item p {
-    font-size: 12.5px;
-    color: var(--text-3);
     margin: 0;
-    line-height: 1.5;
+    font-weight: 400;
   }
 
   @media (max-width: 980px) {
-    .zt-layout { grid-template-columns: 1fr; gap: 40px; }
-    .ft-subgrid { grid-template-columns: 1fr; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .feature {
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feature:last-child { border-bottom: 0; }
+    .feature:nth-child(3n) { border-right: 0; }
+    .feature:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
   }
 </style>

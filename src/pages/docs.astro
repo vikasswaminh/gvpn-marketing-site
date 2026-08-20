@@ -240,6 +240,12 @@ const description = "How MeshWG actually works: the architecture promises we mak
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 24px;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .claim:hover {
+    border-color: color-mix(in oklab, var(--accent) 50%, var(--border));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
   }
   .claim h3 {
     font-size: 15px;

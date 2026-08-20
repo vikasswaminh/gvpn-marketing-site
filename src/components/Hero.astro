@@ -26,24 +26,24 @@ const meshNodes = [
 
     <!-- ── Left column: editorial headline + CTAs + meta ───────── -->
     <div class="hero-left">
-      <span class="eyebrow animate-fade-up">
+      <span class="eyebrow">
         <span class="pill">live</span>
         <span class="eyebrow-text">one platform · mesh vpn + zero trust access</span>
       </span>
 
-      <h1 class="h1 animate-fade-up delay-1">
+      <h1 class="h1">
         Turn the routers <em class="it">you already own</em>
         into a secure mesh network.
       </h1>
 
-      <p class="lede animate-fade-up delay-2">
+      <p class="lede">
         Connect your branches, your home, and your team —
         without buying <b>₹2 lakh SDWAN boxes</b>. MeshWG is a hosted
         mesh service that works with the TP-Link, MikroTik, OpenWrt,
         and Ubiquiti hardware already in your rack.
       </p>
 
-      <div class="hero-cta animate-fade-up delay-3">
+      <div class="hero-cta">
         <a class="btn btn-acid btn-lg" href={site.signupFree}>
           Sign up free
           <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -53,7 +53,7 @@ const meshNodes = [
         </a>
       </div>
 
-      <div class="hero-meta animate-fade-up delay-3">
+      <div class="hero-meta">
         {heroChecks.map((label) => (
           <span>
             <span class="tick">
@@ -167,8 +167,7 @@ const meshNodes = [
     z-index: -1;
     background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
     pointer-events: none;
-    opacity: 0.9;
-    animation: drift-orb 15s ease-in-out infinite alternate;
+    opacity: .8;
   }
   .hero::after {
     content: "";
@@ -176,14 +175,9 @@ const meshNodes = [
     bottom: -200px; left: -200px;
     width: 700px; height: 700px;
     z-index: -1;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 60%);
+    background: radial-gradient(circle, var(--brand-red-soft) 0%, transparent 60%);
     pointer-events: none;
-    opacity: 0.8;
-    animation: drift-orb 12s ease-in-out infinite alternate-reverse;
-  }
-  @keyframes drift-orb {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-40px, 40px) scale(1.05); }
+    opacity: .65;
   }
 
   .hero-inner {

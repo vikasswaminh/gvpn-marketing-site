@@ -46,10 +46,10 @@ const { eyebrow, title, lede } = Astro.props;
   .page-hero .wrap { position: relative; z-index: 1; }
 
   .ph-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    max-width: 800px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 64px;
+    align-items: end;
   }
 
   .ph-eyebrow {

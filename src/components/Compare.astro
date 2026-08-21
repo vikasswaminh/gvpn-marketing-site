@@ -91,7 +91,7 @@ const {
 } = Astro.props;
 ---
 
-<section id={id}>
+<section id={id} class="compare-section">
   <div class="wrap">
     <div class="sec-eyebrow">{eyebrow}</div>
     <h2 class="sec-h">{title}</h2>
@@ -131,8 +131,8 @@ const {
 </section>
 
 <style>
-  #compare { padding: 32px 0 40px; }
-  #compare .sec-h, #compare .sec-lede {
+  .compare-section { padding: 32px 0 40px; }
+  .compare-section .sec-h, .compare-section .sec-lede {
     text-wrap: unset;
     max-width: none;
   }

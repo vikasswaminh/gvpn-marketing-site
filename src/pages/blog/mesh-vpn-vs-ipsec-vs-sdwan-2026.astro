@@ -1,7 +1,7 @@
 ---
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
-import PageHero   from "../../components/PageHero.astro";
+import BlogPost   from "../../components/BlogPost.astro";
 import Footer     from "../../components/Footer.astro";
 import Compare    from "../../components/Compare.astro";
 import { site }   from "../../site";
@@ -85,22 +85,19 @@ const compareRows = [
 <Base title={title} description={description}>
   <Nav />
 
-  <PageHero
-    eyebrow="/ blog · strategy guide"
+    <BlogPost
     title="Mesh VPN, IPsec, or SD-WAN — which one for 2026?"
-    lede="A strategist's guide to the three private-network categories shaping multi-site business today. By the MeshWG editorial team."
-  />
+    description={description}
+    category="engineering guide"
+    datePublished={datePublished}
+    dateModified={dateModified}
+    readMinutes={15}
+    author="MeshWG editorial team"
+    authorRole="Network Architecture"
+  >
 
-  <main class="post">
-    <div class="wrap post-symmetric">
-      <div class="byline">
-            <span class="by-author">By the MeshWG editorial team</span>
-            <span class="by-date">Published {datePublished}{datePublished !== dateModified ? ` · Updated ${dateModified}` : ""}</span>
-          </div>
-
-      <!-- Intro -->
-      <article class="post-block intro">
-        <p class="lede-p">
+    <div class="bp-intro">
+      <p>
           Every multi-site business in 2026 is choosing between three
           approaches to private networking — mesh VPN, IPsec, and
           SD-WAN — and the right answer is increasingly the one that
@@ -120,10 +117,10 @@ const compareRows = [
           choice their CFO, CIO, and operations team will all
           benefit from over the next five years.
         </p>
-      </article>
+      
 
       <!-- § 1 The landscape -->
-      <article class="tldr-box">
+      <div class="bp-tldr">
   <h3>⚡ TL;DR</h3>
         <p>
           The question every multi-branch leader has historically
@@ -162,10 +159,10 @@ const compareRows = [
           rather than which category is generating the most
           marketing pressure.
         </p>
-      </article>
+      
 
       <!-- § 1.5 What changed -->
-      <article id="what-changed" class="post-block">
+      
         <h2>What has changed between 2018 and 2026</h2>
         <p>
           Understanding the three categories begins with
@@ -219,10 +216,10 @@ const compareRows = [
           rather than asking the business to reshape itself
           around a platform.
         </p>
-      </article>
+      
 
       <!-- § 2 Mesh VPN -->
-      <article id="mesh-vpn" class="post-block">
+      
         <h2>Mesh VPN — the modern private network</h2>
         <p>
           Mesh VPN is the category designed for the business
@@ -277,10 +274,10 @@ const compareRows = [
           outcomes that matter without the budget overhead
           of features that rarely get exercised.
         </p>
-      </article>
+      
 
       <!-- § 3 IPsec -->
-      <article id="ipsec" class="post-block">
+      
         <h2>IPsec — the proven foundation</h2>
         <p>
           IPsec has anchored enterprise private networking for
@@ -329,10 +326,10 @@ const compareRows = [
           enterprise toolkit. The choice between them is
           environment-driven, not ideological.
         </p>
-      </article>
+      
 
       <!-- § 4 SD-WAN -->
-      <article id="sdwan" class="post-block">
+      
         <h2>SD-WAN — the enterprise platform</h2>
         <p>
           SD-WAN earned its category by solving real problems at
@@ -383,7 +380,7 @@ const compareRows = [
           that matter without the overhead of features the
           deployment will not exercise.
         </p>
-      </article>
+      
 
       <!-- § 5 Comparison table -->
       <Compare
@@ -398,7 +395,7 @@ const compareRows = [
       />
 
       <!-- § 6 Decision framework -->
-      <article id="decision" class="post-block">
+      
         <h2>Choosing between them: five questions that resolve the decision</h2>
         <p>
           The honest path to the right answer runs through five
@@ -508,10 +505,10 @@ const compareRows = [
           contribution a thoughtful procurement process makes
           to the eventual decision quality.
         </p>
-      </article>
+      
 
       <!-- § 7 Business outcomes -->
-      <article id="outcomes" class="post-block">
+      
         <h2>What "modern private network" actually delivers</h2>
         <p>
           Strip the protocol discussion away and look at what
@@ -587,10 +584,10 @@ const compareRows = [
           practical benefit that often shows up months or years
           after the initial procurement decision was made.
         </p>
-      </article>
+      
 
       <!-- § 8 Sector perspectives -->
-      <article id="sectors" class="post-block">
+      
         <h2>How the decision tends to play out by sector</h2>
         <p>
           Different sectors arrive at this decision from different
@@ -642,10 +639,10 @@ const compareRows = [
           mesh-VPN client agents address the remote-work
           dimension.
         </p>
-      </article>
+      
 
       <!-- FAQ -->
-      <article id="faq" class="post-block faq">
+      
         <h2>Common questions</h2>
         {faqs.map((f) => (
           <details>
@@ -653,7 +650,7 @@ const compareRows = [
             <p>{f.a}</p>
           </details>
         ))}
-      </article>
+      
 
       <!-- CTA -->
       <aside class="cta-strip">
@@ -667,10 +664,7 @@ const compareRows = [
         </p>
       </aside>
 
-    </div>
-  </main>
-
-  <!-- JSON-LD: Article + FAQPage + Breadcrumb -->
+    </BlogPost><!-- JSON-LD: Article + FAQPage + Breadcrumb -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Article",
@@ -723,170 +717,4 @@ const compareRows = [
   <Footer />
 </Base>
 
-<style>
-  .post { padding: 48px 0 64px; background-color: var(--bg-2, #fafafa); }
-  .post-symmetric {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .byline {
-    display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 18px;
-    margin-bottom: 48px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--text-3);
-    width: 100%;
-    max-width: 720px;
-    text-align: center;
-  }
-  .by-author a { color: var(--accent); }
-  .by-author a:hover { color: var(--accent-strong); }
-  
-  .post-block {
-    margin: 0 auto 32px;
-    max-width: 800px;
-    width: 100%;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px 48px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-  }
-  
-  .tldr-box {
-    margin: 0 auto 48px;
-    max-width: 800px;
-    width: 100%;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-left: 4px solid #ff66cc;
-    border-radius: 12px;
-    padding: 32px 48px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-  }
-  
-  .tldr-box h3 {
-    color: #ff66cc;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    margin-top: 0;
-    font-family: var(--font-sans);
-  }
-  .post-block:last-child { margin-bottom: 0; }
-  .post-block h2 {
-    font-family: var(--font-serif);
-    font-size: 36px;
-    line-height: 1.04;
-    letter-spacing: -0.02em;
-    font-weight: 400;
-    margin: 0 0 22px;
-    text-wrap: balance;
-    color: var(--text);
-  }
-  .post-block h2 .it { font-style: normal; color: var(--accent); }
-  .post-block p {
-    margin: 0 0 16px;
-    color: var(--text-2);
-    font-size: 15.5px;
-    line-height: 1.7;
-  }
-  .post-block p:last-child { margin-bottom: 0; }
-  .post-block strong { color: var(--text); font-weight: 600; }
-  .post-block a { color: var(--accent); }
-  .post-block a:hover { color: var(--accent-strong); }
-  .intro .lede-p { font-size: 17px; line-height: 1.7; color: var(--text); }
 
-  .decision {
-    list-style: none;
-    counter-reset: dec;
-    padding: 0; margin: 24px 0;
-    display: flex; flex-direction: column;
-    gap: 18px;
-  }
-  .decision li {
-    counter-increment: dec;
-    padding-left: 36px;
-    position: relative;
-    color: var(--text-2);
-    font-size: 15.5px;
-    line-height: 1.7;
-  }
-  .decision li::before {
-    content: counter(dec, decimal-leading-zero);
-    position: absolute;
-    left: 0; top: 0;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--accent);
-    letter-spacing: .04em;
-    background: var(--bg-2);
-    padding: 4px 8px;
-    border-radius: var(--radius-sm);
-  }
-
-  .faq h2 { margin-bottom: 16px; }
-  details {
-    border-top: 1px solid var(--border);
-    padding: 20px 0;
-  }
-  details:last-child { border-bottom: 1px solid var(--border); }
-  summary {
-    cursor: pointer;
-    list-style: none;
-    font-size: 15.5px;
-    font-weight: 500;
-    color: var(--text);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px;
-    letter-spacing: -.005em;
-  }
-  summary::-webkit-details-marker { display: none; }
-  summary::after {
-    content: "+";
-    font-family: var(--font-mono);
-    font-size: 18px;
-    color: var(--text-4);
-    line-height: 1;
-    font-weight: 400;
-  }
-  details[open] summary::after { content: "−"; }
-  details p {
-    margin: 14px 0 0;
-    color: var(--text-2);
-    font-size: 14.5px;
-    line-height: 1.7;
-  }
-
-  .cta-strip {
-    margin-top: 32px;
-    padding: 32px 36px;
-    background: color-mix(in oklab, var(--accent) 5%, var(--surface));
-    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
-    border-radius: var(--radius-lg);
-    max-width: 720px;
-  }
-  .cta-strip p {
-    margin: 0;
-    color: var(--text);
-    font-size: 15.5px;
-    line-height: 1.7;
-  }
-  .cta-link {
-    color: var(--accent);
-    font-weight: 500;
-    margin-left: 4px;
-    white-space: nowrap;
-  }
-  .cta-link:hover { color: var(--accent-strong); }
-
-  @media (max-width: 980px) {
-    .post { padding: 32px 0 64px; }
-    .post-block h2 { font-size: 22px; }
-    .post-block { margin-bottom: 20px; }
-    .cta-strip { padding: 24px 22px; }
-  }
-</style>

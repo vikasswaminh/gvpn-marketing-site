@@ -173,7 +173,7 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
     padding: 0; margin: 0 0 64px;
     display: flex; flex-direction: column;
     gap: 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--accent);
     border-radius: var(--radius-lg);
     overflow: hidden;
     background: var(--surface);
@@ -183,7 +183,7 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
     grid-template-columns: 80px 1fr;
     gap: 24px;
     padding: 32px 28px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid color-mix(in oklab, var(--accent) 25%, var(--border));
   }
   .steps li:last-child { border-bottom: 0; }
   .step-n {
@@ -210,10 +210,11 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
   .steps code {
     font-family: var(--font-mono);
     font-size: .92em;
-    background: var(--bg-2);
-    padding: 1px 5px;
+    background: var(--accent-soft);
+    padding: 1px 6px;
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--accent-strong);
+    border: 1px solid var(--accent);
   }
   .hint {
     font-size: 13px;
@@ -326,10 +327,11 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
   .self-host code {
     font-family: var(--font-mono);
     font-size: .92em;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
     padding: 1px 6px;
     border-radius: var(--radius-sm);
+    color: var(--accent-strong);
   }
   .sh-cta {
     display: flex; gap: 8px;

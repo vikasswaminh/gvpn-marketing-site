@@ -178,14 +178,14 @@ const vendorCount = grouped.length;
             <article class="cg-card" data-search={`${m.vendor} ${m.family} ${m.model}`.toLowerCase()} data-vendor={m.vendor}>
               <div class="cg-thumb" style={`--vc:${vendorColor[m.vendor] ?? "#525252"}`}>
                 <!-- Image loads if present in public/img/routers/{slug}.webp.
-                     If missing, onerror hides the img and the text block beneath
-                     becomes the visible content. -->
+                     If missing, onerror loads the shape-based fallback illustration.
+                     If that fails, it hides the image entirely. -->
                 <img
                   src={`/img/routers/${m.slug}.webp`}
                   alt={`${m.vendor} ${m.model}`}
                   loading="lazy"
                   width="160" height="120"
-                  onerror="this.style.display='none'; this.parentElement.classList.add('cg-thumb--text');"
+                  onerror={`if (this.src !== '/img/routers/shape-${m.shape}.png') { this.src='/img/routers/shape-${m.shape}.png'; } else { this.style.display='none'; this.parentElement.classList.add('cg-thumb--text'); }`}
                 />
                 <div class="cg-thumb-text" aria-hidden="true">
                   <span class="cg-tt-vendor">{m.vendor}</span>
@@ -203,17 +203,20 @@ const vendorCount = grouped.length;
       </div>
     ))}
 
-    <p class="cg-foot">
-      Compatibility reflects whether the device's stock firmware ships
-      WireGuard or supports loading it as a kernel module or package.
-      Older firmware revisions may require a one-time vendor update before
-      MeshWG can configure the mesh. If a router currently in your branch
-      estate is not listed, the most likely reason is firmware vintage —
-      reach <a href="mailto:hello@meshwg.com?subject=Router%20compatibility">hello@meshwg.com</a>
-      with the exact model and firmware version, and the editorial team
-      will confirm. Additional models are added to this list as the team
-      verifies vendor documentation.
-    </p>
+    <div class="cg-foot">
+      <div class="cg-foot-label">/ about this list</div>
+      <p class="cg-foot-text">
+        Compatibility reflects whether the device's stock firmware ships
+        WireGuard or supports loading it as a kernel module or package.
+        Older firmware revisions may require a one-time vendor update before
+        MeshWG can configure the mesh. If a router currently in your branch
+        estate is not listed, the most likely reason is firmware vintage —
+        reach <a href="mailto:hello@meshwg.com?subject=Router%20compatibility">hello@meshwg.com</a>
+        with the exact model and firmware version, and the editorial team
+        will confirm. Additional models are added to this list as the team
+        verifies vendor documentation.
+      </p>
+    </div>
 
   </div>
 </section>
@@ -268,7 +271,7 @@ const vendorCount = grouped.length;
 <style>
   #compatibility-grid { padding: 64px 0 96px; }
   .wrap-wide {
-    max-width: 1280px;
+    max-width: var(--maxw);
     margin: 0 auto;
     padding: 0 var(--wrap-pad-x);
   }
@@ -383,27 +386,36 @@ const vendorCount = grouped.length;
   }
   .cg-card {
     display: flex; flex-direction: column;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
     overflow: hidden;
-    transition: border-color .12s ease, transform .12s ease;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
-  .cg-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .cg-card:hover { 
+    border-color: #1677FF; 
+    transform: translateY(-4px); 
+    box-shadow: 0 12px 24px -8px rgba(22, 119, 255, 0.15), 0 4px 12px -4px rgba(0, 0, 0, 0.08);
+  }
 
   .cg-thumb {
     position: relative;
     width: 100%;
     aspect-ratio: 4 / 3;
-    background: linear-gradient(135deg, color-mix(in oklab, var(--vc, var(--text-4)) 7%, var(--bg-2)), var(--bg-2));
+    background-color: #ffffff;
     border-bottom: 1px solid var(--border-faint);
     overflow: hidden;
   }
   .cg-thumb img {
     width: 100%; height: 100%;
     object-fit: contain;
-    padding: 8px;
+    padding: 16px;
     position: relative; z-index: 2;
+    transition: transform 0.25s ease;
+    mix-blend-mode: darken;
+  }
+  .cg-card:hover .cg-thumb img {
+    transform: scale(1.04);
   }
 
   /* Text fallback — visible when no image file exists. Positioned absolutely
@@ -411,7 +423,8 @@ const vendorCount = grouped.length;
      becomes the only visible content. */
   .cg-thumb-text {
     position: absolute; inset: 0;
-    display: flex; flex-direction: column;
+    display: none;
+    flex-direction: column;
     align-items: flex-start; justify-content: flex-end;
     gap: 4px;
     padding: 10px 12px;
@@ -436,10 +449,8 @@ const vendorCount = grouped.length;
     line-height: 1.15;
     word-break: break-word;
   }
-  /* When the <img> errors out, parent gets .cg-thumb--text. We use that as a
-     hook in case we ever want subtly different styling for text-only vs
-     image-present cells; today the text block is identical in both states. */
-  .cg-thumb--text .cg-thumb-text { /* reserved for future variant treatment */ }
+  /* When the <img> errors out, parent gets .cg-thumb--text. */
+  .cg-thumb--text .cg-thumb-text { display: flex; }
 
   .cg-meta {
     padding: 8px 10px 10px;
@@ -471,16 +482,31 @@ const vendorCount = grouped.length;
 
   /* Footnote */
   .cg-foot {
-    margin-top: 48px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    font-size: 13.5px;
-    line-height: 1.65;
-    color: var(--text-3);
-    max-width: 760px;
+    margin-top: 64px;
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 32px;
   }
-  .cg-foot a { color: var(--accent); }
-  .cg-foot a:hover { color: var(--accent-strong); }
+  .cg-foot-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .cg-foot-text {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+  .cg-foot-text a { color: var(--accent); }
+  .cg-foot-text a:hover { color: var(--accent-strong); }
 
   /* Responsive density */
   @media (max-width: 1100px) {
@@ -497,6 +523,7 @@ const vendorCount = grouped.length;
     .cg-meta { padding: 6px 8px 8px; min-height: 48px; }
     .cg-model { font-size: 11.5px; }
     .cg-fw { font-size: 9.5px; }
+    .cg-foot { grid-template-columns: 1fr; gap: 16px; padding: 24px; }
   }
   @media (max-width: 420px)  { .cg-grid { grid-template-columns: repeat(2, 1fr); } }
 </style>

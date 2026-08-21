@@ -10,9 +10,15 @@ const { eyebrow, title, lede } = Astro.props;
 
 <header class="page-hero">
   <div class="wrap">
-    <div class="ph-eyebrow">{eyebrow}</div>
-    <h1 class="ph-h">{title}</h1>
-    {lede && <p class="ph-lede">{lede}</p>}
+    <div class="ph-grid">
+      <div class="ph-left">
+        <div class="ph-eyebrow">{eyebrow}</div>
+        <h1 class="ph-h">{title}</h1>
+      </div>
+      <div class="ph-right">
+        {lede && <p class="ph-lede">{lede}</p>}
+      </div>
+    </div>
   </div>
 </header>
 
@@ -39,6 +45,13 @@ const { eyebrow, title, lede } = Astro.props;
   }
   .page-hero .wrap { position: relative; z-index: 1; }
 
+  .ph-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
   .ph-eyebrow {
     display: inline-block;
     font-family: var(--font-mono);
@@ -53,11 +66,10 @@ const { eyebrow, title, lede } = Astro.props;
   .ph-h {
     font-family: var(--font-serif);
     font-size: clamp(20px, 2.8vw, 38px);
-    line-height: 1;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     font-weight: 400;
-    margin: 0 0 24px;
-    max-width: 880px;
+    margin: 0;
     text-wrap: balance;
     color: var(--text);
   }
@@ -75,6 +87,7 @@ const { eyebrow, title, lede } = Astro.props;
 
   @media (max-width: 980px) {
     .page-hero { padding: 110px 0 40px; }
+    .ph-grid { grid-template-columns: 1fr; gap: 24px; }
     .ph-h { font-size: 18px; }
   }
 </style>

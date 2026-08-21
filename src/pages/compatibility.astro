@@ -54,71 +54,78 @@ const faqs = [
   <section class="addendum">
     <div class="wrap">
 
-      <article class="addendum-block">
-        <div class="ad-eyebrow">/ how it works</div>
-        <h2>Three patterns that make this list possible.</h2>
-        <p>
-          The reason MeshWG operates across this breadth of hardware is
-          that it does not depend on any vendor's proprietary tunnel
-          protocol. The encrypted layer is standard WireGuard — the same
-          protocol every router on this page implements natively. What
-          MeshWG provides is the coordination layer above the protocol:
-          keypair distribution, peer state, policy enforcement, and the
-          dashboard that turns dozens of individual router configurations
-          into a single navigable mesh.
-        </p>
-        <p>
-          The result for an organisation evaluating mesh VPN is a
-          materially simpler decision. Existing branches with TP-Link
-          ER605 gateways slot in as easily as branches running MikroTik
-          RB5009, Ubiquiti UDM, or GL.iNet Flint 2. New branches can
-          standardise on whichever vendor procurement prefers without
-          changing the broader network architecture. Hardware refresh
-          cycles run independently of mesh-platform decisions.
-        </p>
-      </article>
+      <div class="addendum-grid">
+        <article class="addendum-block">
+          <div class="ad-eyebrow">/ how it works</div>
+          <h2>Three patterns that make this list possible.</h2>
+          <p>
+            The reason MeshWG operates across this breadth of hardware is
+            that it does not depend on any vendor's proprietary tunnel
+            protocol. The encrypted layer is standard WireGuard — the same
+            protocol every router on this page implements natively. What
+            MeshWG provides is the coordination layer above the protocol:
+            keypair distribution, peer state, policy enforcement, and the
+            dashboard that turns dozens of individual router configurations
+            into a single navigable mesh.
+          </p>
+          <p>
+            The result for an organisation evaluating mesh VPN is a
+            materially simpler decision. Existing branches with TP-Link
+            ER605 gateways slot in as easily as branches running MikroTik
+            RB5009, Ubiquiti UDM, or GL.iNet Flint 2. New branches can
+            standardise on whichever vendor procurement prefers without
+            changing the broader network architecture. Hardware refresh
+            cycles run independently of mesh-platform decisions.
+          </p>
+        </article>
 
-      <article class="addendum-block">
-        <div class="ad-eyebrow">/ the protocol layer</div>
-        <h2>Why standardising on WireGuard matters strategically.</h2>
-        <p>
-          WireGuard is not a MeshWG-specific protocol. It is the modern
-          encrypted-tunnel standard adopted by every major router vendor,
-          built into the Linux kernel since 2020, and supported by every
-          mainstream operating system. Organisations that standardise
-          their private networking on WireGuard preserve the freedom to
-          switch coordination platforms later without changing their
-          router fleet, and to introduce additional WireGuard-speaking
-          tools alongside MeshWG when specific use cases call for them.
-        </p>
-        <p>
-          That architectural openness is a deliberate choice — proprietary
-          VPN protocols deliver short-term lock-in benefits to vendors but
-          accumulate cost as the organisation grows. The 57 models on
-          this list represent infrastructure investments that remain
-          portable, durable, and aligned with where the broader
-          private-networking industry is headed.
-        </p>
-      </article>
+        <article class="addendum-block">
+          <div class="ad-eyebrow">/ the protocol layer</div>
+          <h2>Why standardising on WireGuard matters strategically.</h2>
+          <p>
+            WireGuard is not a MeshWG-specific protocol. It is the modern
+            encrypted-tunnel standard adopted by every major router vendor,
+            built into the Linux kernel since 2020, and supported by every
+            mainstream operating system. Organisations that standardise
+            their private networking on WireGuard preserve the freedom to
+            switch coordination platforms later without changing their
+            router fleet, and to introduce additional WireGuard-speaking
+            tools alongside MeshWG when specific use cases call for them.
+          </p>
+          <p>
+            That architectural openness is a deliberate choice — proprietary
+            VPN protocols deliver short-term lock-in benefits to vendors but
+            accumulate cost as the organisation grows. The 57 models on
+            this list represent infrastructure investments that remain
+            portable, durable, and aligned with where the broader
+            private-networking industry is headed.
+          </p>
+        </article>
+      </div>
 
       <article id="faq" class="addendum-block faq">
         <div class="ad-eyebrow">/ frequently asked</div>
         <h2>Compatibility, firmware, and what to do if your model is not listed.</h2>
-        {faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
+        <div class="faq-grid">
+          {faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
       </article>
 
       <aside class="cta-strip">
-        <p>
-          If your branch routers are on this list, you can start a free
-          MeshWG trial and configure a two-site mesh in under five
-          minutes.
-          <a class="cta-link" href={site.signupFree}>Start free →</a>
-        </p>
+        <div class="cta-text">
+          <h3>Ready to connect your fleet?</h3>
+          <p>
+            If your branch routers are on this list, you can start a free
+            MeshWG trial and configure a two-site mesh in under five
+            minutes.
+          </p>
+        </div>
+        <a class="btn btn-primary" href={site.signupFree}>Start free →</a>
       </aside>
 
     </div>
@@ -176,9 +183,22 @@ const faqs = [
 
 <style>
   .addendum { padding: 32px 0 96px; }
+  .addendum-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
   .addendum-block {
-    margin-bottom: 64px;
-    max-width: 760px;
+    margin-bottom: 48px;
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 48px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .addendum-grid .addendum-block {
+    margin-bottom: 0;
   }
   .addendum-block:last-child { margin-bottom: 0; }
 
@@ -207,12 +227,19 @@ const faqs = [
   .addendum-block p:last-child { margin-bottom: 0; }
 
   /* FAQ */
-  .faq h2 { margin-bottom: 32px; }
+  .faq { max-width: 100%; } /* override the 760px max-width to allow full grid */
+  .faq h2 { margin-bottom: 32px; max-width: 760px; }
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 48px;
+    align-items: start;
+  }
   details {
     border-top: 1px solid var(--border);
     padding: 20px 0;
   }
-  details:last-child { border-bottom: 1px solid var(--border); }
+  .faq-grid details:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
   summary {
     cursor: pointer;
     list-style: none;
@@ -241,31 +268,38 @@ const faqs = [
   }
 
   .cta-strip {
-    margin-top: 48px;
-    padding: 32px 36px;
-    background: color-mix(in oklab, var(--accent) 5%, var(--surface));
+    margin-top: 64px;
+    padding: 40px;
+    background: color-mix(in oklab, var(--accent) 4%, var(--surface));
     border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
     border-radius: var(--radius-lg);
-    max-width: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
   }
-  .cta-strip p {
-    margin: 0;
-    color: var(--text);
-    font-size: 15.5px;
-    line-height: 1.7;
-  }
-  .cta-link {
-    color: var(--accent);
+  .cta-text h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
     font-weight: 500;
-    margin-left: 4px;
-    white-space: nowrap;
+    color: var(--text);
   }
-  .cta-link:hover { color: var(--accent-strong); }
+  .cta-text p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.6;
+    max-width: 560px;
+  }
 
   @media (max-width: 980px) {
     .addendum { padding: 16px 0 64px; }
+    .addendum-grid { grid-template-columns: 1fr; gap: 32px; }
+    .faq-grid { grid-template-columns: 1fr; gap: 0; }
+    .faq-grid details:nth-last-child(-n+2) { border-bottom: 0; }
+    .faq-grid details:last-child { border-bottom: 1px solid var(--border); }
     .addendum-block h2 { font-size: 22px; }
-    .addendum-block { margin-bottom: 48px; }
-    .cta-strip { padding: 24px 22px; }
+    .addendum-block { margin-bottom: 32px; padding: 32px; }
+    .cta-strip { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 24px; }
   }
 </style>

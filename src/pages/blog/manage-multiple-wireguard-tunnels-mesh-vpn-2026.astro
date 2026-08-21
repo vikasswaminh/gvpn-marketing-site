@@ -1,7 +1,7 @@
 ---
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
-import PageHero   from "../../components/PageHero.astro";
+import BlogPost   from "../../components/BlogPost.astro";
 import Footer     from "../../components/Footer.astro";
 import { site }   from "../../site";
 
@@ -43,20 +43,18 @@ const faqs = [
 <Base title={title} description={description}>
   <Nav />
 
-  <PageHero
-    eyebrow="/ blog · engineering guide"
+    <BlogPost
     title="How to Manage Multiple WireGuard Tunnels and Build a WireGuard Mesh VPN"
-    lede="Master WireGuard mesh networking and multi-tunnel management in 2026. Architecture, full-mesh topologies, automated configs, and BGP routing."
-  />
+    description={description}
+    category="engineering guide"
+    datePublished={datePublished}
+    dateModified={dateModified}
+    readMinutes={15}
+    author="MeshWG editorial team"
+    authorRole="Network Architecture"
+  >
 
-  <main class="post">
-    <div class="wrap post-symmetric">
-      <div class="byline">
-        <span class="by-author">By the MeshWG engineering team</span>
-        <span class="by-date">Published {datePublished}</span>
-      </div>
-
-      <article class="post-block intro">
+      
         <p class="lede-p">
           WireGuard has redefined point-to-point network encryption by delivering lightweight, kernel-space performance with a minimal cryptographic footprint. However, when enterprise infrastructure expands beyond a single static site-to-site link, administrators face a severe operational challenge: managing multiple WireGuard tunnels and building a scalable full-mesh topology. Because standard WireGuard relies on static configuration files (<code>wg0.conf</code>) containing hardcoded public keys, IP endpoints, and allowed IP subnets, manual mesh maintenance quickly degenerates into operational chaos.
         </p>
@@ -66,18 +64,18 @@ const faqs = [
         <p class="lede-p">
           This comprehensive engineering guide addresses the challenges of scaling WireGuard overlays. It covers the architectural patterns, routing mechanisms, automation toolchains, and control-plane strategies required to manage multiple WireGuard tunnels and build robust, high-performance mesh networks.
         </p>
-      </article>
+      
 
-      <article class="tldr-box">
+      <div class="bp-tldr">
         <h3>⚡ TL;DR Key Takeaways</h3>
         <p><strong>The N(N-1)/2 Scaling Challenge:</strong> Building a full-mesh topology manually scales exponentially. Network architects must choose between single-interface multi-peer setups, multi-interface point-to-point links, or automated control-plane orchestration platforms.</p>
         <p><strong>Single-Interface vs Multi-Interface Architecture:</strong> A single WireGuard interface (<code>wg0</code>) can manage hundreds of peers simultaneously using Cryptokey Routing, saving system resources. Multi-interface configurations are reserved for environments requiring isolated firewall zones.</p>
         <p><strong>Dynamic Endpoint Resolution Limits:</strong> Native <code>wg-quick</code> resolves DNS domain names only once when an interface initializes. Operating multi-site meshes across dynamic public IPs requires explicit PersistentKeepalive settings combined with dynamic endpoint update scripts or control-plane agents.</p>
         <p><strong>Dynamic Routing Integration:</strong> Combining WireGuard overlay tunnels with dynamic routing protocols like BGP (via FRRouting) enables automatic route discovery, failover, and multi-path routing across complex topologies.</p>
         <p><strong>Decoupling Data and Control Planes:</strong> To eliminate manual configuration drift, modern enterprise architectures separate the data plane (kernel-level WireGuard) from the control plane (automated key distribution and IP allocation).</p>
-      </article>
+      
 
-      <article class="post-block">
+      
         <h2>1. Problem Statement: The Scaling Nightmare of Static WireGuard Configurations</h2>
         <p>WireGuard was explicitly designed as a simple, stateless cryptographic tunnel primitive. The original protocol specification intentionally omitted complex control-plane features such as automatic peer discovery, dynamic IP assignment, key distribution, and central policy management. While this minimalist design makes WireGuard secure and fast, it transfers the burden of scale entirely onto the system administrator.</p>
 
@@ -440,7 +438,7 @@ PersistentKeepalive = 25
           <li><strong>Standardize Gateway Configurations:</strong> Deploy standard Linux, MikroTik, or OpenWrt gateway routers using optimized MTU (1420) and mandatory TCP MSS clamping firewall rules.</li>
           <li><strong>Automate Fleet Management:</strong> Transition away from manual static configuration file editing. Use Ansible automation templates for small fleets or implement an automated management control plane like MeshWG to orchestrate peer key distribution, dynamic endpoint tracking, and zero-trust access control rules at scale.</li>
         </ul>
-      </article>
+      
       
       <div class="post-cta">
         <h3>Ready to build your mesh?</h3>
@@ -457,64 +455,4 @@ PersistentKeepalive = 25
   <Footer />
 </Base>
 
-<style>
-  .post-symmetric { max-width: 840px; }
-  .byline { display: flex; flex-direction: column; gap: 4px; padding: 32px 0; border-bottom: 1px solid var(--border-faint); margin-bottom: 48px; }
-  .by-author { font-weight: 500; color: var(--text); font-size: 15.5px; }
-  .by-date { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }
-  
-  .intro { font-size: 17.5px; line-height: 1.7; margin-bottom: 48px; color: var(--text-2); }
-  .intro .lede-p { margin: 0 0 20px; }
-  .intro .lede-p:last-child { margin-bottom: 0; }
-  
-  .tldr-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 32px 40px;
-    margin: 48px 0;
-  }
-  .tldr-box h3 { margin: 0 0 16px; font-size: 16px; font-weight: 600; color: var(--text); }
-  .tldr-box p { margin: 0 0 16px; font-size: 14.5px; line-height: 1.65; color: var(--text-2); }
-  .tldr-box p:last-child { margin-bottom: 0; }
-  
-  .post-block h2 { font-size: 26px; line-height: 1.25; letter-spacing: -0.015em; font-weight: 600; margin: 64px 0 24px; color: var(--text); }
-  .post-block h3 { font-size: 19px; font-weight: 600; margin: 40px 0 16px; color: var(--text); letter-spacing: -0.01em; }
-  .post-block p { font-size: 15.5px; line-height: 1.7; color: var(--text-2); margin: 0 0 20px; }
-  .post-block ul, .post-block ol { margin: 0 0 24px; padding-left: 24px; color: var(--text-2); font-size: 15.5px; line-height: 1.7; }
-  .post-block li { margin-bottom: 12px; }
-  .post-block strong { color: var(--text); font-weight: 600; }
-  
-  .post-block pre {
-    background: var(--code-bg);
-    color: var(--code-fg);
-    padding: 20px 24px;
-    border-radius: var(--radius-md);
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    line-height: 1.6;
-    margin: 24px 0;
-  }
-  .post-block code { font-family: var(--font-mono); font-size: 0.9em; background: var(--bg-2); padding: 2px 6px; border-radius: 4px; color: var(--text); }
-  .post-block pre code { background: transparent; padding: 0; border-radius: 0; color: inherit; font-size: 13px; }
-  
-  .faq-item { margin-top: 32px; }
-  
-  .post-cta {
-    margin-top: 80px;
-    padding: 40px;
-    background: color-mix(in oklab, var(--accent) 4%, var(--surface));
-    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
-    border-radius: var(--radius-xl);
-    text-align: center;
-  }
-  .post-cta h3 { font-size: 22px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .post-cta p { font-size: 15.5px; color: var(--text-2); margin: 0 auto 24px; max-width: 500px; line-height: 1.6; }
-  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  
-  @media (max-width: 768px) {
-    .tldr-box { padding: 24px; }
-    .post-cta { padding: 32px 24px; }
-  }
-</style>
+

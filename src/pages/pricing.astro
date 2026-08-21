@@ -47,6 +47,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     eyebrow="/ pricing"
     title="Pay for what you mesh."
     lede="A machine is anything in your mesh. Two free forever. After that, ₹349 per machine per month on annual billing — or ₹499 if you'd rather pay monthly."
+    wrapLede={true}
   />
 
   <section class="price-section">
@@ -198,6 +199,20 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
       } else {
         cloudPriceEl.textContent = "₹499";
         cloudUnitEl.textContent  = "/ machine / month, billed monthly";
+      }
+    });
+  });
+
+  // ── Exclusive FAQ Accordion ────────────────────────────────────────
+  const faqDetails = document.querySelectorAll(".pfaq-grid details");
+  faqDetails.forEach((targetDetail) => {
+    targetDetail.addEventListener("click", () => {
+      if (!targetDetail.open) {
+        faqDetails.forEach((detail) => {
+          if (detail !== targetDetail) {
+            detail.removeAttribute("open");
+          }
+        });
       }
     });
   });

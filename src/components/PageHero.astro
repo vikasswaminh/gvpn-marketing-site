@@ -3,9 +3,11 @@ interface Props {
   eyebrow: string;
   title: string;
   lede?: string;
+  wrapLede?: boolean;
+  wrapTitle?: boolean;
 }
 
-const { eyebrow, title, lede } = Astro.props;
+const { eyebrow, title, lede, wrapLede = false, wrapTitle = false } = Astro.props;
 ---
 
 <header class="page-hero">
@@ -13,10 +15,10 @@ const { eyebrow, title, lede } = Astro.props;
     <div class="ph-grid">
       <div class="ph-left">
         <div class="ph-eyebrow">{eyebrow}</div>
-        <h1 class="ph-h">{title}</h1>
+        <h1 class:list={["ph-h", { "ph-h--wrap": wrapTitle }]}>{title}</h1>
       </div>
       <div class="ph-right">
-        {lede && <p class="ph-lede">{lede}</p>}
+        {lede && <p class:list={["ph-lede", { "ph-lede--wrap": wrapLede }]} set:html={lede} />}
       </div>
     </div>
   </div>
@@ -28,10 +30,9 @@ const { eyebrow, title, lede } = Astro.props;
      padding accounts for both the nav and the additional breathing
      room below it. */
   .page-hero {
-    padding: 152px 0 64px;
+    padding: 152px 0 32px;
     border-bottom: 1px solid var(--border);
     position: relative;
-    overflow: hidden;
   }
   /* soft acid glow top-right matches the homepage hero atmosphere */
   .page-hero::before {
@@ -46,9 +47,9 @@ const { eyebrow, title, lede } = Astro.props;
   .page-hero .wrap { position: relative; z-index: 1; }
 
   .ph-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     align-items: start;
   }
 
@@ -70,20 +71,26 @@ const { eyebrow, title, lede } = Astro.props;
     letter-spacing: -0.02em;
     font-weight: 400;
     margin: 0;
-    text-wrap: balance;
+    white-space: nowrap;
     color: var(--text);
+  }
+  .ph-h--wrap {
+    white-space: normal;
   }
 
   .ph-lede {
     color: var(--text-2);
     font-size: 17px;
-    max-width: 680px;
     line-height: 1.6;
     margin: 0;
-    text-wrap: pretty;
+    white-space: nowrap;
     font-weight: 300;
   }
   .ph-lede b { color: var(--text); font-weight: 500; }
+  .ph-lede--wrap {
+    white-space: normal;
+    max-width: 100%;
+  }
 
   @media (max-width: 980px) {
     .page-hero { padding: 110px 0 40px; }

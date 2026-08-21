@@ -47,6 +47,8 @@ const faqs = [
     eyebrow="/ blog · engineering guide"
     title="WireGuard NAT Traversal: How VPN Peers Connect Behind CGNAT and Firewalls"
     lede="A complete 2026 engineering guide to UDP hole punching, PersistentKeepalive, CGNAT workarounds, STUN/ICE mechanics, and enterprise relay strategies."
+    wrapTitle={true}
+    wrapLede={true}
   />
 
   <main class="post">
@@ -240,7 +242,7 @@ PersistentKeepalive = 25
 </Base>
 
 <style>
-  .post-symmetric { max-width: 840px; }
+  .post-symmetric { width: 100%; }
   .byline { display: flex; flex-direction: column; gap: 4px; padding: 32px 0; border-bottom: 1px solid var(--border-faint); margin-bottom: 48px; }
   .by-author { font-weight: 500; color: var(--text); font-size: 15.5px; }
   .by-date { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }

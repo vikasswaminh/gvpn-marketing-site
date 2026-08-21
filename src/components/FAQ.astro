@@ -106,3 +106,18 @@ const faqs = [
     .faq-grid { grid-template-columns: 1fr; gap: 0; }
   }
 </style>
+
+<script is:inline>
+  const faqs = document.querySelectorAll("#faq details");
+  faqs.forEach((targetDetail) => {
+    targetDetail.addEventListener("click", () => {
+      if (!targetDetail.open) {
+        faqs.forEach((detail) => {
+          if (detail !== targetDetail) {
+            detail.removeAttribute("open");
+          }
+        });
+      }
+    });
+  });
+</script>

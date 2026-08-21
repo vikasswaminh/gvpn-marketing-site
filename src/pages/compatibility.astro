@@ -47,6 +47,7 @@ const faqs = [
     eyebrow="/ compatibility"
     title="The routers that work with MeshWG today."
     lede="57 router models across 9 vendor families, each independently verified by the editorial team. Filter by vendor, search by model number, and check the minimum firmware that ships WireGuard support."
+    wrapLede={true}
   />
 
   <CompatibilityGrid />
@@ -159,6 +160,21 @@ const faqs = [
     "inLanguage": "en",
   })}></script>
 
+  <script is:inline>
+    const compatFaqs = document.querySelectorAll(".faq-grid details");
+    compatFaqs.forEach((targetDetail) => {
+      targetDetail.addEventListener("click", () => {
+        if (!targetDetail.open) {
+          compatFaqs.forEach((detail) => {
+            if (detail !== targetDetail) {
+              detail.removeAttribute("open");
+            }
+          });
+        }
+      });
+    });
+  </script>
+
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -192,7 +208,7 @@ const faqs = [
   .addendum-block {
     margin-bottom: 48px;
     background: #ffffff;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #001f5c;
     border-radius: 16px;
     padding: 48px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.02);

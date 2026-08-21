@@ -68,15 +68,19 @@ const vendors = [
   }
   .vendor-tile {
     display: flex; align-items: center; gap: 12px;
-    padding: 16px 18px;
+    padding: 14px 16px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    transition: border-color 0.2s ease, background 0.2s ease;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    height: 100%;
   }
   .vendor-tile:hover {
     border-color: var(--border-strong);
-    background: var(--surface-2);
+    background: var(--bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
   }
 
   .vlogo {

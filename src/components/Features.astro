@@ -55,14 +55,15 @@ const features = [
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
-    margin-top: 64px;
+    margin-top: 48px;
     background: var(--border);
     border: 1px solid var(--border);
-    border-radius: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
   }
   .feature {
     background: var(--bg);
-    padding: 36px 32px 40px;
+    padding: 24px 28px 28px;
     transition: background 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
     position: relative;
     z-index: 1;

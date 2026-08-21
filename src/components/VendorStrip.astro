@@ -16,16 +16,18 @@ const vendors = [
       <div class="lbl">If it runs WireGuard, it works with MeshWG</div>
       <a class="see-all" href="/compatibility">View all 57 supported routers →</a>
     </div>
-    <div class="vendor-row">
-      {vendors.map((v) => (
-        <div class="vendor-tile">
-          <span class="vlogo" style={`background:${v.color}`}>{v.tag}</span>
-          <div>
-            <div class="vname">{v.name}</div>
-            <div class="vsub">{v.sub}</div>
+    <div class="vendor-marquee">
+      <div class="vendor-row">
+        {[...vendors, ...vendors].map((v) => (
+          <div class="vendor-tile">
+            <span class="vlogo" style={`background:${v.color}`}>{v.tag}</span>
+            <div>
+              <div class="vname">{v.name}</div>
+              <div class="vsub">{v.sub}</div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 </section>
@@ -60,11 +62,26 @@ const vendors = [
     gap: 6px;
   }
   .see-all:hover { color: var(--accent-strong); }
+  .vendor-marquee {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  }
   .vendor-row {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
+    display: flex;
+    width: max-content;
+    gap: 16px;
     align-items: center;
+    animation: marquee 25s linear infinite;
+  }
+  .vendor-row:hover {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-50% - 8px)); }
   }
   .vendor-tile {
     display: flex; align-items: center; gap: 12px;
@@ -104,6 +121,5 @@ const vendors = [
 
   @media (max-width: 980px) {
     .vendor-section { padding: 32px 0 56px; }
-    .vendor-row { grid-template-columns: repeat(2, 1fr); }
   }
 </style>

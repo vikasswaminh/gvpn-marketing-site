@@ -47,9 +47,13 @@ const { eyebrow, title, lede } = Astro.props;
 
   .ph-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 64px;
-    align-items: end;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .ph-right {
+    margin-top: 56px; /* Staggers the description below the title baseline for an asymmetric layout */
   }
 
   .ph-eyebrow {
@@ -88,6 +92,7 @@ const { eyebrow, title, lede } = Astro.props;
   @media (max-width: 980px) {
     .page-hero { padding: 110px 0 40px; }
     .ph-grid { grid-template-columns: 1fr; gap: 24px; }
+    .ph-right { margin-top: 0; }
     .ph-h { font-size: 18px; }
   }
 </style>

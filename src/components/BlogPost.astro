@@ -28,16 +28,17 @@ const {
   eyebrow={category ? `/ blog · ${category}` : "/ blog"}
   title={title}
   lede={description}
-  wrapTitle={true}
-  wrapLede={true}
 />
 
 <main class="post">
   <div class="wrap post-symmetric">
     <div class="byline">
-      <span class="by-author">By {author || 'the MeshWG engineering team'}</span>
+      <span class="by-author">By {author || 'MeshWG editorial team'}</span>
       {datePublished && (
-        <span class="by-date">Published {datePublished}</span>
+        <span class="by-date">
+          Published {datePublished}
+          {dateModified && dateModified !== datePublished ? ` · Updated ${dateModified}` : ""}
+        </span>
       )}
     </div>
 
@@ -48,58 +49,98 @@ const {
 </main>
 
 <style is:global>
-  .post { padding: 0 0 64px; }
-  .post-symmetric { width: 100%; }
-  .byline { display: flex; flex-direction: column; gap: 4px; padding: 32px 0; border-bottom: 1px solid var(--border-faint); margin-bottom: 48px; text-align: left; }
-  .by-author { font-weight: 500; color: var(--text); font-size: 15.5px; }
-  .by-author a { color: var(--accent); }
-  .by-author a:hover { color: var(--accent-strong); }
-  .by-date { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }
-
-  .intro { font-size: 17.5px; line-height: 1.7; margin-bottom: 48px; color: var(--text-2); }
-  .intro .lede-p { margin: 0 0 20px; }
-  .intro .lede-p:last-child { margin-bottom: 0; }
-  
-  .tldr-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 32px 40px;
-    margin: 48px 0;
+  .post { padding: 48px 0 64px; background-color: var(--bg-2, #fafafa); }
+  .post-symmetric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .tldr-box h3 { margin: 0 0 16px; font-size: 16px; font-weight: 600; color: var(--text); }
-  .tldr-box p { margin: 0 0 16px; font-size: 14.5px; line-height: 1.65; color: var(--text-2); }
-  .tldr-box p:last-child { margin-bottom: 0; }
-  
-  .post-block { width: 100%; }
-  .post-block h2 { font-size: 26px; line-height: 1.25; letter-spacing: -0.015em; font-weight: 600; margin: 64px 0 24px; color: var(--text); }
-  .post-block h3 { font-size: 19px; font-weight: 600; margin: 40px 0 16px; color: var(--text); letter-spacing: -0.01em; }
-  .post-block p { font-size: 15.5px; line-height: 1.7; color: var(--text-2); margin: 0 0 20px; }
-  .post-block ul, .post-block ol { margin: 0 0 24px; padding-left: 24px; color: var(--text-2); font-size: 15.5px; line-height: 1.7; }
-  .post-block li { margin-bottom: 12px; }
-  .post-block strong { color: var(--text); font-weight: 600; }
-  
-  .post-block pre {
-    background: var(--code-bg);
-    color: var(--code-fg);
-    padding: 20px 24px;
-    border-radius: var(--radius-md);
-    overflow-x: auto;
+  .byline {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 18px;
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
     font-family: var(--font-mono);
     font-size: 13px;
-    line-height: 1.6;
-    margin: 24px 0;
+    color: var(--text-3);
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
   }
-  .post-block code { font-family: var(--font-mono); font-size: 0.9em; background: var(--bg-2); padding: 2px 6px; border-radius: 4px; color: var(--text); }
-  .post-block pre code { background: transparent; padding: 0; border-radius: 0; color: inherit; font-size: 13px; }
+  .by-author a { color: var(--accent); }
+  .by-author a:hover { color: var(--accent-strong); }
+  
+  .post-block {
+    margin: 0 auto 32px;
+    max-width: 800px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 48px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+  
+  .tldr-box {
+    margin: 0 auto 48px;
+    max-width: 800px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-left: 4px solid #ff66cc;
+    border-radius: 12px;
+    padding: 32px 48px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+  
+  .tldr-box h3 {
+    color: #ff66cc;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    margin-top: 0;
+    font-family: var(--font-sans);
+  }
+  .post-block:last-child { margin-bottom: 0; }
+  .post-block h2 {
+    font-family: var(--font-serif);
+    font-size: 36px;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    margin: 0 0 22px;
+    text-wrap: balance;
+    color: var(--text);
+  }
+  .post-block h2 .it { font-style: normal; color: var(--accent); }
+  .post-block h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 400;
+    margin: 32px 0 12px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .post-block p {
+    margin: 0 0 16px;
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .post-block p:last-child { margin-bottom: 0; }
+  .post-block strong { color: var(--text); font-weight: 600; }
+  .post-block code {
+    font-family: var(--font-mono);
+    font-size: .9em;
+    background: var(--bg-2);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+  }
   .post-block a { color: var(--accent); }
   .post-block a:hover { color: var(--accent-strong); }
-
-  /* Reset nested wrap padding for components used inside blog posts (like Compare) */
-  .post-content .wrap {
-    padding: 0;
-    max-width: none;
-  }
+  .intro .lede-p { font-size: 17px; line-height: 1.7; color: var(--text); }
+  .bp-intro { margin: 0 auto 32px; max-width: 800px; width: 100%; }
 
   /* Phase blocks */
   .phase {

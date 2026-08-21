@@ -30,7 +30,8 @@ import { site } from "../site";
   /* Editorial closing CTA — dark canvas card with a soft acid glow
      in the upper-right corner, serif italic emphasis on the second
      clause of the headline. */
-  .cta-section { padding: 0 0 64px; }
+  .cta-section { padding: 0 0 32px; }
+  #cta { padding-top: 32px; }
 
   .cta {
     background: var(--surface);
@@ -50,7 +51,7 @@ import { site } from "../site";
     background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
     pointer-events: none;
   }
-  .cta-inner { max-width: 720px; position: relative; z-index: 1; }
+  .cta-inner { max-width: none; position: relative; z-index: 1; }
 
   .cta-eyebrow {
     display: inline-block;
@@ -70,7 +71,8 @@ import { site } from "../site";
     margin: 0 0 20px;
     font-weight: 400;
     color: var(--text);
-    text-wrap: balance;
+    text-wrap: unset;
+    max-width: none;
   }
   .cta-h span {
     font-style: normal;
@@ -82,7 +84,8 @@ import { site } from "../site";
     margin: 0 0 32px;
     line-height: 1.6;
     font-weight: 300;
-    max-width: 580px;
+    max-width: none;
+    text-wrap: unset;
   }
   .cta-row {
     display: flex; gap: 10px;

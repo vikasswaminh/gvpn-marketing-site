@@ -131,14 +131,18 @@ const {
 </section>
 
 <style>
-  #compare { padding-bottom: 40px; }
+  #compare { padding: 32px 0 40px; }
+  #compare .sec-h, #compare .sec-lede {
+    text-wrap: unset;
+    max-width: none;
+  }
   /* Editorial comparison table — acid-tinted MeshWG column on a
      subtle vertical gradient, mono uppercase column headers, serif
      italic row labels would feel out of register so labels stay in
      the mono signature instead. */
   .compare-wrap {
     margin-top: 64px;
-    border: 1px solid var(--border);
+    border: 1px solid navy;
     border-radius: var(--radius-lg);
     overflow: hidden;
     overflow-x: auto;
@@ -152,7 +156,7 @@ const {
   .compare th, .compare td {
     text-align: left;
     padding: 22px 24px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid navy;
     vertical-align: top;
     line-height: 1.5;
     color: var(--text-2);
@@ -198,7 +202,10 @@ const {
     text-align: center;
   }
   .cf-link {
-    font-size: 13.5px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--accent);
     transition: color .12s ease;
   }

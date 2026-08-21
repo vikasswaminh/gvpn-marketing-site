@@ -48,6 +48,12 @@ const features = [
 </section>
 
 <style>
+  #features { padding: 32px 0; }
+  #features .sec-h, #features .sec-lede {
+    text-wrap: unset;
+    max-width: none;
+  }
+
   /* Editorial feature grid — hairline-divided cells on the ink canvas,
      serif italic titles, ultra-light body. Hover ramps the surface
      up a step (no shadow, just contrast). */
@@ -56,8 +62,8 @@ const features = [
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     margin-top: 48px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    background: navy;
+    border: 1px solid navy;
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
@@ -71,6 +77,12 @@ const features = [
   .feature.hover-card:hover {
     z-index: 2;
     background: var(--bg);
+    transform: none; /* Prevent shifting that covers the grid gaps */
+    box-shadow: inset 0 0 0 1px navy; /* Subtle inner border on hover instead of big shadow */
+  }
+  .feature.hover-card:active {
+    transform: none; /* Prevent shifting */
+    box-shadow: inset 0 0 0 2px navy; /* Stronger inner border on click */
   }
 
   .ft-title {

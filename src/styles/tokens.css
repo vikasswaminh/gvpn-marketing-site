@@ -60,8 +60,8 @@
   --ember:          #DA291C;
 
   /* ── Code surfaces (dark blocks on a light page) ──────────────────── */
-  --code-bg:        #0a0a0a;
-  --code-bg-2:      #141414;
+  --code-bg:        #1e293b;
+  --code-bg-2:      #334155;
   --code-fg:        #e6e6e9;
   --code-com:       #6b7280;
   --code-pun:       #a1a1aa;

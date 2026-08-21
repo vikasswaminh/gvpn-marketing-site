@@ -2,6 +2,16 @@
 import BrandMark from "./BrandMark.astro";
 import { site } from "../site";
 ---
+<div class="announcement">
+  <div class="wrap announcement-inner">
+    <span class="announcement-text">
+      <span class="badge">NEW</span>
+      Self-serve signup is live. Free for 2 machines, forever. ₹349/machine/month after.
+    </span>
+    <a href="/pricing" class="announcement-link">See pricing &rarr;</a>
+  </div>
+</div>
+
 <nav class="nav">
   <div class="wrap nav-inner">
     <a class="brand" href="/">
@@ -24,12 +34,54 @@ import { site } from "../site";
 </nav>
 
 <style>
+  .announcement {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 101;
+    background: var(--brand-red);
+    color: #ffffff;
+    height: 40px;
+  }
+  .announcement-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+  .announcement-text {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .announcement .badge {
+    background: #ffffff;
+    color: var(--brand-red);
+    font: 700 10.5px/1 var(--font-sans);
+    padding: 3px 6px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .announcement-link {
+    color: #ffffff;
+    font-weight: 600;
+    transition: opacity 0.15s ease;
+  }
+  .announcement-link:hover {
+    opacity: 0.8;
+  }
+  @media (max-width: 980px) {
+    .announcement { display: none; }
+  }
+
   /* Fixed nav. Top-of-page: nearly transparent; on scroll past 60 px the
      IntersectionObserver in Base.astro adds .nav--scrolled and the bar
      becomes frosted white with a subtle hairline border. */
   .nav {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 40px; left: 0; right: 0;
     z-index: 100;
     background: rgba(255, 255, 255, 0.6);
     -webkit-backdrop-filter: saturate(160%) blur(14px);
@@ -37,6 +89,10 @@ import { site } from "../site";
     border-bottom: 1px solid transparent;
     transition: border-bottom-color 0.25s ease, background 0.25s ease;
   }
+  @media (max-width: 980px) {
+    .nav { top: 0; }
+  }
+  
   .nav--scrolled {
     background: rgba(255, 255, 255, 0.75);
     border-bottom-color: var(--border);

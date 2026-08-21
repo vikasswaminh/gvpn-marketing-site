@@ -38,7 +38,7 @@ const meshNodes = [
 
       <p class="lede">
         Connect your branches, your home, and your team —
-        without buying <b>₹2 lakh SDWAN boxes</b>. MeshWG is a hosted
+        without buying <b>₹2 lakh SDWAN boxes</b>. <span class="hl-meshwg">MeshWG</span> is a hosted
         mesh service that works with the TP-Link, MikroTik, OpenWrt,
         and Ubiquiti hardware already in your rack.
       </p>
@@ -242,6 +242,13 @@ const meshNodes = [
     margin: 0;
   }
   .lede b { color: var(--text); font-weight: 600; }
+  .hl-meshwg {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+  }
 
   /* ── CTAs row ────────────────────────────────────────────────── */
   .hero-cta {

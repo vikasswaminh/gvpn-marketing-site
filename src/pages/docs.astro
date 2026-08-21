@@ -263,19 +263,19 @@ const description = "How MeshWG actually works: the architecture promises we mak
   /* Config pre */
   .config-pre {
     margin: 32px 0 0;
-    background: #0a0a0a;
-    color: #e5e5e5;
+    background: var(--code-bg);
+    color: var(--code-fg);
     border-radius: var(--radius-lg);
     padding: 24px 26px;
     font: 12.5px/1.75 var(--font-mono);
     overflow: auto;
-    border: 1px solid #1a1a1a;
+    border: 1px solid var(--border-strong);
     white-space: pre;
   }
-  .config-pre .hdr { color: #737373; }
-  .config-pre .sec { color: #a5b4fc; }
-  .config-pre .key { color: #fafafa; }
-  .config-pre .val { color: #fbbf24; }
+  .config-pre .hdr { color: var(--code-com); }
+  .config-pre .sec { color: var(--code-key); font-weight: 600; }
+  .config-pre .key { color: var(--text-2); font-weight: 500; }
+  .config-pre .val { color: var(--code-num); }
 
   /* Don't-do list */
   .dont {

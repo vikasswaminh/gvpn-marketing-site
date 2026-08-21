@@ -15,36 +15,36 @@
 :root {
   /* ── Surfaces ─────────────────────────────────────────────────────── */
   --bg:             #ffffff;
-  --bg-2:           #fafafa;
-  --bg-3:           #f4f4f5;
-  --bg-deep:        #ebebed;
-  --surface:        #fafafa;
-  --surface-2:      #f4f4f5;
+  --bg-2:           #f8fafc;
+  --bg-3:           #e8eef5;
+  --bg-deep:        #e8eef5;
+  --surface:        #ffffff;
+  --surface-2:      #f8fafc;
 
   /* ── Ink + muted ──────────────────────────────────────────────────── */
-  --text:           #0a0a0a;
-  --text-2:         #18181b;
-  --text-3:         #52525b;
-  --text-4:         #8a8a93;
-  --ink:            #0a0a0a;
-  --ink-2:          #18181b;
-  --muted:          #52525b;
-  --muted-2:        #8a8a93;
-  --muted-3:        #b4b4ba;
+  --text:           #0B1220;
+  --text-2:         #0F172A;
+  --text-3:         #526071;
+  --text-4:         #94a3b8;
+  --ink:            #0B1220;
+  --ink-2:          #0F172A;
+  --muted:          #526071;
+  --muted-2:        #94a3b8;
+  --muted-3:        #cbd5e1;
 
   /* ── Lines (super subtle on light) ────────────────────────────────── */
-  --border-faint:   #f0f0f1;
-  --border:         #e5e5e7;
-  --border-strong:  #ddddde;
-  --line:           #e5e5e7;
-  --line-2:         #ddddde;
-  --line-3:         #f0f0f1;
+  --border-faint:   #f1f5f9;
+  --border:         #e8eef5;
+  --border-strong:  #d0d7e1;
+  --line:           #e8eef5;
+  --line-2:         #d0d7e1;
+  --line-3:         #f1f5f9;
 
-  /* ── Accent: bright blue ──────────────────────────────────────────── */
-  --accent:         #0066ff;
-  --accent-strong:  #0052cc;
-  --accent-soft:    #e7efff;
-  --accent-glow:    rgba(0, 102, 255, .18);
+  /* ── Accent: electric blue ──────────────────────────────────────────── */
+  --accent:         #1677FF;
+  --accent-strong:  #0958d9;
+  --accent-soft:    #e6f4ff;
+  --accent-glow:    rgba(22, 119, 255, .18);
   --accent-ink:     #ffffff;
 
   /* ── Brand red (announcement bar + emphasis) ──────────────────────── */
@@ -53,16 +53,16 @@
   --brand-red-soft: #fde8e6;
 
   /* ── Status ───────────────────────────────────────────────────────── */
-  --ok:             #16a34a;
+  --ok:             #10B981;
   --warn:           #facc15;
   --err:            #dc2626;
-  --info:           #0066ff;
+  --info:           #1677FF;
   --ember:          #DA291C;
 
   /* ── Code surfaces (light blocks on a light page) ─────────────────── */
-  --code-bg:        #f4f4f5;
-  --code-bg-2:      #e5e5e7;
-  --code-fg:        #18181b;
+  --code-bg:        #f8fafc;
+  --code-bg-2:      #e8eef5;
+  --code-fg:        #0B1220;
   --code-com:       #71717a;
   --code-pun:       #52525b;
   --code-key:       #0052cc;
@@ -117,10 +117,6 @@ body {
   font-family: var(--font-sans);
   color: var(--text);
   background-color: var(--bg);
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
-  background-size: 32px 32px;
   line-height: 1.5;
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
@@ -345,4 +341,10 @@ em, i, cite, dfn, address, var { font-style: normal; }
   transform: translateY(-4px) translateZ(0);
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
   border-color: var(--border-strong);
+}
+.hover-card:active {
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: inset 0 0 0 1px var(--text), 4px 4px 0px 0px var(--text);
+  border-color: var(--text);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
 }

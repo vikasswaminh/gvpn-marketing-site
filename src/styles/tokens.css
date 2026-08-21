@@ -59,19 +59,19 @@
   --info:           #0066ff;
   --ember:          #DA291C;
 
-  /* ── Code surfaces (dark blocks on a light page) ──────────────────── */
-  --code-bg:        #1e293b;
-  --code-bg-2:      #334155;
-  --code-fg:        #e6e6e9;
-  --code-com:       #6b7280;
-  --code-pun:       #a1a1aa;
-  --code-key:       #93c5fd;
-  --code-str:       #86efac;
-  --code-num:       #fcd34d;
-  --code-fn:        #fda4af;
-  --code-cmd:       #ffffff;
-  --code-prompt:    #93c5fd;
-  --code-ok:        #86efac;
+  /* ── Code surfaces (light blocks on a light page) ─────────────────── */
+  --code-bg:        #f4f4f5;
+  --code-bg-2:      #e5e5e7;
+  --code-fg:        #18181b;
+  --code-com:       #71717a;
+  --code-pun:       #52525b;
+  --code-key:       #0052cc;
+  --code-str:       #16a34a;
+  --code-num:       #d97706;
+  --code-fn:        #dc2626;
+  --code-cmd:       #0a0a0a;
+  --code-prompt:    #0066ff;
+  --code-ok:        #16a34a;
 
   /* ── Typography ───────────────────────────────────────────────────── */
   --font-sans:      "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;

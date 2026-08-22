@@ -28,6 +28,8 @@ const {
   eyebrow={category ? `/ blog · ${category}` : "/ blog"}
   title={title}
   lede={description}
+  wrapTitle={true}
+  wrapLede={true}
 />
 
 <main class="post">
@@ -42,20 +44,31 @@ const {
       )}
     </div>
 
-    <slot />
+    <div class="post-block post-content">
+      <slot />
+    </div>
   </div>
 </main>
 
 <style is:global>
-  .post-symmetric { width: 100%; max-width: 800px; margin: 0 auto; }
-  
-  .byline { display: flex; flex-direction: column; gap: 4px; padding: 32px 0; border-bottom: 1px solid var(--border-faint); margin-bottom: 48px; }
+  .post { padding: 48px 0 64px; background-color: var(--surface, #ffffff); }
+  .post-symmetric {
+    width: 100%;
+    display: block;
+  }
+  .byline {
+    display: flex; flex-direction: column; gap: 4px; padding: 32px 0; border-bottom: 1px solid var(--border-faint); margin-bottom: 48px;
+    width: 100%;
+  }
   .by-author { font-weight: 500; color: var(--text); font-size: 15.5px; }
   .by-date { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }
+  .by-author a { color: var(--accent); }
+  .by-author a:hover { color: var(--accent-strong); }
   
-  .intro { font-size: 17.5px; line-height: 1.7; margin-bottom: 48px; color: var(--text-2); }
-  .intro .lede-p { margin: 0 0 20px; }
-  .intro .lede-p:last-child { margin-bottom: 0; }
+  .post-block {
+    width: 100%;
+    margin: 0 0 32px 0;
+  }
   
   .tldr-box {
     background: var(--surface);
@@ -63,18 +76,37 @@ const {
     border-radius: var(--radius-lg);
     padding: 32px 40px;
     margin: 48px 0;
+    width: 100%;
   }
-  .tldr-box h3 { margin: 0 0 16px; font-size: 16px; font-weight: 600; color: var(--text); }
+  
+  .tldr-box h3 {
+    margin: 0 0 16px; font-size: 16px; font-weight: 600; color: var(--text);
+    font-family: var(--font-sans);
+  }
   .tldr-box p { margin: 0 0 16px; font-size: 14.5px; line-height: 1.65; color: var(--text-2); }
   .tldr-box p:last-child { margin-bottom: 0; }
   
-  .post-block h2 { font-size: 26px; line-height: 1.25; letter-spacing: -0.015em; font-weight: 600; margin: 64px 0 24px; color: var(--text); }
-  .post-block h3 { font-size: 19px; font-weight: 600; margin: 40px 0 16px; color: var(--text); letter-spacing: -0.01em; }
-  .post-block p { font-size: 15.5px; line-height: 1.7; color: var(--text-2); margin: 0 0 20px; }
+  .post-block:last-child { margin-bottom: 0; }
+  
+  .post-block h2 {
+    font-size: 26px; line-height: 1.25; letter-spacing: -0.015em; font-weight: 600; margin: 64px 0 24px; color: var(--text);
+    font-family: var(--font-sans);
+  }
+  .post-block h2 .it { font-style: normal; color: var(--accent); }
+  .post-block h3 {
+    font-size: 19px; font-weight: 600; margin: 40px 0 16px; color: var(--text); letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+  }
+  .post-block p {
+    font-size: 15.5px; line-height: 1.7; color: var(--text-2); margin: 0 0 20px;
+  }
+  .post-block p:last-child { margin-bottom: 0; }
   .post-block ul, .post-block ol { margin: 0 0 24px; padding-left: 24px; color: var(--text-2); font-size: 15.5px; line-height: 1.7; }
   .post-block li { margin-bottom: 12px; }
   .post-block strong { color: var(--text); font-weight: 600; }
-  
+  .post-block code {
+    font-family: var(--font-mono); font-size: 0.9em; padding: 2px 4px; background: var(--bg-2); border-radius: var(--radius-sm); color: var(--text);
+  }
   .post-block pre {
     background: var(--code-bg);
     color: var(--code-fg);
@@ -84,13 +116,33 @@ const {
     font-family: var(--font-mono);
     font-size: 13px;
     line-height: 1.6;
-    margin: 24px 0;
+    margin-bottom: 24px;
   }
-  .post-block code { font-family: var(--font-mono); font-size: 0.9em; background: var(--bg-2); padding: 2px 6px; border-radius: 4px; color: var(--text); }
   .post-block pre code { background: transparent; padding: 0; border-radius: 0; color: inherit; font-size: 13px; }
-  .post-block a { color: var(--accent); }
-  .post-block a:hover { color: var(--accent-strong); }
+  .post-block a:not(.btn) { color: var(--accent); }
+  .post-block a:not(.btn):hover { color: var(--accent-strong); }
+  .intro .lede-p { font-size: 17px; line-height: 1.7; color: var(--text); margin: 0 0 20px; }
+  .bp-intro { margin: 0 auto 32px; width: 100%; }
+
+  .faq-item { margin-top: 32px; }
   
+  .post-cta {
+    margin-top: 80px;
+    padding: 40px;
+    background: color-mix(in oklab, var(--accent) 4%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
+    border-radius: var(--radius-xl);
+    text-align: center;
+  }
+  .post-cta h3 { font-size: 22px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .post-cta p { font-size: 15.5px; color: var(--text-2); margin: 0 auto 24px; max-width: 500px; line-height: 1.6; }
+  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  
+  @media (max-width: 768px) {
+    .tldr-box { padding: 24px; }
+    .post-cta { padding: 32px 24px; }
+  }
+
   /* Phase blocks */
   .phase {
     background: var(--surface);
@@ -98,7 +150,6 @@ const {
     border-radius: var(--radius-lg);
     padding: 32px 36px;
     max-width: 760px;
-    margin-bottom: 32px;
   }
   .ph-head {
     display: flex; align-items: baseline; gap: 16px;
@@ -154,11 +205,14 @@ const {
   }
   .steps li {
     counter-increment: stp;
-    padding: 30px 28px 30px 86px;
+    padding: 24px 28px 24px 60px;
     border-bottom: 1px solid var(--border);
     position: relative;
   }
   .steps li:last-child { border-bottom: 0; }
+  .steps li {
+    padding: 30px 28px 30px 86px;
+  }
   .steps li::before {
     content: counter(stp, decimal-leading-zero);
     position: absolute;
@@ -185,7 +239,6 @@ const {
   .steps p:last-child { margin-bottom: 0; }
 
   /* FAQ */
-  .faq-item { margin-top: 32px; }
   .faq h2 { margin-bottom: 16px; }
   details {
     border-top: 1px solid var(--border);
@@ -241,19 +294,7 @@ const {
     white-space: nowrap;
   }
   .cta-link:hover { color: var(--accent-strong); }
-  
-  .post-cta {
-    margin-top: 80px;
-    padding: 40px;
-    background: color-mix(in oklab, var(--accent) 4%, var(--surface));
-    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
-    border-radius: var(--radius-xl);
-    text-align: center;
-  }
-  .post-cta h3 { font-size: 22px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .post-cta p { font-size: 15.5px; color: var(--text-2); margin: 0 auto 24px; max-width: 500px; line-height: 1.6; }
-  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  
+
   @media (max-width: 980px) {
     .post { padding: 32px 0 64px; }
     .post-block h2 { font-size: 22px; }
@@ -263,10 +304,5 @@ const {
     .cta-strip { padding: 24px 22px; }
     .steps li { padding: 20px 18px 20px 50px; }
     .steps li::before { left: 18px; top: 22px; }
-  }
-  
-  @media (max-width: 768px) {
-    .tldr-box { padding: 24px; }
-    .post-cta { padding: 32px 24px; }
   }
 </style>

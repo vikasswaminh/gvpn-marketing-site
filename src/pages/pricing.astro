@@ -167,12 +167,22 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
           <h2>Billing questions, answered.</h2>
         </header>
         <div class="pfaq-grid">
-          {pricingFaqs.map((f, i) => (
-            <details open={i === 0}>
-              <summary>{f.q}</summary>
-              <p>{f.a}</p>
-            </details>
-          ))}
+          <div>
+            {pricingFaqs.slice(0, 3).map((f, i) => (
+              <details open={i === 0}>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+          <div>
+            {pricingFaqs.slice(3).map((f, i) => (
+              <details>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -15,7 +15,7 @@ const heroChecks = [
 const meshNodes = [
   { tag: "TP", label: "TP-Link"  },
   { tag: "MT", label: "MikroTik" },
-  { tag: "OW", label: "OpenWrt"  },
+  { tag: "LI", label: "Linux/Other"  },
   { tag: "UB", label: "Ubiquiti" },
   { tag: "OP", label: "OPNsense" },
 ];
@@ -75,55 +75,57 @@ const meshNodes = [
           <span class="live">5 peers up</span>
         </div>
 
-        <!-- Connection lines + animated flow paths (SVG layer) -->
-        <svg class="mesh-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="hub-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"  stop-color="#0066ff" stop-opacity="0.4"/>
-              <stop offset="60%" stop-color="#0066ff" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <!-- Static connection backbone (5 spokes hub→node) -->
-          <line class="mesh-line" x1="250" y1="210" x2="250" y2="50"/>
-          <line class="mesh-line" x1="250" y1="210" x2="402" y2="134"/>
-          <line class="mesh-line" x1="250" y1="210" x2="346" y2="362"/>
-          <line class="mesh-line" x1="250" y1="210" x2="154" y2="362"/>
-          <line class="mesh-line" x1="250" y1="210" x2="98" y2="134"/>
-          <!-- Animated dashed flow paths (3 spokes carry traffic on different timings) -->
-          <line class="mesh-flow a" x1="250" y1="210" x2="250" y2="50"/>
-          <line class="mesh-flow b" x1="250" y1="210" x2="346" y2="362"/>
-          <line class="mesh-flow c" x1="250" y1="210" x2="98"  y2="134"/>
-        </svg>
-
-        <!-- Hub node (acid, pulsing rings) -->
-        <div class="mesh-node hub" style="left:50%; top:42%;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="6" r="1.8"/>
-            <circle cx="6"  cy="14" r="1.8"/>
-            <circle cx="18" cy="14" r="1.8"/>
-            <circle cx="12" cy="20" r="1.5"/>
-            <path d="M12 8 L6 14 M12 8 L18 14 M6 14 L12 20 M18 14 L12 20 M6 14 L18 14"/>
+        <div class="mesh-diagram">
+          <!-- Connection lines + animated flow paths (SVG layer) -->
+          <svg class="mesh-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="hub-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"  stop-color="#0066ff" stop-opacity="0.4"/>
+                <stop offset="60%" stop-color="#0066ff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- Static connection backbone (5 spokes hub→node) -->
+            <line class="mesh-line" x1="250" y1="250" x2="250" y2="90"/>
+            <line class="mesh-line" x1="250" y1="250" x2="402" y2="174"/>
+            <line class="mesh-line" x1="250" y1="250" x2="346" y2="402"/>
+            <line class="mesh-line" x1="250" y1="250" x2="154" y2="402"/>
+            <line class="mesh-line" x1="250" y1="250" x2="98" y2="174"/>
+            <!-- Animated dashed flow paths (3 spokes carry traffic on different timings) -->
+            <line class="mesh-flow a" x1="250" y1="250" x2="250" y2="90"/>
+            <line class="mesh-flow b" x1="250" y1="250" x2="346" y2="402"/>
+            <line class="mesh-flow c" x1="250" y1="250" x2="98"  y2="174"/>
           </svg>
-        </div>
 
-        <!-- 5 vendor nodes around the hub -->
-        {meshNodes.map((n, i) => {
-          // 5 positions on a circle of radius 32% from center, starting at top
-          const positions = [
-            { left: "50%",   top: "10%"  },
-            { left: "80.4%", top: "26.8%" },
-            { left: "69.2%", top: "72.4%" },
-            { left: "30.8%", top: "72.4%" },
-            { left: "19.6%", top: "26.8%" },
-          ];
-          const p = positions[i];
-          return (
-            <div class="mesh-node" style={`left:${p.left}; top:${p.top};`}>
-              <span class="vtag">{n.tag}</span>
-              <span class="vname">{n.label}</span>
-            </div>
-          );
-        })}
+          <!-- Hub node (acid, pulsing rings) -->
+          <div class="mesh-node hub" style="left:50%; top:50%;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="6" r="1.8"/>
+              <circle cx="6"  cy="14" r="1.8"/>
+              <circle cx="18" cy="14" r="1.8"/>
+              <circle cx="12" cy="20" r="1.5"/>
+              <path d="M12 8 L6 14 M12 8 L18 14 M6 14 L12 20 M18 14 L12 20 M6 14 L18 14"/>
+            </svg>
+          </div>
+
+          <!-- 5 vendor nodes around the hub -->
+          {meshNodes.map((n, i) => {
+            // 5 positions on a circle of radius 32% from center, starting at top
+            const positions = [
+              { left: "50%",   top: "18%"  },
+              { left: "80.4%", top: "34.8%" },
+              { left: "69.2%", top: "80.4%" },
+              { left: "30.8%", top: "80.4%" },
+              { left: "19.6%", top: "34.8%" },
+            ];
+            const p = positions[i];
+            return (
+              <div class="mesh-node" style={`left:${p.left}; top:${p.top};`}>
+                <span class="vtag">{n.tag}</span>
+                <span class="vname">{n.label}</span>
+              </div>
+            );
+          })}
+        </div>
 
         <!-- Foot: 3 stat cells -->
         <div class="mesh-foot">
@@ -132,7 +134,7 @@ const meshNodes = [
             <div class="val">12 ms</div>
           </div>
           <div>
-            <div class="lbl">tunnels</div>
+            <div class="lbl">networks / tunnels</div>
             <div class="val">5 / 5</div>
           </div>
           <div>
@@ -358,6 +360,13 @@ const meshNodes = [
     animation: mesh-blink 1.4s ease-in-out infinite;
   }
   @keyframes mesh-blink { 50% { opacity: 0.25; } }
+
+  .mesh-diagram {
+    position: absolute;
+    inset: 0;
+    transform: scale(0.72) translateY(-7%);
+    transform-origin: center center;
+  }
 
   /* SVG layer (lines + animated dashed flow) */
   .mesh-svg {

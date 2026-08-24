@@ -320,30 +320,30 @@ sudo sysctl --system</code></pre></li>
 
       <h2>19. Cloud deployment</h2>
       <p>The following Infrastructure-as-Code Terraform snippet provisions a hardened Headscale control plane host on AWS EC2:</p>
-      <pre><code>terraform {
-  required_providers {
-    aws = { source = "hashicorp/aws", version = "~> 5.0" }
-  }
-}
+      <pre><code>terraform &#123;
+  required_providers &#123;
+    aws = &#123; source = "hashicorp/aws", version = "~> 5.0" &#125;
+  &#125;
+&#125;
 
-resource "aws_security_group" "headscale_sg" {
+resource "aws_security_group" "headscale_sg" &#123;
   name   = "headscale-sg"
   vpc_id = "vpc-0123456789abcdef0"
 
-  ingress { from_port = 443,   to_port = 443,   protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] } # API
-  ingress { from_port = 3478,  to_port = 3478,  protocol = "udp", cidr_blocks = ["0.0.0.0/0"] } # STUN
-  ingress { from_port = 51820, to_port = 51820, protocol = "udp", cidr_blocks = ["0.0.0.0/0"] } # WireGuard
-  egress  { from_port = 0,     to_port = 0,     protocol = "-1",  cidr_blocks = ["0.0.0.0/0"] }
-}
+  ingress &#123; from_port = 443,   to_port = 443,   protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] &#125; # API
+  ingress &#123; from_port = 3478,  to_port = 3478,  protocol = "udp", cidr_blocks = ["0.0.0.0/0"] &#125; # STUN
+  ingress &#123; from_port = 51820, to_port = 51820, protocol = "udp", cidr_blocks = ["0.0.0.0/0"] &#125; # WireGuard
+  egress  &#123; from_port = 0,     to_port = 0,     protocol = "-1",  cidr_blocks = ["0.0.0.0/0"] &#125;
+&#125;
 
-resource "aws_instance" "headscale_server" {
+resource "aws_instance" "headscale_server" &#123;
   ami                         = "ami-0c7217cdde317cfec" # Ubuntu 24.04 ARM64
   instance_type               = "t4g.small"
   subnet_id                   = "subnet-0123456789abcdef0"
   vpc_security_group_ids      = [aws_security_group.headscale_sg.id]
   associate_public_ip_address = true
 
-  user_data = <<-EOF
+  user_data = &lt;&lt;-EOF
               #!/bin/bash
               apt-get update && apt-get install -y docker.io docker-compose-v2
               mkdir -p /etc/headscale /var/lib/headscale
@@ -392,52 +392,7 @@ resource "aws_instance" "headscale_server" {
     </div>
   </BlogPost>
 
-  <!-- JSON-LD: Article + FAQPage + Breadcrumb -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": `${url}#article`,
-    "mainEntityOfPage": { "@type": "WebPage", "@id": url },
-    "headline": title,
-    "description": description,
-    "datePublished": datePublished,
-    "dateModified": dateModified,
-    "author": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
-      "url": "https://meshwg.com/about",
-    },
-    "publisher": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
-      "url": "https://meshwg.com",
-    },
-    "keywords": ["Cloud WireGuard VPN", "Managed WireGuard", "Self-Hosted WireGuard", "WireGuard Mesh Network", "Headscale vs Tailscale", "Netmaker Deployment", "WireGuard NAT Traversal", "Zero Trust Overlay Network", "Kernel WireGuard vs Userspace", "DERP Relaying", "Noise Protocol Handshake", "eBPF Mesh Routing", "WireGuard SSO OIDC Integration", "Split Tunneling WG"],
-    "isAccessibleForFree": true,
-    "inLanguage": "en",
-  })}></script>
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqs.map(f => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a },
-    })),
-  })}></script>
-
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://meshwg.com/blog/" },
-      { "@type": "ListItem", "position": 3, "name": title, "item": url },
-    ],
-  })}></script>
 
   <Footer />
 </Base>

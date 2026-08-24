@@ -453,52 +453,7 @@ sudo iptables -A FORWARD -s 10.200.0.0/16 -d 10.0.0.0/8 -j LOG_AND_DROP</code></
     </div>
   </BlogPost>
 
-  <!-- JSON-LD: Article + FAQPage + Breadcrumb -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": `${url}#article`,
-    "mainEntityOfPage": { "@type": "WebPage", "@id": url },
-    "headline": title,
-    "description": description,
-    "datePublished": datePublished,
-    "dateModified": dateModified,
-    "author": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
-      "url": "https://meshwg.com/about",
-    },
-    "publisher": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
-      "url": "https://meshwg.com",
-    },
-    "keywords": ["WireGuard Site-to-Site VPN", "WireGuard connect multiple locations", "WireGuard multi-site setup", "WireGuard site to site router configuration", "WireGuard site to site subnet routing", "WireGuard mesh network", "MeshWG site-to-site VPN"],
-    "isAccessibleForFree": true,
-    "inLanguage": "en",
-  })}></script>
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqs.map(f => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a },
-    })),
-  })}></script>
-
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://meshwg.com/blog/" },
-      { "@type": "ListItem", "position": 3, "name": title, "item": url },
-    ],
-  })}></script>
 
   <Footer />
 </Base>

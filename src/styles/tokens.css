@@ -74,21 +74,21 @@
   --code-ok:        #16a34a;
 
   /* ── Typography ───────────────────────────────────────────────────── */
-  --font-sans:      "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-sans:      "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
   --font-mono:      "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --font-display:   "Geist", "Inter Tight", system-ui, sans-serif;
+  --font-display:   "Lato", system-ui, sans-serif;
   --font-serif:     var(--font-display);
 
-  /* ── Radii (tight — crawlcrawl-style) ─────────────────────────────── */
+  /* ── Radii (polished modern) ─────────────────────────────── */
   --radius-sm:      4px;
-  --radius:         6px;
-  --radius-lg:      8px;
-  --radius-xl:      12px;
+  --radius:         8px;
+  --radius-lg:      10px;
+  --radius-xl:      16px;
   --radius-pill:    999px;
   --r-sm:           4px;
-  --r-md:           6px;
-  --r-lg:           8px;
-  --r-xl:           12px;
+  --r-md:           8px;
+  --r-lg:           10px;
+  --r-xl:           16px;
 
   /* ── Layout ───────────────────────────────────────────────────────── */
   --wrap-max:       1180px;
@@ -98,14 +98,14 @@
   --maxw-wide:      1260px;
   --container:      1180px;
 
-  /* ── Shadows (super subtle for light theme) ───────────────────────── */
-  --shadow-card:    0 1px 0 rgba(10, 10, 10, 0.04);
-  --shadow-deep:    0 24px 48px -16px rgba(10, 10, 10, 0.18);
-  --shadow-code:    0 24px 48px -16px rgba(10, 10, 10, 0.18);
+  /* ── Shadows (polished modern) ───────────────────────── */
+  --shadow-card:    0 2px 8px rgba(10, 10, 10, 0.05), 0 1px 2px rgba(10, 10, 10, 0.02);
+  --shadow-deep:    0 24px 48px -16px rgba(10, 10, 10, 0.15);
+  --shadow-code:    0 24px 48px -16px rgba(10, 10, 10, 0.15);
   
   /* Modern Depth Upgrades */
-  --shadow-soft:    0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-hover:   0 12px 32px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-soft:    0 6px 16px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-hover:   0 16px 40px rgba(0, 0, 0, 0.08), 0 6px 16px rgba(0, 0, 0, 0.04);
   --shadow-glow:    0 0 40px rgba(22, 119, 255, 0.15);
 }
 
@@ -122,8 +122,8 @@ body {
   font-family: var(--font-sans);
   color: var(--text);
   background-color: var(--bg);
-  line-height: 1.5;
-  font-size: 15px;
+  line-height: 1.6;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -253,9 +253,9 @@ section + section { border-top: 1px solid var(--border); }
 .sec-h {
   font-family: var(--font-display);
   font-size: clamp(36px, 4.5vw, 56px);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 700;
   margin: 0 0 24px;
   max-width: 880px;
   text-wrap: balance;

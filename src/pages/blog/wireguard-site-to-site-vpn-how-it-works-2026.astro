@@ -325,10 +325,10 @@ const compareRows = [
               peer's <code>[Peer]</code> block referencing some other
               peer, AllowedIPs must list both:
             </p>
-            <ul class="bullets">
-              <li>The other peer's overlay IP, as a <code>/32</code> — e.g. <code>10.100.0.2/32</code></li>
-              <li>The other peer's LAN subnet, as the appropriate CIDR — e.g. <code>192.168.20.0/24</code></li>
-            </ul>
+            <p>
+              — The other peer's overlay IP, as a <code>/32</code> — e.g. <code>10.100.0.2/32</code><br />
+              — The other peer's LAN subnet, as the appropriate CIDR — e.g. <code>192.168.20.0/24</code>
+            </p>
             <p>
               The /32 lets the two peers reach each other directly across
               the overlay. The LAN subnet entry is what tells the kernel

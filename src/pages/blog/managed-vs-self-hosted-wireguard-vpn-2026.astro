@@ -52,7 +52,7 @@ const faqs = [
     <div class="bp-intro">
       <h2>1. Executive summary</h2>
       <p>
-        Selecting between managed and self-hosted WireGuard control planes represents one of the most consequential decisions in modern cloud network engineering. At its foundation, raw WireGuard provides an exceptionally fast, cryptographically opinionated virtual interface implemented directly inside the Linux kernel. However, vanilla WireGuard was designed as a static point-to-point tunneling mechanism. When an enterprise attempts to connect hundreds of dynamic edge devices, cloud servers, and employee laptops, configuration complexity grows exponentially. Managing static IP mappings and public key distribution across a full mesh network quickly becomes impossible without an automated control plane framework.
+        Selecting between managed and self-hosted WireGuard control planes represents one of the most consequential decisions in modern cloud network engineering. At its foundation, raw WireGuard provides an exceptionally fast, cryptographically opinionated virtual interface implemented directly inside the Linux kernel. However, vanilla WireGuard was designed as a static point-to-point tunneling mechanism. When an enterprise attempts to connect hundreds of dynamic edge devices, cloud servers, and employee laptops, configuration complexity grows exponentially. <a href="/blog/manage-multiple-wireguard-tunnels-mesh-vpn-2026/">Managing static IP mappings and public key distribution across a full mesh network</a> quickly becomes impossible without an automated control plane framework.
       </p>
       <p>
         Managed WireGuard platforms, such as Tailscale or NetBird Cloud, eliminate this administrative burden by delivering the control plane completely as a software service. They automate dynamic node discovery, peer key exchanges, identity provider authentication, and fallback relaying across complex enterprise firewalls. The tradeoff for this operational simplicity is dependency and metadata exposure: all node registries, connection timestamps, hostnames, and user access topologies reside within third-party vendor infrastructure.
@@ -70,13 +70,13 @@ const faqs = [
           <li><strong>Control Plane and Data Plane Decoupling:</strong> Managed and self-hosted platforms separate administrative policy management from network data transport. The control plane coordinates node registrations, identity checks, and public key maps out-of-band. The data plane transfers encrypted application payload traffic directly peer-to-peer between endpoints.</li>
           <li><strong>Metadata Privacy and Compliance Sovereignty:</strong> Managed SaaS providers never decrypt raw application data payloads during direct peer connections. SaaS vendors retain full visibility over control plane metadata, including hostnames, IP mapping tables, user identities, and connection logs. Self-hosted platforms keep all network topology maps, user identities, and access logs strictly inside private infrastructure boundaries.</li>
           <li><strong>Kernel Performance vs Userspace Overhead:</strong> Native Linux kernel-space execution (wireguard.ko) achieves up to nine gigabits per second throughput with minimal CPU utilization. Userspace drivers (wireguard-go) introduce heavy context-switching overhead, reducing throughput by over sixty percent and spiking CPU consumption.</li>
-          <li><strong>NAT Traversal and Dynamic Relaying Mechanics:</strong> Peer discovery relies on STUN protocols to discover public reflective IP addresses and dynamic socket ports. Restrictive symmetric firewalls drop direct UDP connections, forcing traffic through fallback encrypted relay servers (DERP nodes).</li>
+          <li><strong><a href="/blog/wireguard-nat-traversal-cgnat-firewalls-2026/">NAT Traversal and Dynamic Relaying Mechanics</a>:</strong> Peer discovery relies on STUN protocols to discover public reflective IP addresses and dynamic socket ports. Restrictive symmetric firewalls drop direct UDP connections, forcing traffic through fallback encrypted relay servers (DERP nodes).</li>
           <li><strong>Zero-Trust Identity Integration:</strong> Modern control planes use OpenID Connect (OIDC) protocols to tie ephemeral WireGuard key pairs to corporate Single Sign-On identities. Security teams enforce centralized Access Control Lists (ACLs), multi-factor authentication (MFA), and automated key lifecycles.</li>
         </ul>
       </div>
 
       <h2>3. Problem statement</h2>
-      <p>Legacy enterprise remote access solutions, such as traditional IPsec and OpenVPN deployments, suffer from structural limitations that fail to meet modern cloud-native connectivity requirements.</p>
+      <p><a href="/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/">Legacy enterprise remote access solutions, such as traditional IPsec and OpenVPN deployments</a>, suffer from structural limitations that fail to meet modern cloud-native connectivity requirements.</p>
       <ul>
         <li><strong>Hub-and-Spoke Bottlenecks:</strong> Traditional architectures route all remote client traffic through a central hardware concentrator or firewall appliance before forwarding it to cloud resources. This hairpin routing pattern creates severe performance bottlenecks, increases network latency, introduces a single point of failure, and generates high cloud bandwidth egress costs.</li>
         <li><strong>Monolithic Codebase Vulnerabilities:</strong> Legacy VPN engines contain hundreds of thousands of lines of complex C code. This code bloat increases the attack surface, requiring frequent emergency security patches and software maintenance cycles.</li>
@@ -133,7 +133,7 @@ const faqs = [
         <li><strong>Incoming traffic:</strong> The kernel decrypts the UDP packet using the sender's public key and verifies that the inner source IP matches the assigned allowed IP list. If the source IP does not match, the kernel drops the packet immediately.</li>
       </ul>
 
-      <h3>STUN-Assisted NAT Hole-Punching</h3>
+      <h3><a href="/blog/wireguard-nat-traversal-cgnat-firewalls-2026/">STUN-Assisted NAT Hole-Punching</a></h3>
       <p>Agents query public STUN (Session Traversal Utilities for NAT) servers to discover their external reflexive IP address and dynamic UDP port mapping. Endpoint socket addresses are reported to the central coordination server, which broadcasts them to authorized peer nodes. Authorized peers send simultaneous outbound UDP handshake packets to each other's public endpoints. This creates active state tracking entries inside intermediate firewalls, enabling direct peer-to-peer communication.</p>
 
       <h3>Noise IKpsk2 Handshake Lifecycle</h3>

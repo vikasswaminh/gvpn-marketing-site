@@ -76,7 +76,7 @@ const faqs = [
         <p><strong>PersistentKeepalive Is Mandatory Behind NAT:</strong> Setting <code>PersistentKeepalive = 25</code> (or 15 on aggressive 4G/5G mobile carrier networks) forces WireGuard to transmit silent, 32-byte authenticated heartbeat packets. This maintains stateful mapping entries in intermediate firewalls indefinitely.</p>
         <p><strong>Cryptokey Endpoint Roaming:</strong> WireGuard endpoints dynamically update peer IP and port mappings in system memory upon receiving an authenticated inbound packet. This allows active tunnels to survive dynamic WAN IP updates, Wi-Fi to cellular roaming, and ISP re-leases without session drops.</p>
         <p><strong>Symmetric NAT Limitations:</strong> Simple UDP hole punching succeeds across Full Cone, Address-Restricted Cone, and Port-Restricted Cone NATs. However, Symmetric NAT allocates a unique external port for every distinct destination IP:port pair, requiring out-of-band coordination or public relay nodes to establish transit.</p>
-        <p><strong>Decoupling Data and Control Planes:</strong> Native kernel WireGuard lacks built-in STUN or relay coordination protocols. Scaling multi-site environments behind double NAT requires an external control plane (such as MeshWG) to dynamically map public endpoints and orchestrate peer handshakes out-of-band.</p>
+        <p><strong>Decoupling Data and Control Planes:</strong> Native kernel WireGuard lacks built-in STUN or relay coordination protocols. Scaling multi-site environments behind double NAT <a href="/blog/managed-vs-self-hosted-wireguard-vpn-2026/">requires an external control plane (such as MeshWG)</a> to dynamically map public endpoints and orchestrate peer handshakes out-of-band.</p>
         <p><strong>Mandatory Encapsulation Clamping:</strong> Double NAT, cellular GTP encapsulation, and PPPoE headers add variable network overhead. Lowering interface MTU to 1420 (or 1380 over mobile links) and enforcing TCP MSS clamping prevents packet fragmentation black holes.</p>
       </article>
 
@@ -120,7 +120,7 @@ const faqs = [
           <li><strong>Outbound State Maintenance:</strong> Transmitting periodic, authenticated, 32-byte empty WireGuard frames (<code>PersistentKeepalive</code>) from behind NAT to keep firewall state table entries active indefinitely.</li>
           <li><strong>Cryptokey Endpoint Roaming:</strong> Automatically updating a peer's destination IP address and UDP port mapping in memory whenever a valid, authenticated inbound packet arrives from a new external network socket.</li>
         </ul>
-        <p>This enables WireGuard to maintain continuous site-to-site or peer-to-peer overlay tunnels across dynamic public IP updates, mobile network switches, and double-NAT enterprise environments.</p>
+        <p>This enables WireGuard to <a href="/blog/wireguard-site-to-site-vpn-multiple-locations/">maintain continuous site-to-site or peer-to-peer overlay tunnels</a> across dynamic public IP updates, mobile network switches, and double-NAT enterprise environments.</p>
 
         <h2>4. Architecture &amp; Topologies: Direct UDP Hole Punching vs Relay-Assisted Mesh</h2>
         
@@ -145,7 +145,7 @@ const faqs = [
         <h3>4.3 Decoupled Control-Plane Mesh Topology (MeshWG Approach)</h3>
         <p>Applies in enterprise environments with dozens or hundreds of distributed nodes operating behind dynamic NATs, home routers, and cellular connections.</p>
         <ul>
-          <li><strong>Mechanism:</strong> A central control plane orchestrates endpoint discovery, public key exchange, and access control policies out-of-band. Once nodes obtain each other's updated public endpoints, they establish direct peer-to-peer WireGuard tunnels using kernel-level UDP hole punching. If direct P2P is blocked by Symmetric NATs, the control plane dynamically routes traffic through encrypted relay nodes.</li>
+          <li><strong>Mechanism:</strong> A <a href="/blog/manage-multiple-wireguard-tunnels-mesh-vpn-2026/">central control plane orchestrates endpoint discovery, public key exchange, and access control policies out-of-band</a>. Once nodes obtain each other's updated public endpoints, they establish direct peer-to-peer WireGuard tunnels using kernel-level UDP hole punching. If direct P2P is blocked by Symmetric NATs, the control plane dynamically routes traffic through encrypted relay nodes.</li>
           <li><strong>Traffic Path:</strong> Direct P2P whenever possible; automatic fallback to encrypted relays when firewalls block direct paths.</li>
           <li><strong>Latency:</strong> Minimal for P2P links; optimized for relayed traffic.</li>
         </ul>

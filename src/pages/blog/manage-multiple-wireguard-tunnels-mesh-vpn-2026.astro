@@ -97,7 +97,7 @@ const faqs = [
         <p>To understand how modern WireGuard mesh networks function, we must trace how overlay networking evolved over the last three decades:</p>
         <ul>
           <li><strong>Static IPsec Meshes (Late 1990s):</strong> Early enterprise meshes relied on manual IPsec tunnel creation. Configuring full meshes required generating hundreds of Security Associations (SAs) and manual Phase 1/Phase 2 configurations across commercial routers. Interoperability issues between hardware vendors frequently broke tunnel stability.</li>
-          <li><strong>Dynamic Multipoint VPN (DMVPN) - 2000s:</strong> Cisco introduced DMVPN to solve IPsec scaling issues. DMVPN combined Multipoint GRE (mGRE), Next Hop Resolution Protocol (NHRP), and dynamic routing (BGP or EIGRP) to dynamically establish direct spoke-to-spoke IPsec tunnels over a central hub. While effective, DMVPN was proprietary, complex to configure, and bound to Cisco hardware.</li>
+          <li><strong>Dynamic Multipoint VPN (DMVPN) - 2000s:</strong> Cisco introduced DMVPN to <a href="/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/">solve IPsec scaling issues</a>. DMVPN combined Multipoint GRE (mGRE), Next Hop Resolution Protocol (NHRP), and dynamic routing (BGP or EIGRP) to dynamically establish direct spoke-to-spoke IPsec tunnels over a central hub. While effective, DMVPN was proprietary, complex to configure, and bound to Cisco hardware.</li>
           <li><strong>Userspace Overlay Networks (2010s):</strong> Solutions like ZeroTier and Tinc pioneered userspace mesh overlays, using custom protocols and software daemons to handle NAT traversal and automated peer discovery. However, operating in userspace introduced context-switching performance bottlenecks on high-throughput connections.</li>
           <li><strong>WireGuard Integration &amp; Modern Control Planes (2016–2026):</strong> Jason Donenfeld's introduction of WireGuard brought high-speed, kernel-level tunnel encapsulation to modern operating systems. To solve WireGuard's lack of a control plane, open-source and commercial orchestration engines (such as MeshWG, Tailscale, NetBird, and Headscale) emerged. These platforms separate the control plane (automating peer discovery and key exchange) from the data plane (using native kernel WireGuard for high-speed packet delivery).</li>
         </ul>
@@ -137,7 +137,7 @@ const faqs = [
         <h3>4.3 Hybrid Mesh Topology (Core Mesh with Spoke Branches)</h3>
         <p>A pragmatic enterprise design that balances performance with configuration complexity.</p>
         <ul>
-          <li><strong>Design:</strong> High-capacity core nodes (Data Centers, AWS VPC Gateways, Main Offices) form a fully meshed core backbone. Small branch offices, retail outlets, or field units connect via redundant Hub-and-Spoke links into two or more core nodes.</li>
+          <li><strong>Design:</strong> High-capacity core nodes (Data Centers, AWS VPC Gateways, Main Offices) form a fully meshed core backbone. <a href="/blog/wireguard-site-to-site-vpn-multiple-locations/">Small branch offices, retail outlets, or field units</a> connect via redundant Hub-and-Spoke links into two or more core nodes.</li>
           <li><strong>Advantages:</strong> Reduces configuration overhead for small remote sites while maintaining low latency and high availability across primary infrastructure hubs.</li>
         </ul>
 
@@ -315,7 +315,7 @@ sudo wg show
         <ul>
           <li><strong>Cryptographic Key Compromise Risk:</strong> A private key on a single branch router is compromised by an adversary. <strong>Mitigation:</strong> Revoke the compromised public key instantly from all other mesh nodes' <code>[Peer]</code> configuration blocks. Enforce automated short-lived key rotations using an overlay control plane.</li>
           <li><strong>Overlapping AllowedIP Injection (Route Hijacking) Risk:</strong> A malicious or misconfigured node advertises AllowedIPs = 0.0.0.0/0 or another site's local subnet, attempting to intercept internal corporate traffic. <strong>Mitigation:</strong> Enforce strict control-plane policy validation. Gateways must accept AllowedIPs definitions only from authenticated deployment templates or central orchestration engines.</li>
-          <li><strong>NAT Traversal Pinhole Stalls Risk:</strong> Edge routers close inactive stateful UDP pinholes, isolating nodes behind CGNAT. <strong>Mitigation:</strong> Enforce <code>PersistentKeepalive = 25</code> on all peer connections originating behind stateful firewalls or dynamic NAT interfaces.</li>
+          <li><strong>NAT Traversal Pinhole Stalls Risk:</strong> Edge routers close inactive stateful UDP pinholes, isolating nodes behind <a href="/blog/wireguard-nat-traversal-cgnat-firewalls-2026/">CGNAT</a>. <strong>Mitigation:</strong> Enforce <code>PersistentKeepalive = 25</code> on all peer connections originating behind stateful firewalls or dynamic NAT interfaces.</li>
           <li><strong>Quantum-Computer Key Decryption Risk:</strong> Future quantum computers attempt retroactive decryption of recorded ECDH key exchanges. <strong>Mitigation:</strong> Deploy PresharedKey entries across all sensitive peer definitions, adding a 256-bit symmetric encryption layer that is resistant to quantum attack vectors.</li>
         </ul>
 
@@ -372,7 +372,7 @@ sudo tcpdump -n -i eth0 host 203.0.113.20 and udp port 51820
         <h2>15. Architectural &amp; Tooling Alternatives for WireGuard Orchestration</h2>
         <p>Manually managing static <code>wg0.conf</code> files becomes unsustainable past 10 nodes. Organizations generally adopt one of three orchestration approaches to manage multi-tunnel deployments at scale:</p>
         <ul>
-          <li><strong>Control-Plane Orchestration Platforms (MeshWG):</strong> Acts as an automated orchestration platform for standard WireGuard configurations. It automatically manages key generation, peer discovery, dynamic IP changes, and zero-trust firewall access rules across your existing hardware routers. Uses native, un-modified kernel WireGuard on your hardware.</li>
+          <li><strong>Control-Plane Orchestration Platforms (MeshWG):</strong> Acts as an <a href="/blog/managed-vs-self-hosted-wireguard-vpn-2026/">automated orchestration platform</a> for standard WireGuard configurations. It automatically manages key generation, peer discovery, dynamic IP changes, and zero-trust firewall access rules across your existing hardware routers. Uses native, un-modified kernel WireGuard on your hardware.</li>
           <li><strong>Agent-Based Overlay VPNs (Tailscale / NetBird):</strong> Requires installing a proprietary background software agent on every node. The agent communicates with a hosted control plane to handle NAT traversal and dynamically inject peer routes.</li>
           <li><strong>DIY Automation (Ansible / Terraform / Python Scripts):</strong> Engineering teams build custom Ansible scripts or CI/CD pipelines to template static <code>wg0.conf</code> files and push them to servers via SSH.</li>
         </ul>

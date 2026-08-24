@@ -62,10 +62,10 @@ const features = [
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     margin-top: 48px;
-    background: navy;
-    border: 1px solid navy;
+    background: var(--border);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to allow shadows to overflow */
   }
   .feature.hover-card {
     background: var(--bg);
@@ -73,16 +73,17 @@ const features = [
     transition: background 0.25s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     z-index: 1;
+    border-radius: var(--radius-sm); /* Added so individual cards look rounded when lifted */
   }
   .feature.hover-card:hover {
-    z-index: 2;
+    z-index: 10;
     background: var(--bg);
-    transform: none; /* Prevent shifting that covers the grid gaps */
-    box-shadow: inset 0 0 0 1px navy; /* Subtle inner border on hover instead of big shadow */
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: var(--shadow-hover);
   }
   .feature.hover-card:active {
-    transform: none; /* Prevent shifting */
-    box-shadow: inset 0 0 0 2px navy; /* Stronger inner border on click */
+    transform: translateY(-1px) scale(1);
+    box-shadow: var(--shadow-soft);
   }
 
   .ft-title {

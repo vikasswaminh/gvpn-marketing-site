@@ -158,27 +158,26 @@ const meshNodes = [
     isolation: isolate;
     background: transparent;
   }
-  /* Two very-subtle wash tints — accent (blue) top-right + brand red
-     bottom-left. */
+  /* Vibrant animated wash tints — accent (blue) top-right + brand red bottom-left. */
   .hero::before {
     content: "";
     position: absolute;
     top: -200px; right: -10%;
     width: 900px; height: 900px;
     z-index: -1;
-    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(22, 119, 255, 0.12) 0%, transparent 60%);
     pointer-events: none;
-    opacity: .9;
+    animation: slowPulse 8s infinite alternate ease-in-out;
   }
   .hero::after {
     content: "";
     position: absolute;
-    bottom: -200px; left: -200px;
+    bottom: -150px; left: -150px;
     width: 700px; height: 700px;
     z-index: -1;
-    background: radial-gradient(circle, var(--brand-red-soft) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(218, 41, 28, 0.08) 0%, transparent 60%);
     pointer-events: none;
-    opacity: .65;
+    animation: float 12s infinite alternate ease-in-out;
   }
 
   .hero-inner {

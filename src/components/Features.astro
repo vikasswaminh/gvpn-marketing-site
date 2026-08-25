@@ -29,16 +29,16 @@ const features = [
 
 <section id="features">
   <div class="wrap">
-    <div class="sec-eyebrow">/ features</div>
-    <h2 class="sec-h">Everything you need. Nothing you don't.</h2>
-    <p class="sec-lede">
+    <div class="sec-eyebrow" data-reveal>/ features</div>
+    <h2 class="sec-h" data-reveal data-reveal-delay="100">Everything you need. Nothing you don't.</h2>
+    <p class="sec-lede" data-reveal data-reveal-delay="200">
       A small, focused product instead of an enterprise checklist with
       a hundred boxes you'll never tick.
     </p>
 
     <div class="feature-grid">
-      {features.map((f) => (
-        <article class="feature hover-card">
+      {features.map((f, i) => (
+        <article class="feature hover-card" data-reveal data-reveal-delay={100 + (i * 100)}>
           <h4 class="ft-title">{f.title}</h4>
           <p class="ft-body">{f.body}</p>
         </article>

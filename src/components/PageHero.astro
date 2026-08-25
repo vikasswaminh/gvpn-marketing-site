@@ -14,10 +14,10 @@ const { eyebrow, title, lede, wrapLede = false, wrapTitle = false } = Astro.prop
   <div class="wrap">
     <div class="ph-grid">
       <div class="ph-left">
-        <div class="ph-eyebrow animate-fade-up">{eyebrow}</div>
-        <h1 class:list={["ph-h", { "ph-h--wrap": wrapTitle }, "animate-fade-up delay-1"]}>{title}</h1>
+        <div class="ph-eyebrow" data-reveal>{eyebrow}</div>
+        <h1 class:list={["ph-h", { "ph-h--wrap": wrapTitle }]} data-reveal data-reveal-delay="100">{title}</h1>
       </div>
-      <div class="ph-right animate-fade-up delay-2">
+      <div class="ph-right" data-reveal data-reveal-delay="200">
         {lede && <p class:list={["ph-lede", { "ph-lede--wrap": wrapLede }]} set:html={lede} />}
       </div>
     </div>
@@ -34,15 +34,24 @@ const { eyebrow, title, lede, wrapLede = false, wrapTitle = false } = Astro.prop
     border-bottom: 1px solid var(--border);
     position: relative;
   }
-  /* soft acid glow top-right matches the homepage hero atmosphere */
+  @keyframes gradientMesh {
+    0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+    33% { transform: scale(1.1) translate(40px, -20px); opacity: 1; }
+    66% { transform: scale(0.9) translate(-30px, 40px); opacity: 0.9; }
+    100% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+  }
+
   .page-hero::before {
     content: "";
     position: absolute;
     top: -120px; right: -180px;
     width: 600px; height: 600px;
-    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
+    background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(22, 119, 255, 0.1) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
+    filter: blur(40px);
+    animation: gradientMesh 15s ease-in-out infinite;
   }
   .page-hero .wrap { position: relative; z-index: 1; }
 

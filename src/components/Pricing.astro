@@ -59,17 +59,17 @@ const plans = [
 
 <section id="pricing">
   <div class="wrap">
-    <div class="sec-eyebrow">/ pricing</div>
-    <h2 class="sec-h">Simple pricing. Per machine. No surprises.</h2>
-    <p class="sec-lede">
+    <div class="sec-eyebrow" data-reveal>/ pricing</div>
+    <h2 class="sec-h" data-reveal data-reveal-delay="100">Simple pricing. Per machine. No surprises.</h2>
+    <p class="sec-lede" data-reveal data-reveal-delay="200">
       A "machine" is anything in your mesh — a router, a laptop, a phone,
       or a server. Two free forever; <span class="mono-inline">₹349/each</span>
       after that on annual billing.
     </p>
 
     <div class="price-grid">
-      {plans.map((p) => (
-        <article class={`plan hover-card${p.accent ? " plan-accent" : ""}`}>
+      {plans.map((p, i) => (
+        <article class={`plan hover-card${p.accent ? " plan-accent" : ""}`} data-reveal data-reveal-delay={100 + (i * 100)}>
           <header>
             <div class="plan-name">{p.name}</div>
             <div class="plan-price">

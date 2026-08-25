@@ -3,6 +3,7 @@ import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
 import BlogPost   from "../../components/BlogPost.astro";
 import Footer     from "../../components/Footer.astro";
+import { Code }   from "astro:components";
 
 const slug          = "how-to-set-up-a-router-vpn-without-installing-vpn-software";
 const title         = "How to Set Up a Router VPN Without Installing VPN Software (2026 MeshWG Guide)";
@@ -72,7 +73,8 @@ const dateModified  = "2026-08-25";
 
       <h2>8. Configuration</h2>
       <p>Below are complete, production-grade text configurations for configuring a software-free router VPN gateway using OpenWrt.</p>
-      <pre><code>config interface 'loopback'
+      
+      <Code lang="bash" theme="github-dark" code={`config interface 'loopback'
 	option device 'lo'
 	option proto 'static'
 	option ipaddr '127.0.0.1'
@@ -92,7 +94,7 @@ config interface 'wg0'
 	option proto 'wireguard'
 	option private_key 'CLIENT_ROUTER_PRIVATE_KEY_HERE='
 	list addresses '10.64.0.2/32'
-	option mtu '1420'</code></pre>
+	option mtu '1420'`} />
 
       <h2>21. Conclusion</h2>
       <p>Configuring a router VPN gateway without installing client software represents the standard in modern network security architecture. By centralizing encryption, key management, policy-based routing, and DNS leak protection onto a high-performance edge router running native kernel WireGuard and MeshWG infrastructure, organizations and individuals completely eliminate endpoint management friction.</p>

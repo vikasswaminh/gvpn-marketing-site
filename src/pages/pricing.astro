@@ -189,6 +189,16 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     </div>
   </section>
 
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": pricingFaqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  })}></script>
+
   <Footer />
 </Base>
 

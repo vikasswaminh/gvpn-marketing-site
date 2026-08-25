@@ -50,6 +50,16 @@ const {
   </div>
 </main>
 
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://meshwg.com/blog" },
+    { "@type": "ListItem", "position": 3, "name": title, "item": Astro.url.href }
+  ]
+})}></script>
+
 <style is:global>
   .post { padding: 0 0 64px; background-color: var(--surface, #ffffff); margin-top: -16px; }
   .post-symmetric {

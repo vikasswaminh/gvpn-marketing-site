@@ -1,6 +1,8 @@
 ---
 import BrandMark from "./BrandMark.astro";
 import { site } from "../site";
+
+const currentPath = Astro.url.pathname;
 ---
 <div class="announcement">
   <div class="wrap announcement-inner">
@@ -19,11 +21,11 @@ import { site } from "../site";
       <span class="brand-name">{site.productName}</span>
     </a>
     <div class="nav-links">
-      <a href="/quickstart">Quickstart</a>
-      <a href="/docs">Docs</a>
-      <a href="/compatibility">Compatibility</a>
-      <a href="/blog">Blog</a>
-      <a href="/pricing">Pricing</a>
+      <a href="/quickstart" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
+      <a href="/docs" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
+      <a href="/compatibility" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
+      <a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
+      <a href="/pricing" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
     </div>
     <div class="nav-spacer"></div>
     <div class="nav-cta">
@@ -94,9 +96,9 @@ import { site } from "../site";
   }
   
   .nav--scrolled {
-    background: rgba(255, 255, 255, 0.75);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-            backdrop-filter: saturate(180%) blur(20px);
+    background: rgba(255, 255, 255, 0.6);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+            backdrop-filter: saturate(180%) blur(24px);
     border-bottom-color: rgba(0, 0, 0, 0.04);
     box-shadow: var(--shadow-soft);
   }
@@ -140,6 +142,8 @@ import { site } from "../site";
   }
   .nav-links a:hover { color: var(--text); }
   .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-links a.active { color: var(--text); font-weight: 500; }
+  .nav-links a.active::after { transform: scaleX(1); }
 
   .nav-spacer { flex: 1; }
   .nav-cta { display: flex; gap: 6px; align-items: center; }

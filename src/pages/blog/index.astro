@@ -309,17 +309,19 @@ const rightSidebarPosts = posts.slice(7, 9);
     display: grid;
     grid-template-columns: 1.2fr 1fr;
     background: var(--surface);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-lg);
+    border: 3px solid #F59E0B; /* Thick yellow-orange box format */
+    border-radius: var(--radius-xl); /* Rounded corners like the screenshot */
     overflow: hidden;
     text-decoration: none;
     color: inherit;
     min-height: 340px;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
   }
   .feat-img {
     background: var(--bg-2);
     position: relative;
     overflow: hidden;
+    border-right: 1px solid rgba(245, 158, 11, 0.2);
   }
   .mesh-bg {
     position: absolute;
@@ -374,8 +376,8 @@ const rightSidebarPosts = posts.slice(7, 9);
     gap: 24px;
   }
   .mag-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border: 2px solid #F59E0B; /* Matching yellow-orange box format */
+    border-radius: var(--radius-xl);
     background: var(--surface);
     padding: 24px;
     text-decoration: none;
@@ -384,6 +386,7 @@ const rightSidebarPosts = posts.slice(7, 9);
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
   }
   .card-t {
     font-family: var(--font-serif);

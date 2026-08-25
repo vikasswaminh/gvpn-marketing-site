@@ -106,21 +106,21 @@ const description = "Founder-written notes on branch networking, WireGuard, mesh
 
 // Sidebars - Stubs for visual layout density matching the reference
 const founderSpecialPosts = [
-  { title: "Stop Buying SD-WAN Appliances in 2026", slug: "#" },
-  { title: "Why Legacy IPsec VPNs Are Killing Your Remote Team", slug: "#" },
-  { title: "Zero-Trust is a Network Architecture, Not a Software Tool", slug: "#" },
-  { title: "The Hidden Costs of Cloud Provider VPN Gateways", slug: "#" },
-  { title: "Hardware vs Software VPNs: The 2026 Debate", slug: "#" },
-  { title: "Why the Modern Enterprise is Moving to WireGuard", slug: "#" },
+  { title: "Stop Buying SD-WAN Appliances in 2026", slug: "stop-buying-sd-wan-appliances-2026" },
+  { title: "Why Legacy IPsec VPNs Are Killing Your Remote Team", slug: "why-legacy-ipsec-vpns-are-killing-remote-teams" },
+  { title: "Zero-Trust is a Network Architecture, Not a Software Tool", slug: "zero-trust-is-an-architecture-not-a-tool" },
+  { title: "The Hidden Costs of Cloud Provider VPN Gateways", slug: "hidden-costs-of-cloud-vpn-gateways" },
+  { title: "Hardware vs Software VPNs: The 2026 Debate", slug: "hardware-vs-software-vpns-2026" },
+  { title: "Why the Modern Enterprise is Moving to WireGuard", slug: "why-enterprises-are-moving-to-wireguard" },
 ];
 
 const aiSpecialPosts = [
-  { title: "How AI is Automating Mesh VPN Routing in 2026", slug: "#" },
-  { title: "Self-Healing Mesh Networks: The Future of Cloud AI", slug: "#" },
-  { title: "Using ChatGPT to Write WireGuard Configs: A Warning", slug: "#" },
-  { title: "Machine Learning vs BGP: The Next Era of Traffic Routing", slug: "#" },
-  { title: "AI Won't Replace Network Engineers - But It Will Change Routing", slug: "#" },
-  { title: "The Rise of AI-Driven Zero Trust Security", slug: "#" },
+  { title: "How AI is Automating Mesh VPN Routing in 2026", slug: "how-ai-automates-mesh-vpn-routing-2026" },
+  { title: "Self-Healing Mesh Networks: The Future of Cloud AI", slug: "self-healing-mesh-networks-cloud-ai" },
+  { title: "Using ChatGPT to Write WireGuard Configs: A Warning", slug: "using-chatgpt-for-wireguard-configs-warning" },
+  { title: "Machine Learning vs BGP: The Next Era of Traffic Routing", slug: "machine-learning-vs-bgp-routing" },
+  { title: "AI Won't Replace Network Engineers - But It Will Change Routing", slug: "ai-wont-replace-network-engineers" },
+  { title: "The Rise of AI-Driven Zero Trust Security", slug: "rise-of-ai-driven-zero-trust-security" },
 ];
 
 // Partition logic for center column layout
@@ -140,7 +140,7 @@ const gridPosts = posts.slice(1, 7); // Show the next 6 posts in the grid
         <ul class="mag-list">
           {founderSpecialPosts.map((p) => (
             <li>
-              <a href={p.slug !== '#' ? `/blog/${p.slug}/` : '#'} class="mag-list-link">{p.title}</a>
+              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
             </li>
           ))}
         </ul>
@@ -197,7 +197,7 @@ const gridPosts = posts.slice(1, 7); // Show the next 6 posts in the grid
         <ul class="mag-list">
           {aiSpecialPosts.map((p) => (
             <li>
-              <a href={p.slug !== '#' ? `/blog/${p.slug}/` : '#'} class="mag-list-link">{p.title}</a>
+              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
             </li>
           ))}
         </ul>

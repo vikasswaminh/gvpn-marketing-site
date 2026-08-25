@@ -484,8 +484,8 @@ const vendorCount = grouped.length;
   .cg-foot {
     margin-top: 64px;
     padding: 32px;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 80%);
+    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
     border-radius: var(--radius-lg);
     display: grid;
     grid-template-columns: 1fr;

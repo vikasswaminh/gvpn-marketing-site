@@ -116,26 +116,49 @@ const {
       const a = document.createElement('a');
       a.href = '#' + heading.id;
       a.textContent = titleText;
-      li.appendChild(a);
-      tocList.appendChild(li);
-      tocLinks.push({ link: a, section: heading });
-    });
-
-    // Intersection Observer for active TOC highlighting
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          tocLinks.forEach(item => item.link.classList.remove('toc-active'));
-          const activeItem = tocLinks.find(item => item.section.id === entry.target.id);
-          if (activeItem) activeItem.link.classList.add('toc-active');
+      
+      // Smooth scrolling on click
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(heading.id);
+        if (target) {
+          const y = target.getBoundingClientRect().top + window.scrollY - 100; // offset for nav
+          window.scrollTo({ top: y, behavior: 'smooth' });
         }
       });
-    }, { rootMargin: '0px 0px -80% 0px', threshold: 0 });
+      
+      li.appendChild(a);
+      tocList.appendChild(li);
+      tocLinks.push(a);
+    });
 
-    headings.forEach(heading => observer.observe(heading));
-    
-    // Fallback: Set first item active if nothing is intersecting initially
-    if (tocLinks.length > 0) tocLinks[0].link.classList.add('toc-active');
+    // Rock-solid scroll tracker for active TOC link
+    const onScroll = () => {
+      let currentId = '';
+      headings.forEach(heading => {
+        const top = heading.getBoundingClientRect().top;
+        // If the heading is above the middle of the screen (or just past the navbar)
+        if (top < 200) {
+          currentId = heading.id;
+        }
+      });
+
+      // If we haven't scrolled down to the first heading yet, highlight the first one
+      if (!currentId && headings.length > 0) {
+        currentId = headings[0].id;
+      }
+
+      tocLinks.forEach(link => {
+        link.classList.remove('toc-active');
+        if (link.getAttribute('href') === '#' + currentId) {
+          link.classList.add('toc-active');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Trigger once on load
+    onScroll();
   });
 </script>
 

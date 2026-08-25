@@ -65,15 +65,9 @@ const {
 
     <div class="post-body-grid">
       <aside class="post-toc">
-        <div class="mag-pill pill-purple" style="background: #D946EF; color: white; border: none; font-weight: 700; margin-bottom: 24px; display: inline-block;">TABLE OF CONTENTS</div>
-        <ul class="toc-list">
-          <li><a href="#">The Short Version, Before We Go Deep</a></li>
-          <li><a href="#">1. Problem Statement</a></li>
-          <li><a href="#">2. History</a></li>
-          <li><a href="#">3. Definition</a></li>
-          <li><a href="#">4. Architecture</a></li>
-          <li><a href="#">8. Configuration</a></li>
-          <li><a href="#">21. Conclusion</a></li>
+        <div class="mag-pill" style="background: #D946EF; color: white; border-radius: 100px; padding: 4px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 24px; display: inline-block;">TABLE OF CONTENTS</div>
+        <ul class="toc-list" id="toc-list">
+          <!-- Dynamically populated by JS -->
         </ul>
       </aside>
 
@@ -94,6 +88,37 @@ const {
     { "@type": "ListItem", "position": 3, "name": title, "item": Astro.url.href }
   ]
 })}></script>
+
+<script>
+  // Dynamically generate the TOC based on the actual blog content
+  document.addEventListener('DOMContentLoaded', () => {
+    const content = document.querySelector('.post-content');
+    const tocList = document.getElementById('toc-list');
+    if (!content || !tocList) return;
+    
+    // Also include the TLDR box title if present
+    const headings = content.querySelectorAll('h2, .tldr-box h3');
+    headings.forEach((heading) => {
+      // Create a URL-friendly ID if it doesn't have one
+      if (!heading.id) {
+        heading.id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      }
+      
+      // Strip any leading numbers (e.g., "1. ", "2. ") from the text
+      let titleText = heading.textContent.replace(/^\d+\.\s*/, '');
+      
+      // Strip the lightning bolt emoji if it's the TLDR box
+      titleText = titleText.replace(/^⚡\s*/, '');
+      
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + heading.id;
+      a.textContent = titleText;
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+  });
+</script>
 
 <style is:global>
   /* Layout */
@@ -203,7 +228,11 @@ const {
     top: 100px;
     background: #FFFAF0;
     padding-right: 24px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
   }
+  .post-toc::-webkit-scrollbar { width: 4px; }
+  .post-toc::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 4px; }
   .toc-list {
     list-style: none;
     padding: 0;

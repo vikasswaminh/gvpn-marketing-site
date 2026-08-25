@@ -38,7 +38,7 @@ const features = [
 
     <div class="feature-grid">
       {features.map((f, i) => (
-        <article class="feature hover-card" data-reveal data-reveal-delay={100 + (i * 100)}>
+        <article class="feature hover-card" data-tilt data-reveal data-reveal-delay={100 + (i * 100)}>
           <h4 class="ft-title">{f.title}</h4>
           <p class="ft-body">{f.body}</p>
         </article>
@@ -104,14 +104,12 @@ const features = [
   .feature.hover-card:hover {
     z-index: 10;
     background: var(--bg);
-    transform: translateY(-4px) scale(1.01);
     box-shadow: var(--shadow-hover);
   }
   .feature.hover-card:hover::before {
     opacity: 1;
   }
   .feature.hover-card:active {
-    transform: translateY(-1px) scale(1);
     box-shadow: var(--shadow-soft);
   }
 

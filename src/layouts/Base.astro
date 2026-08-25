@@ -158,6 +158,42 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
       }
     ]
   })} />
+  <style is:inline>
+    [data-reveal-delay="400"] { transition-delay: 400ms; }
+    [data-reveal-delay="500"] { transition-delay: 500ms; }
+
+    /* 3D Tilt Base Styles */
+    [data-tilt] {
+      transform: perspective(1200px) rotateX(var(--rotateX, 0deg)) rotateY(var(--rotateY, 0deg)) translateY(var(--tilt-y, 0)) scale(var(--tilt-scale, 1));
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    [data-tilt]:not(:hover) {
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease;
+    }
+    [data-tilt]:hover {
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.1s ease;
+      --tilt-y: -4px;
+      --tilt-scale: 1.01;
+      z-index: 10;
+    }
+    [data-tilt]:active {
+      --tilt-y: -1px;
+      --tilt-scale: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      [data-tilt] {
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 <body>
   <slot />
@@ -183,10 +219,37 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
             });
           }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
           document.querySelectorAll('section').forEach(function (s) { io.observe(s); });
+          document.querySelectorAll('[data-reveal]').forEach((el) => {
+            io.observe(el);
+          });
         } else {
           // No IO: reveal everything immediately as a graceful fallback.
           document.querySelectorAll('section').forEach(function (s) { s.classList.add('in-view'); });
         }
+
+        // 3D Tilt Animation Logic
+        document.querySelectorAll('[data-tilt]').forEach(el => {
+          el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // Max tilt angle: 6 degrees for a subtle, premium feel
+            const rotateX = ((y - centerY) / centerY) * -6; 
+            const rotateY = ((x - centerX) / centerX) * 6;
+            
+            el.style.setProperty('--rotateX', `${rotateX}deg`);
+            el.style.setProperty('--rotateY', `${rotateY}deg`);
+          });
+          
+          el.addEventListener('mouseleave', () => {
+            el.style.setProperty('--rotateX', '0deg');
+            el.style.setProperty('--rotateY', '0deg');
+          });
+        });
 
         // Frosted-nav-on-scroll
         var nav = document.querySelector('.nav');

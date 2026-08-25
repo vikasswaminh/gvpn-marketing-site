@@ -337,19 +337,19 @@ const gridPosts = posts.slice(1, 7); // Show the next 6 posts in the grid
     display: grid;
     grid-template-columns: 1fr 1fr; /* Exactly 50/50 to match screenshot */
     background: var(--surface);
-    border: 3px solid #F59E0B; /* Thick yellow-orange box format */
+    border: 3px solid #1E3A8A; /* Thick navy blue box format */
     border-radius: var(--radius-xl); /* Rounded corners like the screenshot */
     overflow: hidden;
     text-decoration: none;
     color: inherit;
     height: 260px; /* Fixed height to force the short/wide aspect ratio */
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15); /* Navy blue shadow */
   }
   .feat-img {
     background: var(--bg-2);
     position: relative;
     overflow: hidden;
-    border-right: 1px solid rgba(245, 158, 11, 0.2);
+    border-right: 1px solid rgba(30, 58, 138, 0.2); /* Navy blue separator */
     height: 100%;
   }
   .mesh-bg {
@@ -407,7 +407,7 @@ const gridPosts = posts.slice(1, 7); // Show the next 6 posts in the grid
     gap: 24px;
   }
   .mag-card {
-    border: 2px solid #F59E0B; /* Matching yellow-orange box format */
+    border: 2px solid #1E3A8A; /* Matching navy blue box format */
     border-radius: var(--radius-xl);
     background: var(--surface);
     padding: 24px;
@@ -417,7 +417,7 @@ const gridPosts = posts.slice(1, 7); // Show the next 6 posts in the grid
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1); /* Navy blue shadow */
   }
   .card-t {
     font-family: var(--font-sans);

@@ -26,17 +26,6 @@ const dateModified  = "2026-08-25";
     authorRole="Network Architecture"
   >
     <div class="bp-intro">
-      <h2>Executive Summary</h2>
-      <p>
-        Deploying virtual private network (VPN) client applications across every endpoint within an organization or household introduces severe operational friction. Smart televisions, Internet of Things (IoT) sensors, game consoles, IP security cameras, and legacy industrial hardware run proprietary operating systems that completely lack support for native VPN software applications. Furthermore, managing individual software clients across dozens of mobile and desktop endpoints leads to frequent connection drops, high battery consumption, user misconfigurations, and software licensing overhead.
-      </p>
-      <p>
-        The definitive architectural solution to this problem is offloading secure overlay networking directly to the primary network edge router. By configuring an edge router to establish a native, kernel-level WireGuard or MeshWG overlay tunnel, the router acts as a transparent VPN gateway for the entire local area network (LAN). Every device connected to the router—whether via physical Ethernet cables or Wi-Fi—automatically routes its network traffic through the secure encrypted mesh without requiring a single byte of VPN software to be installed on the client device itself.
-      </p>
-      <p>
-        This technical guide provides an exhaustive, end-to-end blueprint for engineering a software-free router VPN gateway using modern kernel-space protocols, advanced policy-based routing, strict packet filtering, and MeshWG integration.
-      </p>
-
       <div class="tldr-box">
         <h3>TL;DR</h3>
         <ul>
@@ -48,6 +37,17 @@ const dateModified  = "2026-08-25";
           <li><strong>MeshWG Optimization:</strong> Connecting the router directly into a MeshWG network turns the entire local subnet into an active peer on a secure, self-healing mesh topology without exposing individual internal device IPs to public networks.</li>
         </ul>
       </div>
+
+      <h2>Executive Summary</h2>
+      <p>
+        Deploying virtual private network (VPN) client applications across every endpoint within an organization or household introduces severe operational friction. Smart televisions, Internet of Things (IoT) sensors, game consoles, IP security cameras, and legacy industrial hardware run proprietary operating systems that completely lack support for native VPN software applications. Furthermore, managing individual software clients across dozens of mobile and desktop endpoints leads to frequent connection drops, high battery consumption, user misconfigurations, and software licensing overhead.
+      </p>
+      <p>
+        The definitive architectural solution to this problem is offloading secure overlay networking directly to the primary network edge router. By configuring an edge router to establish a native, kernel-level WireGuard or MeshWG overlay tunnel, the router acts as a transparent VPN gateway for the entire local area network (LAN). Every device connected to the router—whether via physical Ethernet cables or Wi-Fi—automatically routes its network traffic through the secure encrypted mesh without requiring a single byte of VPN software to be installed on the client device itself.
+      </p>
+      <p>
+        This technical guide provides an exhaustive, end-to-end blueprint for engineering a software-free router VPN gateway using modern kernel-space protocols, advanced policy-based routing, strict packet filtering, and MeshWG integration.
+      </p>
 
       <h2>1. Problem Statement</h2>
       <p>Modern local networks suffer from device diversity and endpoint management fragmentation. The traditional approach to network privacy and remote infrastructure access relies on installing user-space client applications on every device. This client-centric model fails in real-world deployments due to four core engineering challenges.</p>

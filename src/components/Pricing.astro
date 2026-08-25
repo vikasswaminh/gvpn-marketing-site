@@ -107,7 +107,7 @@ const plans = [
     </p>
 
     <div class="price-detail-link">
-      <a class="btn" href="/pricing">See full pricing, calculator, and billing FAQ →</a>
+      <a class="accent-link" href="/pricing">See full pricing, calculator, and billing FAQ →</a>
     </div>
   </div>
 </section>
@@ -240,6 +240,16 @@ const plans = [
     margin: 24px 0 0;
     display: flex;
     justify-content: center;
+  }
+  
+  .accent-link {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 14px;
+    transition: opacity 0.15s ease;
+  }
+  .accent-link:hover {
+    opacity: 0.8;
   }
 
   @media (max-width: 980px) {

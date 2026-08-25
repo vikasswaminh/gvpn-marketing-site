@@ -29,7 +29,7 @@ const {
     
     <header class="post-header">
       <div class="post-meta-top">
-        {category && <span class="mag-pill pill-purple" style="background: #FDF4FF; color: #D946EF; border-color: #FDF4FF;">{category.toUpperCase()}</span>}
+        {category && <span class="mag-pill" style="background: #FFF7ED; color: #F97316; font-size: 11px; padding: 4px 12px; border-radius: 100px; font-weight: 700;">{category.toUpperCase()}</span>}
         {datePublished && (
           <>
             <span class="meta-dot">•</span>
@@ -49,7 +49,7 @@ const {
 
     <div class="post-author-row">
       <div class="author-block">
-        <div class="author-avatar">⚡</div>
+      <div class="author-avatar" style="background: #FFF7ED; color: #F97316;">⚡</div>
         <div class="author-info">
           <div class="author-name">{author || 'MeshWG Systems Engineering'}</div>
           <div class="author-role">{authorRole || 'Network Architecture'}</div>
@@ -65,7 +65,7 @@ const {
 
     <div class="post-body-grid">
       <aside class="post-toc">
-        <div class="mag-pill" style="background: #D946EF; color: white; border-radius: 100px; padding: 4px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 24px; display: inline-block;">TABLE OF CONTENTS</div>
+        <div class="mag-pill" style="background: #F97316; color: white; border-radius: 100px; padding: 4px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 24px; display: inline-block;">TABLE OF CONTENTS</div>
         <ul class="toc-list" id="toc-list">
           <!-- Dynamically populated by JS -->
         </ul>
@@ -98,6 +98,8 @@ const {
     
     // Also include the TLDR box title if present
     const headings = content.querySelectorAll('h2, .tldr-box h3');
+    const tocLinks = [];
+
     headings.forEach((heading) => {
       // Create a URL-friendly ID if it doesn't have one
       if (!heading.id) {
@@ -116,7 +118,24 @@ const {
       a.textContent = titleText;
       li.appendChild(a);
       tocList.appendChild(li);
+      tocLinks.push({ link: a, section: heading });
     });
+
+    // Intersection Observer for active TOC highlighting
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(item => item.link.classList.remove('toc-active'));
+          const activeItem = tocLinks.find(item => item.section.id === entry.target.id);
+          if (activeItem) activeItem.link.classList.add('toc-active');
+        }
+      });
+    }, { rootMargin: '0px 0px -80% 0px', threshold: 0 });
+
+    headings.forEach(heading => observer.observe(heading));
+    
+    // Fallback: Set first item active if nothing is intersecting initially
+    if (tocLinks.length > 0) tocLinks[0].link.classList.add('toc-active');
   });
 </script>
 
@@ -136,7 +155,7 @@ const {
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 600;
-    color: #D946EF;
+    color: #F97316;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -181,8 +200,6 @@ const {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #FDF4FF;
-    color: #D946EF;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -227,7 +244,9 @@ const {
     position: sticky;
     top: 100px;
     background: #FFFAF0;
-    padding-right: 24px;
+    padding-right: 32px;
+    margin-right: 32px;
+    border-right: 1px solid var(--border-faint);
     max-height: calc(100vh - 120px);
     overflow-y: auto;
   }
@@ -239,7 +258,7 @@ const {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
   }
   .toc-list a {
     text-decoration: none;
@@ -247,10 +266,20 @@ const {
     font-family: var(--font-sans);
     font-size: 15px;
     line-height: 1.4;
-    transition: color 0.2s;
+    transition: all 0.2s;
+    display: block;
+    padding: 10px 16px;
+    margin-left: -16px;
+    border-radius: 8px;
   }
   .toc-list a:hover {
-    color: #D946EF;
+    color: #F97316;
+    background: rgba(249, 115, 22, 0.05);
+  }
+  .toc-list a.toc-active {
+    color: #F97316;
+    background: #FFF7ED;
+    font-weight: 600;
   }
 
   /* Content Area overrides */
@@ -273,8 +302,8 @@ const {
   }
   
   .tldr-box {
-    background: #FDF4FF;
-    border: 1px solid rgba(217, 70, 239, 0.2);
+    background: #FFF7ED;
+    border: 1px solid rgba(249, 115, 22, 0.2);
     border-radius: var(--radius-lg);
     padding: 32px 40px;
     margin: 0 0 48px 0;
@@ -282,7 +311,7 @@ const {
   }
   
   .tldr-box h3 {
-    margin: 0 0 16px; font-size: 18px; font-weight: 700; color: #D946EF;
+    margin: 0 0 16px; font-size: 18px; font-weight: 700; color: #F97316;
     font-family: var(--font-sans);
     display: flex;
     align-items: center;

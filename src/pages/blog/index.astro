@@ -317,14 +317,14 @@ const rightSidebarPosts = posts.slice(7, 9);
   /* Featured Article */
   .mag-featured {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 1fr 1fr; /* Exactly 50/50 to match screenshot */
     background: var(--surface);
     border: 3px solid #F59E0B; /* Thick yellow-orange box format */
     border-radius: var(--radius-xl); /* Rounded corners like the screenshot */
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    min-height: 260px; /* Reduced from 340px to match the shorter proportion */
+    height: 260px; /* Fixed height to force the short/wide aspect ratio */
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
   }
   .feat-img {
@@ -332,6 +332,7 @@ const rightSidebarPosts = posts.slice(7, 9);
     position: relative;
     overflow: hidden;
     border-right: 1px solid rgba(245, 158, 11, 0.2);
+    height: 100%;
   }
   .mesh-bg {
     position: absolute;
@@ -341,15 +342,15 @@ const rightSidebarPosts = posts.slice(7, 9);
     background-color: var(--bg-3);
   }
   .feat-content {
-    padding: 24px 28px; /* Tightened padding to reduce overall height */
+    padding: 20px 24px; /* Tight padding to fit fixed height */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 12px; /* Tightened gap */
+    gap: 8px; /* Tight gap */
   }
   .feat-t {
-    font-family: var(--font-sans);
-    font-size: 24px;
+    font-family: 'Lato', var(--font-sans); /* Explicitly Lato */
+    font-size: 22px;
     font-weight: 700;
     color: var(--text);
     margin: 0;
@@ -358,16 +359,18 @@ const rightSidebarPosts = posts.slice(7, 9);
   }
   .feat-d {
     color: var(--text-2);
-    font-size: 14.5px;
-    line-height: 1.5; /* Tightened line height slightly */
+    font-family: 'Lato', var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Reduced to 2 lines to match the screenshot */
+    -webkit-line-clamp: 2; /* 2 lines to match the screenshot */
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
   .feat-meta {
     margin-top: auto;
+    font-family: 'Lato', var(--font-sans);
     font-size: 13px;
     color: var(--text-3);
     display: flex;

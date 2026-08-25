@@ -30,11 +30,11 @@ const archPoints = [
 ];
 
 const dontDoList = [
-  "We don't ship firmware. The router runs whatever it normally runs.",
-  "We don't install an agent on your devices. The WireGuard implementation is the one already in the device.",
-  "We don't invent a new tunnel protocol. It's WireGuard, RFC-style.",
-  "We don't intercept your traffic — it's WireGuard-encrypted end to end.",
-  "We don't retain per-machine private keys. They're shown to you once at creation, then gone.",
+  { bold: "We don't ship firmware.",                  rest: "The router runs whatever it normally runs." },
+  { bold: "We don't install an agent on your devices.", rest: "The WireGuard implementation is the one already in the device." },
+  { bold: "We don't invent a new tunnel protocol.",     rest: "It's WireGuard, RFC-style." },
+  { bold: "We don't intercept your traffic",           rest: "— it's WireGuard-encrypted end to end." },
+  { bold: "We don't retain per-machine private keys.", rest: "They're shown to you once at creation, then gone." },
 ];
 
 const testCoverage = [
@@ -125,12 +125,13 @@ const description = "How MeshWG actually works: the architecture promises we mak
         <header>
           <div class="db-eyebrow">/ 03 what it doesn't do</div>
           <h2>The honest list of things MeshWG isn't.</h2>
+          <p class="db-lede">We keep it simple. No gimmicks, no magic. Here's what MeshWG doesn't do.</p>
         </header>
         <ul class="dont">
-          {dontDoList.map((line) => (
+          {dontDoList.map((item) => (
             <li>
-              <span class="dash">—</span>
-              {line}
+              <span class="dont-dash">—</span>
+              <span class="dont-text"><strong>{item.bold}</strong> {item.rest}</span>
             </li>
           ))}
         </ul>
@@ -284,18 +285,33 @@ const description = "How MeshWG actually works: the architecture promises we mak
     list-style: none;
     padding: 0; margin: 32px 0 0;
     display: flex; flex-direction: column;
-    gap: 12px;
+    gap: 0;
+    border-top: 1px solid var(--border);
   }
   .dont li {
-    display: flex; gap: 14px;
+    display: flex; align-items: center; gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
     color: var(--text-2);
     font-size: 15px;
     line-height: 1.6;
   }
-  .dash {
-    color: var(--text-4);
-    font-family: var(--font-mono);
+  .dont-dash {
     flex-shrink: 0;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in oklab, var(--accent) 10%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--accent) 20%, var(--border));
+    border-radius: var(--radius);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .dont-text strong {
+    color: var(--text);
+    font-weight: 500;
   }
 
   /* Coverage grid */

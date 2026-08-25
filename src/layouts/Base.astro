@@ -158,6 +158,81 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
       }
     ]
   })} />
+
+  <!-- HIGH-VOLUME SEO: Organization & WebSite Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": ["Organization", "WebSite"],
+    "name": "MeshWG",
+    "alternateName": "MeshWG Zero-Trust VPN",
+    "url": "https://meshwg.com/",
+    "description": "Zero-config, highly secure mesh VPN built on WireGuard. Connect servers, devices, and clouds in seconds without complex infrastructure.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://meshwg.com/search?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  })} />
+
+  <!-- HIGH-VOLUME SEO: SoftwareApplication Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MeshWG",
+    "operatingSystem": "Linux, Windows, macOS, iOS, Android",
+    "applicationCategory": "NetworkingApplication",
+    "description": "Enterprise-grade Mesh VPN and Zero Trust Network Access (ZTNA) platform built on top of the WireGuard protocol.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR",
+      "description": "Free for up to 2 machines forever"
+    }
+  })} />
+
+  <!-- HIGH-VOLUME SEO: FAQPage Schema (Aggressive keyword targeting) -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a WireGuard Mesh VPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A WireGuard Mesh VPN like MeshWG connects all your devices directly to each other in a peer-to-peer network, rather than routing traffic through a central server. This provides lower latency, higher security, and zero single points of failure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I bypass CGNAT with a Mesh VPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "MeshWG uses advanced NAT traversal techniques (like STUN and hole punching) to establish direct connections between devices, even if they are both behind restrictive CGNATs or corporate firewalls."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is MeshWG free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, MeshWG is completely free forever for up to 2 machines. For larger fleets, our Cloud plan starts at ₹349 per machine per month with unlimited scalability."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "SD-WAN vs Mesh VPN: Which is better?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "While SD-WAN is great for branch offices, a Mesh VPN like MeshWG provides end-to-end encryption down to the specific device (Zero Trust). Mesh VPNs are significantly easier to deploy and manage than legacy SD-WAN hardware."
+        }
+      }
+    ]
+  })} />
+
   <style is:inline>
     [data-reveal-delay="400"] { transition-delay: 400ms; }
     [data-reveal-delay="500"] { transition-delay: 500ms; }

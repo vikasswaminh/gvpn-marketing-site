@@ -163,10 +163,10 @@ const faqs = [
   <script is:inline>
     const compatFaqs = document.querySelectorAll(".faq-grid details");
     compatFaqs.forEach((targetDetail) => {
-      targetDetail.addEventListener("click", () => {
-        if (!targetDetail.open) {
+      targetDetail.addEventListener("toggle", () => {
+        if (targetDetail.open) {
           compatFaqs.forEach((detail) => {
-            if (detail !== targetDetail) {
+            if (detail !== targetDetail && detail.open) {
               detail.removeAttribute("open");
             }
           });

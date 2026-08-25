@@ -109,10 +109,10 @@ const faqs = [
 <script is:inline>
   const faqs = document.querySelectorAll("#faq details");
   faqs.forEach((targetDetail) => {
-    targetDetail.addEventListener("click", () => {
-      if (!targetDetail.open) {
+    targetDetail.addEventListener("toggle", () => {
+      if (targetDetail.open) {
         faqs.forEach((detail) => {
-          if (detail !== targetDetail) {
+          if (detail !== targetDetail && detail.open) {
             detail.removeAttribute("open");
           }
         });

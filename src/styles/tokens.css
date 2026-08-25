@@ -91,12 +91,12 @@
   --r-xl:           16px;
 
   /* ── Layout ───────────────────────────────────────────────────────── */
-  --wrap-max:       1180px;
-  --wrap-pad-x:     clamp(20px, 4vw, 28px);
-  --maxw-narrow:    880px;
-  --maxw:           1180px;
-  --maxw-wide:      1260px;
-  --container:      1180px;
+  --wrap-max:       100%;
+  --wrap-pad-x:     4vw; /* Standardized edge padding */
+  --maxw-narrow:    1200px;
+  --maxw:           100%;
+  --maxw-wide:      100%;
+  --container:      100%;
 
   /* ── Shadows (polished modern) ───────────────────────── */
   --shadow-card:    0 2px 8px rgba(10, 10, 10, 0.05), 0 1px 2px rgba(10, 10, 10, 0.02);

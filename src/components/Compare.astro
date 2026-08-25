@@ -31,6 +31,8 @@ interface Props {
   footLinkHref?: string;
   /** Hide the footer link entirely (useful for blog posts that have their own CTA). */
   hideFoot?: boolean;
+  /** Disable the global .wrap container when embedding inside already-constrained layouts (like blog posts). */
+  noWrap?: boolean;
 }
 
 const DEFAULT_COLS = ["Box-based SDWAN", "Tailscale / Netbird"] as const;
@@ -88,11 +90,12 @@ const {
   footLinkText = "How it actually works under the hood →",
   footLinkHref = "/docs",
   hideFoot     = false,
+  noWrap       = false,
 } = Astro.props;
 ---
 
 <section id={id}>
-  <div class="wrap">
+  <div class={noWrap ? "" : "wrap"}>
     <div class="sec-eyebrow">{eyebrow}</div>
     <h2 class="sec-h">{title}</h2>
     <p class="sec-lede">{lede}</p>

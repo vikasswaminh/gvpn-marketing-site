@@ -164,7 +164,7 @@ const {
 
 <style is:global>
   /* Layout */
-  .post-layout { padding: 120px 0 64px; background-color: #FFFAF0; min-height: 100vh; }
+  .post-layout { padding: 120px 0 64px; background-color: var(--bg); min-height: 100vh; }
   
   /* Header */
   .post-header {
@@ -266,7 +266,7 @@ const {
   .post-toc {
     position: sticky;
     top: 100px;
-    background: #FFFAF0;
+    background: transparent;
     padding-right: 32px;
     margin-right: 32px;
     border-right: 1px solid var(--border-faint);
@@ -307,7 +307,7 @@ const {
 
   /* Content Area overrides */
   .post-content {
-    background: #FFFAF0;
+    background: transparent;
     max-width: 800px;
   }
   .post-content h2 {

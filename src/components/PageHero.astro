@@ -14,10 +14,10 @@ const { eyebrow, title, lede, wrapLede = false, wrapTitle = false } = Astro.prop
   <div class="wrap">
     <div class="ph-grid">
       <div class="ph-left">
-        <div class="ph-eyebrow">{eyebrow}</div>
-        <h1 class:list={["ph-h", { "ph-h--wrap": wrapTitle }]}>{title}</h1>
+        <div class="ph-eyebrow animate-fade-up">{eyebrow}</div>
+        <h1 class:list={["ph-h", { "ph-h--wrap": wrapTitle }, "animate-fade-up delay-1"]}>{title}</h1>
       </div>
-      <div class="ph-right">
+      <div class="ph-right animate-fade-up delay-2">
         {lede && <p class:list={["ph-lede", { "ph-lede--wrap": wrapLede }]} set:html={lede} />}
       </div>
     </div>

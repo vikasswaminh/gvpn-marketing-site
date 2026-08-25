@@ -26,24 +26,24 @@ const meshNodes = [
 
     <!-- ── Left column: editorial headline + CTAs + meta ───────── -->
     <div class="hero-left">
-      <span class="eyebrow">
+      <span class="eyebrow animate-fade-up">
         <span class="pill">live</span>
         <span class="eyebrow-text">one platform · mesh vpn + zero trust access</span>
       </span>
 
-      <h1 class="h1">
+      <h1 class="h1 animate-fade-up delay-1">
         Turn the routers <em class="it">you already own</em>
         into a secure mesh network.
       </h1>
 
-      <p class="lede">
+      <p class="lede animate-fade-up delay-2">
         Connect your branches, your home, and your team —
         without buying <b>₹2 lakh SDWAN boxes</b>. <span class="hl-meshwg">MeshWG</span> is a hosted
         mesh service that works with the TP-Link, MikroTik, OpenWrt,
         and Ubiquiti hardware already in your rack.
       </p>
 
-      <div class="hero-cta">
+      <div class="hero-cta animate-fade-up delay-3">
         <a class="btn btn-acid btn-lg" href={site.signupFree}>
           Sign up free
           <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -53,7 +53,7 @@ const meshNodes = [
         </a>
       </div>
 
-      <div class="hero-meta">
+      <div class="hero-meta animate-fade-up delay-3">
         {heroChecks.map((label) => (
           <span>
             <span class="tick">

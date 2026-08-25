@@ -94,8 +94,10 @@ import { site } from "../site";
   }
   
   .nav--scrolled {
-    background: rgba(255, 255, 255, 0.85);
-    border-bottom-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.75);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(20px);
+    border-bottom-color: rgba(0, 0, 0, 0.04);
     box-shadow: var(--shadow-soft);
   }
 

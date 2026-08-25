@@ -334,6 +334,46 @@ const {
     margin-bottom: 24px;
   }
   
+  /* Markdown Tables */
+  .post-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .post-content th, .post-content td {
+    padding: 16px 20px;
+    border: 1px solid var(--border-faint);
+    text-align: left;
+    vertical-align: top;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .post-content th {
+    background: var(--bg-2);
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .post-content tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.02);
+  }
+  
+  .pink-link {
+    color: #D946EF;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+  .pink-link:hover {
+    color: #C026D3;
+  }
+  
   .tldr-box {
     background: #F0F9FF; /* Light blue */
     border: 1px solid rgba(2, 132, 199, 0.2);

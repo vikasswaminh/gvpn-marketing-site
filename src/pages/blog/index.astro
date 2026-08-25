@@ -1,17 +1,9 @@
 ---
 import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
-import PageHero   from "../../components/PageHero.astro";
 import Footer     from "../../components/Footer.astro";
 
-// Blog post index. Hardcoded list — matches the pattern used elsewhere in
-// the site (quickstart.astro's vendorGuides, docs.astro's archPoints). When a
-// new post ships, prepend its entry to this array; the index page rebuilds
-// automatically. Newest first.
-//
-// Keep `slug` matching the .astro filename in this directory. Keep `category`
-// short enough to fit on one line at narrow widths.
-
+// Blog post index. Hardcoded list.
 interface PostMeta {
   slug:        string;
   title:       string;
@@ -96,69 +88,100 @@ const posts: PostMeta[] = [
   },
 ];
 
-// Human-readable date formatter.
 const fmtDate = (iso: string) => {
   const d = new Date(iso + "T00:00:00Z");
   return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 };
 
 const title = "Blog — MeshWG";
-const description = "Founder-written notes on branch networking, WireGuard, mesh VPN, and connecting the routers you already own. Long-form guides for the practical work of running a private network across multiple sites.";
+const description = "Founder-written notes on branch networking, WireGuard, mesh VPN, and connecting the routers you already own.";
+
+// Partition logic for 3-column layout
+const featuredPost = posts[0];
+const gridPosts = posts.slice(1, 5);
+const leftSidebarPosts = posts.slice(5, 7);
+const rightSidebarPosts = posts.slice(7, 9);
 ---
 
 <Base title={title} description={description}>
   <Nav />
 
-  <PageHero
-    eyebrow="/ blog"
-    title="Practical notes on mesh VPN, WireGuard, and branch networking."
-    lede="Long-form, founder-written guides. The kind of detail we'd send to a friend setting up their first multi-branch deployment."
-    wrapTitle={true}
-    wrapLede={true}
-  />
+  <section class="mag-section">
+    <div class="wrap mag-wrap">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="mag-sidebar mag-left">
+        <div class="mag-pill pill-orange">STRATEGY SPECIAL</div>
+        <ul class="mag-list">
+          {leftSidebarPosts.map((p) => (
+            <li>
+              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+            </li>
+          ))}
+        </ul>
+      </aside>
 
-  <section class="blog-index">
-    <div class="wrap">
+      <!-- CENTER MAIN -->
+      <main class="mag-center">
+        <div class="mag-header">
+          <h1 class="mag-h1">MeshWG Engineering & Strategy Blog</h1>
+          <p class="mag-desc">Expert articles on mesh networks, WireGuard, routing, & IT infrastructure</p>
+        </div>
+        
+        <div class="mag-pill-row">
+          <div class="mag-pill pill-orange">NEWEST ARTICLES</div>
+          <span class="mag-subtext">Latest from our experts</span>
+        </div>
 
-      <ol class="post-list">
-        {posts.map((p) => (
-          <li class="post-item">
-            <a class="post-link hover-card" href={`/blog/${p.slug}/`}>
-              <div class="meta">
-                <span class="cat">/ {p.category}</span>
-                <span class="dot">·</span>
-                <span class="date">{fmtDate(p.datePublished)}</span>
-                <span class="dot">·</span>
-                <span class="rt">{p.readMinutes} min read</span>
-              </div>
-              <h2 class="t">{p.title}</h2>
-              <div class="tldr">
-                <span class="tldr-label">TL;DR</span>
-                <p class="d">{p.description}</p>
-              </div>
-              <span class="arrow" aria-hidden="true">Read →</span>
+        <!-- Featured Post -->
+        <a href={`/blog/${featuredPost.slug}/`} class="mag-featured hover-card" data-tilt>
+          <div class="feat-img">
+            <!-- Sleek Placeholder Mesh Gradient -->
+            <div class="mesh-bg"></div>
+          </div>
+          <div class="feat-content">
+            <div class="mag-pill-row">
+              <div class="mag-pill pill-orange">{featuredPost.category}</div>
+              <div class="mag-pill pill-red">NEW</div>
+            </div>
+            <h2 class="feat-t">{featuredPost.title}</h2>
+            <p class="feat-d">{featuredPost.description}</p>
+            <div class="feat-meta">
+              <span>{featuredPost.readMinutes} min read</span>
+              <span class="dot">·</span>
+              <span class="read-link">Read article &rarr;</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Grid Posts -->
+        <div class="mag-grid">
+          {gridPosts.map((p) => (
+            <a href={`/blog/${p.slug}/`} class="mag-card hover-card" data-tilt>
+              <div class="mag-pill pill-orange">{p.category}</div>
+              <h3 class="card-t">{p.title}</h3>
+              <p class="card-d">{p.description}</p>
             </a>
-          </li>
-        ))}
-      </ol>
+          ))}
+        </div>
+      </main>
 
-      <aside class="rss-strip">
-        <p>
-          More posts coming soon — branch VPN economics, WireGuard
-          site-to-site under various ISP conditions, mesh-VPN vs IPsec
-          vs SDWAN. If you'd like an email when the next one lands,
-          drop a line to <a href="mailto:hello@meshwg.com?subject=MeshWG%20blog%20updates">hello@meshwg.com</a>.
-        </p>
+      <!-- RIGHT SIDEBAR -->
+      <aside class="mag-sidebar mag-right">
+        <div class="mag-pill pill-purple">ENGINEERING SPECIAL</div>
+        <ul class="mag-list">
+          {rightSidebarPosts.map((p) => (
+            <li>
+              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+            </li>
+          ))}
+        </ul>
       </aside>
 
     </div>
   </section>
 
-  <!-- ── Blog-index Breadcrumb + ItemList JSON-LD ─────────────────
-       ItemList lets Google understand this is a list of articles and
-       can surface "Blog" sitelinks once the section has a few posts.
-       Breadcrumb improves the rendered SERP appearance for this URL.
-       ──────────────────────────────────────────────────────────── -->
+  <!-- HIGH-VOLUME SEO: Blog Breadcrumbs & ItemList -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -194,118 +217,206 @@ const description = "Founder-written notes on branch networking, WireGuard, mesh
 </Base>
 
 <style>
-  .blog-index { padding: 56px 0 96px; }
-
-  .post-list {
-    list-style: none;
-    padding: 0; margin: 0;
-    display: flex; flex-direction: column;
-    gap: 14px;
+  .mag-section { 
+    padding: 120px 0 96px; 
+    min-height: 100vh;
   }
 
-  .post-item {
+  .mag-wrap {
+    display: grid;
+    grid-template-columns: 260px 1fr 260px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* Pilly Buttons */
+  .mag-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1;
+  }
+  .pill-orange { background: #F97316; color: #fff; }
+  .pill-red { background: #EF4444; color: #fff; }
+  .pill-purple { background: #8B5CF6; color: #fff; }
+
+  /* Sidebars */
+  .mag-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .mag-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .mag-list-link {
+    display: block;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--text-2);
+    font-weight: 400;
+    transition: color 0.15s ease;
+  }
+  .mag-list-link:hover {
+    color: var(--accent);
+  }
+
+  /* Center Main */
+  .mag-center {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .mag-header {
+    margin-bottom: 8px;
+  }
+  .mag-h1 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  .mag-desc {
+    color: var(--text-3);
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .mag-pill-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .mag-subtext {
+    font-size: 13px;
+    color: var(--text-4);
+  }
+
+  /* Featured Article */
+  .mag-featured {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    min-height: 340px;
+  }
+  .feat-img {
+    background: var(--bg-2);
+    position: relative;
+    overflow: hidden;
+  }
+  .mesh-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 0% 0%, rgba(22, 119, 255, 0.2) 0%, transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(249, 115, 22, 0.15) 0%, transparent 60%);
+    background-color: var(--bg-3);
+  }
+  .feat-content {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+  }
+  .feat-t {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .feat-d {
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .feat-meta {
+    margin-top: auto;
+    font-size: 13px;
+    color: var(--text-3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .read-link {
+    color: #F97316;
+    font-weight: 500;
+  }
+
+  /* Grid Posts */
+  .mag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .mag-card {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     background: var(--surface);
-    transition: border-color .15s ease, transform .15s ease;
-  }
-  .post-item:hover {
-    border-color: color-mix(in oklab, var(--accent) 35%, var(--border));
-    transform: translateY(-1px);
-  }
-
-  .post-link {
-    display: block;
-    padding: 20px 24px;
-    color: inherit;
+    padding: 24px;
     text-decoration: none;
-  }
-
-  .meta {
-    display: flex; flex-wrap: wrap; align-items: center;
-    gap: 0 10px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    margin-bottom: 16px;
-  }
-  .meta .cat { color: var(--accent); }
-  .meta .dot { color: var(--text-4); }
-  .meta .date, .meta .rt { color: var(--text-3); }
-
-  /* Editorial serif title — italic accents reserve for hover acid wash */
-  .t {
-    font-family: var(--font-serif);
-    font-size: 30px;
-    font-weight: 400;
-    letter-spacing: -0.018em;
-    margin: 0 0 12px;
-    line-height: 1.08;
-    color: var(--text);
-    transition: color 0.15s ease;
-  }
-  .post-link:hover .t { color: var(--accent); }
-
-  .tldr {
+    color: inherit;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin: 0 0 20px;
-    padding: 14px 18px;
-    background: var(--bg-2);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    align-items: flex-start;
+    gap: 16px;
   }
-  .tldr-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--accent);
+  .card-t {
+    font-family: var(--font-serif);
+    font-size: 18px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .d {
+    color: var(--text);
     margin: 0;
-    color: var(--text-2);
-    font-size: 15px;
-    line-height: 1.65;
-    font-weight: 400;
+    line-height: 1.3;
+  }
+  .card-d {
+    color: var(--text-3);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  .arrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--accent);
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  @media (max-width: 1200px) {
+    .mag-wrap { grid-template-columns: 220px 1fr 220px; gap: 32px; }
   }
-  .post-link:hover .arrow { color: var(--accent-strong); }
-
-  /* RSS-coming strip */
-  .rss-strip {
-    margin-top: 48px;
-    padding: 24px 28px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-  }
-  .rss-strip p {
-    margin: 0;
-    color: var(--text-2);
-    font-size: 14.5px;
-    line-height: 1.65;
-  }
-  .rss-strip a {
-    color: var(--accent);
-  }
-  .rss-strip a:hover { color: var(--accent-strong); }
 
   @media (max-width: 980px) {
-    .blog-index { padding: 32px 0 64px; }
-    .post-link { padding: 18px 20px; }
-    .t { font-size: 19px; }
+    .mag-wrap { grid-template-columns: 1fr; gap: 64px; }
+    .mag-featured { grid-template-columns: 1fr; }
+    .feat-img { height: 200px; }
+    .mag-sidebar { order: 2; }
+    .mag-center { order: 1; }
+  }
+
+  @media (max-width: 640px) {
+    .mag-grid { grid-template-columns: 1fr; }
   }
 </style>

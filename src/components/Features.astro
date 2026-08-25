@@ -47,6 +47,21 @@ const features = [
   </div>
 </section>
 
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+    const cards = document.querySelectorAll('.hover-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+  });
+</script>
+
 <style>
   #features { padding: 32px 0; }
   #features .sec-h, #features .sec-lede {
@@ -74,12 +89,26 @@ const features = [
     position: relative;
     z-index: 1;
     border-radius: var(--radius-sm); /* Added so individual cards look rounded when lifted */
+    overflow: hidden; /* Contains the hover glow */
+  }
+  .feature.hover-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(22, 119, 255, 0.08), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 0;
   }
   .feature.hover-card:hover {
     z-index: 10;
     background: var(--bg);
     transform: translateY(-4px) scale(1.01);
     box-shadow: var(--shadow-hover);
+  }
+  .feature.hover-card:hover::before {
+    opacity: 1;
   }
   .feature.hover-card:active {
     transform: translateY(-1px) scale(1);
@@ -94,6 +123,8 @@ const features = [
     letter-spacing: -0.01em;
     color: var(--text);
     line-height: 1.1;
+    position: relative;
+    z-index: 2;
   }
   .ft-body {
     color: var(--text-2);
@@ -101,6 +132,8 @@ const features = [
     line-height: 1.6;
     margin: 0;
     font-weight: 300;
+    position: relative;
+    z-index: 2;
   }
 
   @media (max-width: 980px) {

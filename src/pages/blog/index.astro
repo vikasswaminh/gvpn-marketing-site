@@ -104,24 +104,24 @@ const fmtDate = (iso: string) => {
 const title = "Blog — MeshWG";
 const description = "Founder-written notes on branch networking, WireGuard, mesh VPN, and connecting the routers you already own.";
 
-// Sidebars - Stubs for visual layout density matching the reference
-const founderSpecialPosts = [
-  { title: "Stop Buying SD-WAN Appliances in 2026", slug: "stop-buying-sd-wan-appliances-2026" },
-  { title: "Why Legacy IPsec VPNs Are Killing Your Remote Team", slug: "why-legacy-ipsec-vpns-are-killing-remote-teams" },
-  { title: "Zero-Trust is a Network Architecture, Not a Software Tool", slug: "zero-trust-is-an-architecture-not-a-tool" },
-  { title: "The Hidden Costs of Cloud Provider VPN Gateways", slug: "hidden-costs-of-cloud-vpn-gateways" },
-  { title: "Hardware vs Software VPNs: The 2026 Debate", slug: "hardware-vs-software-vpns-2026" },
-  { title: "Why the Modern Enterprise is Moving to WireGuard", slug: "why-enterprises-are-moving-to-wireguard" },
+// Sidebars - Mapped to real existing posts
+const founderSlugs = [
+  "mesh-vpn-vs-ipsec-vs-sdwan-2026",
+  "branch-office-vpn-smb-rollout-playbook-2026",
+  "sd-wan-alternatives-2026",
+  "managed-vs-self-hosted-wireguard-vpn-2026",
+  "manage-multiple-wireguard-tunnels-mesh-vpn-2026"
 ];
+const founderSpecialPosts = founderSlugs.map(slug => posts.find(p => p.slug === slug)).filter(Boolean);
 
-const aiSpecialPosts = [
-  { title: "How AI is Automating Mesh VPN Routing in 2026", slug: "how-ai-automates-mesh-vpn-routing-2026" },
-  { title: "Self-Healing Mesh Networks: The Future of Cloud AI", slug: "self-healing-mesh-networks-cloud-ai" },
-  { title: "Using ChatGPT to Write WireGuard Configs: A Warning", slug: "using-chatgpt-for-wireguard-configs-warning" },
-  { title: "Machine Learning vs BGP: The Next Era of Traffic Routing", slug: "machine-learning-vs-bgp-routing" },
-  { title: "AI Won't Replace Network Engineers - But It Will Change Routing", slug: "ai-wont-replace-network-engineers" },
-  { title: "The Rise of AI-Driven Zero Trust Security", slug: "rise-of-ai-driven-zero-trust-security" },
+const aiSlugs = [
+  "how-to-set-up-a-router-vpn-without-installing-vpn-software",
+  "wireguard-site-to-site-vpn-multiple-locations",
+  "wireguard-nat-traversal-cgnat-firewalls-2026",
+  "wireguard-site-to-site-vpn-how-it-works-2026",
+  "tp-link-site-to-site-vpn-wireguard-2026"
 ];
+const aiSpecialPosts = aiSlugs.map(slug => posts.find(p => p.slug === slug)).filter(Boolean);
 
 // Partition logic for center column layout
 const featuredPost = posts[0];

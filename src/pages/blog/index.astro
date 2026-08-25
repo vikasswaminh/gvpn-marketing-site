@@ -15,6 +15,14 @@ interface PostMeta {
 
 const posts: PostMeta[] = [
   {
+    slug:          "how-to-set-up-a-router-vpn-without-installing-vpn-software",
+    title:         "How to Set Up a Router VPN Without Installing VPN Software (2026 MeshWG Guide)",
+    description:   "Master setting up a native router VPN gateway without installing software on client devices. Step-by-step OpenWrt, WireGuard, and MeshWG deployment guide.",
+    datePublished: "2026-08-24",
+    readMinutes:   25,
+    category:      "engineering guide",
+  },
+  {
     slug:          "managed-vs-self-hosted-wireguard-vpn-2026",
     title:         "Managed vs Self-Hosted WireGuard VPN: Enterprise Mesh Network Architecture Guide (2026)",
     description:   "Comprehensive architectural comparison of self-hosted (Headscale, Netmaker, NetBird) versus managed WireGuard platforms (Tailscale, NetBird Cloud). Features kernel performance metrics, production configuration blocks, NAT traversal mechanics, and zero-trust security hardening blueprints.",
@@ -283,12 +291,12 @@ const rightSidebarPosts = posts.slice(7, 9);
     margin-bottom: 8px;
   }
   .mag-h1 {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: 28px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
     margin: 0 0 12px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
   .mag-desc {
     color: var(--text-3);
@@ -340,9 +348,9 @@ const rightSidebarPosts = posts.slice(7, 9);
     gap: 12px; /* Tightened gap */
   }
   .feat-t {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
     margin: 0;
     line-height: 1.2;
@@ -368,7 +376,7 @@ const rightSidebarPosts = posts.slice(7, 9);
   }
   .read-link {
     color: #F97316;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   /* Grid Posts */
@@ -391,9 +399,9 @@ const rightSidebarPosts = posts.slice(7, 9);
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
   }
   .card-t {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
     margin: 0;
     line-height: 1.3;

@@ -217,10 +217,10 @@ const {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 32px 0;
+    padding: 24px 0;
     border-top: 1px solid var(--border-faint);
     border-bottom: 1px solid var(--border-faint);
-    margin-bottom: 64px;
+    margin-bottom: 32px;
     flex-wrap: wrap;
     gap: 24px;
   }
@@ -362,7 +362,7 @@ const {
     background: rgba(0, 0, 0, 0.02);
   }
   
-  .pink-link {
+  .pink-link, .post-content a, .post-block a:not(.toc-link) {
     color: #D946EF;
     text-decoration: underline;
     text-decoration-thickness: 1px;
@@ -370,9 +370,10 @@ const {
     font-weight: 600;
     transition: color 0.2s ease;
   }
-  .pink-link:hover {
+  .pink-link:hover, .post-content a:hover, .post-block a:not(.toc-link):hover {
     color: #C026D3;
   }
+
   
   .tldr-box {
     background: #F0F9FF; /* Light blue */

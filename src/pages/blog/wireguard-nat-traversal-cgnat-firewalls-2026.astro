@@ -59,6 +59,16 @@ const faqs = [
       </div>
 
       <article class="post-block intro">
+      <article class="tldr-box">
+        <h3>TL;DR</h3>
+        <p><strong>Stateful UDP Translation Expirations:</strong> Stateful firewalls and CGNAT routers clear inactive UDP translation table entries after brief idle periods (typically 20 to 60 seconds). Without continuous outbound keepalive traffic, incoming WireGuard frames are dropped at the external perimeter.</p>
+        <p><strong>PersistentKeepalive Is Mandatory Behind NAT:</strong> Setting <code>PersistentKeepalive = 25</code> (or 15 on aggressive 4G/5G mobile carrier networks) forces WireGuard to transmit silent, 32-byte authenticated heartbeat packets. This maintains stateful mapping entries in intermediate firewalls indefinitely.</p>
+        <p><strong>Cryptokey Endpoint Roaming:</strong> WireGuard endpoints dynamically update peer IP and port mappings in system memory upon receiving an authenticated inbound packet. This allows active tunnels to survive dynamic WAN IP updates, Wi-Fi to cellular roaming, and ISP re-leases without session drops.</p>
+        <p><strong>Symmetric NAT Limitations:</strong> Simple UDP hole punching succeeds across Full Cone, Address-Restricted Cone, and Port-Restricted Cone NATs. However, Symmetric NAT allocates a unique external port for every distinct destination IP:port pair, requiring out-of-band coordination or public relay nodes to establish transit.</p>
+        <p><strong>Decoupling Data and Control Planes:</strong> Native kernel WireGuard lacks built-in STUN or relay coordination protocols. Scaling multi-site environments behind double NAT <a href="/blog/managed-vs-self-hosted-wireguard-vpn-2026/">requires an external control plane (such as MeshWG)</a> to dynamically map public endpoints and orchestrate peer handshakes out-of-band.</p>
+        <p><strong>Mandatory Encapsulation Clamping:</strong> Double NAT, cellular GTP encapsulation, and PPPoE headers add variable network overhead. Lowering interface MTU to 1420 (or 1380 over mobile links) and enforcing TCP MSS clamping prevents packet fragmentation black holes.</p>
+      </article>
+
         <p class="lede-p">
           As IPv4 address exhaustion has accelerated worldwide, Internet Service Providers (ISPs), cellular operators, and enterprise network teams have overwhelmingly deployed Carrier-Grade NAT (CGNAT, defined in RFC 6598 under 100.64.0.0/10). While CGNAT extends the operational lifespan of legacy IPv4 infrastructure, it breaks traditional peer-to-peer (P2P) networking paradigms. When two gateway routers or remote endpoints both reside behind stateful NAT firewalls or double-NAT carrier environments, neither node possesses a publicly reachable IP address.
         </p>
@@ -70,15 +80,6 @@ const faqs = [
         </p>
       </article>
 
-      <article class="tldr-box">
-        <h3>⚡ TL;DR Key Takeaways</h3>
-        <p><strong>Stateful UDP Translation Expirations:</strong> Stateful firewalls and CGNAT routers clear inactive UDP translation table entries after brief idle periods (typically 20 to 60 seconds). Without continuous outbound keepalive traffic, incoming WireGuard frames are dropped at the external perimeter.</p>
-        <p><strong>PersistentKeepalive Is Mandatory Behind NAT:</strong> Setting <code>PersistentKeepalive = 25</code> (or 15 on aggressive 4G/5G mobile carrier networks) forces WireGuard to transmit silent, 32-byte authenticated heartbeat packets. This maintains stateful mapping entries in intermediate firewalls indefinitely.</p>
-        <p><strong>Cryptokey Endpoint Roaming:</strong> WireGuard endpoints dynamically update peer IP and port mappings in system memory upon receiving an authenticated inbound packet. This allows active tunnels to survive dynamic WAN IP updates, Wi-Fi to cellular roaming, and ISP re-leases without session drops.</p>
-        <p><strong>Symmetric NAT Limitations:</strong> Simple UDP hole punching succeeds across Full Cone, Address-Restricted Cone, and Port-Restricted Cone NATs. However, Symmetric NAT allocates a unique external port for every distinct destination IP:port pair, requiring out-of-band coordination or public relay nodes to establish transit.</p>
-        <p><strong>Decoupling Data and Control Planes:</strong> Native kernel WireGuard lacks built-in STUN or relay coordination protocols. Scaling multi-site environments behind double NAT <a href="/blog/managed-vs-self-hosted-wireguard-vpn-2026/">requires an external control plane (such as MeshWG)</a> to dynamically map public endpoints and orchestrate peer handshakes out-of-band.</p>
-        <p><strong>Mandatory Encapsulation Clamping:</strong> Double NAT, cellular GTP encapsulation, and PPPoE headers add variable network overhead. Lowering interface MTU to 1420 (or 1380 over mobile links) and enforcing TCP MSS clamping prevents packet fragmentation black holes.</p>
-      </article>
 
       <article class="post-block">
         <h2>1. Problem Statement: The Stateful Firewall &amp; CGNAT Barrier</h2>

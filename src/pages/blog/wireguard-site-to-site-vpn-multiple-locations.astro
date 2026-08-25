@@ -62,18 +62,8 @@ const faqs = [
     authorRole="Network Architecture"
   >
     <div class="bp-intro">
-      <p>
-        Connecting geographically distributed branch offices, cloud environments, and remote data centers into a single, seamless private network is one of the fundamental challenges of modern network engineering. <a href="/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/">Traditional enterprise approaches—such as IPsec VPNs or expensive proprietary SD-WAN hardware appliances</a>—introduce significant operational complexity, high hardware expenditure, and performance bottlenecks.
-      </p>
-      <p>
-        WireGuard has transformed site-to-site networking by offering an ultra-fast, state-of-the-art cryptographic VPN protocol implemented directly inside the Linux kernel and ported natively to major router platforms. Unlike point-to-site client VPNs, which connect individual laptops to a central server, a WireGuard Site-to-Site VPN links entire local networks across different physical locations.
-      </p>
-      <p>
-        In a site-to-site architecture, border gateways at each physical site establish an encrypted WireGuard overlay network over the public Internet. When a host on Site A's local subnet, such as IP address 10.10.0.45, sends traffic to a server on Site B's local subnet, such as IP address 10.20.0.5, the Site A gateway intercepts the packet, encrypts it into a standard UDP datagram on port 51820, and routes it across the tunnel to the Site B gateway. The receiving gateway decrypts the packet and forwards it to the destination host on its local LAN. End devices require zero VPN software installation; all encryption and routing occur transparently at the router boundary.
-      </p>
-
       <div class="tldr-box">
-        <h3>⚡ Architectural Key Takeaways</h3>
+        <h3>TL;DR</h3>
         <ul>
           <li><strong>Primary Use Case:</strong> Interconnecting entire local area subnets across corporate branch offices, cloud VPC environments, homelabs, and edge compute locations.</li>
           <li><strong>Kernel Performance:</strong> Comprises approximately 4,000 lines of code, running natively in Linux kernel space to deliver near line-rate throughput with minimal CPU utilization.</li>
@@ -85,6 +75,17 @@ const faqs = [
           <li><strong>Automated Mesh Scaling:</strong> Manual static meshes require quadratic peer key management. <a href="/blog/managed-vs-self-hosted-wireguard-vpn-2026/">Hosted orchestration platforms like MeshWG</a> automate site-to-site mesh routing on existing router hardware without requiring expensive SD-WAN hardware boxes.</li>
         </ul>
       </div>
+
+      <p>
+        Connecting geographically distributed branch offices, cloud environments, and remote data centers into a single, seamless private network is one of the fundamental challenges of modern network engineering. <a href="/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/">Traditional enterprise approaches—such as IPsec VPNs or expensive proprietary SD-WAN hardware appliances</a>—introduce significant operational complexity, high hardware expenditure, and performance bottlenecks.
+      </p>
+      <p>
+        WireGuard has transformed site-to-site networking by offering an ultra-fast, state-of-the-art cryptographic VPN protocol implemented directly inside the Linux kernel and ported natively to major router platforms. Unlike point-to-site client VPNs, which connect individual laptops to a central server, a WireGuard Site-to-Site VPN links entire local networks across different physical locations.
+      </p>
+      <p>
+        In a site-to-site architecture, border gateways at each physical site establish an encrypted WireGuard overlay network over the public Internet. When a host on Site A's local subnet, such as IP address 10.10.0.45, sends traffic to a server on Site B's local subnet, such as IP address 10.20.0.5, the Site A gateway intercepts the packet, encrypts it into a standard UDP datagram on port 51820, and routes it across the tunnel to the Site B gateway. The receiving gateway decrypts the packet and forwards it to the destination host on its local LAN. End devices require zero VPN software installation; all encryption and routing occur transparently at the router boundary.
+      </p>
+
 
       <h2>2. Key Engineering Principles & Architectural Constraints</h2>
       <p>Building a multi-site WireGuard network requires adhering to four strict networking principles:</p>

@@ -91,29 +91,9 @@ const compareRows = [
   >
 
     <div class="bp-intro">
-      <p>
-          Box-based SD-WAN was the right answer in 2018. In 2026, most
-          SMB and mid-market teams looking for branch-office connectivity
-          are quietly evaluating something else — usually a cloud-managed
-          mesh VPN running on the routers they already own, sometimes a
-          full ZTNA stack, occasionally a SDWAN-as-a-service platform
-          that drops the appliance. The wave is real. A 20-branch
-          deployment on MeshWG — the BYO-router pattern this post leads
-          with — runs around ₹7,000 a month against the ₹30 lakhs in
-          hardware plus ₹30,000 a month in licensing a comparable
-          Cisco/Fortinet/Aryaka rollout would cost. Setup is under two
-          minutes per site. Two machines are free, forever. The other
-          six options in this guide each have their own legitimate
-          place. The point isn't that mesh VPN beats SD-WAN — it's that
-          in 2026 you have at least seven serious choices, each with a
-          different sweet spot. Pick by the constraints your environment
-          actually has.
-        </p>
-      
-
       <!-- § Why look for alternatives -->
       <div class="tldr-box">
-  <h3>⚡ TL;DR</h3>
+  <h3>TL;DR</h3>
         <p>
           SD-WAN was designed to replace MPLS. In the late 2010s the
           replacement story was clean: MPLS circuits cost ₹40,000–80,000
@@ -144,6 +124,35 @@ const compareRows = [
         </p>
         <p>
           That gap between "what SD-WAN sells" and "what most SMB
+          deployments actually use" is where the seven alternatives in
+          this post live. Each of them does encrypted tunnels and central
+          policy. Each of them ships in minutes rather than weeks. Each
+          of them costs noticeably less than box-based SD-WAN at the
+          SMB scale. Beyond that, they differ on a handful of axes that
+          determine which fits your specific environment.
+        </p>
+      </div>
+
+      <p>
+          Box-based SD-WAN was the right answer in 2018. In 2026, most
+          SMB and mid-market teams looking for branch-office connectivity
+          are quietly evaluating something else — usually a cloud-managed
+          mesh VPN running on the routers they already own, sometimes a
+          full ZTNA stack, occasionally a SDWAN-as-a-service platform
+          that drops the appliance. The wave is real. A 20-branch
+          deployment on MeshWG — the BYO-router pattern this post leads
+          with — runs around ₹7,000 a month against the ₹30 lakhs in
+          hardware plus ₹30,000 a month in licensing a comparable
+          Cisco/Fortinet/Aryaka rollout would cost. Setup is under two
+          minutes per site. Two machines are free, forever. The other
+          six options in this guide each have their own legitimate
+          place. The point isn't that mesh VPN beats SD-WAN — it's that
+          in 2026 you have at least seven serious choices, each with a
+          different sweet spot. Pick by the constraints your environment
+          actually has.
+        </p>
+      
+
           deployments actually use" is where the seven alternatives in
           this post live. Each of them does encrypted tunnels and central
           policy. Each of them ships in minutes rather than weeks. Each

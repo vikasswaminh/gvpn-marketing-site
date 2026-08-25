@@ -53,8 +53,16 @@ const faqs = [
     author="MeshWG editorial team"
     authorRole="Network Architecture"
   >
-
       
+      <div class="tldr-box">
+        <h3>TL;DR</h3>
+        <p><strong>The N(N-1)/2 Scaling Challenge:</strong> Building a full-mesh topology manually scales exponentially. Network architects must choose between single-interface multi-peer setups, multi-interface point-to-point links, or automated control-plane orchestration platforms.</p>
+        <p><strong>Single-Interface vs Multi-Interface Architecture:</strong> A single WireGuard interface (<code>wg0</code>) can manage hundreds of peers simultaneously using Cryptokey Routing, saving system resources. Multi-interface configurations are reserved for environments requiring isolated firewall zones.</p>
+        <p><strong>Dynamic Endpoint Resolution Limits:</strong> Native <code>wg-quick</code> resolves DNS domain names only once when an interface initializes. Operating multi-site meshes across dynamic public IPs requires explicit PersistentKeepalive settings combined with dynamic endpoint update scripts or control-plane agents.</p>
+        <p><strong>Dynamic Routing Integration:</strong> Combining WireGuard overlay tunnels with dynamic routing protocols like BGP (via FRRouting) enables automatic route discovery, failover, and multi-path routing across complex topologies.</p>
+        <p><strong>Decoupling Data and Control Planes:</strong> To eliminate manual configuration drift, modern enterprise architectures <a href="/blog/managed-vs-self-hosted-wireguard-vpn-2026/">separate the data plane (kernel-level WireGuard) from the control plane</a> (automated key distribution and IP allocation).</p>
+      </div>
+
         <p class="lede-p">
           WireGuard has redefined point-to-point network encryption by delivering lightweight, kernel-space performance with a minimal cryptographic footprint. However, when enterprise infrastructure expands beyond a single static site-to-site link, administrators face a severe operational challenge: managing multiple WireGuard tunnels and building a scalable full-mesh topology. Because standard WireGuard relies on static configuration files (<code>wg0.conf</code>) containing hardcoded public keys, IP endpoints, and allowed IP subnets, manual mesh maintenance quickly degenerates into operational chaos.
         </p>
@@ -65,15 +73,6 @@ const faqs = [
           This comprehensive engineering guide addresses the challenges of scaling WireGuard overlays. It covers the architectural patterns, routing mechanisms, automation toolchains, and control-plane strategies required to manage multiple WireGuard tunnels and build robust, high-performance mesh networks.
         </p>
       
-
-      <div class="tldr-box">
-        <h3>⚡ TL;DR Key Takeaways</h3>
-        <p><strong>The N(N-1)/2 Scaling Challenge:</strong> Building a full-mesh topology manually scales exponentially. Network architects must choose between single-interface multi-peer setups, multi-interface point-to-point links, or automated control-plane orchestration platforms.</p>
-        <p><strong>Single-Interface vs Multi-Interface Architecture:</strong> A single WireGuard interface (<code>wg0</code>) can manage hundreds of peers simultaneously using Cryptokey Routing, saving system resources. Multi-interface configurations are reserved for environments requiring isolated firewall zones.</p>
-        <p><strong>Dynamic Endpoint Resolution Limits:</strong> Native <code>wg-quick</code> resolves DNS domain names only once when an interface initializes. Operating multi-site meshes across dynamic public IPs requires explicit PersistentKeepalive settings combined with dynamic endpoint update scripts or control-plane agents.</p>
-        <p><strong>Dynamic Routing Integration:</strong> Combining WireGuard overlay tunnels with dynamic routing protocols like BGP (via FRRouting) enables automatic route discovery, failover, and multi-path routing across complex topologies.</p>
-        <p><strong>Decoupling Data and Control Planes:</strong> To eliminate manual configuration drift, modern enterprise architectures <a href="/blog/managed-vs-self-hosted-wireguard-vpn-2026/">separate the data plane (kernel-level WireGuard) from the control plane</a> (automated key distribution and IP allocation).</p>
-      </div>
 
       
         <h2>1. Problem Statement: The Scaling Nightmare of Static WireGuard Configurations</h2>

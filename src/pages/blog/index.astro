@@ -104,11 +104,28 @@ const fmtDate = (iso: string) => {
 const title = "Blog — MeshWG";
 const description = "Founder-written notes on branch networking, WireGuard, mesh VPN, and connecting the routers you already own.";
 
-// Partition logic for 3-column layout
+// Sidebars - Stubs for visual layout density matching the reference
+const founderSpecialPosts = [
+  { title: "Stop Buying SD-WAN Appliances in 2026", slug: "#" },
+  { title: "Why Legacy IPsec VPNs Are Killing Your Remote Team", slug: "#" },
+  { title: "Zero-Trust is a Network Architecture, Not a Software Tool", slug: "#" },
+  { title: "The Hidden Costs of Cloud Provider VPN Gateways", slug: "#" },
+  { title: "Hardware vs Software VPNs: The 2026 Debate", slug: "#" },
+  { title: "Why the Modern Enterprise is Moving to WireGuard", slug: "#" },
+];
+
+const aiSpecialPosts = [
+  { title: "How AI is Automating Mesh VPN Routing in 2026", slug: "#" },
+  { title: "Self-Healing Mesh Networks: The Future of Cloud AI", slug: "#" },
+  { title: "Using ChatGPT to Write WireGuard Configs: A Warning", slug: "#" },
+  { title: "Machine Learning vs BGP: The Next Era of Traffic Routing", slug: "#" },
+  { title: "AI Won't Replace Network Engineers - But It Will Change Routing", slug: "#" },
+  { title: "The Rise of AI-Driven Zero Trust Security", slug: "#" },
+];
+
+// Partition logic for center column layout
 const featuredPost = posts[0];
-const gridPosts = posts.slice(1, 5);
-const leftSidebarPosts = posts.slice(5, 7);
-const rightSidebarPosts = posts.slice(7, 9);
+const gridPosts = posts.slice(1, 7); // Show the next 6 posts in the grid
 ---
 
 <Base title={title} description={description}>
@@ -119,11 +136,11 @@ const rightSidebarPosts = posts.slice(7, 9);
       
       <!-- LEFT SIDEBAR -->
       <aside class="mag-sidebar mag-left">
-        <div class="mag-pill pill-orange">STRATEGY SPECIAL</div>
+        <div class="mag-pill pill-orange">FOUNDER SPECIAL</div>
         <ul class="mag-list">
-          {leftSidebarPosts.map((p) => (
+          {founderSpecialPosts.map((p) => (
             <li>
-              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+              <a href={p.slug !== '#' ? `/blog/${p.slug}/` : '#'} class="mag-list-link">{p.title}</a>
             </li>
           ))}
         </ul>
@@ -176,11 +193,11 @@ const rightSidebarPosts = posts.slice(7, 9);
 
       <!-- RIGHT SIDEBAR -->
       <aside class="mag-sidebar mag-right">
-        <div class="mag-pill pill-purple">ENGINEERING SPECIAL</div>
+        <div class="mag-pill pill-purple">AI SPECIAL</div>
         <ul class="mag-list">
-          {rightSidebarPosts.map((p) => (
+          {aiSpecialPosts.map((p) => (
             <li>
-              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+              <a href={p.slug !== '#' ? `/blog/${p.slug}/` : '#'} class="mag-list-link">{p.title}</a>
             </li>
           ))}
         </ul>

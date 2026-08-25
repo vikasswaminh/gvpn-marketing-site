@@ -255,15 +255,14 @@ const faqs = [
   .faq h2 { margin-bottom: 32px; max-width: 760px; }
   .faq-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 48px;
-    align-items: start;
+    grid-template-columns: 1fr;
+    gap: 0;
   }
   details {
     border-top: 1px solid var(--border);
     padding: 20px 0;
   }
-  .faq-grid details:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .faq-grid details:last-child { border-bottom: 1px solid var(--border); }
   summary {
     cursor: pointer;
     list-style: none;
@@ -320,8 +319,6 @@ const faqs = [
     .addendum { padding: 16px 0 64px; }
     .addendum-grid { grid-template-columns: 1fr; gap: 32px; }
     .faq-grid { grid-template-columns: 1fr; gap: 0; }
-    .faq-grid details:nth-last-child(-n+2) { border-bottom: 0; }
-    .faq-grid details:last-child { border-bottom: 1px solid var(--border); }
     .addendum-block h2 { font-size: 22px; }
     .addendum-block { margin-bottom: 32px; padding: 32px; }
     .cta-strip { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 24px; }

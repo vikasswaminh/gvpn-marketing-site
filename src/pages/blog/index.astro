@@ -314,7 +314,7 @@ const rightSidebarPosts = posts.slice(7, 9);
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    min-height: 340px;
+    min-height: 260px; /* Reduced from 340px to match the shorter proportion */
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
   }
   .feat-img {
@@ -331,11 +331,11 @@ const rightSidebarPosts = posts.slice(7, 9);
     background-color: var(--bg-3);
   }
   .feat-content {
-    padding: 32px;
+    padding: 24px 28px; /* Tightened padding to reduce overall height */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 16px;
+    gap: 12px; /* Tightened gap */
   }
   .feat-t {
     font-family: var(--font-serif);
@@ -349,10 +349,10 @@ const rightSidebarPosts = posts.slice(7, 9);
   .feat-d {
     color: var(--text-2);
     font-size: 14.5px;
-    line-height: 1.6;
+    line-height: 1.5; /* Tightened line height slightly */
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2; /* Reduced to 2 lines to match the screenshot */
     -webkit-box-orient: vertical;
     overflow: hidden;
   }

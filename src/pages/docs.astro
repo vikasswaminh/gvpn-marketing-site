@@ -233,7 +233,7 @@ const description = "How MeshWG actually works: the architecture promises we mak
   /* Architecture claims */
   .claims {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 16px;
     margin-top: 32px;
   }
@@ -248,9 +248,6 @@ const description = "How MeshWG actually works: the architecture promises we mak
     border-color: var(--accent);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.04);
-  }
-  .claim:nth-child(-n+2) {
-    grid-column: 1 / -1;
   }
   .claim h3 {
     font-size: 15px;

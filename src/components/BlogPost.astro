@@ -91,10 +91,14 @@ const {
 
 <script>
   // Dynamically generate the TOC based on the actual blog content
-  document.addEventListener('DOMContentLoaded', () => {
+  // Use astro:page-load instead of DOMContentLoaded because of ViewTransitions
+  document.addEventListener('astro:page-load', () => {
     const content = document.querySelector('.post-content');
     const tocList = document.getElementById('toc-list');
     if (!content || !tocList) return;
+    
+    // Clear TOC to prevent duplicates on soft navigations
+    tocList.innerHTML = '';
     
     // Also include the TLDR box title if present
     const headings = content.querySelectorAll('h2, .tldr-box h3');
@@ -156,7 +160,13 @@ const {
       });
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // Clean up previous scroll listeners to avoid memory leaks on navigation
+    if (window._tocScrollHandler) {
+      window.removeEventListener('scroll', window._tocScrollHandler);
+    }
+    window._tocScrollHandler = onScroll;
+    
+    window.addEventListener('scroll', window._tocScrollHandler, { passive: true });
     // Trigger once on load
     onScroll();
   });

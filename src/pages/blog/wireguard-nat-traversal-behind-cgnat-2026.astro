@@ -1,0 +1,117 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import BlogPost   from "../../components/BlogPost.astro";
+import Footer     from "../../components/Footer.astro";
+import { site }   from "../../site";
+
+const slug          = "wireguard-nat-traversal-behind-cgnat-2026";
+const url           = `https://meshwg.com/blog/${slug}`;
+const title         = "WireGuard NAT Traversal: How VPN Peers Connect Behind CGNAT and Firewalls (2026)";
+const description   = "A practical guide to how WireGuard tunnels negotiate connectivity through Carrier‑Grade NAT, stateful firewalls and double‑NAT environments using keep‑alives, endpoint roaming and optional relay servers.";
+const datePublished = "2026-08-25";
+const dateModified  = "2026-08-25";
+
+const faqs = [
+  {
+    q: "Why does WireGuard need PersistentKeepalive behind NAT?",
+    a: "Because stateful firewalls and CGNAT devices drop UDP state after a short idle period. PersistentKeepalive sends a tiny authenticated packet every N seconds to keep the translation entry alive."
+  },
+  {
+    q: "Can WireGuard work without a control‑plane orchestrator?",
+    a: "It can, but only when at least one endpoint has a static public IP or both are behind NAT types that allow hole‑punching. In double‑NAT or symmetric NAT scenarios a control‑plane or relay is required."
+  }
+];
+---
+
+<Base title={title} description={description}>
+  <Nav />
+
+  <BlogPost
+    title={title}
+    description={description}
+    category="engineering guide"
+    datePublished={datePublished}
+    dateModified={dateModified}
+    readMinutes={18}
+    author="MeshWG editorial team"
+    authorRole="Network Architecture"
+  >
+    <div class="bp-intro">
+      <div class="tldr-box">
+        <h3>TL;DR</h3>
+        <ul>
+          <li><strong>PersistentKeepalive is mandatory behind any stateful NAT or CGNAT.</strong> It keeps UDP translation entries alive by sending a 32‑byte authenticated packet every 25 seconds (15 seconds on aggressive mobile networks).</li>
+          <li><strong>Endpoint Roaming updates peer endpoints automatically.</strong> WireGuard kernels adjust the stored remote address as soon as a valid packet arrives, enabling seamless Wi‑Fi ↔ cellular handovers.</li>
+          <li><strong>Symmetric NATs require an external relay.</strong> When both peers sit behind symmetric NAT or double‑NAT, a TURN‑style relay (DERP) or a MeshWG control‑plane must forward traffic.</li>
+          <li><strong>MTU clamping prevents fragmentation.</strong> Reduce the interface MTU to 1420 bytes (1380 bytes on mobile) and enable TCP‑MSS clamping on gateways.</li>
+        </ul>
+      </div>
+
+      <h2>1. Executive Summary</h2>
+      <p>
+        WireGuard’s minimal kernel implementation provides blazing‑fast encryption but intentionally omits heavy NAT‑traversal protocols. In real‑world deployments, especially behind Carrier‑Grade NAT (CGNAT) or enterprise firewalls, engineers must combine WireGuard’s built‑in primitives – PersistentKeepalive, Cryptokey Endpoint Roaming, and an out‑of‑band control plane – to achieve reliable connectivity.
+      </p>
+
+      <h2>2. Problem Statement</h2>
+      <p>
+        Modern ISPs allocate private IPv4 space (100.64.0.0/10) to millions of customers using CGNAT. Stateful firewalls and CGNAT devices create temporary UDP translation entries that expire after a short idle interval (20 s‑300 s). When a WireGuard peer resides behind such a device, inbound packets are dropped unless a keep‑alive keeps the state alive. Additionally, symmetric NATs allocate a unique external port per destination, breaking direct hole‑punching.
+      </p>
+
+      <h2>3. Core Mechanics</h2>
+      <ul>
+        <li><strong>PersistentKeepalive:</strong> A configurable interval (default 0 = disabled). Setting it to 25 seconds forces the kernel to emit empty authenticated packets, keeping NAT state alive.</li>
+        <li><strong>Cryptokey Endpoint Roaming:</strong> The kernel updates the stored peer endpoint whenever a valid packet is received from a new address, allowing seamless IP changes without renegotiation.</li>
+        <li><strong>Relay (DERP) Fallback:</strong> When direct UDP hole‑punching fails, the control‑plane routes traffic through an encrypted relay server that both peers can reach.</li>
+      </ul>
+
+      <h2>4. Architecture Diagram</h2>
+      <p>
+        <img src="/nat_traversal_diagram.png" alt="WireGuard NAT Traversal Diagram" style="max-width:100%; height:auto; border-radius:8px;" />
+      </p>
+
+      <h2>5. Configuration Primer</h2>
+      <pre><code>[Interface]
+Address = 10.200.0.1/24
+ListenPort = 51820
+PrivateKey = &lt;private_key&gt;
+
+[Peer]
+PublicKey = &lt;peer_public_key&gt;
+Endpoint = 203.0.113.45:51820
+AllowedIPs = 10.200.0.2/32
+PersistentKeepalive = 25
+</code></pre>
+      <p>
+        The <code>Endpoint</code> can be a placeholder (e.g., the last known address). WireGuard will replace it automatically after the first successful packet.
+      </p>
+
+      <h2>6. Deployment Steps</h2>
+      <ol>
+        <li>Enable <code>PersistentKeepalive = 25</code> on all peers.</li>
+        <li>Set the interface MTU to 1420 bytes (1380 bytes on mobile) to avoid fragmentation.</li>
+        <li>Deploy a lightweight relay (DERP) for environments where both ends are behind symmetric NAT.</li>
+        <li>Integrate a control‑plane (MeshWG) that periodically publishes each node’s latest public endpoint to the others.</li>
+        <li>Validate connectivity with <code>wg show</code> and monitor NAT state tables on firewalls.</li>
+      </ol>
+
+      <h2>7. Troubleshooting Checklist</h2>
+      <ul>
+        <li>Verify that <code>PersistentKeepalive</code> is non‑zero on both sides.</li>
+        <li>Inspect firewall logs for UDP state expirations.</li>
+        <li>Confirm MTU settings on both peers and any intermediate routers.</li>
+        <li>If direct traffic fails, enable a DERP relay and re‑test.</li>
+      </ul>
+
+      <h2>8. Frequently Asked Questions</h2>
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </BlogPost>
+
+  <Footer />
+</Base>

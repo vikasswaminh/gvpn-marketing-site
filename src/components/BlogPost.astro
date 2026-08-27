@@ -267,7 +267,7 @@ const {
   /* Body Grid */
   .post-body-grid {
     display: grid;
-    grid-template-columns: 280px minmax(0, 840px);
+    grid-template-columns: 280px minmax(0, 1fr);
     gap: 32px;
     align-items: start;
   }
@@ -319,8 +319,8 @@ const {
     background: transparent;
     max-width: 100%;
     min-width: 0;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
+    word-break: normal;
   }
   .post-content h2 {
     font-family: var(--font-sans);
@@ -364,7 +364,7 @@ const {
     background: rgba(0, 0, 0, 0.02);
   }
   
-  .pink-link, .post-content a, .post-block a:not(.toc-link) {
+  .pink-link, .post-content a:not(.btn), .post-block a:not(.toc-link):not(.btn) {
     color: #D946EF;
     text-decoration: underline;
     text-decoration-thickness: 1px;
@@ -372,7 +372,7 @@ const {
     font-weight: 600;
     transition: color 0.2s ease;
   }
-  .pink-link:hover, .post-content a:hover, .post-block a:not(.toc-link):hover {
+  .pink-link:hover, .post-content a:not(.btn):hover, .post-block a:not(.toc-link):not(.btn):hover {
     color: #C026D3;
   }
 
@@ -432,6 +432,8 @@ const {
     padding: 20px 24px;
     border-radius: var(--radius-md);
     overflow-x: auto;
+    max-width: 100%;
+    min-width: 0;
     font-family: var(--font-mono);
     font-size: 13px;
     line-height: 1.6;

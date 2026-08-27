@@ -85,11 +85,11 @@ const meshNodes = [
               </linearGradient>
             </defs>
             <!-- Static connection backbone (5 spokes hub→node) -->
-            <line class="mesh-line" x1="250" y1="250" x2="250" y2="90"/>
-            <line class="mesh-line" x1="250" y1="250" x2="402" y2="174"/>
-            <line class="mesh-line" x1="250" y1="250" x2="346" y2="402"/>
-            <line class="mesh-line" x1="250" y1="250" x2="154" y2="402"/>
-            <line class="mesh-line" x1="250" y1="250" x2="98" y2="174"/>
+            <line class="mesh-line" data-line-id="0" x1="250" y1="250" x2="250" y2="90"/>
+            <line class="mesh-line" data-line-id="1" x1="250" y1="250" x2="402" y2="174"/>
+            <line class="mesh-line" data-line-id="2" x1="250" y1="250" x2="346" y2="402"/>
+            <line class="mesh-line" data-line-id="3" x1="250" y1="250" x2="154" y2="402"/>
+            <line class="mesh-line" data-line-id="4" x1="250" y1="250" x2="98" y2="174"/>
             <!-- Animated dashed flow paths (3 spokes carry traffic on different timings) -->
             <line class="mesh-flow a" x1="250" y1="250" x2="250" y2="90"/>
             <line class="mesh-flow b" x1="250" y1="250" x2="346" y2="402"/>
@@ -119,7 +119,7 @@ const meshNodes = [
             ];
             const p = positions[i];
             return (
-              <div class="mesh-node" style={`left:${p.left}; top:${p.top};`}>
+              <div class="mesh-node interactive-node" data-node-id={i} style={`left:${p.left}; top:${p.top};`}>
                 <span class="vtag">{n.tag}</span>
                 <span class="vname">{n.label}</span>
               </div>
@@ -131,15 +131,15 @@ const meshNodes = [
         <div class="mesh-foot">
           <div>
             <div class="lbl">latency</div>
-            <div class="val">12 ms</div>
+            <div class="val" id="hud-latency">12 ms</div>
           </div>
           <div>
             <div class="lbl">networks / tunnels</div>
-            <div class="val">5 / 5</div>
+            <div class="val" id="hud-tunnels">5 / 5</div>
           </div>
           <div>
             <div class="lbl">status</div>
-            <div class="val ok">online</div>
+            <div class="val ok" id="hud-status">online</div>
           </div>
         </div>
 
@@ -406,7 +406,15 @@ const meshNodes = [
     box-shadow: var(--shadow-card);
     transform: translate(-50%, -50%);
     z-index: 3;
+    transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   }
+  .interactive-node { cursor: pointer; }
+  .mesh-node.dimmed { opacity: 0.3; }
+  .mesh-node.active { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 24px var(--accent-glow); z-index: 10; border-color: var(--accent); }
+  
+  .mesh-line { transition: stroke-opacity 0.3s ease, stroke 0.3s ease, stroke-width 0.3s ease; }
+  .mesh-line.dimmed { stroke-opacity: 0.15; }
+  .mesh-line.active { stroke: var(--accent); stroke-opacity: 1; stroke-width: 3; }
   .mesh-node .vtag {
     font: 600 12px/1 var(--font-mono);
     color: var(--text);
@@ -492,3 +500,69 @@ const meshNodes = [
     .hero-meta { gap: 14px 22px; margin-top: 40px; font-size: 10.5px; }
   }
 </style>
+
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+    try {
+      const nodes = document.querySelectorAll('.interactive-node');
+      const lines = document.querySelectorAll('.mesh-line');
+      const hudLatency = document.getElementById('hud-latency');
+      const hudStatus = document.getElementById('hud-status');
+      
+      let hoverTimeout;
+      
+      nodes.forEach(node => {
+        node.addEventListener('mouseenter', () => {
+          const id = node.getAttribute('data-node-id');
+          
+          // Dim all nodes and lines
+          nodes.forEach(n => n.classList.add('dimmed'));
+          lines.forEach(l => l.classList.add('dimmed'));
+          
+          // Highlight current node and line
+          node.classList.remove('dimmed');
+          node.classList.add('active');
+          const activeLine = document.querySelector(`.mesh-line[data-line-id="${id}"]`);
+          if (activeLine) {
+            activeLine.classList.remove('dimmed');
+            activeLine.classList.add('active');
+          }
+          
+          // Update HUD
+          hudLatency.innerText = (Math.floor(Math.random() * 4) + 1) + ' ms';
+          hudStatus.innerText = 'active handshake';
+          hudStatus.style.color = 'var(--accent)';
+        });
+        
+        node.addEventListener('mouseleave', () => {
+          const id = node.getAttribute('data-node-id');
+          
+          // Remove active state
+          node.classList.remove('active');
+          const activeLine = document.querySelector(`.mesh-line[data-line-id="${id}"]`);
+          if (activeLine) {
+            activeLine.classList.remove('active');
+          }
+          
+          // Reset all after a small delay to avoid flicker
+          clearTimeout(hoverTimeout);
+          hoverTimeout = setTimeout(() => {
+            nodes.forEach(n => n.classList.remove('dimmed'));
+            lines.forEach(l => l.classList.remove('dimmed'));
+            
+            // Reset HUD
+            hudLatency.innerText = '12 ms';
+            hudStatus.innerText = 'online';
+            hudStatus.style.color = 'var(--ok)';
+          }, 150);
+        });
+
+        // Click to pulse
+        node.addEventListener('click', () => {
+          node.style.transform = 'translate(-50%, -50%) scale(0.9)';
+          setTimeout(() => { node.style.transform = ''; }, 150);
+        });
+      });
+    } catch(e) {}
+  });
+</script>

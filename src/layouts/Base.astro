@@ -66,13 +66,12 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
 
-  <!-- Fonts: Lato + Geist Mono.
-       Lato for everything (body + display + UI); Geist Mono for code,
-       eyebrows, and any tabular data where proportional rendering breaks
-       alignment. -->
+  <!-- Fonts: Inter + Montserrat + Geist Mono.
+       Inter for body text; Montserrat for headings; Geist Mono for code,
+       eyebrows, and tabular data. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 

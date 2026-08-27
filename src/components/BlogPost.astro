@@ -194,8 +194,8 @@ const {
   }
   .meta-dot { opacity: 0.5; }
   .post-h1 {
-    font-family: var(--font-sans);
-    font-size: clamp(32px, 5vw, 56px);
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 48px);
     font-weight: 800;
     color: var(--text);
     line-height: 1.1;
@@ -323,10 +323,17 @@ const {
     word-break: normal;
   }
   .post-content h2 {
-    font-family: var(--font-sans);
-    font-size: 28px;
+    font-family: var(--font-display);
+    font-size: 32px;
     font-weight: 700;
-    margin: 48px 0 24px;
+    margin: 48px 0 16px;
+    color: var(--text);
+  }
+  .post-content h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 32px 0 8px;
     color: var(--text);
   }
   .post-content p, .post-content li {

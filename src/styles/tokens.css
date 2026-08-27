@@ -350,7 +350,7 @@ em, i, cite, dfn, address, var { font-style: normal; }
   will-change: transform, box-shadow;
 }
 .hover-card:hover {
-  transform: translateY(-4px) translateZ(0);
+  transform: translateY(-4px) scale(1.04) translateZ(0);
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
   border-color: var(--border-strong);
 }

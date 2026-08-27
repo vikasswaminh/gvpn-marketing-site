@@ -192,7 +192,7 @@ Address = &lt;Overlay_IP&gt;/24
 ListenPort = 51820
 PrivateKey = &lt;Local_Private_Key&gt;
 # PostUp hooks auto-clamp TCP MSS and add nftables forward rules
-PostUp = nft add table inet wg_filter; nft add chain inet wg_filter forward \{ type filter hook forward priority 0 \; policy accept \; \}; nft add rule inet wg_filter forward iifname "wg0" oifname "eth1" accept; nft add rule inet wg_filter forward iifname "eth1" oifname "wg0" accept; iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtud
+PostUp = nft add table inet wg_filter; nft add chain inet wg_filter forward &#123; type filter hook forward priority 0 ; policy accept ; &#125;; nft add rule inet wg_filter forward iifname "wg0" oifname "eth1" accept; nft add rule inet wg_filter forward iifname "eth1" oifname "wg0" accept; iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtud
 PostDown = nft delete table inet wg_filter; iptables -t mangle -D FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtud</code></pre>
 
   <h2 id="examples">9. Examples</h2>

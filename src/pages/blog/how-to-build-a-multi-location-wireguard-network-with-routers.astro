@@ -25,7 +25,18 @@ const dateModified  = "2026-08-27";
     authorRole="Network Architecture"
   >
 
-  <div class="intro">
+  <div class="bp-intro">
+    <div class="tldr-box">
+      <h3 id="tl-dr">⚡ TL;DR</h3>
+      <ul>
+        <li><strong>Kernel-Level Efficiency:</strong> WireGuard runs directly in kernel space, eliminating expensive user-to-kernel context switches common in OpenVPN, delivering line-rate speed and low CPU utilization on low-power edge routers.</li>
+        <li><strong>Cryptokey Routing Engine:</strong> WireGuard routes packets strictly based on an internal mapping of public keys to allowed IP addresses, combining authentication, encryption, and routing table enforcement into a single atomic operation.</li>
+        <li><strong>Topology Trade-offs:</strong> Traditional hub-and-spoke WireGuard topologies introduce latency penalties and single points of failure. Full-mesh topologies deliver optimal peer-to-peer latency but scale quadratically in operational complexity unless automated.</li>
+        <li><strong>The MTU Sizing Imperative:</strong> WireGuard adds a 60-byte encapsulation header. TCP MSS clamping is mandatory to prevent packet drop issues caused by path MTU discovery failures.</li>
+        <li><strong>MeshWG Automated Orchestration:</strong> Manually managing N-to-N peer relationships across dozens of routers requires hand-crafting configuration files. MeshWG automates key distribution, dynamic NAT traversal, endpoint discovery, and subnet routing state management across distributed edge gateways.</li>
+        <li><strong>Dynamic Routing Synergy:</strong> For large enterprise multi-site overlays, coupling WireGuard with dynamic routing daemons like FRRouting running Border Gateway Protocol over overlay interfaces eliminates static route maintenance and enables automated link failover.</li>
+      </ul>
+    </div>
     <p class="lede-p">
       Connecting geographically distributed office locations, data centers, edge computing sites, and cloud environments into a unified private network has traditionally required complex, heavy-overhead Virtual Private Network protocol suites like IPsec or OpenVPN. While IPsec offers standard enterprise adoption and OpenVPN provides flexible user-space tunneling, both introduce significant operational friction, computational overhead, complex state machines, and high maintenance costs when scaled across multi-location router deployments.
     </p>
@@ -37,17 +48,6 @@ const dateModified  = "2026-08-27";
     </p>
   </div>
 
-  <div class="tldr-box">
-    <h3>Key Takeaways</h3>
-    <ul>
-      <li><strong>Kernel-Level Efficiency:</strong> WireGuard runs directly in kernel space, eliminating expensive user-to-kernel context switches common in OpenVPN, delivering line-rate speed and low CPU utilization on low-power edge routers.</li>
-      <li><strong>Cryptokey Routing Engine:</strong> WireGuard routes packets strictly based on an internal mapping of public keys to allowed IP addresses, combining authentication, encryption, and routing table enforcement into a single atomic operation.</li>
-      <li><strong>Topology Trade-offs:</strong> Traditional hub-and-spoke WireGuard topologies introduce latency penalties and single points of failure. Full-mesh topologies deliver optimal peer-to-peer latency but scale quadratically in operational complexity unless automated.</li>
-      <li><strong>The MTU Sizing Imperative:</strong> WireGuard adds a 60-byte encapsulation header. TCP MSS clamping is mandatory to prevent packet drop issues caused by path MTU discovery failures.</li>
-      <li><strong>MeshWG Automated Orchestration:</strong> Manually managing N-to-N peer relationships across dozens of routers requires hand-crafting configuration files. MeshWG automates key distribution, dynamic NAT traversal, endpoint discovery, and subnet routing state management across distributed edge gateways.</li>
-      <li><strong>Dynamic Routing Synergy:</strong> For large enterprise multi-site overlays, coupling WireGuard with dynamic routing daemons like FRRouting running Border Gateway Protocol over overlay interfaces eliminates static route maintenance and enables automated link failover.</li>
-    </ul>
-  </div>
 
   <h2 id="problem-statement">1. Problem statement</h2>
   <p>

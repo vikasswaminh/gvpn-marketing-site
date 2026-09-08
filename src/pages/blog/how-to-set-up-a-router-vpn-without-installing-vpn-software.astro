@@ -152,7 +152,7 @@ ip route add default dev wg0 table 200
 
 # Tag LAN traffic for VPN routing
 nft add table inet vpn_routing
-nft add chain inet vpn_routing prerouting { type filter hook prerouting priority -150\; }
+nft add chain inet vpn_routing prerouting &#123; type filter hook prerouting priority -150\; &#125;
 nft add rule inet vpn_routing prerouting iifname "br-lan" ip saddr 192.168.1.0/24 mark set 0x1
 
 # Apply policy routing rule

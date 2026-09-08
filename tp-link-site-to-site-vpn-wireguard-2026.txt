@@ -112,7 +112,7 @@ const compareRows = [
 ];
 ---
 
-<Base title={title} description={description} canonical={Astro.url.href}>
+<Base title={title} description={description} canonical={url}>
   <Nav />
 
     <BlogPost
@@ -137,7 +137,7 @@ const compareRows = [
           nodes on a cloud-managed mesh, using the WireGuard support already in
           your firmware. A 20-branch deployment runs around ₹7,000 per month
           against the ₹30 lakhs of hardware plus ₹30,000 per month of licensing
-          a traditional <a href="https://blogs.meshwg.com/mesh-vpn-vs-ipsec-vs-sdwan-2026/" class="pink-link">SD-WAN</a> setup costs for the same job. Pilot it on two
+          a traditional SDWAN setup costs for the same job. Pilot it on two
           machines free, forever — no credit card, no trial countdown, no
           card required to test on real branches before the third machine
           turns the meter on. Setup is under two minutes per branch. Below
@@ -727,11 +727,12 @@ const compareRows = [
     "author": {
       "@type": "Person",
       "name": "MeshWG Editorial Team",
-      "url": "https://meshwg.com/about",
+      "url": "https://meshwg.com/about"
     },
     "publisher": {
-      "@type": "Person",
-      "name": "MeshWG Editorial Team",
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
       "url": "https://meshwg.com",
       "logo": { "@type": "ImageObject", "url": "https://meshwg.com/favicon.svg" },
     },
@@ -777,5 +778,3 @@ const compareRows = [
 
   <Footer />
 </Base>
-
-

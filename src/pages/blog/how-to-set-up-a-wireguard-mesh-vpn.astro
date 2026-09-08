@@ -1,0 +1,174 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import BlogPost   from "../../components/BlogPost.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title         = "How to Set Up a WireGuard Mesh VPN (Full Guide)";
+const description   = "A comprehensive guide on setting up a WireGuard mesh VPN. Compare manual configurations vs automated cloud control planes for scalable networks.";
+const datePublished = "2026-09-04";
+const dateModified  = "2026-09-04";
+---
+
+<Base title={title + " · MeshWG Blog"} description={description} canonical={Astro.url.href}>
+  <Nav />
+
+  <BlogPost
+    title={title}
+    description={description}
+    category="ENGINEERING GUIDE"
+    datePublished={datePublished}
+    dateModified={dateModified}
+    readMinutes={25}
+    author="MeshWG editorial team"
+    authorRole="Network Architecture"
+  >
+    <div class="tldr-box">
+      <h3>TL;DR</h3>
+      <ul>
+        <li><strong>Two Approaches:</strong> You can configure a WireGuard mesh manually (editing config files on each device) or use an automated control plane (MeshWG) that handles key distribution, NAT traversal, and routing automatically.</li>
+        <li><strong>Manual Works for Small Deployments:</strong> Two or three sites with static IPs and experienced engineers can self-manage. Beyond that, manual configuration becomes an operational liability.</li>
+        <li><strong>Automated Scales Properly:</strong> A cloud control plane eliminates the quadratic configuration growth problem, handles CGNAT natively, and reduces each new site to a two-minute onboarding step.</li>
+        <li><strong>Router-Native Deployment:</strong> Both approaches run on native WireGuard in router firmware — OpenWrt, MikroTik RouterOS, TP-Link Omada, OPNsense. No agents, no new hardware required.</li>
+      </ul>
+    </div>
+
+    <p class="lede-p">
+      A WireGuard mesh VPN connects multiple locations — branch offices, cloud servers, remote workers — into a single encrypted private network where every node can reach every other node directly, without routing traffic through a central hub. This guide covers both how to set one up manually and how automated platforms like MeshWG make the approach practical at scale.
+    </p>
+
+    <h2 id="what-is-wireguard-mesh">What is a WireGuard mesh VPN?</h2>
+    <p>A standard WireGuard deployment is point-to-point: Site A connects to Site B through a single tunnel. A mesh VPN extends this to N sites, where every site connects directly to every other site. This gives you:</p>
+    <ul>
+      <li><strong>Lower latency:</strong> Traffic between Site A and Site C travels directly, not via Site B as a relay.</li>
+      <li><strong>Higher throughput:</strong> No hub bottleneck. Each path uses its own independent tunnel.</li>
+      <li><strong>Better resilience:</strong> If one site loses connectivity, traffic can route around it. No single point of failure.</li>
+      <li><strong>Simpler routing:</strong> Every site has a complete view of the network. No hub-and-spoke routing tables to maintain.</li>
+    </ul>
+    <p>The challenge is configuration complexity. In a hub-and-spoke model, you configure N+1 tunnels (one per site, plus the hub). In a full mesh of N sites, you need N(N-1)/2 tunnels. At 10 sites, that is 45 tunnels. At 20 sites, 190. Manual configuration at that scale is not viable — which is why automated control planes exist.</p>
+
+    <h2 id="prerequisites">Prerequisites</h2>
+    <p>Before setting up a WireGuard mesh, you need:</p>
+    <ul>
+      <li><strong>WireGuard-capable devices at each site.</strong> In 2026, this includes most modern routers: OpenWrt devices, MikroTik RouterOS 7+, TP-Link Omada (firmware 5.9+), Ubiquiti EdgeRouter, OPNsense, and Linux servers.</li>
+      <li><strong>Root or administrator access to each device.</strong> WireGuard configuration requires kernel-level access.</li>
+      <li><strong>A plan for IP addressing.</strong> You need a private IP range for the mesh overlay. Common choices are <code>10.0.0.0/8</code> blocks, <code>172.16.0.0/12</code> ranges, or the CGNAT space <code>100.64.0.0/10</code>.</li>
+      <li><strong>Understanding of which subnets each site will advertise.</strong> Each site's local network (e.g., <code>192.168.1.0/24</code>) needs to be reachable through the mesh.</li>
+    </ul>
+
+    <h2 id="manual-setup">Method 1: Manual WireGuard mesh configuration</h2>
+    <p>Manual configuration is educational and appropriate for small, stable deployments. Here is the process for a three-site mesh.</p>
+
+    <h3>Step 1: Generate keypairs on each device</h3>
+    <p>On each device, run:</p>
+    <pre><code>wg genkey | tee private.key | wg pubkey > public.key
+cat private.key   # keep this secret, never share
+cat public.key    # this is safe to share</code></pre>
+    <p>Store the private key securely. You will need each site's public key to configure the others.</p>
+
+    <h3>Step 2: Assign overlay IPs</h3>
+    <p>Assign each site a unique IP in your overlay range:</p>
+    <ul>
+      <li>Site A: <code>10.100.0.1/24</code></li>
+      <li>Site B: <code>10.100.0.2/24</code></li>
+      <li>Site C: <code>10.100.0.3/24</code></li>
+    </ul>
+
+    <h3>Step 3: Write the configuration files</h3>
+    <p>On Site A's router (<code>/etc/wireguard/wg0.conf</code>):</p>
+    <pre><code>[Interface]
+Address = 10.100.0.1/24
+ListenPort = 51820
+PrivateKey = SITE_A_PRIVATE_KEY
+
+[Peer]
+PublicKey = SITE_B_PUBLIC_KEY
+Endpoint = SITE_B_PUBLIC_IP:51820
+AllowedIPs = 10.100.0.2/32, 192.168.2.0/24
+PersistentKeepalive = 25
+
+[Peer]
+PublicKey = SITE_C_PUBLIC_KEY
+Endpoint = SITE_C_PUBLIC_IP:51820
+AllowedIPs = 10.100.0.3/32, 192.168.3.0/24
+PersistentKeepalive = 25</code></pre>
+    <p>Repeat for Sites B and C, substituting each site's private key and listing the other two sites as peers. Then bring the interface up:</p>
+    <pre><code>wg-quick up wg0
+systemctl enable wg-quick@wg0</code></pre>
+
+    <h3>Limitations of manual configuration</h3>
+    <p>Manual configuration works for three sites with static IPs. It breaks down when:</p>
+    <ul>
+      <li>Any site is behind CGNAT (no public IP to put in the Endpoint field)</li>
+      <li>Any site uses a dynamic IP (the Endpoint becomes stale after every DHCP renewal)</li>
+      <li>You need to add a fourth site (requires editing config files on all three existing sites)</li>
+      <li>You need to rotate keys (requires coordinated update across all peers)</li>
+      <li>A site goes offline and you need to revoke its access (requires editing all peer configs)</li>
+    </ul>
+
+    <h2 id="automated-setup">Method 2: Automated mesh with MeshWG</h2>
+    <p>MeshWG replaces manual configuration with a cloud control plane that handles key distribution, endpoint discovery, NAT traversal, and routing automatically. The setup process is fundamentally different: instead of writing config files, you enroll each device with the control plane, and the control plane generates and distributes the correct configuration to each device.</p>
+
+    <h3>Step 1: Create a MeshWG account</h3>
+    <p>Sign up at <a href="https://meshwg.com">meshwg.com</a>. The first two machines are free forever — no credit card required. This is enough to test the full mesh functionality between two sites before committing to a broader deployment.</p>
+
+    <h3>Step 2: Create a network</h3>
+    <p>In the MeshWG dashboard, create a new network. Give it a name (e.g., "Branch Offices") and select an overlay IP range. MeshWG will assign IPs to each enrolled device from this range automatically.</p>
+
+    <h3>Step 3: Enroll each device</h3>
+    <p>For each device, MeshWG generates an enrollment command — a single command that, when run on the device, generates a local keypair, registers the public key with the control plane, and configures the WireGuard interface. For an OpenWrt router, the command looks like:</p>
+    <pre><code>curl -sSL https://meshwg.com/enroll | sh -s -- --token YOUR_ENROLLMENT_TOKEN</code></pre>
+    <p>For MikroTik RouterOS, the enrollment is done through the RouterOS API — paste the configuration block generated by the dashboard into a RouterOS terminal.</p>
+    <p>For TP-Link Omada routers, enroll through the Omada Controller integration in the MeshWG dashboard.</p>
+
+    <h3>Step 4: Verify connectivity</h3>
+    <p>Once enrolled, devices appear in the MeshWG dashboard with their overlay IPs, connection status, and last-seen timestamps. You can verify connectivity with a simple ping:</p>
+    <pre><code>ping 10.100.0.2   # from Site A to Site B's overlay IP</code></pre>
+    <p>If the ping succeeds, the WireGuard session is up and traffic is flowing directly between the two sites, encrypted end-to-end.</p>
+
+    <h3>Step 5: Advertise local subnets</h3>
+    <p>To make each site's local network reachable through the mesh, configure subnet routing in the MeshWG dashboard. Specify which local subnet each site should advertise (e.g., Site A advertises <code>192.168.1.0/24</code>). MeshWG automatically updates the AllowedIPs configuration on all other enrolled devices to include the new route.</p>
+
+    <h2 id="cgnat">Handling CGNAT and dynamic IPs</h2>
+    <p>The most common deployment challenge is CGNAT. Most small-business internet connections in 2026 use carrier-grade NAT — the ISP assigns the customer a private IP within a shared NAT pool, and there is no way to receive inbound connections directly.</p>
+    <p>Manual WireGuard cannot handle this without an intermediate relay server. MeshWG handles it natively:</p>
+    <ol>
+      <li>Each device dials outbound to the MeshWG control plane. Because it is outbound, CGNAT allows it through.</li>
+      <li>The control plane records the device's reflexive public endpoint — the IP and port the connection appears to come from.</li>
+      <li>The control plane shares this reflexive endpoint with other devices in the network.</li>
+      <li>Both devices attempt simultaneous WireGuard handshakes, triggering UDP hole-punching through the NAT.</li>
+      <li>In most cases, the direct peer-to-peer connection succeeds. When it does not (symmetric NAT on both sides), MeshWG falls back to an encrypted relay.</li>
+    </ol>
+
+    <h2 id="performance">Performance considerations</h2>
+    <p>WireGuard performance on router hardware in 2026 is excellent across the supported platforms:</p>
+    <ul>
+      <li><strong>MikroTik hAP ax3:</strong> ~600 Mbps WireGuard throughput with hardware offloading enabled</li>
+      <li><strong>TP-Link ER7206:</strong> ~300 Mbps WireGuard throughput</li>
+      <li><strong>OpenWrt on MediaTek MT7981B:</strong> ~800 Mbps with kernel crypto acceleration</li>
+      <li><strong>OPNsense on 2-core x86:</strong> ~1 Gbps with AES-NI</li>
+    </ul>
+    <p>For most SMB deployments, the WAN link bandwidth is the bottleneck, not the WireGuard encryption. A 100 Mbps fibre connection will be saturated long before the router's WireGuard throughput limit is reached.</p>
+
+    <h2 id="troubleshooting">Troubleshooting common issues</h2>
+
+    <h3>Peers show as connected but traffic does not flow</h3>
+    <p>This usually indicates a routing issue. Verify that the AllowedIPs on each peer includes all the subnets you expect to reach, and that the local routing table on each device has a route for the mesh overlay range pointing to the WireGuard interface.</p>
+
+    <h3>Handshake never succeeds</h3>
+    <p>Check that UDP port 51820 (or your configured WireGuard port) is not blocked by a firewall between the two endpoints. Also verify that the public key in each peer's configuration matches the actual private key on the target device — a mismatch will cause the handshake to silently fail.</p>
+
+    <h3>Connection drops periodically</h3>
+    <p>This is almost always a NAT mapping expiry. Add <code>PersistentKeepalive = 25</code> to each peer configuration that sits behind NAT. The keepalive sends a small UDP packet every 25 seconds to keep the NAT mapping active.</p>
+
+    <aside class="cta-strip">
+      <p>
+        Want to skip the manual configuration?
+        <a class="cta-link" href="https://meshwg.com/signup">Try MeshWG free →</a>
+        Two machines included forever — connect your first two sites in under five minutes.
+      </p>
+    </aside>
+  </BlogPost>
+
+  <Footer />
+</Base>

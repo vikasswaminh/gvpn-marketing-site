@@ -1,0 +1,118 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import BlogPost   from "../../components/BlogPost.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title         = "Cloud WireGuard VPN: How to Connect Cloud Servers and Branch Networks with MeshWG";
+const description   = "Deep dive into how a cloud-managed WireGuard VPN works. Learn about control planes, peer-to-peer encryption, and zero-trust mesh architecture.";
+const datePublished = "2026-08-31";
+const dateModified  = "2026-08-31";
+---
+
+<Base title={title + " · MeshWG Blog"} description={description} canonical={Astro.url.href}>
+  <Nav />
+
+  <BlogPost
+    title={title}
+    description={description}
+    category="STRATEGY & ARCHITECTURE"
+    datePublished={datePublished}
+    dateModified={dateModified}
+    readMinutes={30}
+    author="MeshWG editorial team"
+    authorRole="Network Architecture"
+  >
+    <div class="tldr-box">
+      <h3>TL;DR</h3>
+      <ul>
+        <li><strong>Cloud-Managed WireGuard:</strong> MeshWG uses a cloud control plane to automate key exchange, peer discovery, and NAT traversal — turning WireGuard from a manual protocol into a managed service.</li>
+        <li><strong>Peer-to-Peer by Default:</strong> Traffic between your cloud servers and branch offices flows directly, encrypted peer-to-peer. The MeshWG control plane coordinates connections but does not carry your data.</li>
+        <li><strong>Zero-Trust Architecture:</strong> Every device is cryptographically authenticated. There is no implicit trust by network location — a compromised branch router cannot see traffic it is not authorised to decrypt.</li>
+        <li><strong>Works Behind CGNAT:</strong> Cloud VMs typically have public IPs; branches typically sit behind CGNAT. MeshWG handles the asymmetry natively — branches dial outbound, and the control plane coordinates the handshake.</li>
+      </ul>
+    </div>
+
+    <p class="lede-p">
+      Cloud WireGuard VPN is the pattern of connecting cloud infrastructure — AWS VPCs, Azure VNets, DigitalOcean Droplets, bare-metal servers — into the same encrypted private network as your branch offices, using WireGuard as the tunnel protocol and a cloud control plane to automate the orchestration. This guide explains how the architecture works, why it is technically superior to traditional VPN approaches for hybrid cloud connectivity, and how MeshWG implements it in production.
+    </p>
+
+    <h2 id="the-problem">The problem: connecting cloud and branch</h2>
+    <p>Most businesses running cloud infrastructure eventually face the same connectivity problem: their applications live in the cloud, but their users, printers, servers, and data are distributed across physical branch offices. Getting those two worlds to communicate securely, reliably, and without exposing sensitive systems to the public internet is the core challenge of hybrid cloud networking.</p>
+    <p>Traditional approaches each carry significant trade-offs:</p>
+    <ul>
+      <li><strong>Site-to-Site IPsec VPNs</strong> require static public IPs on both ends, complex IKE policy alignment, and manual configuration updates whenever endpoints change. They work for hub-and-spoke topologies but break down for full mesh connectivity across many sites.</li>
+      <li><strong>Cloud provider VPN gateways</strong> (AWS VGW, Azure VPN Gateway) are expensive at scale, support limited throughput without premium tiers, and are tightly coupled to a single provider's ecosystem.</li>
+      <li><strong>SD-WAN appliances</strong> solve the connectivity problem but require proprietary hardware at every site, multi-week procurement cycles, and specialist operations teams.</li>
+      <li><strong>SSH tunnels and bastion hosts</strong> are operationally fragile, not designed for production traffic at scale, and create single points of failure.</li>
+    </ul>
+    <p>Cloud WireGuard VPN with a mesh control plane solves all of these by using open, standard cryptography running on infrastructure the business already operates — the cloud VMs it is already paying for and the routers it already has at each branch.</p>
+
+    <h2 id="how-cloud-wireguard-works">How cloud WireGuard VPN works</h2>
+    <p>The architecture has three components:</p>
+
+    <h3>Cloud nodes</h3>
+    <p>A cloud node is any virtual machine or container that runs WireGuard. This includes your application servers, database instances, internal tooling VMs, and CI/CD runners. Each cloud VM generates a WireGuard keypair and enrolls with the MeshWG control plane. The VM receives a mesh overlay IP address (for example, <code>100.64.0.1</code>) and a peer list from the control plane.</p>
+    <p>Cloud VMs typically have stable public IP addresses assigned by the cloud provider. This makes them excellent "anchor points" in the mesh — branches can dial to a cloud VM's public IP directly, without needing the control plane to broker every connection.</p>
+
+    <h3>Branch nodes</h3>
+    <p>A branch node is a router at a physical location. It runs WireGuard natively in its firmware (OpenWrt, MikroTik, TP-Link Omada, Ubiquiti, OPNsense). The router enrolls with the control plane by dialing outbound — this works even from behind CGNAT, which is the default for most small-business internet connections.</p>
+    <p>Once enrolled, the branch router receives its peer list, including the public keys and endpoints of all cloud VMs and other branch offices it is authorised to reach. WireGuard sessions are established directly between the branch router and the cloud VMs — the control plane is not in the data path.</p>
+
+    <h3>The control plane</h3>
+    <p>The MeshWG control plane is a cloud service that handles all the orchestration work that would otherwise require manual intervention:</p>
+    <ul>
+      <li>Key registration and distribution — collecting public keys from enrolled nodes and distributing them to authorised peers</li>
+      <li>Endpoint discovery — tracking each node's current public IP and port so peers can find each other</li>
+      <li>NAT traversal coordination — brokering simultaneous UDP hole-punching when both endpoints sit behind NAT</li>
+      <li>Policy enforcement — determining which nodes can talk to which other nodes, enforced by selectively omitting peers from each node's configuration</li>
+      <li>Key rotation — automatically rotating Curve25519 keypairs on a configurable schedule without dropping active sessions</li>
+    </ul>
+
+    <h2 id="routing-architecture">Routing architecture</h2>
+    <p>When a branch office connects to a cloud VPC via MeshWG, there are two routing concerns: the overlay routing (which overlay IPs reach which WireGuard peers) and the underlay routing (which real subnets are reachable through which peers).</p>
+
+    <h3>Overlay routing</h3>
+    <p>Every enrolled node receives a unique overlay IP address in the mesh's private address space (typically a <code>100.64.0.0/10</code> or RFC 1918 block). Overlay IPs are stable — they do not change when a node's WAN IP changes. This stability is what makes overlay IPs useful as stable identifiers for services.</p>
+
+    <h3>Subnet routing</h3>
+    <p>Real subnets — your cloud VPC's <code>10.0.1.0/24</code>, or your branch's <code>192.168.1.0/24</code> — are advertised through AllowedIPs. A cloud VM acting as a gateway for a VPC subnet advertises that subnet to the mesh. Branch routers that receive this advertisement add a route via the WireGuard interface for that subnet. Traffic destined for VPC resources flows through the WireGuard tunnel without requiring any changes to the application servers themselves.</p>
+
+    <h2 id="cloud-providers">Cloud provider integration patterns</h2>
+
+    <h3>AWS</h3>
+    <p>On AWS, the typical pattern is to run a WireGuard-enrolled EC2 instance in each VPC where connectivity is needed. The instance is assigned an Elastic IP for stability and acts as a gateway for the VPC subnet. A route is added to the VPC route table directing mesh-destined traffic to the WireGuard instance. Security groups allow inbound UDP on WireGuard's port (51820 by default) from the mesh's relay IP ranges.</p>
+    <p>For high availability, a pair of WireGuard instances can be placed in different availability zones with an AWS Network Load Balancer in front. The NLB provides a stable endpoint IP while routing to whichever instance is healthy.</p>
+
+    <h3>Azure</h3>
+    <p>On Azure, WireGuard instances run as Virtual Machines in the VNet. A User-Defined Route (UDR) in the VNet's route table directs mesh traffic to the WireGuard VM's private IP. The Network Security Group allows inbound UDP on the WireGuard port. For spoke VNets, VNet peering connects the WireGuard-enrolled VNet to other VNets, allowing a single gateway VM to serve as the mesh attachment point for multiple VNets.</p>
+
+    <h3>DigitalOcean and bare-metal providers</h3>
+    <p>On smaller cloud providers and bare-metal providers, the pattern is simpler: a Droplet or VM runs WireGuard and enrolls with the control plane. Because these instances typically have stable public IPs, the NAT traversal complexity that affects branch offices does not apply. The instance acts directly as a mesh peer, and other nodes connect to it by its public IP.</p>
+
+    <h2 id="security-model">Security model</h2>
+    <p>Cloud WireGuard VPN with MeshWG provides several security properties that traditional VPN approaches do not:</p>
+
+    <h3>Cryptographic peer authentication</h3>
+    <p>Every WireGuard peer is identified by its Curve25519 public key. There is no concept of "trust by subnet" — a device cannot impersonate another device by spoofing its IP address, because every packet must be verifiably encrypted with the sender's private key. A compromised branch router can only decrypt traffic that was specifically addressed to it.</p>
+
+    <h3>Perfect forward secrecy</h3>
+    <p>WireGuard performs an ephemeral ECDH handshake every 180 seconds, generating new session keys. Even if a device's long-term private key were compromised, past traffic encrypted under previous session keys cannot be decrypted. This property — perfect forward secrecy — is automatically provided by WireGuard's Noise protocol implementation.</p>
+
+    <h3>Zero implicit trust</h3>
+    <p>The MeshWG policy system determines which nodes can communicate with which other nodes. A branch office that should only reach the internal ERP system does not receive the public key of the customer database — and therefore cannot establish a WireGuard session with it, regardless of what routes are configured. Policy is enforced at the cryptographic layer, not just the network layer.</p>
+
+    <h3>India-resident control plane</h3>
+    <p>For organisations operating in India, MeshWG runs its control plane in India-resident infrastructure, with INR billing through Razorpay. Cryptographic key material and network topology metadata remain within Indian jurisdiction, aligning with DPDP requirements and reducing the compliance surface area for regulated sectors.</p>
+
+    <aside class="cta-strip">
+      <p>
+        Ready to connect your cloud infrastructure and branch offices?
+        <a class="cta-link" href="https://meshwg.com/signup">Start for free →</a>
+        Two machines included forever, no card required.
+      </p>
+    </aside>
+  </BlogPost>
+
+  <Footer />
+</Base>

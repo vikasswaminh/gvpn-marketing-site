@@ -76,7 +76,7 @@ const compareRows = [
 ];
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} canonical={Astro.url.href}>
   <Nav />
 
     <BlogPost
@@ -250,7 +250,7 @@ const compareRows = [
         </p>
         <p>
           The
-          <a href="/blog/sd-wan-alternatives-2026/">SD-WAN alternatives 2026 buyer's guide</a>
+          <a href="https://blogs.meshwg.com/sd-wan-alternatives-2026/"><a href="https://blogs.meshwg.com/mesh-vpn-vs-ipsec-vs-sdwan-2026/" class="pink-link">SD-WAN</a> alternatives 2026 buyer's guide</a>
           covers seven specific products inside approach A and B with
           pricing, fit profiles, and a six-axis decision matrix. For
           this playbook, assume approach A: cloud-managed mesh on
@@ -650,10 +650,10 @@ const compareRows = [
         </ul>
         <p>
           The
-          <a href="/blog/wireguard-site-to-site-vpn-how-it-works-2026/">how WireGuard site-to-site works</a>
+          <a href="https://blogs.meshwg.com/wireguard-site-to-site-vpn-how-it-works-2026/">how WireGuard site-to-site works</a>
           companion post covers the protocol-level mechanics for the
           site-to-site case in depth. The
-          <a href="/blog/sd-wan-alternatives-2026/">SD-WAN alternatives buyer's guide</a>
+          <a href="https://blogs.meshwg.com/sd-wan-alternatives-2026/">SD-WAN alternatives buyer's guide</a>
           covers product-level comparisons across all three categories.
         </p>
       
@@ -703,15 +703,13 @@ const compareRows = [
     "datePublished": datePublished,
     "dateModified": dateModified,
     "author": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
+      "@type": "Person",
+      "name": "MeshWG Editorial Team",
       "url": "https://meshwg.com/about",
     },
     "publisher": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
+      "@type": "Person",
+      "name": "MeshWG Editorial Team",
       "url": "https://meshwg.com",
       "logo": { "@type": "ImageObject", "url": "https://meshwg.com/favicon.svg" },
     },

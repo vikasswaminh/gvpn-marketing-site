@@ -1,0 +1,111 @@
+---
+import Base       from "../../layouts/Base.astro";
+import Nav        from "../../components/Nav.astro";
+import BlogPost   from "../../components/BlogPost.astro";
+import Footer     from "../../components/Footer.astro";
+
+const title         = "Agentless WireGuard Mesh VPN on Existing Routers";
+const description   = "Deploy a WireGuard mesh VPN directly on existing TP-Link, MikroTik, or Ubiquiti routers without installing agents. Fast, CGNAT-native networking.";
+const datePublished = "2026-09-04";
+const dateModified  = "2026-09-04";
+---
+
+<Base title={title + " · MeshWG Blog"} description={description} canonical={Astro.url.href}>
+  <Nav />
+
+  <BlogPost
+    title={title}
+    description={description}
+    category="ENGINEERING GUIDE"
+    datePublished={datePublished}
+    dateModified={dateModified}
+    readMinutes={28}
+    author="MeshWG editorial team"
+    authorRole="Network Architecture"
+  >
+    <div class="tldr-box">
+      <h3>TL;DR</h3>
+      <ul>
+        <li><strong>No Agent Needed:</strong> Modern WireGuard mesh VPNs run directly on the routers most businesses already own, using native WireGuard support. The router is the endpoint.</li>
+        <li><strong>Cloud Control Plane:</strong> The coordination problem — who to trust, where to send traffic, how to rotate keys — is handled by a cloud control plane. Each branch dials outbound to the coordination service, receives its peer list and keys, and then talks peer-to-peer over encrypted tunnels.</li>
+        <li><strong>Fast Deployment:</strong> A 20-site deployment comes online in under two minutes per site, on hardware that was already in the building, with no new appliance and no licensing line.</li>
+        <li><strong>Purpose Built:</strong> This model suits 5-to-50-branch businesses with mixed router fleets and generalist IT teams. It replaces the hand-edited <code>wg0.conf</code> with automated coordination.</li>
+      </ul>
+    </div>
+
+    <p class="lede-p">
+      A field engineer's guide to turning the routers you already own — TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense — into a cloud-coordinated WireGuard mesh, with no agent to install, no firmware to flash, and no specialist to schedule.
+    </p>
+
+    <h2 id="why-agentless-matters">Why "without an agent" matters now</h2>
+    <p>Every multi-branch business has a version of the same conversation. The IT generalist — the person who also handles the email, the ERP, the Wi-Fi passwords, and the printer that keeps jamming — is asked to connect five, ten, or forty locations into one private network. The options they are handed all seem to require something they do not have: a dedicated appliance, a specialist installer, or a fleet of software agents to manage.</p>
+    <p>The agentless WireGuard mesh removes the last of those three. It does not ask the business to install anything on the routers, because the routers already speak the protocol. It does not ask for a specialist, because the coordination layer does the work a specialist would otherwise do. And it does not ask for new hardware, because the existing router fleet is the hardware.</p>
+    <p>The result is a private network that comes online at the pace the business moves, not the pace the network team can schedule. A retail chain opening a seasonal store, a clinic group adding a neighbourhood practice, a distributor reshuffling a godown footprint — each of these becomes a two-minute step rather than a procurement project. That is the operational reality the agentless model was built for.</p>
+
+    <h2 id="what-changed">What changed between 2018 and 2026</h2>
+    <p>Understanding why agentless mesh is possible now requires understanding what was not possible before. Three things shifted between the SD-WAN era and today, and each one made the current model viable.</p>
+    <p><strong>WireGuard entered the kernel.</strong> WireGuard was merged into the Linux kernel in 2020, and from there it proliferated into the router firmware most businesses already run. OpenWrt, MikroTik RouterOS, TP-Link, Ubiquiti, OPNsense — the major firmware families all ship native WireGuard support today. That single fact is the foundation of the agentless model: the tunnel technology is already on the device, maintained by the firmware vendor, updated with the firmware. There is nothing for the business to install.</p>
+    <p><strong>Fibre broadband became the default.</strong> Consumer and small-business fibre is now affordable and reliable across the markets where multi-branch SMBs operate. The old argument for dedicated appliances — that broadband could not carry production traffic without intelligent path selection — has weakened as the underlying transport improved.</p>
+    <p><strong>Carrier-grade NAT became the norm.</strong> CGNAT is now the default on consumer and small-business connections. The agentless mesh is designed around exactly that constraint — every branch dials outbound, so CGNAT stops being a problem and becomes the expected condition.</p>
+
+    <h2 id="what-agentless-means">What "agentless WireGuard mesh" actually means</h2>
+    <p>An <strong>agent-based mesh</strong> installs a software client on each device. The client handles the tunnel, the key management, the policy enforcement, and the reporting. This is the model used by most zero-trust access platforms for laptops and workstations — the agent is the endpoint.</p>
+    <p>An <strong>agentless mesh</strong>, in the sense this guide uses the term, installs nothing on the router. The router's native WireGuard implementation is the endpoint. What the mesh platform provides is the coordination layer — the service that tells each router which peers to trust, what keys to use, and where to send traffic. The router does the encryption and forwarding; the platform does the orchestration.</p>
+    <p>This distinction matters for three reasons:</p>
+    <ol>
+      <li><strong>It removes the software lifecycle problem.</strong> An agent is software you must deploy, update, patch, and troubleshoot across a fleet. A router's WireGuard support is part of the firmware — it updates with the firmware, and it is maintained by the firmware vendor.</li>
+      <li><strong>It removes the endpoint coverage problem.</strong> An agent only protects devices you install it on. A router-based mesh protects the entire network behind that router — every server, every POS terminal, every camera, every workstation — without touching any of them.</li>
+      <li><strong>It changes who can operate the network.</strong> Agent-based mesh often still requires someone to install and manage the client fleet. Agentless mesh moves that work to the control plane, which a generalist IT team can operate.</li>
+    </ol>
+
+    <h2 id="architecture">Architecture: the control plane and the data plane</h2>
+    <p>Every mesh VPN, agentless or not, separates two planes of operation.</p>
+    <p><strong>The data plane</strong> is the encrypted traffic path between branches. In an agentless WireGuard mesh, the data plane runs entirely on the routers. Branch A encrypts traffic with WireGuard and sends it directly to Branch B over UDP. The mesh platform is not in this path — it does not see the traffic, it does not relay it (except in fallback cases), and it does not add latency. The data plane is peer-to-peer.</p>
+    <p><strong>The control plane</strong> is the coordination service. It holds the state that makes the data plane possible: which routers belong to the organisation, what their public keys are, what their current public endpoints are, and what policy applies to each. When a branch comes online, it dials outbound to the control plane, authenticates, and receives its peer list and configuration.</p>
+    <p>The critical design decision in an agentless mesh is that the control plane is out-of-band from the data plane. Traffic between branches never touches the coordination service. This is what keeps the mesh fast and what keeps the platform from becoming a bottleneck or a single point of failure for throughput.</p>
+
+    <h2 id="how-mesh-forms">Internal working: how the mesh forms</h2>
+    <p><strong>Step 1 — The router dials out.</strong> The router, running its native WireGuard client, initiates an outbound connection to the control plane's coordination endpoint. This is a single UDP connection. Because it is outbound, it works from behind CGNAT, behind a dynamic IP, behind a firewall that blocks inbound — none of that matters.</p>
+    <p><strong>Step 2 — Authentication.</strong> The router authenticates to the control plane. In WireGuard terms, this is a cryptographic handshake using the router's private key and the control plane's public key.</p>
+    <p><strong>Step 3 — Configuration delivery.</strong> The control plane sends the router its peer list: the public keys of every other branch it should talk to, plus their current public endpoints.</p>
+    <p><strong>Step 4 — Peer discovery.</strong> The router now knows who it should talk to and where they are. It attempts a WireGuard handshake with each peer.</p>
+    <p><strong>Step 5 — Persistent keepalive.</strong> Once the tunnel is up, the router sends periodic keepalives to keep the NAT mapping alive.</p>
+    <p><strong>Step 6 — Continuous reconciliation.</strong> The control plane keeps watching. If a branch's IP changes, if a key is rotated, if a peer is revoked, the control plane pushes the update and the mesh reconverges automatically.</p>
+
+    <h2 id="supported-hardware">Supported router platforms in 2026</h2>
+    <p>The agentless model works on any router that ships native WireGuard support in its firmware. In 2026, that covers the vast majority of the SMB router market:</p>
+
+    <h3>MikroTik RouterOS 7</h3>
+    <p>RouterOS 7 ships native WireGuard support as a first-class interface type. Configuration is done through the RouterOS API, the web interface, or Winbox. MikroTik hardware runs this natively with no additional packages. The agentless mesh configures the WireGuard interface, peer list, and routing rules through the RouterOS API, making MikroTik the most flexible platform for mesh deployments.</p>
+
+    <h3>OpenWrt</h3>
+    <p>OpenWrt includes WireGuard as a standard package (<code>wireguard-tools</code> and <code>kmod-wireguard</code>). Configuration is done through UCI (Unified Configuration Interface) or the LuCI web interface. The agentless mesh interacts with OpenWrt through the UCI system, writing configuration directly to the <code>/etc/config/network</code> file.</p>
+
+    <h3>TP-Link Omada</h3>
+    <p>TP-Link's Omada Business routers (ER605, ER7206, ER8411) added WireGuard support in Omada Controller firmware 5.9. Configuration is through the Omada Controller API or direct router admin interface. The agentless mesh connects via the Omada API to push WireGuard peer configurations.</p>
+
+    <h3>Ubiquiti EdgeRouter and UniFi</h3>
+    <p>EdgeRouter runs EdgeOS, a fork of VyOS that includes WireGuard support through a package. UniFi Network Application added WireGuard VPN support in version 7.4. Both platforms are supported through their respective APIs.</p>
+
+    <h3>OPNsense</h3>
+    <p>OPNsense ships native WireGuard support as part of the base install. Configuration is through the OPNsense REST API or the web interface. The agentless mesh uses the REST API to push WireGuard tunnel and peer configurations.</p>
+
+    <h2 id="what-it-is-not-built-for">What this model is not built for</h2>
+    <p>The agentless router mesh is purpose-built for site-to-site connectivity. It is the right model when the branch is the unit of connectivity — when the goal is connecting locations, not individual devices. It is not the right model for:</p>
+    <ul>
+      <li><strong>Remote worker access.</strong> A roaming laptop needs an agent-based solution — something that follows the user across networks. The router mesh secures the site; a zero-trust access client secures the person.</li>
+      <li><strong>Packet-level WAN optimisation.</strong> If the deployment genuinely needs application-aware QoS, MPLS-aware path selection, or carrier-managed SLAs, an SD-WAN platform with dedicated appliances is the right tool.</li>
+      <li><strong>Environments without WireGuard-capable routers.</strong> If the site uses very old hardware that does not support WireGuard natively, the agentless model does not apply.</li>
+    </ul>
+
+    <aside class="cta-strip">
+      <p>
+        Ready to turn your existing routers into a mesh network?
+        <a class="cta-link" href="https://meshwg.com/signup">Start free →</a>
+        Two machines included forever, no card required.
+      </p>
+    </aside>
+  </BlogPost>
+
+  <Footer />
+</Base>

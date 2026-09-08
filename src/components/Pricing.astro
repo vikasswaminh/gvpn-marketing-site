@@ -4,7 +4,7 @@ import { site } from "../site";
 const plans = [
   {
     key: "free",
-    name: "Free",
+    name: "FREE",
     price: "₹0",
     unit: "forever",
     description: "Start meshing today. Free for as long as you stay small.",
@@ -21,9 +21,9 @@ const plans = [
   },
   {
     key: "cloud",
-    name: "Cloud",
+    name: "CLOUD",
     price: "₹349",
-    unit: "/ machine / month, billed annually",
+    unit: "/ machine / month",
     sub: "or ₹499 / machine / month, billed monthly",
     description: "For growing meshes. Same hosted product, no machine limit.",
     bullets: [
@@ -39,7 +39,7 @@ const plans = [
   },
   {
     key: "pro",
-    name: "Pro",
+    name: "PRO",
     price: "Custom",
     unit: "talk to us",
     description: "Bigger fleets, dedicated infrastructure, custom needs.",
@@ -59,34 +59,36 @@ const plans = [
 
 <section id="pricing">
   <div class="wrap">
-    <div class="sec-eyebrow" data-reveal>/ pricing</div>
-    <h2 class="sec-h" data-reveal data-reveal-delay="100">Simple pricing. Per machine. No surprises.</h2>
+    <div class="sec-eyebrow" data-reveal>/ PRICING</div>
+    <h2 class="sec-h" data-reveal data-reveal-delay="100">
+      Simple pricing. <span class="blue">Per machine.</span> No surprises.
+    </h2>
     <p class="sec-lede" data-reveal data-reveal-delay="200">
       A "machine" is anything in your mesh — a router, a laptop, a phone,
-      or a server. Two free forever; <span class="mono-inline">₹349/each</span>
-      after that on annual billing.
+      or a server. Two free forever; ₹349 each after that on annual billing.
     </p>
 
     <div class="price-grid">
       {plans.map((p, i) => (
-        <article class={`plan hover-card${p.accent ? " plan-accent" : ""}`} data-tilt data-reveal data-reveal-delay={100 + (i * 100)}>
+        <article class={`plan${p.accent ? " plan-accent" : ""}`} data-tilt data-reveal data-reveal-delay={100 + (i * 100)}>
+          {p.accent && <div class="badge">MOST POPULAR</div>}
+          
           <header>
             <div class="plan-name">{p.name}</div>
             <div class="plan-price">
               <span class="num">{p.price}</span>
-              <span class="unit">{p.unit}</span>
             </div>
+            {p.unit && <div class="plan-unit">{p.unit}</div>}
             {p.sub && <div class="plan-sub">{p.sub}</div>}
           </header>
 
           <p class="plan-desc">{p.description}</p>
 
+          <div class="plan-divider"></div>
+
           <ul class="plan-list">
             {p.bullets.map((b) => (
-              <li>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-                {b}
-              </li>
+              <li>{b}</li>
             ))}
           </ul>
 
@@ -102,8 +104,7 @@ const plans = [
     </div>
 
     <p class="price-foot">
-      <strong>No credit card to start.</strong> Two machines stay free as long
-      as you want — add a third only when you're ready to grow.
+      <strong>No credit card to start.</strong> Two machines stay free as long as you want — add a third only when you're ready to grow.
     </p>
 
     <div class="price-detail-link">
@@ -113,147 +114,198 @@ const plans = [
 </section>
 
 <style>
-  #pricing { padding: 40px 0 32px; }
+  #pricing { padding: 32px 0 16px; }
   #pricing .sec-h, #pricing .sec-lede {
     text-wrap: unset;
     max-width: none;
   }
-
-  .mono-inline {
-    font-family: var(--font-mono);
-    font-size: .95em;
-    color: var(--text);
+  #pricing .blue {
+    color: #2563EB;
   }
 
   .price-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 24px;
     margin-top: 64px;
   }
 
   .plan {
-    background: linear-gradient(180deg, rgba(0,0,0,0.04), var(--surface) 60%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 32px 28px;
-    display: flex; flex-direction: column;
-    gap: 20px;
-    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.05);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .plan:hover { border-color: var(--border-strong); }
-  .plan-accent {
-    border-color: var(--accent);
-    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 60%);
-    box-shadow: 0 0 0 2px var(--accent), 0 16px 32px -8px rgba(0, 102, 255, 0.15);
-    z-index: 2;
+    background: #ffffff;
+    border: 2px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex; 
+    flex-direction: column;
     position: relative;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
   }
-  .plan-accent::before {
-    content: "Most popular";
-    display: inline-block;
-    font-family: var(--font-mono);
+  
+  .plan-accent {
+    border-color: #2563EB;
+    background: #EFF6FF;
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+  }
+  
+  .badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2563EB;
+    color: #ffffff;
+    font-family: var(--font-display);
     font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--accent);
-    margin-bottom: -8px;
+    letter-spacing: 0.1em;
+    padding: 4px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
   }
 
   .plan-name {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     color: var(--text-3);
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
 
   .plan-price {
-    display: flex; align-items: baseline; gap: 10px;
-    flex-wrap: wrap;
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    margin-bottom: 4px;
   }
+  
   .plan-price .num {
-    font-family: var(--font-serif);
-    font-size: 56px;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 700;
     line-height: 1;
-    letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
     color: var(--text);
   }
-  .plan-accent .plan-price .num { color: var(--accent); font-style: normal; }
-  .plan-price .unit {
-    font-size: 12.5px;
-    color: var(--text-3);
-    line-height: 1.4;
+  
+  .plan-accent .plan-price .num {
+    color: #2563EB;
   }
+
+  .plan-unit {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 4px;
+  }
+
   .plan-sub {
-    margin-top: 4px;
-    font-size: 12px;
-    color: var(--text-4);
-    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  
+  /* For Cloud plan, keep unit on same line roughly if possible, but the design puts it below or beside. 
+     We'll adjust to keep it close to the num */
+  .plan-accent .plan-unit, .plan-accent .plan-sub {
+    color: #64748B;
+  }
+  .plan-accent .plan-price {
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .plan-accent .plan-unit {
+    display: inline;
+    margin-left: 8px;
   }
 
   .plan-desc {
     color: var(--text-2);
-    font-size: 13.5px;
-    line-height: 1.55;
-    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 16px 0 0;
+  }
+
+  .plan-divider {
+    height: 1px;
+    background: #E2E8F0;
+    margin: 16px 0;
+  }
+  .plan-accent .plan-divider {
+    background: #DBEAFE;
   }
 
   .plan-list {
     list-style: none;
-    padding: 0; margin: 0;
-    display: flex; flex-direction: column; gap: 10px;
+    padding: 0; 
+    margin: 0;
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px;
     flex: 1;
+    margin-bottom: 24px;
   }
+  
   .plan-list li {
-    display: flex; align-items: flex-start; gap: 8px;
     color: var(--text-2);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.5;
-  }
-  .plan-list :global(svg) {
-    color: var(--ok);
-    flex-shrink: 0;
-    margin-top: 3px;
   }
 
   .plan-cta {
     justify-content: center;
     width: 100%;
-    height: 40px;
+    height: 48px;
+    font-weight: 600;
+  }
+
+  .btn-line {
+    background: #ffffff;
+    border: 2px solid #1a1a1a;
+    color: var(--text);
+  }
+  .btn-line:hover {
+    border-color: #1a1a1a;
+    background: #F8FBFF;
+  }
+  
+  .btn-primary {
+    background: #2563EB;
+    border: none;
+    color: #ffffff;
+  }
+  .btn-primary:hover {
+    background: #1D4ED8;
   }
 
   .price-foot {
-    margin: 40px 0 0;
-    font-size: 13px;
-    color: var(--text-3);
+    margin: 48px 0 0;
+    font-size: 14px;
+    color: var(--text-2);
     text-align: center;
     line-height: 1.6;
   }
-  .price-foot strong { color: var(--text); font-weight: 500; }
+  .price-foot strong { 
+    color: var(--text); 
+    font-weight: 600; 
+  }
 
   .price-detail-link {
-    margin: 24px 0 0;
+    margin: 16px 0 0;
     display: flex;
     justify-content: center;
   }
   
   .accent-link {
-    color: var(--accent);
+    color: #2563EB;
     font-weight: 500;
     font-size: 14px;
-    transition: opacity 0.15s ease;
+    transition: color 0.15s ease;
   }
   .accent-link:hover {
-    opacity: 0.8;
+    color: #1D4ED8;
   }
 
   @media (max-width: 980px) {
-    .price-grid { grid-template-columns: 1fr; gap: 24px; }
-    .plan-accent { transform: none; }
+    .price-grid { grid-template-columns: 1fr; }
   }
 </style>

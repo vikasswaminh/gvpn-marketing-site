@@ -3,114 +3,214 @@ import Base       from "../../layouts/Base.astro";
 import Nav        from "../../components/Nav.astro";
 import BlogPost   from "../../components/BlogPost.astro";
 import Footer     from "../../components/Footer.astro";
-import { site }   from "../../site";
 
-const slug          = "wireguard-nat-traversal-behind-cgnat-2026";
-const url           = `https://meshwg.com/blog/${slug}`;
-const title         = "WireGuard NAT Traversal: How VPN Peers Connect Behind CGNAT and Firewalls (2026)";
-const description   = "A practical guide to how WireGuard tunnels negotiate connectivity through Carrier‑Grade NAT, stateful firewalls and double‑NAT environments using keep‑alives, endpoint roaming and optional relay servers.";
-const datePublished = "2026-08-25";
-const dateModified  = "2026-08-25";
-
-const faqs = [
-  {
-    q: "Why does WireGuard need PersistentKeepalive behind NAT?",
-    a: "Because stateful firewalls and CGNAT devices drop UDP state after a short idle period. PersistentKeepalive sends a tiny authenticated packet every N seconds to keep the translation entry alive."
-  },
-  {
-    q: "Can WireGuard work without a control‑plane orchestrator?",
-    a: "It can, but only when at least one endpoint has a static public IP or both are behind NAT types that allow hole‑punching. In double‑NAT or symmetric NAT scenarios a control‑plane or relay is required."
-  }
-];
+const title         = "WireGuard NAT Traversal: Connecting Peers Behind CGNAT & Firewalls (2026)";
+const description   = "Complete 2026 engineering guide to WireGuard NAT Traversal. Learn UDP hole punching, PersistentKeepalive, CGNAT workarounds, STUN/ICE mechanics, and enterprise relay strategies.";
+const datePublished = "2026-08-21";
+const dateModified  = "2026-08-21";
 ---
 
-<Base title={title} description={description}>
+<Base title={title + " · MeshWG Blog"} description={description} canonical={Astro.url.href}>
   <Nav />
 
   <BlogPost
     title={title}
     description={description}
-    category="engineering guide"
+    category="STRATEGY & ARCHITECTURE"
     datePublished={datePublished}
     dateModified={dateModified}
-    readMinutes={18}
+    readMinutes={26}
     author="MeshWG editorial team"
     authorRole="Network Architecture"
   >
-    <div class="bp-intro">
-      <div class="tldr-box">
-        <h3>TL;DR</h3>
-        <ul>
-          <li><strong>PersistentKeepalive is mandatory behind any stateful NAT or CGNAT.</strong> It keeps UDP translation entries alive by sending a 32‑byte authenticated packet every 25 seconds (15 seconds on aggressive mobile networks).</li>
-          <li><strong>Endpoint Roaming updates peer endpoints automatically.</strong> WireGuard kernels adjust the stored remote address as soon as a valid packet arrives, enabling seamless Wi‑Fi ↔ cellular handovers.</li>
-          <li><strong>Symmetric NATs require an external relay.</strong> When both peers sit behind symmetric NAT or double‑NAT, a TURN‑style relay (DERP) or a MeshWG control‑plane must forward traffic.</li>
-          <li><strong>MTU clamping prevents fragmentation.</strong> Reduce the interface MTU to 1420 bytes (1380 bytes on mobile) and enable TCP‑MSS clamping on gateways.</li>
-        </ul>
-      </div>
-
-      <h2>1. Executive Summary</h2>
-      <p>
-        WireGuard’s minimal kernel implementation provides blazing‑fast encryption but intentionally omits heavy NAT‑traversal protocols. In real‑world deployments, especially behind Carrier‑Grade NAT (CGNAT) or enterprise firewalls, engineers must combine WireGuard’s built‑in primitives – PersistentKeepalive, Cryptokey Endpoint Roaming, and an out‑of‑band control plane – to achieve reliable connectivity.
-      </p>
-
-      <h2>2. Problem Statement</h2>
-      <p>
-        Modern ISPs allocate private IPv4 space (100.64.0.0/10) to millions of customers using CGNAT. Stateful firewalls and CGNAT devices create temporary UDP translation entries that expire after a short idle interval (20 s‑300 s). When a WireGuard peer resides behind such a device, inbound packets are dropped unless a keep‑alive keeps the state alive. Additionally, symmetric NATs allocate a unique external port per destination, breaking direct hole‑punching.
-      </p>
-
-      <h2>3. Core Mechanics</h2>
+    <details class="tldr-box" open>
+      <summary>Key Takeaways (TL;DR)</summary>
       <ul>
-        <li><strong>PersistentKeepalive:</strong> A configurable interval (default 0 = disabled). Setting it to 25 seconds forces the kernel to emit empty authenticated packets, keeping NAT state alive.</li>
-        <li><strong>Cryptokey Endpoint Roaming:</strong> The kernel updates the stored peer endpoint whenever a valid packet is received from a new address, allowing seamless IP changes without renegotiation.</li>
-        <li><strong>Relay (DERP) Fallback:</strong> When direct UDP hole‑punching fails, the control‑plane routes traffic through an encrypted relay server that both peers can reach.</li>
+        <li><strong>Stateful UDP Translation Expirations:</strong> Stateful firewalls and CGNAT routers clear inactive UDP translation table entries after brief idle periods (typically 20 to 60 seconds). Without continuous outbound keepalive traffic, incoming WireGuard frames are dropped at the external perimeter.</li>
+        <li><strong>PersistentKeepalive Is Mandatory Behind NAT:</strong> Setting <code>PersistentKeepalive = 25</code> (or 15 on aggressive 4G/5G mobile carrier networks) forces WireGuard to transmit silent, 32-byte authenticated heartbeat packets, maintaining stateful mapping entries in intermediate firewalls indefinitely.</li>
+        <li><strong>Cryptokey Endpoint Roaming:</strong> WireGuard endpoints dynamically update peer IP and port mappings in system memory upon receiving an authenticated inbound packet. This allows active tunnels to survive dynamic WAN IP updates, Wi-Fi to cellular roaming, and ISP re-leases without session drops.</li>
+        <li><strong>Symmetric NAT Limitations:</strong> Simple UDP hole punching succeeds across Full Cone, Address-Restricted Cone, and Port-Restricted Cone NATs. However, Symmetric NAT allocates a unique external port for every distinct destination IP:port pair, requiring out-of-band coordination or public relay nodes to establish transit.</li>
+        <li><strong>Decoupling Data and Control Planes:</strong> Native kernel WireGuard lacks built-in STUN or relay coordination protocols. Scaling multi-site environments behind double NAT requires an external control plane (such as MeshWG) to dynamically map public endpoints and orchestrate peer handshakes out-of-band.</li>
+        <li><strong>Mandatory Encapsulation Clamping:</strong> Double NAT, cellular GTP encapsulation, and PPPoE headers add variable network overhead. Lowering interface MTU to 1420 (or 1380 over mobile links) and enforcing TCP MSS clamping prevents packet fragmentation black holes.</li>
       </ul>
+    </details>
 
-      <h2>4. Architecture Diagram</h2>
-      <p>
-        <img src="/nat_traversal_diagram.png" alt="WireGuard NAT Traversal Diagram" style="max-width:100%; height:auto; border-radius:8px;" />
-      </p>
+    <h2 id="executive-summary">Executive Summary</h2>
+    <p>As IPv4 address exhaustion has accelerated worldwide, Internet Service Providers (ISPs), cellular operators, and enterprise network teams have overwhelmingly deployed Carrier-Grade NAT (CGNAT, defined in RFC 6598 under <code>100.64.0.0/10</code>). While CGNAT extends the operational lifespan of legacy IPv4 infrastructure, it breaks traditional peer-to-peer (P2P) networking paradigms. When two gateway routers or remote endpoints both reside behind stateful NAT firewalls or double-NAT carrier environments, neither node possesses a publicly reachable IP address.</p>
+    <p>Standard point-to-point VPN protocols fail under CGNAT because neither endpoint can listen for unprompted incoming connection requests from an unroutable network segment. WireGuard addresses this challenge through its lightweight architecture, high-efficiency UDP transport, and dynamic endpoint tracking primitives. However, successfully traversing restrictive enterprise firewalls, symmetric NATs, and carrier-grade barriers requires a deep understanding of UDP hole punching mechanics, stateful mapping timeouts, keepalive intervals, out-of-band discovery engines, and fallback relay architectures.</p>
 
-      <h2>5. Configuration Primer</h2>
-      <pre><code>[Interface]
-Address = 10.200.0.1/24
+    <h2 id="problem-statement">Problem Statement: The Stateful Firewall &amp; CGNAT Barrier</h2>
+    <p>To understand why NAT traversal is critical for modern private networks, engineers must evaluate how stateful firewalls and NAT middleboxes process connection traffic.</p>
+
+    <h3>Stateful Firewall Filtering Logic</h3>
+    <p>A stateful firewall monitors the state of active network connections traversing its interfaces. Unlike TCP—which uses explicit SYN, ACK, and FIN control flags to establish and close connections—UDP is a connectionless protocol.</p>
+    <p>To manage UDP traffic, a stateful firewall creates a temporary translation mapping in its internal State Table whenever an internal host transmits an outbound UDP packet. Internal Host (<code>192.168.1.50:51820</code>) sending to External Destination (<code>203.0.113.10:51820</code>) maps to Public Gateway <code>198.51.100.2:61005</code>.</p>
+    <p>However, if no traffic traverses this socket within the firewall's UDP idle timeout period (which ranges from 20 seconds on mobile networks to 300 seconds on enterprise firewalls), the firewall purges the state table entry. Any subsequent inbound packet from the remote peer is dropped at the external boundary.</p>
+
+    <h3>Carrier-Grade NAT (CGNAT / RFC 6598)</h3>
+    <p>Under CGNAT, local customer premises equipment (CPE) routers do not receive a unique public IPv4 address from their provider. Instead, the ISP assigns an unroutable IPv4 address from the <code>100.64.0.0/10</code> address space.</p>
+    <p>This creates a Double NAT architecture:</p>
+    <ul>
+      <li><strong>First Layer (Local CPE Router):</strong> Translates internal LAN subnets (<code>192.168.1.0/24</code>) to the local WAN interface address (<code>100.64.45.12</code>).</li>
+      <li><strong>Second Layer (Carrier Edge Gateway):</strong> Translates thousands of subscriber addresses (<code>100.64.0.0/10</code>) to a shared pool of public IP addresses.</li>
+    </ul>
+    <p>Because the local customer gateway lacks a dedicated public IP address, it cannot receive unprompted inbound packets from the public internet. If both endpoints in a VPN link reside behind separate CGNAT infrastructure, neither device can initiate a connection to the other using static network configurations alone.</p>
+
+    <h2 id="history">A Brief History of NAT Traversal Protocols</h2>
+    <ul>
+      <li><strong>Manual Port Forwarding and UPnP (Early 2000s):</strong> Early deployments required network administrators to configure static port forwarding rules on edge routers or rely on Universal Plug and Play (UPnP). UPnP allowed software clients to request automatic port mappings from local edge routers. However, UPnP proved insecure, was widely disabled in enterprise environments, and failed completely across upstream CGNAT infrastructure.</li>
+      <li><strong>STUN (Session Traversal Utilities for NAT - RFC 5389):</strong> Introduced a client-server protocol where a node behind NAT transmits a query to a public STUN server. The STUN server reflects back the client's public IP address and external port mapping, allowing the client to discover its public network identity and NAT mapping classification.</li>
+      <li><strong>TURN (Traversal Using Relays around NAT - RFC 5766):</strong> Developed as a fallback mechanism when direct P2P connections failed (such as behind Symmetric NATs). Client data is encapsulated and relayed through an intermediate public server.</li>
+      <li><strong>ICE (Interactive Connectivity Establishment - RFC 8445):</strong> Combined STUN and TURN into a unified framework. Endpoints gather candidate connection paths and systematically test connection paths to select the lowest-latency path available.</li>
+      <li><strong>WireGuard's Native Primitive Shift (2016–2026):</strong> WireGuard chose not to embed heavy STUN, TURN, or ICE protocols into its minimal kernel codebase. Instead, WireGuard relies on lightweight primitives: Cryptokey Endpoint Roaming and PersistentKeepalive. Higher-level orchestration engines (such as MeshWG) handle out-of-band discovery.</li>
+    </ul>
+
+    <h2 id="nat-types">NAT Types and Hole Punching Compatibility</h2>
+    <p>NAT behavior varies based on how edge devices map internal IP:port sockets to external public IP:port sockets:</p>
+
+    <h3>1. Full-Cone NAT (One-to-One NAT)</h3>
+    <p>Once an internal host (<code>192.168.1.50:51820</code>) sends an outbound packet, the NAT router maps it to a fixed public IP:port (<code>203.0.113.10:51820</code>). Any external host on the public internet can send packets to <code>203.0.113.10:51820</code>, and they are forwarded to the internal host.</p>
+    <p><em>Hole Punching Success: 100% (Easiest to traverse).</em></p>
+
+    <h3>2. Address-Restricted Cone NAT</h3>
+    <p>The NAT router maps the internal host's socket to a public IP:port. An external host can send packets to the internal host only if the internal host previously sent a packet to that external host (on any port).</p>
+    <p><em>Hole Punching Success: 100% when using <code>PersistentKeepalive</code>.</em></p>
+
+    <h3>3. Port-Restricted Cone NAT</h3>
+    <p>The NAT router maps the internal host's socket to a public IP:port. An external host can send packets to the internal host only if the internal host previously sent a packet to that exact external IP and port combination.</p>
+    <p><em>Hole Punching Success: 100% when both peers target each other's exact endpoint ports simultaneously.</em></p>
+
+    <h3>4. Symmetric NAT (Enterprise Firewalls &amp; Aggressive CGNAT)</h3>
+    <p>If an internal host sends a packet to Peer A, the NAT router assigns external port 61001. If the same internal host sends a packet to Peer B, the NAT router assigns a different external port (61002). Neither peer can predict the dynamic port assigned to the other.</p>
+    <p><em>Hole Punching Success: Fails for direct P2P between two Symmetric NATs. Requires an intermediate relay node.</em></p>
+
+    <h2 id="cryptokey-roaming">Cryptokey Endpoint Roaming Mechanics</h2>
+    <p>In traditional IPsec, if a client's public IP address changes during an active session, the Security Association (SA) breaks, forcing a multi-second IKE renegotiation. WireGuard handles dynamic IP changes statelessly via <strong>Cryptokey Endpoint Roaming</strong>:</p>
+    <ol>
+      <li>Peer A (<code>10.100.0.1</code>) sends an encrypted data packet to Peer B's known public endpoint (<code>203.0.113.10:51820</code>).</li>
+      <li>Peer A transitions from a corporate Wi-Fi network to a 5G cellular link. Its public IP changes to <code>172.56.21.99:41200</code>.</li>
+      <li>Peer A transmits its next WireGuard packet (authenticated using Peer A's private key) to Peer B.</li>
+      <li>Peer B receives the UDP packet on its listening port.</li>
+      <li>Peer B decrypts and authenticates the packet payload using Peer A's static public key.</li>
+      <li><strong>The Roaming Update:</strong> Upon successful authentication, Peer B's kernel driver updates Peer A's Endpoint field in memory to <code>172.56.21.99:41200</code>.</li>
+      <li>All subsequent outbound packets from Peer B to Peer A are sent immediately to <code>172.56.21.99:41200</code> without session drops or manual intervention.</li>
+    </ol>
+
+    <h2 id="configuration">The PersistentKeepalive Directive</h2>
+    <p>The single most important parameter for nodes operating behind NAT or CGNAT:</p>
+    <pre><code>[Peer]
+PublicKey           = &lt;PEER_PUBLIC_KEY&gt;
+Endpoint            = 203.0.113.10:51820
+AllowedIPs          = 10.100.0.2/32
+PersistentKeepalive = 25</code></pre>
+    <ul>
+      <li><strong>Default Value:</strong> 0 (Disabled). When disabled, WireGuard sends packets only when applications actively transmit data. If no application traffic flows for 30 seconds, intermediate NAT state entries expire.</li>
+      <li><strong>Recommended Value:</strong> 25 (seconds). Forces WireGuard to send an empty, 32-byte authenticated packet every 25 seconds if no regular traffic has been transmitted.</li>
+      <li><strong>Cellular Optimization:</strong> On restrictive mobile networks (where NAT timeouts can be as short as 15 seconds), set <code>PersistentKeepalive = 15</code>.</li>
+    </ul>
+
+    <h2 id="double-nat-workflow">Double NAT Hole Punching Workflow</h2>
+    <p>Trace how NAT traversal operates step-by-step when two nodes communicate behind separate CGNAT environments:</p>
+    <ol>
+      <li><strong>Environmental Setup:</strong> Node A (<code>192.168.1.50</code>) sits behind CGNAT A, mapped to Public WAN IP <code>198.51.100.10:61005</code>. Node B (<code>10.0.0.12</code>) sits behind CGNAT B, mapped to Public WAN IP <code>203.0.113.50:54110</code>.</li>
+      <li><strong>Keepalive Initiation:</strong> Node A's configuration includes <code>PersistentKeepalive = 25</code> targeting Node B's public endpoint (<code>203.0.113.50:54110</code>).</li>
+      <li><strong>Outbound State Creation (CGNAT A):</strong> Node A sends an empty 32-byte keepalive packet. As it traverses CGNAT A, a state mapping is created.</li>
+      <li><strong>Initial Packet Drop at CGNAT B:</strong> The packet arrives at CGNAT B. If CGNAT B has no existing state entry for Node A, CGNAT B drops the packet.</li>
+      <li><strong>Reciprocal Keepalive (Hole Punch Completion):</strong> Node B's configuration also includes <code>PersistentKeepalive = 25</code> targeting Node A's public endpoint. Node B sends an outbound keepalive frame, creating a state mapping through CGNAT B.</li>
+      <li><strong>Successful State Match:</strong> Node B's packet arrives at CGNAT A, which finds the active entry created in Step 3, permits the packet, and forwards it to Node A.</li>
+      <li><strong>Bidirectional Tunnel Established:</strong> Node A receives Node B's packet, authenticates it, updates Node B's endpoint in memory, and sends an immediate response. The bidirectional UDP tunnel is established.</li>
+    </ol>
+
+    <h2 id="production-config">Production Configuration: Branch Behind CGNAT to Cloud Hub</h2>
+    <pre><code>[Interface]
+PrivateKey = &lt;BRANCH_PRIVATE_KEY&gt;
+Address    = 10.100.0.2/32
 ListenPort = 51820
-PrivateKey = &lt;private_key&gt;
+MTU        = 1420
+PostUp     = iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+PostDown   = iptables -t mangle -D FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
 [Peer]
-PublicKey = &lt;peer_public_key&gt;
-Endpoint = 203.0.113.45:51820
-AllowedIPs = 10.200.0.2/32
-PersistentKeepalive = 25
-</code></pre>
+PublicKey           = &lt;CLOUD_GATEWAY_PUBLIC_KEY&gt;
+Endpoint            = 203.0.113.100:51820
+AllowedIPs          = 10.100.0.1/32, 10.50.0.0/16
+PersistentKeepalive = 25</code></pre>
+
+    <h2 id="relay-architecture">Relay Architecture for Symmetric NAT</h2>
+    <p>When both endpoints sit behind Symmetric NATs, a public relay server must be deployed. The relay server forwards encrypted WireGuard packets between the two CGNAT nodes without decrypting them.</p>
+    <p>A relay server configuration (public IP <code>203.0.113.200</code>):</p>
+    <pre><code>[Interface]
+PrivateKey = &lt;RELAY_PRIVATE_KEY&gt;
+Address    = 10.100.0.100/32
+ListenPort = 51820
+
+[Peer]
+# Branch A
+PublicKey           = &lt;BRANCH_A_PUBLIC_KEY&gt;
+AllowedIPs          = 10.100.0.1/32, 192.168.10.0/24
+
+[Peer]
+# Branch B
+PublicKey           = &lt;BRANCH_B_PUBLIC_KEY&gt;
+AllowedIPs          = 10.100.0.2/32, 192.168.20.0/24</code></pre>
+    <p>Both branches configure the relay's public IP as their peer endpoint and set <code>PersistentKeepalive = 25</code>. The relay kernel forwards encrypted packets between them transparently.</p>
+
+    <h2 id="meshwg-automation">MeshWG Control Plane Automation</h2>
+    <p>Manual NAT traversal configuration requires:</p>
+    <ul>
+      <li>A static relay server with a public IP</li>
+      <li>Manually updating all peer endpoint configs when WAN IPs change</li>
+      <li>No automatic fallback from P2P to relay when networks change</li>
+    </ul>
+    <p>MeshWG automates the entire NAT traversal lifecycle:</p>
+    <ol>
+      <li><strong>Outbound Registration:</strong> Each node dials outbound to the MeshWG control plane, which records its reflexive public endpoint (IP + port seen from the outside).</li>
+      <li><strong>Endpoint Distribution:</strong> The control plane shares current public endpoints of all authorized peers with each node.</li>
+      <li><strong>Simultaneous Hole Punching:</strong> Both nodes attempt WireGuard handshakes to each other's reflexive addresses simultaneously, triggering bidirectional UDP hole punching.</li>
+      <li><strong>Automatic Relay Fallback:</strong> If direct P2P fails (Symmetric NAT on both sides), the control plane routes traffic through an encrypted relay node automatically, with no manual configuration required.</li>
+      <li><strong>Continuous Reconciliation:</strong> When any node's WAN IP changes, the control plane detects the new reflexive endpoint within seconds and pushes the updated endpoint to all peers.</li>
+    </ol>
+
+    <h2 id="mtu">MTU Tuning for NAT Environments</h2>
+    <p>WireGuard encapsulation adds 60 bytes of overhead to each packet (40 bytes IP/UDP header + 20 bytes WireGuard header). The standard Ethernet MTU is 1500 bytes. Setting WireGuard's interface MTU to 1420 bytes prevents fragmentation in most environments.</p>
+    <p>For additional overhead scenarios:</p>
+    <ul>
+      <li><strong>PPPoE links:</strong> PPPoE adds 8 bytes overhead. Set MTU to 1412.</li>
+      <li><strong>Double NAT / CGNAT:</strong> Set MTU to 1420 and enable TCP MSS clamping.</li>
+      <li><strong>Cellular / LTE / 5G:</strong> GTP encapsulation adds additional overhead. Set MTU to 1380.</li>
+    </ul>
+
+    <h2 id="troubleshooting">Troubleshooting NAT Traversal Failures</h2>
+
+    <h3>Verify current peer handshake status</h3>
+    <pre><code>sudo wg show wg0
+# Look for: latest handshake, transfer bytes, endpoint</code></pre>
+
+    <h3>Test UDP port reachability</h3>
+    <pre><code># From a remote Linux host with a public IP:
+nc -z -v -u TARGET_PUBLIC_IP 51820
+# Or using nmap:
+nmap -sU -p 51820 TARGET_PUBLIC_IP</code></pre>
+
+    <h3>Check firewall state tables (Linux/nftables)</h3>
+    <pre><code># View active UDP connection tracking entries:
+conntrack -L --proto udp | grep 51820</code></pre>
+
+    <h3>Common failure causes</h3>
+    <ul>
+      <li><strong>No handshake ever succeeds:</strong> One or both endpoints have Symmetric NAT with no relay configured. Deploy a relay server or use MeshWG.</li>
+      <li><strong>Handshake succeeds but drops after 30-60 seconds:</strong> <code>PersistentKeepalive</code> is not set on the node behind NAT. Add it.</li>
+      <li><strong>Ping works but HTTPS fails:</strong> MTU fragmentation issue. Lower the interface MTU and enable TCP MSS clamping.</li>
+      <li><strong>Tunnel drops after IP change:</strong> Normal behavior for static configs. Use MeshWG or DDNS to keep endpoints current.</li>
+    </ul>
+
+    <aside class="cta-strip">
       <p>
-        The <code>Endpoint</code> can be a placeholder (e.g., the last known address). WireGuard will replace it automatically after the first successful packet.
+        Want WireGuard NAT traversal handled automatically — CGNAT, roaming, and relay fallback included?
+        <a class="cta-link" href="https://meshwg.com/signup">Try MeshWG free →</a>
+        Two machines included forever, no card required.
       </p>
-
-      <h2>6. Deployment Steps</h2>
-      <ol>
-        <li>Enable <code>PersistentKeepalive = 25</code> on all peers.</li>
-        <li>Set the interface MTU to 1420 bytes (1380 bytes on mobile) to avoid fragmentation.</li>
-        <li>Deploy a lightweight relay (DERP) for environments where both ends are behind symmetric NAT.</li>
-        <li>Integrate a control‑plane (MeshWG) that periodically publishes each node’s latest public endpoint to the others.</li>
-        <li>Validate connectivity with <code>wg show</code> and monitor NAT state tables on firewalls.</li>
-      </ol>
-
-      <h2>7. Troubleshooting Checklist</h2>
-      <ul>
-        <li>Verify that <code>PersistentKeepalive</code> is non‑zero on both sides.</li>
-        <li>Inspect firewall logs for UDP state expirations.</li>
-        <li>Confirm MTU settings on both peers and any intermediate routers.</li>
-        <li>If direct traffic fails, enable a DERP relay and re‑test.</li>
-      </ul>
-
-      <h2>8. Frequently Asked Questions</h2>
-      {faqs.map((f) => (
-        <details>
-          <summary>{f.q}</summary>
-          <p>{f.a}</p>
-        </details>
-      ))}
-    </div>
+    </aside>
   </BlogPost>
 
   <Footer />

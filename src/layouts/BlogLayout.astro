@@ -1,0 +1,186 @@
+---
+import { strategyPosts, engineeringPosts } from "../utils/posts";
+
+export interface Props {
+  // If true, the center content might be the homepage layout
+  isHomepage?: boolean; 
+}
+
+const { isHomepage = false } = Astro.props;
+---
+
+<div class="blog-layout-wrapper">
+  <!-- Subtle technical grid background behind the main blog area -->
+  {isHomepage && <div class="tech-grid-bg"></div>}
+  
+  <div class="mag-section">
+    <div class="mag-wrap">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="mag-sidebar mag-left">
+        <div class="mag-pill pill-purple">STRATEGY & ARCHITECTURE</div>
+        <ul class="mag-list">
+          {strategyPosts.map((p) => (
+            <li>
+              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      <!-- CENTER MAIN -->
+      <main class={`mag-center ${isHomepage ? 'is-homepage' : 'is-article'}`}>
+        <slot />
+      </main>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="mag-sidebar mag-right">
+        <div class="mag-pill pill-orange">ENGINEERING GUIDES</div>
+        <ul class="mag-list">
+          {engineeringPosts.map((p) => (
+            <li>
+              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Wrapper and Background */
+  .blog-layout-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg);
+  }
+
+  .tech-grid-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px), 
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  }
+
+  .mag-section { 
+    position: relative;
+    z-index: 1;
+    padding: 120px 0 96px; 
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  /* 3-Column Layout */
+  .mag-wrap {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr) 280px; 
+    gap: 48px;
+    align-items: start;
+    width: 100%;
+    padding: 0 1vw; /* Reduced from 4vw to make it cover more of the screen */
+  }
+
+  /* Pilly Buttons */
+  .mag-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    white-space: nowrap;
+    width: max-content;
+  }
+  .pill-orange { background: #F97316; color: #fff; }
+  .pill-purple { background: #8B5CF6; color: #fff; }
+
+  /* Sidebars */
+  .mag-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-bottom: 24px;
+    scrollbar-width: none; /* Firefox */
+  }
+  .mag-sidebar::-webkit-scrollbar { display: none; /* Chrome, Safari */ }
+
+  .mag-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .mag-list-link {
+    display: block;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-2);
+    font-weight: 500;
+    transition: color 0.15s ease;
+    text-decoration: none;
+  }
+  .mag-list-link:hover {
+    color: var(--accent);
+  }
+
+  /* Center Main */
+  .mag-center {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0; /* Prevents flex children from overflowing */
+  }
+
+  .mag-center.is-article {
+    /* For long-form reading, constrain line length */
+    max-width: 100%;
+    margin: 0 auto;
+    background: #ffffff; /* Clean white surface for article */
+    border: 1px solid var(--border-faint);
+    border-radius: var(--radius-xl);
+    padding: 48px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .mag-wrap { grid-template-columns: 240px minmax(0, 1fr) 240px; gap: 32px; }
+    .mag-center.is-article { padding: 40px 32px; }
+  }
+
+  @media (max-width: 980px) {
+    /* Stack sidebars on smaller screens */
+    .mag-wrap { grid-template-columns: 1fr; gap: 64px; }
+    .mag-sidebar { 
+      position: static; 
+      max-height: none; 
+      overflow: visible; 
+      padding-bottom: 0;
+    }
+    
+    /* Ensure article comes first visually by order */
+    .mag-center { order: 1; }
+    .mag-left { order: 2; border-top: 1px solid var(--border-faint); padding-top: 32px; }
+    .mag-right { order: 3; border-top: 1px solid var(--border-faint); padding-top: 32px; }
+    
+    .mag-center.is-article { padding: 32px 24px; border: none; box-shadow: none; background: transparent; }
+  }
+</style>

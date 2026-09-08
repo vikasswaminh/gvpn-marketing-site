@@ -16,6 +16,8 @@ interface Props {
   publishedTime?: string;
   /** Article-only: ISO date the page was last meaningfully edited. */
   modifiedTime?: string;
+  /** SEO keywords. */
+  keywords?: string;
 }
 
 const {
@@ -26,6 +28,7 @@ const {
   ogImage = "https://meshwg.com/favicon.svg",
   publishedTime,
   modifiedTime,
+  keywords,
 } = Astro.props;
 
 import { ViewTransitions } from "astro:transitions";
@@ -41,6 +44,7 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  {keywords && <meta name="keywords" content={keywords} />}
   <ViewTransitions />
 
   {/* Canonical — every page declares its own absolute URL so duplicate

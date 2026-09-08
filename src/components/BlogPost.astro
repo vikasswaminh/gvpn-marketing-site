@@ -1,5 +1,5 @@
 ---
-import PageHero from "./PageHero.astro";
+import BlogLayout from "../layouts/BlogLayout.astro";
 
 export interface Props {
   title: string;
@@ -10,6 +10,7 @@ export interface Props {
   readMinutes?: number;
   author?: string;
   authorRole?: string;
+  tags?: string[];
 }
 
 const {
@@ -17,67 +18,61 @@ const {
   description,
   category,
   datePublished,
-  dateModified,
   readMinutes,
   author,
-  authorRole
+  authorRole,
+  tags = ["#strategy guide", "#wireguard", "#control plane", "#mesh vpn", "#networking", "#architecture", "#keys", "#cgnat", "#allowedips", "#enterprise"]
 } = Astro.props;
 ---
 
-<main class="post-layout">
-  <div class="wrap">
-    
-    <header class="post-header">
-      <div class="post-meta-top">
-        {category && <span class="mag-pill" style="background: #FFF7ED; color: #F97316; font-size: 11px; padding: 4px 12px; border-radius: 100px; font-weight: 700;">{category.toUpperCase()}</span>}
-        {datePublished && (
-          <>
-            <span class="meta-dot">•</span>
-            <span class="meta-date">{datePublished}</span>
-          </>
-        )}
-        {readMinutes && (
-          <>
-            <span class="meta-dot">•</span>
-            <span class="meta-read">{readMinutes} MIN READ</span>
-          </>
-        )}
-      </div>
-      <h1 class="post-h1">{title}</h1>
-      {description && <p class="post-desc">{description}</p>}
-    </header>
+<BlogLayout isHomepage={false}>
+  <header class="post-header">
+    <div class="breadcrumbs">
+      <a href="/">Home</a> / <a href="/blog">Blog</a> / <span>{title}</span>
+    </div>
 
-    <div class="post-author-row">
-      <div class="author-block">
+    <div class="post-meta-top">
+      {category && (
+        <span class={`mag-pill ${category === 'STRATEGY & ARCHITECTURE' ? 'pill-purple' : 'pill-orange'}`}>
+          {category.toUpperCase()}
+        </span>
+      )}
+      {datePublished && (
+        <>
+          <span class="meta-dot">•</span>
+          <span class="meta-date">{datePublished}</span>
+        </>
+      )}
+      {readMinutes && (
+        <>
+          <span class="meta-dot">•</span>
+          <span class="meta-read">{readMinutes} MIN READ</span>
+        </>
+      )}
+    </div>
+    <h1 class="post-h1">{title}</h1>
+    {description && <p class="post-desc">{description}</p>}
+  </header>
+
+  <div class="post-author-row">
+    <div class="author-block">
       <div class="author-avatar" style="background: #FFF7ED; color: #F97316;">⚡</div>
-        <div class="author-info">
-          <div class="author-name">{author || 'MeshWG Systems Engineering'}</div>
-          <div class="author-role">{authorRole || 'Network Architecture'}</div>
-        </div>
-      </div>
-      <div class="post-tags">
-        <span class="tag">#mesh vpn</span>
-        <span class="tag">#wireguard config</span>
-        <span class="tag">#enterprise routing</span>
-        <span class="tag">#zero trust</span>
+      <div class="author-info">
+        <div class="author-name">{author || 'MeshWG Network Architecture Team'}</div>
+        <div class="author-role">{authorRole || 'Network Architecture'}</div>
       </div>
     </div>
-
-    <div class="post-body-grid">
-      <aside class="post-toc">
-        <div class="mag-pill" style="background: #F97316; color: white; border-radius: 100px; padding: 4px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 24px; display: inline-block;">TABLE OF CONTENTS</div>
-        <ul class="toc-list" id="toc-list">
-          <!-- Dynamically populated by JS -->
-        </ul>
-      </aside>
-
-      <article class="post-content">
-        <slot />
-      </article>
+    <div class="post-tags">
+      {tags.map(tag => (
+        <span class="tag">{tag}</span>
+      ))}
     </div>
-
   </div>
-</main>
+
+  <article class="post-content">
+    <slot />
+  </article>
+</BlogLayout>
 
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
@@ -89,123 +84,68 @@ const {
   ]
 })}></script>
 
-<script>
-  // Dynamically generate the TOC based on the actual blog content
-  // Use astro:page-load instead of DOMContentLoaded because of ViewTransitions
-  document.addEventListener('astro:page-load', () => {
-    const content = document.querySelector('.post-content');
-    const tocList = document.getElementById('toc-list');
-    if (!content || !tocList) return;
-    
-    // Clear TOC to prevent duplicates on soft navigations
-    tocList.innerHTML = '';
-    
-    // Also include the TLDR box title if present
-    const headings = content.querySelectorAll('h2, .tldr-box h3');
-    const tocLinks = [];
-
-    headings.forEach((heading) => {
-      // Create a URL-friendly ID if it doesn't have one
-      if (!heading.id) {
-        heading.id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      }
-      
-      // Strip any leading numbers (e.g., "1. ", "2. ") from the text
-      let titleText = heading.textContent.replace(/^\d+\.\s*/, '');
-      
-      // Strip the lightning bolt emoji if it's the TLDR box
-      titleText = titleText.replace(/^⚡\s*/, '');
-      
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = '#' + heading.id;
-      a.textContent = titleText;
-      
-      // Smooth scrolling on click
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.getElementById(heading.id);
-        if (target) {
-          const y = target.getBoundingClientRect().top + window.scrollY - 100; // offset for nav
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-      });
-      
-      li.appendChild(a);
-      tocList.appendChild(li);
-      tocLinks.push(a);
-    });
-
-    // Rock-solid scroll tracker for active TOC link
-    const onScroll = () => {
-      let currentId = '';
-      headings.forEach(heading => {
-        const top = heading.getBoundingClientRect().top;
-        // If the heading is above the middle of the screen (or just past the navbar)
-        if (top < 200) {
-          currentId = heading.id;
-        }
-      });
-
-      // If we haven't scrolled down to the first heading yet, highlight the first one
-      if (!currentId && headings.length > 0) {
-        currentId = headings[0].id;
-      }
-
-      tocLinks.forEach(link => {
-        link.classList.remove('toc-active');
-        if (link.getAttribute('href') === '#' + currentId) {
-          link.classList.add('toc-active');
-        }
-      });
-    };
-
-    // Clean up previous scroll listeners to avoid memory leaks on navigation
-    if (window._tocScrollHandler) {
-      window.removeEventListener('scroll', window._tocScrollHandler);
-    }
-    window._tocScrollHandler = onScroll;
-    
-    window.addEventListener('scroll', window._tocScrollHandler, { passive: true });
-    // Trigger once on load
-    onScroll();
-  });
-</script>
-
 <style is:global>
-  /* Layout */
-  .post-layout { padding: 120px 0 64px; background-color: var(--bg); min-height: 100vh; }
-  
+  /* Local Pilly Buttons */
+  .mag-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    white-space: nowrap;
+    width: max-content;
+  }
+  .pill-orange { background: #F97316; color: #FFF; }
+  .pill-purple { background: #8B5CF6; color: #FFF; }
+
   /* Header */
   .post-header {
     margin-bottom: 48px;
+  }
+  .breadcrumbs {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text-4);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .breadcrumbs a {
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .breadcrumbs a:hover {
+    color: var(--text);
   }
   .post-meta-top {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 24px;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 600;
-    color: #F97316;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
   }
   .meta-dot { opacity: 0.5; }
   .post-h1 {
     font-family: var(--font-display);
-    font-size: clamp(40px, 5vw, 48px);
+    font-size: clamp(32px, 4vw, 42px);
     font-weight: 800;
     color: var(--text);
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: -0.02em;
     margin: 0 0 24px 0;
     max-width: 100%;
   }
   .post-desc {
     font-family: var(--font-sans);
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1.6;
     color: var(--text-2);
     margin: 0;
@@ -214,15 +154,13 @@ const {
 
   /* Author Row */
   .post-author-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 200px 1fr;
     align-items: center;
-    padding: 24px 0;
-    border-top: 1px solid var(--border-faint);
+    padding: 32px 0;
     border-bottom: 1px solid var(--border-faint);
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-    gap: 24px;
+    margin-bottom: 48px;
+    gap: 32px;
   }
   .author-block {
     display: flex;
@@ -230,19 +168,21 @@ const {
     gap: 16px;
   }
   .author-avatar {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 16px;
+    flex-shrink: 0;
   }
   .author-name {
     font-family: var(--font-sans);
     font-weight: 700;
     color: var(--text);
     font-size: 15px;
+    line-height: 1.3;
   }
   .author-role {
     font-family: var(--font-sans);
@@ -251,72 +191,22 @@ const {
   }
   .post-tags {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     flex-wrap: wrap;
+    justify-content: flex-start;
   }
   .tag {
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-3);
     background: white;
-    padding: 4px 12px;
+    padding: 6px 16px;
     border-radius: 100px;
     border: 1px solid var(--border-faint);
   }
 
-  /* Body Grid */
-  .post-body-grid {
-    display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
-    gap: 32px;
-    align-items: start;
-  }
-
-  /* TOC Sidebar */
-  .post-toc {
-    position: sticky;
-    top: 100px;
-    background: transparent;
-    padding-right: 32px;
-    border-right: 1px solid var(--border-faint);
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-  }
-  .post-toc::-webkit-scrollbar { width: 4px; }
-  .post-toc::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 4px; }
-  .toc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .toc-list a {
-    text-decoration: none;
-    color: var(--text-3);
-    font-family: var(--font-sans);
-    font-size: 15px;
-    line-height: 1.4;
-    transition: all 0.2s;
-    display: block;
-    padding: 10px 16px;
-    margin-left: -16px;
-    border-radius: 8px;
-  }
-  .toc-list a:hover {
-    color: #F97316;
-    background: rgba(249, 115, 22, 0.05);
-  }
-  .toc-list a.toc-active {
-    color: #F97316;
-    background: #FFF7ED;
-    font-weight: 600;
-  }
-
-  /* Content Area overrides */
+  /* Content Area */
   .post-content {
-    background: transparent;
     max-width: 100%;
     min-width: 0;
     overflow-wrap: anywhere;
@@ -324,20 +214,20 @@ const {
   }
   .post-content h2 {
     font-family: var(--font-display);
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     margin: 48px 0 16px;
     color: var(--text);
   }
   .post-content h3 {
     font-family: var(--font-display);
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 600;
     margin: 32px 0 8px;
     color: var(--text);
   }
   .post-content p, .post-content li {
-    font-size: 18px;
+    font-size: 17px;
     line-height: 1.7;
     color: var(--text-2);
     margin-bottom: 24px;
@@ -356,8 +246,6 @@ const {
     border: 1px solid var(--border-faint);
     text-align: left;
     vertical-align: top;
-    text-transform: none;
-    letter-spacing: normal;
   }
   .post-content th {
     background: var(--bg-2);
@@ -371,71 +259,56 @@ const {
     background: rgba(0, 0, 0, 0.02);
   }
   
-  .pink-link, .post-content a:not(.btn), .post-block a:not(.toc-link):not(.btn) {
-    color: #D946EF;
+  .pink-link, .post-content a:not(.btn) {
+    color: #1677FF;
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
     font-weight: 600;
     transition: color 0.2s ease;
   }
-  .pink-link:hover, .post-content a:not(.btn):hover, .post-block a:not(.toc-link):not(.btn):hover {
-    color: #C026D3;
+  .pink-link:hover, .post-content a:not(.btn):hover {
+    color: #0958d9;
   }
 
-  
   .tldr-box {
-    background: #F0F9FF; /* Light blue */
-    border: 1px solid rgba(2, 132, 199, 0.2);
-    border-radius: var(--radius-lg);
+    background: #ffffff;
+    border-left: 4px solid #1677FF;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
     padding: 32px 40px;
     margin: 0 0 48px 0;
     width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   }
   
   .tldr-box h3 {
-    margin: 0 0 16px; font-size: 18px; font-weight: 700; color: #0284C7; /* Dark blue */
+    margin: 0 0 16px; font-size: 18px; font-weight: 700; color: #1677FF;
     font-family: var(--font-sans);
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  .tldr-box h3::before {
-    content: "⚡";
-  }
+  .tldr-box h3::before { content: none; }
   .tldr-box p, .tldr-box li { 
     margin: 0 0 16px; 
     font-size: 16px; 
     line-height: 1.65; 
     color: var(--text-2); 
   }
-  .tldr-box ul {
-    margin-bottom: 0;
-  }
+  .tldr-box ul { margin-bottom: 0; }
   .tldr-box p:last-child { margin-bottom: 0; }
   
-  .post-block h2 {
-    font-size: 26px; line-height: 1.3; letter-spacing: -0.015em; font-weight: 700; margin: 64px 0 24px; color: var(--text);
-    font-family: var(--font-sans);
+  .post-content ul, .post-content ol { 
+    margin: 0 0 24px; padding-left: 24px; 
   }
-  .post-block h2 .it { font-style: normal; color: var(--accent); }
-  .post-block h3 {
-    font-size: 19px; font-weight: 700; margin: 40px 0 16px; color: var(--text); letter-spacing: -0.01em;
-    font-family: var(--font-sans);
-  }
-  .post-block p {
-    font-size: 15.5px; line-height: 1.7; color: var(--text-2); margin: 0 0 20px;
-  }
-  .post-block p:last-child { margin-bottom: 0; }
-  .post-block ul, .post-block ol { margin: 0 0 24px; padding-left: 24px; color: var(--text-2); font-size: 15.5px; line-height: 1.7; }
-  .post-block li { margin-bottom: 12px; }
-  .post-block strong { color: var(--text); font-weight: 600; }
-  .post-block code {
+  .post-content li { margin-bottom: 12px; }
+  .post-content strong { color: var(--text); font-weight: 600; }
+  .post-content code {
     font-family: var(--font-mono); font-size: 0.9em; padding: 2px 4px; background: var(--bg-2); border-radius: var(--radius-sm); color: var(--text);
   }
-  .post-block pre {
-    background: var(--code-bg);
-    color: var(--code-fg);
+  .post-content pre {
+    background: #0F172A;
+    color: #F8FAFC;
     padding: 20px 24px;
     border-radius: var(--radius-md);
     overflow-x: auto;
@@ -446,191 +319,5 @@ const {
     line-height: 1.6;
     margin-bottom: 24px;
   }
-  .post-block pre code { background: transparent; padding: 0; border-radius: 0; color: inherit; font-size: 13px; }
-  .post-block a:not(.btn) { color: var(--accent); }
-  .post-block a:not(.btn):hover { color: var(--accent-strong); }
-  .intro .lede-p { font-size: 17px; line-height: 1.7; color: var(--text); margin: 0 0 20px; }
-  .bp-intro { margin: 0 auto 32px; width: 100%; }
-
-  .faq-item { margin-top: 32px; }
-  
-  .post-cta {
-    margin-top: 80px;
-    padding: 40px;
-    background: color-mix(in oklab, var(--accent) 4%, var(--surface));
-    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
-    border-radius: var(--radius-xl);
-    text-align: center;
-  }
-  .post-cta h3 { font-size: 22px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .post-cta p { font-size: 15.5px; color: var(--text-2); margin: 0 auto 24px; max-width: 500px; line-height: 1.6; }
-  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  
-  @media (max-width: 768px) {
-    .tldr-box { padding: 24px; }
-    .post-cta { padding: 32px 24px; }
-  }
-
-  /* Phase blocks */
-  .phase {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 32px 36px;
-    width: 100%;
-  }
-  .ph-head {
-    display: flex; align-items: baseline; gap: 16px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
-  .ph-num {
-    font-family: var(--font-serif);
-    font-style: normal;
-    font-size: 36px;
-    line-height: 1;
-    color: var(--accent);
-    letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
-    flex-shrink: 0;
-    min-width: 96px;
-  }
-  .ph-head h2 { margin: 0; }
-
-  /* Bullets */
-  .bullets {
-    list-style: none;
-    padding: 0; margin: 16px 0;
-    display: flex; flex-direction: column;
-    gap: 12px;
-  }
-  .bullets li {
-    padding-left: 22px;
-    position: relative;
-    color: var(--text-2);
-    font-size: 15.5px;
-    line-height: 1.7;
-  }
-  .bullets li::before {
-    content: "—";
-    position: absolute;
-    left: 0; top: 0;
-    color: var(--text-4);
-    font-family: var(--font-mono);
-  }
-
-  /* Numbered steps */
-  .steps {
-    list-style: none;
-    counter-reset: stp;
-    padding: 0; margin: 24px 0;
-    display: flex; flex-direction: column;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: var(--surface);
-  }
-  .steps li {
-    counter-increment: stp;
-    padding: 24px 28px 24px 60px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .steps li:last-child { border-bottom: 0; }
-  .steps li {
-    padding: 30px 28px 30px 86px;
-  }
-  .steps li::before {
-    content: counter(stp, decimal-leading-zero);
-    position: absolute;
-    left: 24px; top: 24px;
-    font-family: var(--font-serif);
-    font-style: normal;
-    font-size: 38px;
-    line-height: 1;
-    color: var(--accent);
-    letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
-  }
-  .steps h3 {
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0 0 8px;
-    letter-spacing: -.005em;
-  }
-  .steps p {
-    font-size: 14.5px;
-    line-height: 1.65;
-    margin: 0 0 10px;
-  }
-  .steps p:last-child { margin-bottom: 0; }
-
-  /* FAQ */
-  .faq h2 { margin-bottom: 16px; }
-  details {
-    border-top: 1px solid var(--border);
-    padding: 20px 0;
-  }
-  details:last-child { border-bottom: 1px solid var(--border); }
-  summary {
-    cursor: pointer;
-    list-style: none;
-    font-size: 15.5px;
-    font-weight: 700;
-    color: var(--text);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px;
-    letter-spacing: -.005em;
-  }
-  summary::-webkit-details-marker { display: none; }
-  summary::after {
-    content: "+";
-    font-family: var(--font-mono);
-    font-size: 18px;
-    color: var(--text-4);
-    line-height: 1;
-    font-weight: 400;
-  }
-  details[open] summary::after { content: "−"; }
-  details p {
-    margin: 14px 0 0;
-    color: var(--text-2);
-    font-size: 14.5px;
-    line-height: 1.7;
-  }
-
-  /* CTA */
-  .cta-strip {
-    margin-top: 32px;
-    padding: 32px 36px;
-    background: color-mix(in oklab, var(--accent) 5%, var(--surface));
-    border: 1px solid color-mix(in oklab, var(--accent) 15%, var(--border));
-    border-radius: var(--radius-lg);
-    width: 100%;
-  }
-  .cta-strip p {
-    margin: 0;
-    color: var(--text);
-    font-size: 15.5px;
-    line-height: 1.7;
-  }
-  .cta-link {
-    color: var(--accent);
-    font-weight: 700;
-    margin-left: 4px;
-    white-space: nowrap;
-  }
-  .cta-link:hover { color: var(--accent-strong); }
-
-  @media (max-width: 980px) {
-    .post { padding: 32px 0 64px; }
-    .post-block h2 { font-size: 22px; }
-    .post-block { margin-bottom: 20px; }
-    .phase { padding: 24px 22px; }
-    .ph-head { gap: 10px; }
-    .cta-strip { padding: 24px 22px; }
-    .steps li { padding: 20px 18px 20px 50px; }
-    .steps li::before { left: 18px; top: 22px; }
-  }
+  .post-content pre code { background: transparent; padding: 0; border-radius: 0; color: inherit; font-size: 13px; }
 </style>

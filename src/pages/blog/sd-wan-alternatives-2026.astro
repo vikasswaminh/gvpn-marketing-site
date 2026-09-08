@@ -8,7 +8,7 @@ import { site }   from "../../site";
 
 const slug          = "sd-wan-alternatives-2026";
 const url           = `https://meshwg.com/blog/${slug}`;
-const title         = "SD-WAN alternatives in 2026: seven modern options for connecting branch offices — MeshWG";
+const title         = '<a href="https://blogs.meshwg.com/mesh-vpn-vs-ipsec-vs-sdwan-2026/" class="pink-link">SD-WAN</a> alternatives in 2026: seven modern options for connecting branch offices — MeshWG';
 const description   = "Seven modern alternatives to box-based SD-WAN in 2026 — from BYO-router mesh VPN to ZTNA platforms. Honest comparison for SMB and mid-market teams who want branch connectivity without the appliance refresh cycle.";
 const datePublished = "2026-05-16";
 const dateModified  = "2026-05-16";
@@ -76,7 +76,7 @@ const compareRows = [
 ];
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} canonical={Astro.url.href}>
   <Nav />
 
     <BlogPost
@@ -269,9 +269,9 @@ const compareRows = [
           branches running on ISP fibre (Jio, Airtel, ACT), mixed-vendor
           router estates, no full-time network engineer, branches behind
           CGNAT. Companion posts on
-          <a href="/blog/tp-link-site-to-site-vpn-wireguard-2026/">TP-Link site-to-site</a>
+          <a href="https://blogs.meshwg.com/tp-link-site-to-site-vpn-wireguard-2026/">TP-Link site-to-site</a>
           and
-          <a href="/blog/wireguard-site-to-site-vpn-how-it-works-2026/">how WireGuard site-to-site works</a>
+          <a href="https://blogs.meshwg.com/wireguard-site-to-site-vpn-how-it-works-2026/">how WireGuard site-to-site works</a>
           cover the technical mechanics in depth.
         </p>
         <p>
@@ -708,15 +708,13 @@ const compareRows = [
     "datePublished": datePublished,
     "dateModified": dateModified,
     "author": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
+      "@type": "Person",
+      "name": "MeshWG Editorial Team",
       "url": "https://meshwg.com/about",
     },
     "publisher": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
+      "@type": "Person",
+      "name": "MeshWG Editorial Team",
       "url": "https://meshwg.com",
       "logo": { "@type": "ImageObject", "url": "https://meshwg.com/favicon.svg" },
     },

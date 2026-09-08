@@ -40,11 +40,11 @@
   --line-2:         #d0d7e1;
   --line-3:         #f1f5f9;
 
-  /* ── Accent: electric blue ──────────────────────────────────────────── */
-  --accent:         #1677FF;
-  --accent-strong:  #0958d9;
-  --accent-soft:    #e6f4ff;
-  --accent-glow:    rgba(22, 119, 255, .18);
+  /* ── Accent: dark blue ──────────────────────────────────────────── */
+  --accent:         #1E3A8A;
+  --accent-strong:  #172554;
+  --accent-soft:    #DBEAFE;
+  --accent-glow:    rgba(30, 58, 138, .18);
   --accent-ink:     #ffffff;
 
   /* ── Brand red (announcement bar + emphasis) ──────────────────────── */
@@ -76,23 +76,23 @@
   /* ── Typography ───────────────────────────────────────────────────── */
   --font-sans:      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
   --font-mono:      "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --font-display:   "Montserrat", system-ui, sans-serif;
+  --font-display:   "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
   --font-serif:     var(--font-display);
 
   /* ── Radii (polished modern) ─────────────────────────────── */
-  --radius-sm:      4px;
-  --radius:         8px;
-  --radius-lg:      10px;
-  --radius-xl:      16px;
+  --radius-sm:      6px;
+  --radius:         12px;
+  --radius-lg:      16px;
+  --radius-xl:      24px;
   --radius-pill:    999px;
-  --r-sm:           4px;
-  --r-md:           8px;
-  --r-lg:           10px;
-  --r-xl:           16px;
+  --r-sm:           6px;
+  --r-md:           12px;
+  --r-lg:           16px;
+  --r-xl:           24px;
 
   /* ── Layout ───────────────────────────────────────────────────────── */
   --wrap-max:       100%;
-  --wrap-pad-x:     4vw; /* Standardized edge padding */
+  --wrap-pad-x:     1vw; /* Reduced from 4vw to stretch content closer to edges */
   --maxw-narrow:    1200px;
   --maxw:           100%;
   --maxw-wide:      100%;
@@ -175,20 +175,21 @@ a { color: inherit; text-decoration: none; }
 .btn .arrow { transition: transform 0.25s cubic-bezier(0.6, 0.05, 0.2, 1); }
 .btn:hover .arrow { transform: translateX(3px); }
 
-/* Primary (blue accent) — was the lime "acid" in the dark theme */
+/* Primary (gradient blue) */
 .btn-acid,
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
   color: #ffffff;
-  border-color: var(--accent);
+  border-color: transparent;
   font-weight: 600;
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.25);
 }
 .btn-acid:hover,
 .btn-primary:hover {
-  background: var(--accent-strong);
-  border-color: var(--accent-strong);
+  background: linear-gradient(135deg, #3B82F6, #1E40AF);
+  border-color: transparent;
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 24px var(--accent-glow);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
 }
 
 /* High-contrast (ink on white) — was the "cream" variant */
@@ -205,13 +206,13 @@ a { color: inherit; text-decoration: none; }
 
 /* Outline */
 .btn-line {
-  border-color: var(--accent-soft);
+  border-color: var(--text);
   color: var(--text);
   background: var(--bg);
 }
 .btn-line:hover {
   background: var(--bg-2);
-  border-color: var(--accent);
+  border-color: var(--text);
   transform: translateY(-2px) scale(1.02);
   box-shadow: var(--shadow-hover);
 }
@@ -370,3 +371,11 @@ em, i, cite, dfn, address, var { font-style: normal; }
   0%, 100% { opacity: 0.4; transform: scale(1); filter: blur(40px); }
   50% { opacity: 0.6; transform: scale(1.1); filter: blur(50px); }
 }
+
+ / *   P r e m i u m   B l o g   M i c r o - a n i m a t i o n s   * / 
+ . b t n ,   a   {   t r a n s i t i o n :   a l l   0 . 2 s   c u b i c - b e z i e r ( 0 . 4 ,   0 ,   0 . 2 ,   1 ) ;   } 
+ . b t n : h o v e r   {   t r a n s f o r m :   t r a n s l a t e Y ( - 1 p x ) ;   b o x - s h a d o w :   0   4 p x   1 2 p x   r g b a ( 0 , 0 , 0 , 0 . 1 ) ;   } 
+ . p o s t - c a r d   {   t r a n s i t i o n :   a l l   0 . 3 s   c u b i c - b e z i e r ( 0 . 4 ,   0 ,   0 . 2 ,   1 ) ;   } 
+ . p o s t - c a r d : h o v e r   {   t r a n s f o r m :   t r a n s l a t e Y ( - 4 p x ) ;   b o x - s h a d o w :   0   2 0 p x   4 0 p x   r g b a ( 0 , 0 , 0 , 0 . 0 8 ) ;   } 
+  
+ 

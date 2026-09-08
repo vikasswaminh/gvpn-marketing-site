@@ -3,34 +3,41 @@ const features = [
   {
     title: "Connect any device",
     body: "Routers, laptops, phones, servers. If it speaks WireGuard, it joins your mesh in seconds.",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
   },
   {
     title: "One-click access rules",
     body: "Decide who reaches what — by machine, port, or protocol. Updates apply instantly across your whole network.",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
   },
   {
     title: "Built-in isolation",
     body: "Each organization lives in its own private network. Different teams or clients can't see each other, ever.",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
   },
   {
     title: "Encrypted end-to-end",
     body: "Standard WireGuard. We can't read your traffic. Your ISP can't read it. No one can.",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>`,
   },
   {
     title: "Survives our outages",
     body: "If MeshWG goes offline, your tunnels keep running. WireGuard lives on your devices, not on our servers.",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
   },
   {
     title: "Two machines free, forever",
     body: "Mesh your laptop and your home router at ₹0/month. No trial countdown, no card. Pay only when you add a third.",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
   },
 ];
 ---
 
 <section id="features">
+  <div class="features-bg"></div>
   <div class="wrap">
     <div class="sec-eyebrow" data-reveal>/ features</div>
-    <h2 class="sec-h" data-reveal data-reveal-delay="100">Everything you need. Nothing you don't.</h2>
+    <h2 class="sec-h" data-reveal data-reveal-delay="100">Everything you need. Nothing you <span class="blue">don't.</span></h2>
     <p class="sec-lede" data-reveal data-reveal-delay="200">
       A small, focused product instead of an enterprise checklist with
       a hundred boxes you'll never tick.
@@ -38,8 +45,11 @@ const features = [
 
     <div class="feature-grid">
       {features.map((f, i) => (
-        <article class="feature hover-card" data-tilt data-reveal data-reveal-delay={100 + (i * 100)}>
-          <h4 class="ft-title">{f.title}</h4>
+        <article class="feature-card" data-reveal data-reveal-delay={100 + (i * 100)}>
+          <div class="ft-head">
+            <div class="ft-icon" set:html={f.icon} />
+            <h4 class="ft-title">{f.title}</h4>
+          </div>
           <p class="ft-body">{f.body}</p>
         </article>
       ))}
@@ -47,101 +57,99 @@ const features = [
   </div>
 </section>
 
-<script is:inline>
-  document.addEventListener('astro:page-load', () => {
-    const cards = document.querySelectorAll('.hover-card');
-    cards.forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-      });
-    });
-  });
-</script>
-
 <style>
-  #features { padding: 32px 0; }
+  #features {
+    padding: 64px 0 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .features-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, #F5F8FF 0%, #F0F4FF 50%, #ffffff 100%);
+  }
   #features .sec-h, #features .sec-lede {
     text-wrap: unset;
     max-width: none;
   }
+  #features .sec-h .blue {
+    color: #2563EB;
+    font-style: normal;
+  }
 
-  /* Editorial feature grid — hairline-divided cells on the ink canvas,
-     serif italic titles, ultra-light body. Hover ramps the surface
-     up a step (no shadow, just contrast). */
+  /* ── Feature grid ────────────────────────────────── */
   .feature-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
+    gap: 20px;
     margin-top: 48px;
-    background: var(--accent-soft);
-    border: 1px solid var(--accent-soft);
-    border-radius: var(--radius-lg);
-    overflow: visible; /* Changed from hidden to allow shadows to overflow */
   }
-  .feature.hover-card {
-    background: var(--bg);
-    padding: 24px 28px 28px;
-    transition: background 0.25s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    z-index: 1;
-    border-radius: var(--radius-sm); /* Added so individual cards look rounded when lifted */
-    overflow: hidden; /* Contains the hover glow */
+
+  .feature-card {
+    background: #ffffff;
+    border: 2px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 6px 6px 0px #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.2s ease;
   }
-  .feature.hover-card::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(22, 119, 255, 0.08), transparent 40%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: 0;
+
+  .feature-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #1a1a1a;
   }
-  .feature.hover-card:hover {
-    z-index: 10;
-    background: var(--bg);
-    box-shadow: var(--shadow-hover);
+
+  .ft-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0;
   }
-  .feature.hover-card:hover::before {
-    opacity: 1;
+
+  .ft-icon {
+    width: 48px;
+    height: 48px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
   }
-  .feature.hover-card:active {
-    box-shadow: var(--shadow-soft);
+  
+  .ft-icon :global(svg) {
+    stroke: #ffffff !important;
   }
 
   .ft-title {
-    font-family: var(--font-serif);
-    font-size: 19px;
-    font-weight: 500;
-    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
     letter-spacing: -0.01em;
     color: var(--text);
-    line-height: 1.1;
-    position: relative;
-    z-index: 2;
+    line-height: 1.2;
   }
+  
   .ft-body {
     color: var(--text-2);
     font-size: 14.5px;
     line-height: 1.6;
     margin: 0;
-    font-weight: 300;
-    position: relative;
-    z-index: 2;
+    font-weight: 400;
   }
 
   @media (max-width: 980px) {
     .feature-grid { grid-template-columns: 1fr; }
-    .feature {
-      border-right: 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .feature:last-child { border-bottom: 0; }
-    .feature:nth-child(3n) { border-right: 0; }
-    .feature:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
+  }
+  @media (min-width: 600px) and (max-width: 980px) {
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
+
+<script is:inline>
+  // Hover effects are handled by CSS
+</script>

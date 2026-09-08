@@ -1,45 +1,50 @@
 ---
 // Comparison table — used on the homepage, and reusable in any blog post
 // that needs to position MeshWG against alternatives.
-//
-// Defaults preserve the exact homepage content so this component can be
-// rendered <Compare /> with no props for the index page. To customise it
-// per-post (different competitors, different criteria, different headline),
-// pass any of the props below.
+
+interface Col {
+  title: string;
+  subtitle?: string;
+  icon?: string;
+}
 
 interface Row {
   label: string;
-  cells: readonly string[];   // one entry per non-MeshWG column, in column order
-  us: string;                  // the MeshWG cell, always rendered as the last column
+  icon?: string;
+  cells: readonly string[];
+  us: string;
 }
 
 interface Props {
-  /** Section anchor id. Used for in-page links. Defaults to "compare". */
   id?: string;
-  /** Eyebrow text shown above the title. Defaults to "/ compare". */
   eyebrow?: string;
-  /** Section heading. Defaults to the homepage headline. */
   title?: string;
-  /** Lede paragraph under the heading. Defaults to the homepage lede. */
   lede?: string;
-  /** Column headers for the non-MeshWG options (MeshWG is always the last column). */
-  cols?: readonly string[];
-  /** Rows of the table. Each row's `cells` array must be the same length as `cols`. */
+  cols?: readonly (string | Col)[];
   rows?: readonly Row[];
-  /** Footer link text + href. Defaults to the homepage "How it actually works under the hood →" link. */
   footLinkText?: string;
   footLinkHref?: string;
-  /** Hide the footer link entirely (useful for blog posts that have their own CTA). */
   hideFoot?: boolean;
-  /** Disable the global .wrap container when embedding inside already-constrained layouts (like blog posts). */
   noWrap?: boolean;
 }
 
-const DEFAULT_COLS = ["Box-based SDWAN", "Tailscale / Netbird"] as const;
+const DEFAULT_COLS = [
+  {
+    title: "BOX-BASED SDWAN",
+    subtitle: "Enterprise appliances",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v8Z"/><path d="M18 14h2a2 2 0 0 1 2 2v6Z"/><path d="M9 22v-4h6v4Z"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>`,
+  },
+  {
+    title: "TAILSCALE / NETBIRD",
+    subtitle: "Existing routers + agents",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="16" cy="10" r="1"/></svg>`,
+  },
+];
 
 const DEFAULT_ROWS: readonly Row[] = [
   {
-    label: "Hardware needed",
+    label: "HARDWARE NEEDED",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>`,
     cells: [
       "₹35,000–₹2,50,000 per site",
       "Existing routers, but an agent on every device",
@@ -47,7 +52,8 @@ const DEFAULT_ROWS: readonly Row[] = [
     us: "Existing routers, nothing else",
   },
   {
-    label: "Time to first tunnel",
+    label: "TIME TO FIRST TUNNEL",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
     cells: [
       "2–8 weeks (shipping, install)",
       "Days",
@@ -55,7 +61,8 @@ const DEFAULT_ROWS: readonly Row[] = [
     us: "2 minutes",
   },
   {
-    label: "Price",
+    label: "PRICE",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
     cells: [
       "₹2,500–₹7,000 / site / month + licensing",
       "₹420–500 / user / month",
@@ -63,7 +70,8 @@ const DEFAULT_ROWS: readonly Row[] = [
     us: "₹349 / machine / month",
   },
   {
-    label: "Vendor lock-in",
+    label: "VENDOR LOCK-IN",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
     cells: [
       "Yes — hardware + license",
       "Mostly",
@@ -71,7 +79,8 @@ const DEFAULT_ROWS: readonly Row[] = [
     us: "None — standard WireGuard, move your peers any time",
   },
   {
-    label: "Works at home too",
+    label: "WORKS AT HOME TOO",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
     cells: [
       "No",
       "Limited",
@@ -82,8 +91,8 @@ const DEFAULT_ROWS: readonly Row[] = [
 
 const {
   id           = "compare",
-  eyebrow      = "/ compare",
-  title        = "Why pay ₹25 lakhs for what your hardware already does?",
+  eyebrow      = "/ comparison",
+  title        = "Why pay <span class=\"blue\">₹25 lakhs</span> for what your hardware already does?",
   lede         = "A typical 20-branch SDWAN deployment runs ₹30 lakhs+ in hardware plus ₹30,000/month in licensing — before anything actually works. MeshWG meshes the same 20 branches for ₹7,000 a month and starts working today.",
   cols         = DEFAULT_COLS,
   rows         = DEFAULT_ROWS,
@@ -92,33 +101,76 @@ const {
   hideFoot     = false,
   noWrap       = false,
 } = Astro.props;
+
+// Normalize columns for backward compatibility
+const normalizedCols = cols.map(c => typeof c === 'string' ? { title: c } : c);
+
+const checkIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="#10B981" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4" stroke="#ffffff"/></svg>`;
+const meshIcon = `<svg width="28" height="28" viewBox="0 0 24 24" fill="#2563EB" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/></svg>`;
+const bulbIcon = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>`;
+const listIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`;
 ---
 
 <section id={id}>
   <div class={noWrap ? "" : "wrap"}>
-    <div class="sec-eyebrow">{eyebrow}</div>
-    <h2 class="sec-h">{title}</h2>
+    <div class="sec-eyebrow" set:html={eyebrow}></div>
+    <h2 class="sec-h" set:html={title}></h2>
     <p class="sec-lede">{lede}</p>
 
     <div class="compare-wrap">
       <table class="compare">
         <thead>
           <tr>
-            <th class="rh"></th>
-            {cols.map((c) => (
-              <th>{c}</th>
+            <th class="rh">
+              <div class="th-content">
+                <div class="th-icon" set:html={listIcon} />
+                <span>FEATURE</span>
+              </div>
+            </th>
+            {normalizedCols.map((c) => (
+              <th>
+                <div class="th-content">
+                  {c.icon && <div class="th-icon col-icon" set:html={c.icon} />}
+                  <div>
+                    <div class="th-title">{c.title}</div>
+                    {c.subtitle && <div class="th-subtitle">{c.subtitle}</div>}
+                  </div>
+                </div>
+              </th>
             ))}
-            <th class="us">MeshWG</th>
+            <th class="us">
+              <div class="best-value">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                BEST VALUE
+              </div>
+              <div class="th-content us-th">
+                <div class="us-icon" set:html={meshIcon} />
+                <div>
+                  <div class="th-title us-title">MESHWG</div>
+                  <div class="th-subtitle us-subtitle">Your hardware, fully meshed</div>
+                </div>
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
+          {rows.map((r, rowIndex) => (
             <tr>
-              <td class="rh">{r.label}</td>
+              <td class="rh">
+                <div class="td-rh-content">
+                  {r.icon && <div class="td-icon" set:html={r.icon} />}
+                  <span>{r.label}</span>
+                </div>
+              </td>
               {r.cells.map((c) => (
                 <td>{c}</td>
               ))}
-              <td class="us">{r.us}</td>
+              <td class="us">
+                <div class="us-cell">
+                  <div class="check-icon" set:html={checkIcon} />
+                  <span>{r.us}</span>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -126,7 +178,14 @@ const {
     </div>
 
     {!hideFoot && (
-      <div class="compare-foot" style="margin-bottom: 0;">
+      <div class="compare-foot-box">
+        <div class="cfb-left">
+          <div class="cfb-icon" set:html={bulbIcon} />
+          <div class="cfb-text">
+            <strong>Same hardware. More freedom.</strong>
+            <span>Keep using the routers you already own. No forklift upgrades. No vendor lock-in.</span>
+          </div>
+        </div>
         <a class="cf-link" href={footLinkHref}>{footLinkText}</a>
       </div>
     )}
@@ -134,87 +193,240 @@ const {
 </section>
 
 <style>
-  #compare { padding: 32px 0 40px; }
+  #compare { padding: 64px 0 16px; }
   #compare .sec-h, #compare .sec-lede {
     text-wrap: unset;
     max-width: none;
   }
-  /* Editorial comparison table — acid-tinted MeshWG column on a
-     subtle vertical gradient, mono uppercase column headers, serif
-     italic row labels would feel out of register so labels stay in
-     the mono signature instead. */
+  #compare .sec-h :global(.blue) {
+    color: #2563EB;
+  }
+
   .compare-wrap {
-    margin-top: 64px;
-    border: 1px solid var(--accent-soft);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    margin-top: 32px;
     overflow-x: auto;
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
   .compare {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 14.5px;
-    min-width: 760px;
+    min-width: 860px;
+    background: #ffffff;
+    border: 2px solid #1a1a1a;
+    border-radius: 16px;
   }
   .compare th, .compare td {
     text-align: left;
-    padding: 22px 24px;
-    border-bottom: 1px solid var(--accent-soft);
-    vertical-align: top;
+    padding: 24px 20px;
+    border-bottom: 2px solid #1a1a1a;
+    border-right: 2px solid #1a1a1a;
+    vertical-align: middle;
     line-height: 1.5;
     color: var(--text-2);
   }
+  .compare th:last-child, .compare td:last-child {
+    border-right: none;
+  }
+  .compare td {
+    background: #ffffff;
+  }
+  
+  /* Header styling */
   .compare thead th {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--text-3);
+    background: #F8FAFC;
     font-weight: 500;
-    background: var(--bg-2);
-    padding: 26px 24px;
   }
-  .compare thead th.us {
-    color: var(--accent);
-    background: linear-gradient(180deg, var(--accent-soft), color-mix(in oklab, var(--accent-soft) 50%, transparent));
+  .th-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .compare td.rh, .compare th.rh {
+  .th-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .th-subtitle {
+    font-size: 13px;
     color: var(--text-3);
-    width: 220px;
-    background: var(--bg-2);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+  .th-icon {
+    color: var(--text-3);
+  }
+  .col-icon {
+    background: #E2E8F0;
+    padding: 8px;
+    border-radius: 8px;
+    color: var(--text-2);
+  }
+
+  /* Row Headers */
+  .compare td.rh {
+    width: 240px;
     font-family: var(--font-mono);
     font-size: 11.5px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 600;
   }
-  .compare td.us {
-    background: linear-gradient(180deg, color-mix(in oklab, var(--accent-soft) 70%, transparent), color-mix(in oklab, var(--accent-soft) 40%, transparent));
-    border-left: 1px solid var(--accent-soft);
-    color: var(--text);
-    font-weight: 400;
+  .compare thead th.rh {
+    border-top-left-radius: 14px;
   }
-  .compare td.us strong, .compare td.us b {
-    color: var(--accent);
-    font-weight: 500;
+  .compare tbody tr:last-child td.rh {
+    border-bottom-left-radius: 12px;
   }
-  .compare tbody tr:last-child td { border-bottom: 0; }
-  .compare tbody tr:hover td:not(.rh):not(.us) { background: var(--bg-3); }
+  .td-rh-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .td-icon {
+    color: var(--text-3);
+  }
 
-  .compare-foot {
-    margin-top: 24px;
-    text-align: center;
+  /* Regular cells */
+  .compare tbody tr:last-child td {
+    border-bottom: none;
   }
+  
+  /* MeshWG Column (us) */
+  .compare th.us, .compare td.us {
+    background: #EFF6FF;
+    position: relative;
+  }
+  .compare thead th.us {
+    border-top-right-radius: 14px;
+  }
+  .compare tbody tr:last-child td.us {
+    border-bottom-right-radius: 14px;
+  }
+  .compare tbody tr td.us {
+    /* inner bottom borders handled by general td */
+  }
+
+  .best-value {
+    position: absolute;
+    top: -12px;
+    right: 16px;
+    background: #2563EB;
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+  }
+
+  .us-th {
+    gap: 16px;
+  }
+  .us-icon {
+    background: #DBEAFE;
+    color: #2563EB;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .us-title {
+    color: #2563EB;
+    font-size: 16px;
+  }
+  .us-subtitle {
+    color: var(--text-2);
+  }
+
+  .us-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .check-icon {
+    flex-shrink: 0;
+  }
+
+  /* Hover effects */
+  .compare tbody tr:hover td:not(.us) {
+    background: #F8FAFC;
+  }
+  .compare tbody tr:hover td.us {
+    background: #E0EFFF;
+  }
+
+  /* Footer Box */
+  .compare-foot-box {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .cfb-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .cfb-icon {
+    background: #EFF6FF;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .cfb-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cfb-text strong {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 16px;
+  }
+  .cfb-text span {
+    color: var(--text-2);
+    font-size: 14px;
+  }
+
   .cf-link {
     font-family: var(--font-display);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--accent);
-    transition: color .12s ease;
+    color: #2563EB;
+    transition: color .15s ease;
+    flex-shrink: 0;
   }
-  .cf-link:hover { color: var(--accent-strong); }
+  .cf-link:hover { color: #1D4ED8; }
 
   @media (max-width: 980px) {
-    .compare th, .compare td { padding: 12px 14px; font-size: 13px; }
+    .compare-foot-box {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
   }
 </style>

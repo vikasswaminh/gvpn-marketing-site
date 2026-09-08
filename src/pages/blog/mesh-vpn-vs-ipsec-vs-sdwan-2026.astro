@@ -82,7 +82,7 @@ const compareRows = [
 ];
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} canonical={Astro.url.href}>
   <Nav />
 
     <BlogPost
@@ -679,15 +679,13 @@ const compareRows = [
     "datePublished": datePublished,
     "dateModified": dateModified,
     "author": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
+      "@type": "Person",
+      "name": "MeshWG Editorial Team",
       "url": "https://meshwg.com/about",
     },
     "publisher": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
+      "@type": "Person",
+      "name": "MeshWG Editorial Team",
       "url": "https://meshwg.com",
       "logo": { "@type": "ImageObject", "url": "https://meshwg.com/favicon.svg" },
     },

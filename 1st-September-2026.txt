@@ -1,0 +1,69 @@
+# Comprehensive Engineering Progress Report
+**Dates Covered:** August 31st & September 1st, 2026
+**Project:** gvpn-blog & gvpn-marketing-site
+
+**EXECUTIVE SUMMARY (5 LINES):**
+1. Redesigned the Astro blog to match the premium B2B SaaS layout with a dynamic 3-column homepage and fixed responsive footer.
+2. Standardized typography and readability by enforcing global font rules, removing artificial width constraints, and scaling up sidebar text to 14-16px.
+3. Completely resolved TOC navigation bugs by writing a JavaScript DOM parser that dynamically assigns IDs to raw HTML headings.
+4. Seamlessly deployed multiple new articles (NAT Traversal & TP-Link VPN), integrating custom AI-generated cover images and high-converting CTA strips.
+5. Executed mass regex scripts to normalize all blog headings (removing numeric prefixes) and successfully deployed all code to GitHub Actions.
+---
+
+## PART 1: Yesterday Night's Architecture & UI Overhaul (Aug 31st)
+
+### 1. Global Redesign & Typography System Overhaul
+- **Objective:** Replicate the high-converting B2B SaaS layout from meshwg.pages.dev.
+- Swapped out default fonts for a premium stack (Inter, Montserrat, Geist Mono).
+- Modified `src/styles/global.css` to remove the artificial `max-width: 65ch` limit on the `.prose` container, allowing article text to fluidly stretch across the reading area.
+- Normalized all paragraph font sizes (specifically `.prose p` and `.lede-p`) to exactly 15px to guarantee a consistent visual hierarchy.
+
+### 2. Homepage Layout Structure & Micro-interactions
+- Rewrote `src/pages/index.astro` to support a dynamic 3-column architecture (Left Sidebar with 'Founder Special' pills, Center Featured Post Grid with glassmorphism overlays, Right Sidebar with tags).
+- Added IntersectionObserver scripts in `BaseLayout.astro` for scroll-reveal animations.
+- Added 3D tilt-tracking mouse interactions for the `.hover-card` UI components, and implemented sticky frosted-glass header states triggered dynamically by scroll depth.
+
+### 3. Scripting & TOC UI Bug Fixes
+- **The Problem:** The Table of Contents failed for complex articles using raw HTML `<h2>` tags (since Astro only generated IDs for Markdown `##` headings).
+- **The Fix:** Injected a client-side JS block in `src/layouts/PostLayout.astro` that scans the DOM on load, identifies `<h2>`/`<h3>` tags without an `id`, automatically generates a URL-friendly slug, and dynamically injects the ID. The TOC now tracks scroll position flawlessly across all formats.
+
+### 4. New Article Deployment (WireGuard NAT Traversal)
+- Deployed the massive "WireGuard NAT Traversal: Connecting Peers Behind CGNAT & Firewalls (2026)" guide.
+- Formatted "19. Frequently Asked Questions" into interactive, sleek accordion boxes using native HTML `<details>` and `<summary>` tags.
+- Injected a high-contrast pink Marketing CTA strip at the bottom of the file (`<aside class="cta-strip">`) linking directly to the signup portal.
+- Generated and integrated a premium, custom AI-designed cover image featuring a glowing futuristic shield (`nat_traversal_cover.png`) so it displays flawlessly on the homepage grid.
+
+---
+
+## PART 2: Today's Bug Fixes, SEO & Content Integration (Sept 1st)
+
+### 5. Floating Footer & Layout Architecture Fix
+- Fixed the "floating footer" bug that appeared on short pages (e.g., `/tags/`). Rewrote the global body CSS to use a modern flexbox layout with `margin-top: auto` so the footer is always cleanly anchored to the absolute bottom of the screen.
+
+### 6. Blog Post Migration & SEO Integration (TP-Link Guide)
+- Fully restored the missing "TP-Link site-to-site VPN with WireGuard" guide into the main `gvpn-blog` repository.
+- Converted the raw Astro/HTML components into clean Markdown syntax, preserving all critical content including the FAQs and feature comparison tables.
+- Restored "Related Reading" internal links into the introductory paragraph for better content linking.
+- Integrated perfect 10/10 SEO metadata directly into the post's frontmatter (including custom Meta Title, Description, and SEO Keywords).
+- Generated a brand new, highly premium 3D illustration (`tp_link_vpn_new.png`) to serve as the featured cover image for this post.
+
+### 7. Homepage & Sidebar Balancing
+- Solved the layout imbalance on the homepage by strategically placing the new TP-Link article into the arrays.
+- It was inserted into the center grid (bringing the total to 8 posts, filling the empty gap).
+- It was also added to the "STRATEGY & ARCHITECTURE" sidebar (bringing the total to 5 items, perfectly mirroring the right sidebar).
+
+### 8. Typography Readability Enhancements
+- Verified that the global CSS and `<BaseHead>` components are correctly and uniformly applying the `Lato` font across the entire site.
+- Significantly improved sidebar readability on the homepage by increasing `.mag-list-link` font size from `14px` to `16px`.
+- Improved sidebar readability inside individual blog posts by increasing `.nh-sidebar-link` font size from a tiny `11.5px` to a much cleaner `14px`, alongside a taller line-height for better visual breathing room.
+
+### 9. Heading Normalization (Mass Regex Processing)
+- Executed two custom Node.js scripts across the entire blog repository to normalize all article headings.
+- Stripped all numbered prefixes (e.g., "1.", "1.1", "Phase 1:", "Step 1:") from all `##` Markdown headings.
+- Stripped all numbered prefixes from raw HTML `<h2>` and `<h3>` tags that were hidden in older posts.
+- Successfully processed and cleaned 9 different articles without losing or modifying any of the actual paragraph text, links, or code blocks.
+
+### 10. Deployment
+- Staged all layout, content, and styling updates.
+- Committed the changes locally to Git with clean, professional commit messages.
+- Successfully pushed the `main` branch to the remote GitHub repository, automatically triggering the GitHub Actions workflow to deploy the new features to the live production website.

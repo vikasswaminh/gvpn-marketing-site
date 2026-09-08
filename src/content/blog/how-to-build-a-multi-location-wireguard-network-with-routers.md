@@ -1,31 +1,14 @@
 ---
-import Base       from "../../layouts/Base.astro";
-import Nav        from "../../components/Nav.astro";
-import BlogPost   from "../../components/BlogPost.astro";
-import Footer     from "../../components/Footer.astro";
-
-const slug          = "how-to-build-a-multi-location-wireguard-network-with-routers";
-const title         = "How to Build a Multi-Location WireGuard Network with Routers: Enterprise Guide";
-const description   = "Master multi-location site-to-site WireGuard networks across routers. Covers kernel routing, NAT traversal, MTU tuning, firewall rules, and MeshWG mesh orchestration.";
-const datePublished = "2026-08-27";
-const dateModified  = "2026-08-27";
+title: 'How to Build a Multi-Location WireGuard Network with Routers: Enterprise Guide'
+description: 'Master multi-location site-to-site WireGuard networks across routers. Covers kernel routing, NAT traversal, MTU tuning, firewall rules, and MeshWG mesh orchestration.'
+pubDate: 2026-08-27T00:00:00Z
+author: 'MeshWG editorial team'
+authorRole: 'Network Architecture'
+tags: ['engineering guide']
+cover: '/multi-location-routers.png'
 ---
 
-<Base title={title} description={description} canonical={Astro.url.href}>
-  <Nav />
-
-  <BlogPost 
-    title={title} 
-    description={description} 
-    category="engineering guide"
-    datePublished={datePublished} 
-    dateModified={dateModified}
-    readMinutes={20}
-    author="MeshWG editorial team"
-    authorRole="Network Architecture"
-  >
-
-  <div class="bp-intro">
+<div class="bp-intro">
     <div class="tldr-box">
       <h3 id="tl-dr">TL;DR</h3>
       <ul>
@@ -453,6 +436,4 @@ wg set wg0 peer OPENWRT_STORE_PUBLIC_KEY allowed-ips 172.16.255.50/32,10.150.0.0
     </div>
   </div>
 
-  </BlogPost>
-  <Footer />
-</Base>
+  

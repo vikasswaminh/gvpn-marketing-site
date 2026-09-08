@@ -1,9 +1,11 @@
 ---
+import { site } from "../site";
+
 const faqs = [
   [
     {
       q: "How is this different from Tailscale?",
-      a: "Tailscale needs its software on every device. We work with whatever WireGuard is already on your router — so you can mesh in branch routers, home routers, and even older hardware without installing anything. We also charge per machine, not per user, which is closer to how you'd actually count.",
+      a: "MeshWG runs on your own infrastructure using standard WireGuard, with no third-party control plane. You keep full control of your network, data, and infrastructure.",
     },
     {
       q: "Do I need to install software or replace anything?",
@@ -31,18 +33,27 @@ const faqs = [
 ];
 ---
 
-<section id="faq" style="background: var(--bg-2);">
+<section id="faq">
   <div class="wrap">
-    <div class="sec-eyebrow">/ faq</div>
-    <h2 class="sec-h">Straight answers.</h2>
+    <div class="sec-eyebrow" data-reveal>/ FAQ</div>
+    <h2 class="sec-h" data-reveal data-reveal-delay="100">
+      Straight <span class="blue">answers.</span>
+    </h2>
+    <p class="sec-lede" data-reveal data-reveal-delay="200">
+      Everything you need to know about MeshWG — clear, simple, and to the point.
+    </p>
 
     <div class="faq-grid">
-      {faqs.map((col) => (
-        <div>
+      {faqs.map((col, i) => (
+        <div class="faq-col" data-reveal data-reveal-delay={200 + (i * 100)}>
           {col.map((f) => (
-            <details open={f.open}>
-              <summary>{f.q}</summary>
-              <p>{f.a}</p>
+            <details open={f.open} class="faq-card">
+              <summary>
+                <span class="faq-q">{f.q}</span>
+              </summary>
+              <div class="faq-a">
+                <p>{f.a}</p>
+              </div>
             </details>
           ))}
         </div>
@@ -52,65 +63,96 @@ const faqs = [
 </section>
 
 <style>
-  #faq { padding: 32px 0; }
-  .faq-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 56px;
-    margin-top: 64px;
+  #faq { padding: 24px 0 16px; background: #ffffff; }
+  #faq .sec-h, #faq .sec-lede {
+    text-wrap: unset;
+    max-width: none;
+  }
+  #faq .blue { color: #2563EB; }
+  
+  .sec-lede {
+    color: var(--text-2);
+    font-size: 18px;
+    margin-top: 16px;
+    margin-bottom: 48px;
   }
 
-  details {
-    border-top: 1px solid var(--border);
-    padding: 16px 0;
+  .faq-grid {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
   }
-  details:last-child {
-    border-bottom: 1px solid var(--border);
+
+  .faq-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .faq-card {
+    background: #ffffff;
+    border: 2px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
   }
 
   summary {
     cursor: pointer;
     list-style: none;
-    font-family: var(--font-serif);
-    font-size: 19px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
     color: var(--text);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
     gap: 16px;
-    line-height: 1.2;
+    line-height: 1.4;
   }
-  summary:hover { color: var(--accent); }
   summary::-webkit-details-marker { display: none; }
+  
   summary::after {
     content: "+";
     font-family: var(--font-mono);
-    font-size: 18px;
-    color: var(--text-4);
-    font-weight: 300;
+    font-size: 20px;
+    color: #1a1a1a;
+    font-weight: 400;
     line-height: 1;
     flex-shrink: 0;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition: transform 0.2s ease;
   }
-  details[open] summary::after { content: "−"; color: var(--accent); }
-  details p {
-    margin: 16px 0 0;
-    color: var(--text-2);
-    font-size: 14.5px;
-    line-height: 1.65;
-    font-weight: 300;
+  .faq-card[open] summary::after { 
+    content: "−"; 
   }
 
+  .faq-a {
+    margin-top: 16px;
+  }
+  
+  .faq-a p {
+    margin: 0;
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  
+  .faq-card[open] .faq-a p {
+    color: #475569;
+  }
+
+
   @media (max-width: 980px) {
-    .faq-grid { grid-template-columns: 1fr; gap: 0; }
+    .faq-grid { grid-template-columns: 1fr; }
   }
 </style>
 
 <script is:inline>
   const faqs = document.querySelectorAll("#faq details");
   faqs.forEach((targetDetail) => {
-    targetDetail.addEventListener("click", () => {
-      if (!targetDetail.open) {
+    targetDetail.addEventListener("toggle", () => {
+      if (targetDetail.open) {
         faqs.forEach((detail) => {
           if (detail !== targetDetail) {
             detail.removeAttribute("open");

@@ -1,0 +1,5 @@
+Daily Report - 27 August 2026
+1. Upgraded global typography (Inter/Montserrat) and responsive blog layouts for a 10/10 B2B aesthetic.
+2. Added interactive micro-animations and hover states to the homepage mesh network diagram.
+3. Published "How to Build a Multi-Location WireGuard Network", generated a custom featured image, and resolved Astro build errors.
+4. Finalized blog architecture by correctly wrapping the new post, integrating the dynamic TL;DR, and fixing TOC styling bugs.

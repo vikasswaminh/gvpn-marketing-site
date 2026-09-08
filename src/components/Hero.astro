@@ -15,13 +15,12 @@ const heroChecks = [
   <div class="wrap hero-inner">
 
     <span class="eyebrow animate-fade-up">
-      <span class="pill">live</span>
-      <span class="eyebrow-text">one platform · mesh vpn + zero trust access</span>
+      <span class="eyebrow-text">★ ONE PLATFORM · MESH VPN + ZERO TRUST ACCESS</span>
     </span>
 
     <h1 class="h1 animate-fade-up delay-1">
-      Turn the routers <em class="it">you already own</em>
-      into a <strong>secure mesh network</strong>.
+      <span class="it">Turn the routers you already own</span> —
+      into a secure mesh network.
     </h1>
 
     <h2 class="lede animate-fade-up delay-2">
@@ -34,44 +33,33 @@ const heroChecks = [
     <div class="hero-cta animate-fade-up delay-3">
       <a class="btn btn-acid btn-lg" href={site.signupFree}>
         Sign up free
-        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
       <a class="btn btn-line btn-lg" href={site.proContact}>
         Talk to us — Pro
       </a>
     </div>
 
-    <div class="hero-meta animate-fade-up delay-3">
-      {heroChecks.map((label, index) => (
-        <>
-          <span class="meta-item">
-            <span class="tick">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    <div class="hero-meta-bar animate-fade-up delay-3">
+      <div class="hero-meta-inner">
+        {heroChecks.map((label, index) => (
+          <>
+            <span class="meta-item">
+              {label}
             </span>
-            {label}
-          </span>
-          {index < heroChecks.length - 1 && <span class="meta-sep" aria-hidden="true"></span>}
-        </>
-      ))}
+            {index < heroChecks.length - 1 && <span class="meta-sep" aria-hidden="true">+</span>}
+          </>
+        ))}
+      </div>
     </div>
   </div>
 
-  <div class="wrap hero-topology animate-fade-up delay-4">
-    <img 
-      src="/meshwg-topology.png" 
-      alt="MeshWG secure mesh network connecting home, office, branch, datacenter and remote devices"
-      width="1400"
-      height="800"
-      loading="eager"
-      decoding="async"
-    />
-  </div>
+
 </section>
 
 <style>
   /* ── Hero canvas ─────────────────────────────────────────────── */
   .hero {
-    padding: 120px 0 0;
+    padding: 100px 0 60px;
     position: relative;
     overflow: hidden;
     isolation: isolate;
@@ -79,28 +67,22 @@ const heroChecks = [
   }
   
   .hero-bg-glow {
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 650px;
-    z-index: -2;
-    background: 
-      radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
-      radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.15) 0%, transparent 50%);
-    pointer-events: none;
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    display: none; /* Removed the heavy glow */
   }
   
   .hero-grid-bg {
     position: absolute;
-    top: 0; left: 0; right: 0; height: 650px;
+    top: 0; left: 0; right: 0; bottom: 0;
+    height: 100%;
     z-index: -3;
+    background-color: #faf9f6;
     background-image:
-      linear-gradient(rgba(37, 99, 235, 0.15) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(37, 99, 235, 0.15) 1px, transparent 1px);
-    background-size: 64px 64px;
+      linear-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+    background-size: 48px 48px;
     background-position: center top;
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
   .hero-inner {
@@ -118,120 +100,93 @@ const heroChecks = [
   .eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 12px 6px 8px;
+    justify-content: center;
+    padding: 8px 24px;
     border-radius: var(--radius-pill);
-    background: #ffffff;
-    border: 1px solid rgba(37, 99, 235, 0.2);
-    margin-bottom: 24px;
-    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.04);
-  }
-  .eyebrow .pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #2563EB;
-    color: #ffffff;
-    padding: 4px 10px;
-    border-radius: var(--radius-pill);
-    font: 700 10.5px/1 var(--font-sans);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-  .eyebrow .pill::before {
-    content: "";
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #ffffff;
+    background: transparent;
+    border: 1px solid rgba(218, 165, 32, 0.6);
+    margin-top: 32px;
+    margin-bottom: 32px;
   }
   .eyebrow-text {
-    font: 500 11px/1 var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-2);
+    font: 600 13px/1 var(--font-sans);
+    letter-spacing: 0.15em;
+    color: #8c6600; /* Darkened for better contrast */
   }
 
   /* ── Display H1 ────────────────────────── */
   .h1 {
     font-family: var(--font-display);
-    font-size: clamp(32px, 3.8vw, 48px);
-    line-height: 1.15;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.1;
     letter-spacing: -0.02em;
-    font-weight: 700;
+    font-weight: 800;
     margin: 0 0 24px;
     color: var(--text);
     text-align: center;
-    max-width: 900px;
+    max-width: 950px;
   }
   .h1 .it {
     font-style: normal;
-    background: linear-gradient(135deg, #2563EB, #1D4ED8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    color: #2563EB;
   }
 
   /* ── Lede ─────────────────────────────────────────────────────── */
   .lede {
-    font-size: 17px;
-    color: var(--text-2);
-    max-width: 760px;
-    line-height: 1.65;
+    font-size: 19px;
+    color: #4B5563;
+    max-width: 800px;
+    line-height: 1.6;
     text-wrap: pretty;
-    font-weight: 400;
+    font-weight: 500;
     margin: 0 0 40px;
     text-align: center;
   }
-  .lede b { color: var(--text); font-weight: 600; }
+  .lede b { color: var(--text); font-weight: 700; }
   .hl-meshwg {
-    background: #EFF6FF;
-    color: #2563EB;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: 600;
+    color: var(--text);
+    font-weight: 700;
   }
 
   /* ── CTAs row ────────────────────────────────────────────────── */
   .hero-cta {
     display: flex;
     gap: 16px;
-    margin-bottom: 56px;
+    margin-bottom: 48px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
   }
 
-  /* ── Hero meta row ─────────────── */
-  .hero-meta {
+  /* ── Hero meta bar ─────────────── */
+  .hero-meta-bar {
+    width: 100%;
+    max-width: 1100px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+  }
+  .hero-meta-inner {
     display: flex;
     align-items: center;
     gap: 12px;
-    font: 500 10px/1 var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-3);
+    font: 500 14px/1 var(--font-sans);
+    color: #334155;
     flex-wrap: wrap;
     justify-content: center;
   }
-  .hero-meta .meta-item {
+  .meta-item {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
   }
-  .hero-meta .meta-sep {
-    width: 1px;
-    height: 12px;
-    background: var(--border);
-  }
-  .hero-meta .tick {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #2563EB, #1D4ED8);
-    color: #ffffff;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
+  .meta-sep {
+    color: #94a3b8;
+    margin: 0 4px;
+    font-weight: 400;
   }
 
   /* ── Topology Image ──────────────────────────────────────────── */

@@ -10,7 +10,8 @@ const vendors = [
   { tag: "WG", name: "Linux/Mac/Win", sub: "Official WireGuard apps",  color: "#0a0a0a" },
 ];
 ---
-<section class="vendor-section">
+<section class="vendor-section" aria-labelledby="vendor-heading">
+  <h2 id="vendor-heading" class="sr-only">Supported Routers</h2>
   <div class="vendor-bg"></div>
   <div class="wrap">
     <div class="lbl-row">
@@ -23,8 +24,17 @@ const vendors = [
       </button>
       <div class="vendor-marquee">
         <div class="vendor-row">
-          {[...vendors, ...vendors].map((v) => (
+          {vendors.map((v) => (
             <div class="vendor-tile">
+              <span class="vlogo" style={`background:${v.color}`}>{v.tag}</span>
+              <div>
+                <div class="vname">{v.name}</div>
+                <div class="vsub">{v.sub}</div>
+              </div>
+            </div>
+          ))}
+          {vendors.map((v) => (
+            <div class="vendor-tile" aria-hidden="true">
               <span class="vlogo" style={`background:${v.color}`}>{v.tag}</span>
               <div>
                 <div class="vname">{v.name}</div>
@@ -46,6 +56,9 @@ const vendors = [
     padding: 56px 0 32px;
     position: relative;
     overflow: hidden;
+  }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
   }
   .vendor-bg {
     position: absolute;
@@ -122,11 +135,18 @@ const vendors = [
   }
 
   .vendor-marquee {
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     position: relative;
     width: 100%;
+    overscroll-behavior-x: contain;
     mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  }
+  .vendor-marquee::-webkit-scrollbar {
+    display: none;
   }
   .vendor-row {
     display: flex;

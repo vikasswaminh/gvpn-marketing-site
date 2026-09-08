@@ -4,43 +4,45 @@ import { site } from "../site";
 
 const currentPath = Astro.url.pathname;
 ---
-<div class="announcement">
-  <div class="wrap announcement-inner">
-    <span class="announcement-text">
-      <span class="badge">NEW</span>
-      Self-serve signup is live. Free for 2 machines, forever. ₹349/machine/month after.
-    </span>
-    <a href="/pricing" class="announcement-link">See pricing &rarr;</a>
+<header class="site-header">
+  <div class="announcement" role="region" aria-label="Announcement">
+    <div class="wrap announcement-inner">
+      <span class="announcement-text">
+        <span class="badge">NEW</span>
+        Self-serve signup is live. Free for 2 machines, forever. ₹349/machine/month after.
+      </span>
+      <a href="/pricing" class="announcement-link" aria-label="See pricing details">See pricing &rarr;</a>
+    </div>
   </div>
-</div>
 
-<nav class="nav">
-  <div class="wrap nav-inner">
-    <a class="brand" href="/">
-      <BrandMark />
-      <span class="brand-name">{site.productName}</span>
-    </a>
-    <div class="nav-links">
-      <a href="/quickstart" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
-      <a href="/docs" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
-      <a href="/compatibility" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
-      <a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
-      <a href="/pricing" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
+  <nav class="nav" aria-label="Main Navigation">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/" aria-label="MeshWG Home">
+        <BrandMark />
+        <span class="brand-name">{site.productName}</span>
+      </a>
+      <div class="nav-links">
+        <a href="/quickstart" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
+        <a href="/docs" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
+        <a href="/compatibility" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
+        <a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
+        <a href="/pricing" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
+      </div>
+      <div class="nav-spacer"></div>
+      <div class="nav-cta">
+        <a class="btn btn-ghost" href={site.signIn}>Sign in</a>
+        <a class="btn btn-primary" href={site.signupFree}>Sign up free</a>
+      </div>
     </div>
-    <div class="nav-spacer"></div>
-    <div class="nav-cta">
-      <a class="btn btn-ghost" href={site.signIn}>Sign in</a>
-      <a class="btn btn-primary" href={site.signupFree}>Sign up free</a>
-    </div>
-  </div>
-</nav>
+  </nav>
+</header>
 
 <style>
   .announcement {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 101;
-    background: var(--brand-red);
+    background: var(--brand-red-2); /* Improved contrast */
     color: #ffffff;
     height: 40px;
   }
@@ -59,7 +61,7 @@ const currentPath = Astro.url.pathname;
   }
   .announcement .badge {
     background: #ffffff;
-    color: var(--brand-red);
+    color: var(--brand-red-2); /* Matching improved contrast */
     font: 700 10.5px/1 var(--font-sans);
     padding: 3px 6px;
     border-radius: var(--radius-sm);

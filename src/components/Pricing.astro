@@ -96,7 +96,8 @@ const plans = [
             class={`btn ${p.accent ? "btn-primary" : "btn-line"} plan-cta`}
             href={p.ctaHref}
             target={p.ctaExternal ? "_blank" : undefined}
-            rel={p.ctaExternal ? "noopener" : undefined}>
+            rel={p.ctaExternal ? "noopener" : undefined}
+            aria-label={`${p.ctaLabel} for the ${p.name} plan`}>
             {p.ctaLabel}
           </a>
         </article>

@@ -47,7 +47,7 @@ const faqs = [
       {faqs.map((col, i) => (
         <div class="faq-col" data-reveal data-reveal-delay={200 + (i * 100)}>
           {col.map((f) => (
-            <details open={f.open} class="faq-card">
+            <details open={f.open} name="faq-accordion" class="faq-card">
               <summary>
                 <span class="faq-q">{f.q}</span>
               </summary>
@@ -95,7 +95,6 @@ const faqs = [
     border: 2px solid #1a1a1a;
     border-radius: 12px;
     padding: 24px;
-    transition: all 0.2s ease;
   }
 
   summary {
@@ -148,17 +147,4 @@ const faqs = [
   }
 </style>
 
-<script is:inline>
-  const faqs = document.querySelectorAll("#faq details");
-  faqs.forEach((targetDetail) => {
-    targetDetail.addEventListener("toggle", () => {
-      if (targetDetail.open) {
-        faqs.forEach((detail) => {
-          if (detail !== targetDetail) {
-            detail.removeAttribute("open");
-          }
-        });
-      }
-    });
-  });
-</script>
+

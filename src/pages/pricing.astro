@@ -13,33 +13,39 @@ const MONTHLY_PER_MACHINE = 499;  // ₹/machine/month when billed monthly
 const pricingFaqs = [
   {
     q: "What counts as a machine?",
-    a: "Anything in your mesh — a router, a laptop, a phone, a server, a VPS. Each peer in your mesh counts as one machine.",
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`
+    short: "A machine is any device in your mesh, from laptops to servers.",
+    a: "Anything in your mesh — a router, a laptop, a phone, a server, a VPS. Each peer in your WireGuard mesh counts as one machine.",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`
   },
   {
     q: "Can I switch between monthly and annual?",
+    short: "Yes, you can switch plans anytime.",
     a: "Yes, anytime in the dashboard. If you switch from monthly to annual mid-cycle, we credit the unused portion of the month against the annual price.",
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="14" x2="21" y2="3"></line><polyline points="8 21 3 21 3 16"></polyline><line x1="20" y1="10" x2="3" y2="21"></line></svg>`
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`
   },
   {
     q: "What if I cancel mid-year on the annual plan?",
-    a: "Your mesh keeps running at the paid tier until the year ends — you don't lose your machines on day one. No partial refunds on annual. After the year, anything above the free 2 machines goes read-only until you re-subscribe or remove them.",
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`
+    short: "You'll continue to have access until the end of your billing period.",
+    a: "Your mesh keeps running at the paid tier until the year ends. No partial refunds on annual. After the year, anything above the free 2 machines goes read-only until you re-subscribe or remove them.",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`
   },
   {
     q: "Are there volume discounts?",
+    short: "Yes, contact us for custom pricing for larger teams.",
     a: "Standard ₹349/machine/month annual up to 100 machines. Past 100, talk to us about Pro — we tune pricing for big fleets and offer dedicated infrastructure.",
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`
   },
   {
     q: "What payment methods do you accept?",
+    short: "We accept major credit cards and other secure payment methods.",
     a: "Card, UPI, and net-banking via Razorpay on the Cloud tier. Bank transfer is available for annual Pro contracts. GST invoice provided automatically.",
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>`
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`
   },
   {
     q: "Do free machines stack with paid ones?",
-    a: "Yes — the first 2 machines in any paid account are free. You only pay for machines 3 and up.",
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>`
+    short: "Yes, your 2 free machines stay free even when you add more.",
+    a: "Yes — the first 2 machines in any paid account are always free. You only pay for machines 3 and up.",
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 12 12 17 22 12"/><polyline points="2 17 12 22 22 17"/></svg>`
   },
 ];
 
@@ -260,7 +266,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
             <div class="pfaq-head-right">
               <div class="contact-card">
                 <div class="cc-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
                 </div>
                 <div class="cc-text">
                   <strong>Still have questions?</strong>
@@ -273,15 +279,15 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
           <div class="pfaq-grid">
             <div class="pfaq-col">
               {pricingFaqs.slice(0, 3).map((f) => (
-                <details class="faq-card" open>
+                <details class="faq-card">
                   <summary class="faq-summary">
                     <div class="faq-icon-wrap" set:html={f.icon}></div>
                     <div class="faq-content">
                       <div class="faq-q">{f.q}</div>
+                      <div class="faq-short">{f.short}</div>
                     </div>
                     <div class="faq-toggle">
-                      <svg class="icon-plus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                      <svg class="icon-minus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                      <span class="faq-plus">+</span>
                     </div>
                   </summary>
                   <div class="faq-a"><p>{f.a}</p></div>
@@ -290,15 +296,15 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
             </div>
             <div class="pfaq-col">
               {pricingFaqs.slice(3).map((f) => (
-                <details class="faq-card" open>
+                <details class="faq-card">
                   <summary class="faq-summary">
                     <div class="faq-icon-wrap" set:html={f.icon}></div>
                     <div class="faq-content">
                       <div class="faq-q">{f.q}</div>
+                      <div class="faq-short">{f.short}</div>
                     </div>
                     <div class="faq-toggle">
-                      <svg class="icon-plus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                      <svg class="icon-minus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                      <span class="faq-plus">+</span>
                     </div>
                   </summary>
                   <div class="faq-a"><p>{f.a}</p></div>
@@ -1023,9 +1029,9 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   .pfaq {
     position: relative;
     z-index: 1;
-    max-width: 1000px;
+    max-width: var(--maxw);
     margin: 0 auto;
-    padding: 0 32px;
+    padding: 0 var(--wrap-pad-x);
   }
   .pfaq-head {
     display: flex;
@@ -1119,60 +1125,81 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   .pfaq-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: 16px;
   }
   .pfaq-col {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
   }
   .faq-card {
     background: #ffffff;
-    border: 1px solid rgba(0,0,0,0.03);
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.03);
+    border: 1.5px solid #E8EEF8;
+    border-radius: 14px;
+    padding: 20px 20px;
+    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.04);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .faq-card:hover {
+    border-color: #BFDBFE;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.08);
   }
   .faq-summary {
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
+    align-items: center;
+    gap: 14px;
     cursor: pointer;
     list-style: none;
+    user-select: none;
   }
   .faq-summary::-webkit-details-marker { display: none; }
   .faq-icon-wrap {
-    width: 48px; height: 48px;
-    background: #EFF6FF;
+    width: 44px; height: 44px;
+    min-width: 44px;
+    background: #EEF3FD;
     color: #2563EB;
-    border-radius: 12px;
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .faq-content {
     flex: 1;
-    padding-top: 4px;
+    min-width: 0;
   }
   .faq-q {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: #0F172A;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .faq-short {
+    font-size: 13px;
+    color: #64748B;
     line-height: 1.4;
   }
   .faq-toggle {
-    color: #2563EB;
-    margin-top: 4px;
     flex-shrink: 0;
+    margin-left: 8px;
   }
-  .icon-minus { display: none; }
-  details[open] .icon-plus { display: none; }
-  details[open] .icon-minus { display: block; }
+  .faq-plus {
+    font-size: 22px;
+    font-weight: 300;
+    color: #2563EB;
+    line-height: 1;
+    display: block;
+    transition: transform 0.2s;
+  }
+  details[open] .faq-plus {
+    transform: rotate(45deg);
+  }
   .faq-a {
-    padding-left: 64px;
+    padding-left: 58px;
+    padding-top: 2px;
   }
   .faq-a p {
     margin: 8px 0 0;
-    font-size: 14px;
+    font-size: 13.5px;
     color: #64748B;
     line-height: 1.6;
   }

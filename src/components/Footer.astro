@@ -123,20 +123,22 @@ const year = new Date().getFullYear();
   .wrap {
     position: relative;
     z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
   }
 
   .foot-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 2.5fr;
+    display: flex;
+    justify-content: space-between;
     gap: 64px;
+  }
+  
+  .foot-left {
+    flex: 0 0 320px;
   }
 
   .foot-right {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
     gap: 32px;
   }
 

@@ -43,16 +43,13 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 
 <Base title={title} description={description}>
   <Nav />
-  <div class="pricing-hero">
-    <div class="ph-bg"></div>
-    <div class="wrap">
-      <div class="ph-eyebrow">/ PRICING</div>
-      <h1 class="ph-h1">Pay for what you <span class="text-blue">mesh.</span></h1>
-      <p class="ph-lede">A machine is anything in your mesh. Two free forever. After that, ₹349 per machine per month on annual billing — or ₹499 if you'd rather pay monthly.</p>
-    </div>
-  </div>
   <section class="price-section">
     <div class="wrap">
+      <header class="sec-head" style="text-align: left; margin: 40px 0 60px;">
+        <div class="sec-eyebrow">/ PRICING</div>
+        <h1 class="sec-h">Pay for what you <span class="blue">mesh.</span></h1>
+        <p class="sec-lede">A machine is anything in your mesh. Two free forever. After that, ₹349 per machine per month on annual billing — or ₹499 if you'd rather pay monthly.</p>
+      </header>
 
       <!-- Controls Row: Toggle + Trust Icons -->
       <div class="pricing-controls">
@@ -300,78 +297,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 </script>
 
 <style>
-  /* ── Pricing Hero ─────────────────────────────────────── */
-  .pricing-hero {
-    position: relative;
-    padding: 120px 0 60px; /* Increased padding for grander feel */
-    background: #ffffff;
-    overflow: hidden;
-  }
-  .ph-bg {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    z-index: 0;
-    /* Premium subtle grid pattern top right */
-    background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
-    background-size: 24px 24px;
-    background-position: calc(100% - 24px) 24px;
-    background-repeat: no-repeat;
-  }
-  .ph-bg::before {
-    content: "";
-    position: absolute;
-    top: -300px; right: -200px;
-    width: 1000px; height: 1000px;
-    background: radial-gradient(50% 50% at 50% 50%, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0) 100%);
-    border-radius: 50%;
-    z-index: -1;
-  }
-  .ph-bg::after {
-    content: "";
-    position: absolute;
-    top: -100px; left: -100px;
-    width: 800px; height: 800px;
-    background: radial-gradient(50% 50% at 50% 50%, rgba(37, 99, 235, 0.04) 0%, rgba(37, 99, 235, 0) 100%);
-    border-radius: 50%;
-    z-index: -1;
-  }
-  .pricing-hero .wrap {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px; /* Slightly wider for the hero */
-    margin: 0 auto;
-    padding: 0 24px;
-    text-align: left;
-  }
-  .ph-eyebrow {
-    font-family: var(--font-mono, monospace);
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #2563EB;
-    margin-bottom: 20px;
-  }
-  .ph-h1 {
-    font-family: var(--font-display, sans-serif);
-    font-size: clamp(48px, 6vw, 68px); /* Bigger, bolder */
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: #0F172A;
-    margin: 0 0 20px;
-    line-height: 1.1;
-  }
-  .ph-h1 .text-blue {
-    color: #2563EB;
-  }
-  .ph-lede {
-    font-size: 19px; /* Larger lede text */
-    color: #475569;
-    max-width: 850px;
-    line-height: 1.6;
-    margin: 0 0 48px;
-  }
+
 
   .price-section {
     padding: 24px 0 64px;

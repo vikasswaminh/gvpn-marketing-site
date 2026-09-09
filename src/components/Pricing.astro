@@ -139,13 +139,23 @@ const plans = [
     display: flex; 
     flex-direction: column;
     position: relative;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 8px 8px 0px 0px #1a1a1a; /* Solid offset shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .plan:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0px 0px #1a1a1a;
   }
   
   .plan-accent {
     border-color: #2563EB;
     background: #EFF6FF;
-    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+    box-shadow: 8px 8px 0px 0px #2563EB;
+  }
+  
+  .plan-accent:hover {
+    box-shadow: 10px 10px 0px 0px #2563EB;
   }
   
   .badge {

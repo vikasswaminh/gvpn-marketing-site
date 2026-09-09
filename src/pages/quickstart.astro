@@ -90,41 +90,81 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
 
 <Base title={title} description={description}>
   <Nav />
-  <PageHero
-    eyebrow="/ quickstart"
-    title="Get your first machine online in 2 minutes."
-    lede="Three steps to create the mesh, plus vendor-specific paste instructions for whatever hardware you have."
-  />
+  <div class="qs-hero">
+    <div class="qs-hero-bg"></div>
+    <div class="wrap">
+      <div class="qs-eyebrow">/ QUICKSTART</div>
+      <h1 class="qs-h1">Get your first machine online in <span class="text-blue">2 minutes.</span></h1>
+      <p class="qs-lede">Three steps to create the mesh, plus vendor-specific paste instructions for whatever hardware you have.</p>
+      
+      <div class="qs-benefits">
+        <div class="qs-benefit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          No credit card
+        </div>
+        <div class="qs-benefit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Under 2 minutes
+        </div>
+        <div class="qs-benefit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          Works with your hardware
+        </div>
+      </div>
+    </div>
+  </div>
 
   <section class="qs-section">
     <div class="wrap">
 
-      <!-- ── The three core steps -->
-      <ol class="steps">
-        <li>
-          <div class="step-n">01</div>
-          <div>
+      <div class="qs-cards-container">
+        <!-- Step 01 -->
+        <div class="qs-card">
+          <div class="qs-card-left">
+            <div class="qs-step-n">01</div>
+            <div class="qs-icon-box">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+          </div>
+          <div class="qs-card-main">
             <h2>Sign up</h2>
-            <p>Create your account with Google or email. No credit card. You land in the dashboard in under a minute.</p>
-            <a class="btn btn-primary" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+            <p>Create your account with Google or email. No credit card.<br/>You land in the dashboard in under a minute.</p>
+            <a class="btn btn-primary" href={site.signupFree} target="_blank" rel="noopener">Sign up free &rarr;</a>
           </div>
-        </li>
-        <li>
-          <div class="step-n">02</div>
-          <div>
+        </div>
+        
+        <!-- Step 02 -->
+        <div class="qs-card">
+          <div class="qs-card-left">
+            <div class="qs-step-n">02</div>
+            <div class="qs-icon-box">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg>
+            </div>
+          </div>
+          <div class="qs-card-main">
             <h2>Add a machine</h2>
-            <p>Click <code>Add machine</code>, give it a name (e.g. "branch-mumbai" or "office-router"), and we generate a WireGuard config tied to that machine. The config is shown once — download it or copy it now.</p>
+            <p>Click Add machine, give it a name (e.g. "branch-mumbai" or "office-router"), and we generate a WireGuard config tied to that machine. The config is shown once — download it or copy it now.</p>
+            <a class="btn btn-ghost-blue" href={site.signupFree}>Add machine &rarr;</a>
           </div>
-        </li>
-        <li>
-          <div class="step-n">03</div>
-          <div>
+        </div>
+
+        <!-- Step 03 -->
+        <div class="qs-card">
+          <div class="qs-card-left">
+            <div class="qs-step-n">03</div>
+            <div class="qs-icon-box">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+          </div>
+          <div class="qs-card-main">
             <h2>Paste the config into your device</h2>
             <p>Open the WireGuard section of your router or the official WireGuard app on your laptop / phone. Paste the config. The tunnel comes up within seconds.</p>
             <p class="hint">Vendor-specific instructions below. Pick yours.</p>
+            <a class="btn btn-ghost-blue" href="#vendor-guides">View device guides &rarr;</a>
           </div>
-        </li>
-      </ol>
+        </div>
+      </div>
+      <div id="vendor-guides" style="padding-top: 32px;"></div>
 
       <!-- ── Per-vendor guides -->
       <div class="vendor-grid">
@@ -165,60 +205,167 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
 </Base>
 
 <style>
-  .qs-section { padding: 40px 0 48px; }
-
-  /* Core three steps */
-  .steps {
-    list-style: none;
-    padding: 0; margin: 0 0 32px;
-    display: flex; flex-direction: column;
-    gap: 0;
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-lg);
+  /* Hero Section */
+  .qs-hero {
+    padding: 110px 0 16px; /* Reduced from 130px to fit on single screen */
+    position: relative;
     overflow: hidden;
-    background: var(--surface);
   }
-  .steps li {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 24px;
-    padding: 32px 28px;
-    border-bottom: 1px solid color-mix(in oklab, var(--accent) 25%, var(--border));
+  .qs-hero-bg {
+    position: absolute;
+    top: 0; right: 0;
+    width: 900px; height: 900px;
+    background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
   }
-  .steps li:last-child { border-bottom: 0; }
-  .step-n {
+  .qs-hero .wrap {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .qs-eyebrow {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: var(--accent);
-    letter-spacing: .04em;
-    padding-top: 6px;
   }
-  .steps h2 {
-    font-size: 19px;
-    font-weight: 500;
-    margin: 0 0 8px;
-    letter-spacing: -.01em;
+  .qs-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 3.8vw, 42px);
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.015em;
   }
-  .steps p {
-    margin: 0 0 12px;
+  .text-blue {
+    color: #2563EB;
+  }
+  .qs-lede {
+    font-size: 17px;
     color: var(--text-2);
-    font-size: 15px;
-    line-height: 1.65;
-    max-width: 640px;
+    margin: 0;
+    max-width: 800px;
   }
-  .steps p:last-child { margin-bottom: 0; }
-  .steps code {
-    font-family: var(--font-mono);
-    font-size: .92em;
-    background: var(--accent-soft);
-    padding: 1px 6px;
-    border-radius: var(--radius-sm);
-    color: var(--accent-strong);
-    border: 1px solid var(--accent);
+  
+  /* Benefits Row */
+  .qs-benefits {
+    display: flex;
+    gap: 32px;
+    margin-top: 16px;
+    flex-wrap: wrap;
   }
-  .hint {
-    font-size: 13px;
+  .qs-benefit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-2);
+  }
+
+  /* Cards Section */
+  .qs-section {
+    padding: 0 0 64px; /* Removed top padding */
+  }
+  .qs-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Reduced gap between cards */
+  }
+  .qs-card {
+    background: #ffffff;
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.03);
+    padding: 24px 32px; /* Reduced padding */
+    display: flex;
+    gap: 32px; /* Reduced gap between left icon and text */
+    align-items: flex-start;
+  }
+  .qs-card-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+  }
+  .qs-step-n {
+    background: #EFF6FF;
+    color: #2563EB;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qs-icon-box {
+    background: #EFF6FF;
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qs-card-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+  }
+  .qs-card-main h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .qs-card-main p {
+    font-size: 15.5px;
+    color: var(--text-2);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 600px;
+  }
+  .qs-card-main .hint {
+    font-size: 14px;
     color: var(--text-3);
+  }
+  
+  /* Standardized Ghost Button for Quickstart */
+  .btn-ghost-blue {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    height: 42px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2563EB;
+    background: #ffffff;
+    border: 1px solid #2563EB;
+    border-radius: 8px; /* Consistent radius */
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .btn-ghost-blue:hover, .btn-ghost-blue:focus-visible {
+    background: #EFF6FF;
+    outline: none;
+  }
+  .qs-card-main .btn-primary {
+    border-radius: 8px; /* Matching border radius */
+    height: 42px;
+    padding: 0 20px;
+    font-size: 15px;
   }
 
   /* Vendor grid */
@@ -342,9 +489,23 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
   }
 
   @media (max-width: 980px) {
+    .qs-hero { padding: 110px 0 24px; }
     .qs-section { padding: 24px 0 32px; }
-    .steps li { grid-template-columns: 1fr; padding: 24px; }
-    .step-n { padding-top: 0; }
+    
+    .qs-card {
+      flex-direction: column;
+      gap: 24px;
+      padding: 32px 24px;
+    }
+    
+    .qs-card-left {
+      width: 100%;
+    }
+    
+    .qs-card-main p {
+      max-width: 100%;
+    }
+    
     .vendor-grid { grid-template-columns: 1fr; }
     .self-host { padding: 24px; }
   }

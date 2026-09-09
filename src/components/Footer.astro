@@ -52,7 +52,7 @@ const year = new Date().getFullYear();
 
       <div class="foot-right">
         {cols.map((col) => (
-          <div>
+          <nav aria-label={col.h}>
             <h5 class="col-h">{col.h}</h5>
             <ul class="col-list">
               {col.items.map((it) => (
@@ -67,23 +67,28 @@ const year = new Date().getFullYear();
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
         ))}
       </div>
     </div>
 
     <div class="foot-bot">
-      <div>© {year} {site.productName}. All rights reserved.</div>
-      <div class="legal-links">
-        <a href="/privacy">Privacy</a>
-        <span>·</span>
-        <a href="/terms">Terms</a>
-        <span>·</span>
-        <a href="/refund">Refund &amp; Cancellation</a>
-        <span>·</span>
-        <a href="/.well-known/security.txt">Security</a>
+      <div class="foot-bot-left">
+        <div>© {year} {site.productName}. All rights reserved.</div>
+        <div class="trademark">WireGuard is a registered trademark of Jason A. Donenfeld.</div>
       </div>
-      <div>WireGuard is a registered trademark of Jason A. Donenfeld.</div>
+      <nav aria-label="Legal" class="legal-links">
+        <a href="/privacy">Privacy</a>
+        <span aria-hidden="true">·</span>
+        <a href="/terms">Terms</a>
+        <span aria-hidden="true">·</span>
+        <a href="/refund">Refund &amp; Cancellation</a>
+        <span aria-hidden="true">·</span>
+        <a href="/.well-known/security.txt">Security</a>
+      </nav>
+      <div class="foot-bot-right">
+        <a href="#top" class="back-to-top" aria-label="Back to top">↑ Back to top</a>
+      </div>
     </div>
   </div>
 </footer>
@@ -91,85 +96,225 @@ const year = new Date().getFullYear();
 <style>
   footer {
     border-top: 1px solid #E2E8F0;
-    background: radial-gradient(circle at top left, #F0F5FF, transparent 50%),
-                radial-gradient(circle at bottom right, #F0F5FF, transparent 50%),
-                #FAFAFA;
-    padding: 80px 0 64px;
+    background-color: #F4F8FF; /* More attractive soft premium blue */
+    background-image: radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.08), transparent 60%),
+                      radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 60%);
+    padding: 80px 0 48px;
     color: #475569;
     font-size: 14px;
+    position: relative;
+    overflow: hidden;
   }
+  
+  /* Decorative wave effect via soft gradient */
+  footer::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 70%;
+    height: 100%;
+    background: radial-gradient(120% 120% at 100% 100%, rgba(37, 99, 235, 0.06) 0%, transparent 100%);
+    border-radius: 100% 0 0 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
   .foot-grid {
     display: grid;
-    grid-template-columns: 1.2fr 2fr;
+    grid-template-columns: 1.2fr 2.5fr;
     gap: 64px;
   }
+
   .foot-right {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 32px;
   }
+
   .foot-brand {
     display: flex; align-items: center; gap: 12px;
-    font-weight: 600;
+    font-weight: 700;
     color: #0F172A;
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 22px;
+    margin-bottom: 20px;
   }
+
   .foot-tag {
-    max-width: 340px;
+    max-width: 320px;
     margin: 0;
-    color: #64748B;
+    color: #475569;
     line-height: 1.6;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .col-h {
-    font-family: var(--font-mono, monospace);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #64748B;
-    font-weight: 600;
-    margin: 0 0 16px;
+    font-size: 16px;
+    color: #0F172A;
+    font-weight: 700;
+    margin: 0 0 24px;
+    position: relative;
+    display: inline-block;
   }
+
+  .col-h::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%; /* Changed from 24px to 100% to cover the whole word */
+    height: 2px;
+    background-color: #2563EB;
+    border-radius: 2px;
+  }
+
   .col-list {
     list-style: none; padding: 0; margin: 0;
-    display: flex; flex-direction: column; gap: 12px;
+    display: flex; flex-direction: column; gap: 16px;
   }
+  
   .col-list a {
-    color: #1E293B;
-    font-weight: 500;
+    color: #334155;
+    font-weight: 400;
+    font-size: 15px;
     text-decoration: none;
-    transition: color .12s ease;
+    transition: color 0.15s ease;
+    padding: 2px 0; /* Increase touch target slightly */
+    display: inline-block;
   }
-  .col-list a:hover { color: #2563EB; }
+  
+  .col-list a:hover, .col-list a:focus-visible {
+    color: #2563EB;
+    outline: none;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
 
   .foot-bot {
-    margin-top: 64px;
+    margin-top: 80px;
     padding-top: 32px;
     border-top: 1px solid #E2E8F0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    gap: 24px;
+    font-size: 13px;
+    color: #0F172A;
+  }
+
+  .foot-bot-left {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 4px;
+    font-weight: 500;
+  }
+
+  .trademark {
+    color: #64748B;
+    font-weight: 400;
+  }
+
+  .legal-links {
+    display: flex;
     align-items: center;
     gap: 16px;
     flex-wrap: wrap;
-    font-size: 13px;
-    color: #64748B;
+    justify-content: center;
   }
-  .legal-links {
-    display: flex; align-items: center; gap: 8px;
-  }
+  
   .legal-links a {
-    color: #64748B;
+    color: #0F172A;
+    font-weight: 500;
     text-decoration: none;
-    transition: color .12s ease;
+    transition: color 0.15s ease;
+    padding: 2px 0;
   }
-  .legal-links a:hover { color: #2563EB; }
-  .legal-links span { color: #94A3B8; }
+  
+  .legal-links a:hover, .legal-links a:focus-visible {
+    color: #2563EB;
+    outline: none;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  
+  .legal-links span {
+    color: #94A3B8;
+  }
 
-  @media (max-width: 980px) {
-    .foot-grid { grid-template-columns: 1fr; gap: 48px; }
-    .foot-right { grid-template-columns: 1fr 1fr; }
-    .foot-bot { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .foot-bot-right {
+    justify-self: end;
+  }
+
+  .back-to-top {
+    color: #2563EB;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.15s ease;
+    padding: 2px 0;
+  }
+  
+  .back-to-top:hover, .back-to-top:focus-visible {
+    opacity: 0.8;
+    outline: none;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  /* Smooth scroll setup if not already defined globally */
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .foot-grid {
+      grid-template-columns: 1fr;
+      gap: 56px;
+    }
+    .foot-bot {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+      gap: 32px;
+    }
+    .foot-bot-left, .foot-bot-right {
+      justify-self: center;
+      align-items: center;
+    }
+    .foot-tag {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .foot-right {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .legal-links {
+      flex-direction: column;
+      gap: 16px;
+    }
+    .legal-links span {
+      display: none;
+    }
   }
 </style>

@@ -1,0 +1,6 @@
+Daily Report - September 8th, 2026
+- Fixed a scroll-reveal animation bug to ensure long blog posts render visibly.
+- Aligned blog card proportions and date formatting (Sep 7, 2026) with the new design mockups.
+- Restructured the blog post header to include breadcrumbs and a dynamic author/tag layout.
+- Stripped all blue hover effects from the FAQ to strictly enforce the brutalist black-and-white theme.
+- Resolved an Astro build error caused by unescaped curly braces and successfully deployed the site via GitHub Actions.

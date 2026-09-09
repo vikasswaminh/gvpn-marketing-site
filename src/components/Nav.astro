@@ -51,7 +51,7 @@ const currentPath = Astro.url.pathname;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 13.5px;
+    font-size: 15px; /* Increased for better visibility */
     font-weight: 500;
   }
   .announcement-text {
@@ -70,7 +70,8 @@ const currentPath = Astro.url.pathname;
   }
   .announcement-link {
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 700; /* Made slightly bolder to stand out */
+    font-size: 16px; /* Increased size as requested */
     transition: opacity 0.15s ease;
   }
   .announcement-link:hover {
@@ -114,9 +115,9 @@ const currentPath = Astro.url.pathname;
 
   .brand {
     display: flex; align-items: center; gap: 10px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    font-size: 15px;
+    font-weight: 600; /* Made slightly bolder */
+    letter-spacing: -0.01em;
+    font-size: 18px; /* Increased from 15px */
     color: var(--text);
   }
   .brand-name { color: var(--text); }
@@ -124,12 +125,13 @@ const currentPath = Astro.url.pathname;
   .nav-links {
     display: flex;
     gap: 26px;
-    font-size: 13px;
-    color: var(--text-2);
+    font-size: 15px; /* Increased from 13px */
+    color: #000000; /* Made purely black */
   }
   .nav-links a {
     position: relative;
     padding: 4px 0;
+    color: #000000; /* Ensure links are black */
     transition: color 0.15s ease;
   }
   .nav-links a::after {
@@ -149,6 +151,19 @@ const currentPath = Astro.url.pathname;
 
   .nav-spacer { flex: 1; }
   .nav-cta { display: flex; gap: 6px; align-items: center; }
+  
+  .nav-cta .btn {
+    font-size: 15px; /* Increased to match nav links */
+  }
+  
+  /* Make Sign in button a darker black color */
+  .nav-cta .btn-ghost {
+    color: #000000;
+    font-weight: 600;
+  }
+  .nav-cta .btn-ghost:hover {
+    color: #2563EB; /* MeshWG blue on hover for better UX */
+  }
 
   @media (max-width: 980px) {
     .nav-links { display: none; }

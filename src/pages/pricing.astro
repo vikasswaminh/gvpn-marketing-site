@@ -367,10 +367,9 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 </script>
 
 <style>
-  /* ── Pricing Hero ─────────────────────────────────────── */
   .pricing-hero {
     position: relative;
-    padding: 120px 0 0px; /* Grander feel, let controls sit at bottom */
+    padding: 48px 0 0px; /* Compress top spacing */
     background: #ffffff;
     overflow: hidden;
   }
@@ -418,11 +417,11 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   }
   .ph-h1 {
     font-family: var(--font-display, sans-serif);
-    font-size: clamp(48px, 6vw, 68px);
+    font-size: clamp(40px, 5vw, 56px);
     font-weight: 800;
     letter-spacing: -0.03em;
     color: #0F172A;
-    margin: 0 0 20px;
+    margin: 0 0 12px;
     line-height: 1.1;
   }
   .ph-h1 .text-blue {
@@ -432,11 +431,11 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     font-size: 19px;
     color: #475569;
     line-height: 1.6;
-    margin: 0 0 48px;
+    margin: 0 0 24px;
   }
 
   .price-section {
-    padding: 24px 0 64px;
+    padding: 16px 0 32px;
     position: relative;
     z-index: 10;
   }
@@ -448,7 +447,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
   .toggle-wrap {
     display: inline-flex;
@@ -514,13 +513,13 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
   .plan {
     background: #ffffff;
     border: 2px solid #0F172A;
     border-radius: 12px;
-    padding: 40px;
+    padding: 24px;
     display: flex; flex-direction: column;
     box-shadow: 6px 6px 0px #0F172A;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -578,11 +577,11 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   .plan-price {
     display: flex; align-items: baseline; gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 24px;
-    min-height: 60px;
+    margin-bottom: 16px;
+    min-height: 48px;
   }
   .plan-price .num {
-    font-size: 64px; /* Increased size for emphasis */
+    font-size: 48px; /* Compressed for single screen view */
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.03em;
@@ -711,7 +710,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     margin-bottom: 16px;
     position: relative;
     z-index: 1;
-    padding: 0 32px;
+    padding: 0;
   }
   .calc-head-left {
     max-width: 50%;
@@ -779,7 +778,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     box-shadow: 0 16px 64px rgba(37, 99, 235, 0.06);
     position: relative;
     z-index: 1;
-    margin: 0 32px;
+    margin: 0;
   }
   .calc-inner-head {
     display: flex;

@@ -43,31 +43,51 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 
 <Base title={title} description={description}>
   <Nav />
-  <PageHero
-    eyebrow="/ pricing"
-    title="Pay for what you mesh."
-    lede="A machine is anything in your mesh. Two free forever. After that, ₹349 per machine per month on annual billing — or ₹499 if you'd rather pay monthly."
-    wrapLede={true}
-  />
-
+  <div class="pricing-hero">
+    <div class="ph-bg"></div>
+    <div class="wrap">
+      <div class="ph-eyebrow">/ PRICING</div>
+      <h1 class="ph-h1">Pay for what you <span class="text-blue">mesh.</span></h1>
+      <p class="ph-lede">A machine is anything in your mesh. Two free forever. After that, ₹349 per machine per month on annual billing — or ₹499 if you'd rather pay monthly.</p>
+    </div>
+  </div>
   <section class="price-section">
     <div class="wrap">
 
-      <!-- Billing toggle -->
-      <div class="toggle-wrap" role="tablist" aria-label="Billing cycle">
-        <button class="toggle-btn is-active" data-cycle="annual" type="button">
-          Annual billing
-          <span class="save-tag">save 30%</span>
-        </button>
-        <button class="toggle-btn" data-cycle="monthly" type="button">
-          Monthly billing
-        </button>
+      <!-- Controls Row: Toggle + Trust Icons -->
+      <div class="pricing-controls">
+        <div class="toggle-wrap" role="tablist" aria-label="Billing cycle">
+          <button class="toggle-btn is-active" data-cycle="annual" type="button">
+            Annual billing
+            <span class="save-tag">SAVE 30%</span>
+          </button>
+          <button class="toggle-btn" data-cycle="monthly" type="button">
+            Monthly billing
+          </button>
+        </div>
+        
+        <div class="trust-row">
+          <span class="trust-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            No credit card to start
+          </span>
+          <span class="trust-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            Cancel anytime
+          </span>
+          <span class="trust-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Works with your hardware
+          </span>
+        </div>
       </div>
 
       <!-- Plans -->
       <div class="plans">
         <article class="plan hover-card">
-          <div class="plan-name">Free</div>
+          <div class="plan-head">
+            <div class="plan-name">FREE</div>
+          </div>
           <div class="plan-price">
             <span class="num">₹0</span>
             <span class="unit">forever</span>
@@ -79,14 +99,19 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
             <li>Google or email sign-in</li>
             <li>All access-control features</li>
           </ul>
-          <a class="btn btn-line plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+          <div class="plan-bot">
+            <a class="btn btn-line plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+          </div>
         </article>
 
         <article class="plan plan-accent hover-card">
-          <div class="plan-name">Cloud</div>
+          <div class="plan-head">
+            <div class="plan-badge">MOST POPULAR</div>
+            <div class="plan-name">CLOUD</div>
+          </div>
           <div class="plan-price">
             <span class="num" data-cloud-price>₹349</span>
-            <span class="unit" data-cloud-unit>/ machine / month, billed annually</span>
+            <span class="unit" data-cloud-unit>per machine / month<br>(billed annually)</span>
           </div>
           <p class="plan-desc">Same hosted product as Free. No machine limit.</p>
           <ul class="plan-list">
@@ -95,11 +120,15 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
             <li>Email support</li>
             <li>Cancel anytime</li>
           </ul>
-          <a class="btn btn-primary plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+          <div class="plan-bot">
+            <a class="btn btn-primary plan-cta" href={site.signupFree} target="_blank" rel="noopener">Sign up free</a>
+          </div>
         </article>
 
         <article class="plan hover-card">
-          <div class="plan-name">Pro</div>
+          <div class="plan-head">
+            <div class="plan-name">PRO</div>
+          </div>
           <div class="plan-price">
             <span class="num">Custom</span>
             <span class="unit">talk to us</span>
@@ -111,14 +140,16 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
             <li>Priority support</li>
             <li>SLA on request</li>
           </ul>
-          <a class="btn btn-line plan-cta" href={site.proContact}>Talk to us</a>
+          <div class="plan-bot">
+            <a class="btn btn-line plan-cta" href={site.proContact}>Talk to us</a>
+          </div>
         </article>
       </div>
 
-      <p class="self-host-line">
-        <strong>No credit card to start.</strong> Two machines stay free as long
-        as you want — add a third only when you're ready to grow.
-      </p>
+      <div class="info-bar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        <p><strong>No credit card to start.</strong> Two machines stay free as long as you want — add a third only when you're ready to grow.</p>
+      </div>
 
       <!-- Calculator -->
       <div class="calc">
@@ -215,10 +246,10 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
       const cycle = b.getAttribute("data-cycle");
       if (cycle === "annual") {
         cloudPriceEl.textContent = "₹349";
-        cloudUnitEl.textContent  = "/ machine / month, billed annually";
+        cloudUnitEl.innerHTML  = "per machine / month<br>(billed annually)";
       } else {
         cloudPriceEl.textContent = "₹499";
-        cloudUnitEl.textContent  = "/ machine / month, billed monthly";
+        cloudUnitEl.innerHTML  = "per machine / month<br>(billed monthly)";
       }
     });
   });
@@ -282,151 +313,323 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
 </script>
 
 <style>
-  .price-section { padding: 64px 0 48px; }
+  /* ── Pricing Hero ─────────────────────────────────────── */
+  .pricing-hero {
+    position: relative;
+    padding: 120px 0 60px; /* Increased padding for grander feel */
+    background: #ffffff;
+    overflow: hidden;
+  }
+  .ph-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    /* Premium subtle grid pattern top right */
+    background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-position: calc(100% - 24px) 24px;
+    background-repeat: no-repeat;
+  }
+  .ph-bg::before {
+    content: "";
+    position: absolute;
+    top: -300px; right: -200px;
+    width: 1000px; height: 1000px;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0) 100%);
+    border-radius: 50%;
+    z-index: -1;
+  }
+  .ph-bg::after {
+    content: "";
+    position: absolute;
+    top: -100px; left: -100px;
+    width: 800px; height: 800px;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(37, 99, 235, 0.04) 0%, rgba(37, 99, 235, 0) 100%);
+    border-radius: 50%;
+    z-index: -1;
+  }
+  .pricing-hero .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px; /* Slightly wider for the hero */
+    margin: 0 auto;
+    padding: 0 24px;
+    text-align: left;
+  }
+  .ph-eyebrow {
+    font-family: var(--font-mono, monospace);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #2563EB;
+    margin-bottom: 20px;
+  }
+  .ph-h1 {
+    font-family: var(--font-display, sans-serif);
+    font-size: clamp(48px, 6vw, 68px); /* Bigger, bolder */
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #0F172A;
+    margin: 0 0 20px;
+    line-height: 1.1;
+  }
+  .ph-h1 .text-blue {
+    color: #2563EB;
+  }
+  .ph-lede {
+    font-size: 19px; /* Larger lede text */
+    color: #475569;
+    max-width: 850px;
+    line-height: 1.6;
+    margin: 0 0 48px;
+  }
 
-  /* Toggle */
+  .price-section {
+    padding: 24px 0 64px;
+    background: #ffffff;
+  }
+  .price-section .wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── Controls Row: Toggle + Trust ─────────────────────── */
+  .pricing-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
   .toggle-wrap {
     display: inline-flex;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
     border-radius: 999px;
-    padding: 4px;
-    margin-bottom: 40px;
+    padding: 6px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
   }
   .toggle-btn {
     appearance: none;
     background: transparent;
     border: 0;
-    padding: 8px 18px;
+    padding: 10px 24px;
     border-radius: 999px;
-    font: 500 13px var(--font-sans);
-    color: var(--text-3);
+    font: 600 14px var(--font-sans, system-ui);
+    color: #64748B;
     cursor: pointer;
     display: inline-flex; align-items: center; gap: 8px;
-    transition: background .15s ease, color .15s ease;
+    transition: all .2s ease;
   }
   .toggle-btn.is-active {
-    background: var(--text);
+    background: #0A2540;
     color: #fff;
+    box-shadow: 0 4px 12px rgba(10, 37, 64, 0.15);
+  }
+  .toggle-btn:focus-visible {
+    outline: 2px solid #2563EB;
+    outline-offset: 2px;
   }
   .save-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: var(--radius-sm);
-    background: color-mix(in oklab, var(--ok) 18%, transparent);
-    color: var(--ok);
+    font-family: var(--font-sans, system-ui);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563EB;
     text-transform: uppercase;
-    letter-spacing: .04em;
+    letter-spacing: .02em;
+    font-weight: 700;
   }
   .toggle-btn.is-active .save-tag {
-    background: rgba(255, 255, 255, .15);
-    color: #fff;
+    background: #ffffff;
+    color: #2563EB;
+  }
+  .trust-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #475569;
+    font-weight: 500;
   }
 
-  /* Plans */
+  /* ── Plans ───────────────────────────────────────────── */
   .plans {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
   }
   .plan {
-    background: linear-gradient(180deg, rgba(0,0,0,0.04), var(--surface) 60%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 32px 28px;
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 20px;
+    padding: 40px;
     display: flex; flex-direction: column;
-    gap: 20px;
-    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
   }
-  .plan:hover { border-color: var(--border-strong); }
+  .plan:hover { border-color: #CBD5E1; box-shadow: 0 12px 32px rgba(0,0,0,0.04); }
   .plan-accent {
-    border-color: var(--accent);
-    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 60%);
-    box-shadow: 0 0 0 2px var(--accent), 0 16px 32px -8px rgba(0, 102, 255, 0.15);
-    transform: scale(1.02);
+    border-color: #2563EB;
+    background: #F8FAFC;
+    box-shadow: 0 12px 40px -8px rgba(37, 99, 235, 0.15);
     z-index: 2;
     position: relative;
   }
-  .plan-accent::before {
-    content: "Most popular";
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 10px;
+  .plan-accent:hover {
+    border-color: #1D4ED8;
+  }
+  .plan-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 28px;
+    margin-bottom: 20px;
+  }
+  .plan-badge {
+    background: #DBEAFE;
+    color: #1D4ED8;
+    font-family: var(--font-sans, system-ui);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--accent);
-    margin-bottom: -8px;
+    letter-spacing: 0.04em;
   }
   .plan-name {
-    font-family: var(--font-mono);
-    font-size: 11px;
+    font-family: var(--font-sans, system-ui);
+    font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--text-3);
-    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    color: #64748B;
+    font-weight: 700;
+  }
+  .plan-accent .plan-name {
+    color: #3B82F6;
   }
   .plan-price {
-    display: flex; align-items: baseline; gap: 10px;
+    display: flex; align-items: baseline; gap: 12px;
     flex-wrap: wrap;
+    margin-bottom: 24px;
+    min-height: 60px;
   }
   .plan-price .num {
-    font-family: var(--font-serif);
-    font-size: 56px;
-    font-weight: 400;
+    font-size: 64px; /* Increased size for emphasis */
+    font-weight: 700;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     font-variant-numeric: tabular-nums;
-    color: var(--text);
+    color: #0F172A;
   }
-  .plan-accent .plan-price .num { color: var(--accent); font-style: normal; }
+  .plan-accent .plan-price .num { color: #2563EB; }
   .plan-price .unit {
-    font-size: 12.5px;
-    color: var(--text-3);
-    line-height: 1.4;
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.5;
+    font-weight: 500;
   }
   .plan-desc {
-    color: var(--text-2);
-    font-size: 13.5px;
-    line-height: 1.55;
-    margin: 0;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 32px;
+    min-height: 48px;
   }
   .plan-list {
     list-style: none;
-    padding: 0; margin: 0;
-    display: flex; flex-direction: column; gap: 8px;
+    padding: 0; margin: 0 0 40px 0;
+    display: flex; flex-direction: column; gap: 14px;
     flex: 1;
   }
   .plan-list li {
-    color: var(--text-2);
-    font-size: 13px;
-    line-height: 1.5;
-    padding-left: 18px;
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.4;
+    padding-left: 28px;
     position: relative;
   }
   .plan-list li::before {
     content: "✓";
     position: absolute;
     left: 0; top: 0;
-    color: var(--ok);
-    font-weight: 600;
+    color: #16A34A; /* Brighter green checkmark */
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .plan-bot {
+    margin-top: auto; /* Pushes CTA to the bottom perfectly */
   }
   .plan-cta {
+    display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
-    height: 40px;
+    height: 48px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn-line {
+    background: #ffffff;
+    border: 1px solid #0F172A;
+    color: #0F172A;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .btn-line:hover, .btn-line:focus-visible {
+    background: #F8FAFC;
+    border-color: #0F172A;
+    outline: none;
+  }
+  .btn-primary {
+    background: #2563EB;
+    border: 1px solid #2563EB;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  }
+  .btn-primary:hover, .btn-primary:focus-visible {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+    outline: none;
   }
 
-  .self-host-line {
-    margin: 32px 0 0;
-    font-size: 13.5px;
-    color: var(--text-3);
+  /* ── Information Bar ─────────────────────────────────── */
+  .info-bar {
+    background: #F4F8FF;
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 0 auto;
     text-align: center;
   }
-  .self-host-line strong { color: var(--text); font-weight: 500; }
-  .self-host-line a { color: var(--accent); }
-  .self-host-line a:hover { color: var(--accent-strong); }
+  .info-bar p {
+    margin: 0;
+    font-size: 14px;
+    color: #475569;
+  }
+  .info-bar strong {
+    color: #0F172A;
+    font-weight: 700;
+  }
 
   /* Calculator */
   .calc {

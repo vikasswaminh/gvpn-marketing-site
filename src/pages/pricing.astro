@@ -149,42 +149,95 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
       </div>
 
       <!-- Calculator -->
-      <div class="calc">
+      <div class="calc-section">
         <header class="calc-head">
-          <div class="calc-eyebrow">/ calculator</div>
-          <h2>How much for your mesh?</h2>
-          <p>Drag the slider. The number's exact.</p>
+          <div class="calc-head-left">
+            <div class="calc-eyebrow">/ CALCULATOR</div>
+            <h2>How much for your <span class="text-blue">mesh</span>?</h2>
+            <p>Drag the slider. The number's exact.</p>
+          </div>
+          <div class="calc-head-right">
+            <div class="calc-feature">
+              <strong>Simple transparent pricing</strong>
+              <span>Pay only for what you use.</span>
+            </div>
+            <div class="calc-feature">
+              <strong>Scale at your pace</strong>
+              <span>Start small, grow anytime.</span>
+            </div>
+            <div class="calc-feature">
+              <strong>Built for modern networks</strong>
+              <span>Flexible, predictable costs.</span>
+            </div>
+          </div>
         </header>
 
-        <div class="calc-body">
-          <label for="machines" class="calc-label">
-            <span>Machines in your mesh</span>
-            <output id="machines-count" data-count>10</output>
-          </label>
-          <input id="machines" type="range" min="0" max="100" value="10" step="1" data-slider />
-
-          <div class="calc-result">
-            <div class="result-card" data-cycle-card="annual">
-              <div class="rc-eyebrow">Annual billing</div>
-              <div class="rc-num"><span data-annual-monthly>₹2,792</span><span class="rc-unit">/ month</span></div>
-              <div class="rc-sub">₹<span data-annual-total>33,504</span> billed yearly · <span data-paid-machines>8</span> paid + 2 free</div>
+        <div class="calc">
+          <div class="calc-inner-head">
+            <div class="calc-inner-head-left">
+              <div class="calc-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                  <line x1="8" y1="6" x2="16" y2="6"></line>
+                  <line x1="16" y1="14" x2="16" y2="14.01"></line>
+                  <line x1="12" y1="14" x2="12" y2="14.01"></line>
+                  <line x1="8" y1="14" x2="8" y2="14.01"></line>
+                  <line x1="16" y1="18" x2="16" y2="18.01"></line>
+                  <line x1="12" y1="18" x2="12" y2="18.01"></line>
+                  <line x1="8" y1="18" x2="8" y2="18.01"></line>
+                  <line x1="16" y1="10" x2="16" y2="10.01"></line>
+                  <line x1="12" y1="10" x2="12" y2="10.01"></line>
+                  <line x1="8" y1="10" x2="8" y2="10.01"></line>
+                </svg>
+              </div>
+              <div class="calc-inner-text">
+                <div class="calc-inner-title">MACHINES IN YOUR MESH</div>
+                <div class="calc-inner-subtitle">Select how many machines you need.</div>
+              </div>
             </div>
-
-            <div class="result-card">
-              <div class="rc-eyebrow">Monthly billing</div>
-              <div class="rc-num"><span data-monthly-monthly>₹3,992</span><span class="rc-unit">/ month</span></div>
-              <div class="rc-sub">No annual commitment · cancel anytime</div>
+            <div class="calc-inner-head-right">
+              <div class="calc-machines-box">
+                <output id="machines-count" class="cm-num" data-count>10</output>
+                <div class="cm-label">machines</div>
+              </div>
             </div>
           </div>
 
-          <p class="calc-foot">
-            <span data-foot-paid hidden>
-              Annual saves you <strong data-savings-amount>₹14,400</strong>/year at this size.
-            </span>
-            <span data-foot-free>
-              All your machines are free at this size.
-            </span>
-          </p>
+          <div class="calc-body">
+            <div class="slider-wrapper">
+              <span class="slider-min">0</span>
+              <input id="machines" type="range" min="0" max="100" value="10" step="1" data-slider />
+              <span class="slider-max">100</span>
+            </div>
+
+            <div class="calc-result">
+              <div class="result-card rc-annual" data-cycle-card="annual">
+                <div class="rc-top-row">
+                  <div class="rc-eyebrow">ANNUAL BILLING</div>
+                  <div class="rc-badge"><span class="rc-badge-dot"></span>Best value</div>
+                </div>
+                <div class="rc-num"><span data-annual-monthly>₹2,792</span><span class="rc-unit"> / month</span></div>
+                <div class="rc-sub">₹<span data-annual-total>33,504</span> billed yearly · <span data-paid-machines>8</span> paid + 2 free</div>
+              </div>
+
+              <div class="result-card rc-monthly">
+                <div class="rc-top-row">
+                  <div class="rc-eyebrow">MONTHLY BILLING</div>
+                </div>
+                <div class="rc-num"><span data-monthly-monthly>₹3,992</span><span class="rc-unit"> / month</span></div>
+                <div class="rc-sub">No annual commitment · cancel anytime</div>
+              </div>
+            </div>
+
+            <p class="calc-foot">
+              <span data-foot-paid hidden>
+                Annual saves you <strong data-savings-amount>₹14,400</strong>/year at this size.
+              </span>
+              <span data-foot-free>
+                All your machines are free at this size.
+              </span>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -285,6 +338,10 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     const annualMonthly  = paid * ANNUAL_PER_MACHINE;
     const monthlyMonthly = paid * MONTHLY_PER_MACHINE;
     const annualSavings  = (monthlyMonthly - annualMonthly) * 12;
+
+    // Dual-tone slider track update
+    const percent = (n / 100) * 100;
+    slider.style.background = `linear-gradient(to right, #DBEAFE ${percent}%, #E2E8F0 ${percent}%)`;
 
     // Indian number formatting — 1,00,000 style commas, ₹ prefix.
     const fmt = (v) => "₹" + v.toLocaleString("en-IN");
@@ -627,59 +684,175 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     font-weight: 700;
   }
 
-  /* Calculator */
-  .calc {
-    margin-top: 32px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 48px;
+  /* Calculator Section */
+  .calc-section {
+    margin-top: 64px;
+    background: linear-gradient(180deg, #F8FAFC 0%, #ffffff 100%);
+    position: relative;
+    padding: 64px 0 32px;
+    border-radius: 24px;
+    margin-bottom: 64px;
+  }
+  .calc-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 24px;
+  }
+  .calc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+    padding: 0 48px;
+  }
+  .calc-head-left {
+    max-width: 50%;
   }
   .calc-eyebrow {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono, monospace);
     font-size: 11px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--accent);
-    margin-bottom: 12px;
+    letter-spacing: .08em;
+    color: #2563EB;
+    margin-bottom: 16px;
   }
-  .calc-head h2 {
-    font-size: 28px;
-    font-weight: 500;
-    letter-spacing: -.018em;
-    margin: 0 0 8px;
+  .calc-head-left h2 {
+    font-family: var(--font-display, sans-serif);
+    font-size: clamp(32px, 4vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0F172A;
+    margin: 0 0 12px;
+    line-height: 1.1;
   }
-  .calc-head p {
-    margin: 0 0 32px;
-    color: var(--text-3);
-    font-size: 14.5px;
+  .calc-head-left p {
+    margin: 0;
+    color: #475569;
+    font-size: 17px;
   }
-
-  .calc-label {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 12px;
+  .calc-head-right {
+    display: flex;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    padding: 24px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   }
-  .calc-label span {
-    font-size: 13px;
-    color: var(--text-3);
-    font-family: var(--font-mono);
-    letter-spacing: .04em;
+  .calc-feature {
+    display: flex;
+    flex-direction: column;
+    padding: 0 24px;
+    border-right: 1px solid #E2E8F0;
+  }
+  .calc-feature:last-child {
+    border-right: none;
+  }
+  .calc-feature strong {
+    font-size: 14px;
+    color: #0F172A;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .calc-feature span {
+    font-size: 12px;
+    color: #64748B;
+  }
+  
+  /* Calculator Body */
+  .calc {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    position: relative;
+    z-index: 1;
+    margin: 0 48px;
+  }
+  .calc-inner-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+  .calc-inner-head-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .calc-icon {
+    width: 48px;
+    height: 48px;
+    background: #EFF6FF;
+    color: #2563EB;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .calc-inner-title {
+    font-family: var(--font-mono, monospace);
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #64748B;
+    margin-bottom: 4px;
   }
-  .calc-label output {
-    font-family: var(--font-mono);
-    font-size: 24px;
-    font-weight: 500;
-    color: var(--text);
+  .calc-inner-subtitle {
+    font-size: 14px;
+    color: #475569;
+  }
+  .calc-machines-box {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 16px 32px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .cm-num {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
+    display: block;
+    margin-bottom: 4px;
   }
-
+  .cm-label {
+    font-size: 12px;
+    color: #64748B;
+    font-weight: 600;
+  }
+  
+  /* Slider */
+  .slider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .slider-min, .slider-max {
+    font-size: 15px;
+    color: #0F172A;
+    font-weight: 700;
+  }
   input[type=range] {
-    width: 100%;
+    flex: 1;
     -webkit-appearance: none;
     appearance: none;
     height: 6px;
-    background: var(--border);
+    background: #E2E8F0;
     border-radius: 999px;
     outline: none;
     cursor: pointer;
@@ -687,70 +860,91 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px; height: 20px;
+    width: 28px; height: 28px;
     border-radius: 50%;
-    background: var(--text);
+    background: #0F172A;
     cursor: pointer;
-    border: 3px solid var(--surface);
-    box-shadow: 0 0 0 1px var(--border-strong);
+    border: 6px solid #EFF6FF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   input[type=range]::-moz-range-thumb {
-    width: 20px; height: 20px;
+    width: 28px; height: 28px;
     border-radius: 50%;
-    background: var(--text);
+    background: #0F172A;
     cursor: pointer;
-    border: 3px solid var(--surface);
-    box-shadow: 0 0 0 1px var(--border-strong);
+    border: 6px solid #EFF6FF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-
+  
+  /* Result Cards */
   .calc-result {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 32px;
+    display: flex;
+    gap: 24px;
   }
   .result-card {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px 22px;
+    flex: 1;
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid #E2E8F0;
   }
-  .result-card[data-cycle-card="annual"] {
-    background: var(--accent-soft);
-    border-color: color-mix(in oklab, var(--accent) 25%, var(--border));
+  .rc-annual {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+  }
+  .rc-monthly {
+    background: #ffffff;
+  }
+  .rc-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
   }
   .rc-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
+    font-family: var(--font-mono, monospace);
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: .05em;
     text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--text-3);
-    margin-bottom: 10px;
+  }
+  .rc-badge {
+    background: #DBEAFE;
+    color: #1D4ED8;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .rc-badge-dot {
+    width: 6px; height: 6px;
+    background: #10B981;
+    border-radius: 50%;
   }
   .rc-num {
-    display: flex; align-items: baseline; gap: 6px;
-    font-size: 28px;
-    font-weight: 500;
-    letter-spacing: -.018em;
-    color: var(--text);
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #0F172A;
     font-variant-numeric: tabular-nums;
   }
   .rc-unit {
-    font-size: 13px;
-    color: var(--text-3);
-    font-weight: 400;
+    font-size: 16px;
+    color: #64748B;
+    font-weight: 500;
   }
   .rc-sub {
-    margin-top: 6px;
-    font-size: 12.5px;
-    color: var(--text-3);
-    font-family: var(--font-mono);
+    margin-top: 16px;
+    font-size: 14px;
+    color: #64748B;
   }
   .calc-foot {
     margin: 24px 0 0;
     text-align: center;
-    font-size: 13.5px;
-    color: var(--text-3);
+    font-size: 14px;
+    color: #64748B;
     min-height: 1.4em;
   }
   .calc-foot strong { color: var(--text); font-weight: 500; }

@@ -8,24 +8,39 @@ import Footer     from "../components/Footer.astro";
 // We describe what you get; we don't describe the inside of the box.
 const archPoints = [
   {
+    num: "01",
+    tag: "CONTROL",
     h: "One place where policy is decided",
     p: "All overlay traffic between your machines is routed through a single managed hub — the one place where access rules are applied. Your machines don't need to discover each other directly; they reach the hub, and the hub decides who reaches whom.",
+    features: ["Single managed hub", "Consistent access rules", "No direct machine discovery"]
   },
   {
+    num: "02",
+    tag: "ISOLATION",
     h: "Strict isolation between organizations",
     p: "Each organization is fully isolated from every other organization on the service. Other organizations cannot see or reach your machines, even if they happen to use overlapping private IP ranges.",
+    features: ["Organization-level isolation", "No overlapping conflicts", "Your network stays private"]
   },
   {
+    num: "03",
+    tag: "POLICY",
     h: "Policies apply before traffic reaches the destination",
     p: "When you set a policy to deny, packets are dropped before they ever reach the destination machine. There's no software agent on your devices to bypass and no race window — the rule applies the moment you save it.",
+    features: ["Enforced at the edge", "No bypass, no race window", "Instantly applied"]
   },
   {
+    num: "04",
+    tag: "SECURITY",
     h: "Server-side keys are encrypted at rest",
     p: "The keys MeshWG holds on your behalf are encrypted at rest. The service cannot start at all if the unlock secret is missing. Per-machine private keys are shown to you once at creation and never persisted server-side.",
+    features: ["Encrypted at rest", "Requires unlock secret", "Keys shown once, never stored"]
   },
   {
+    num: "05",
+    tag: "INTERNET",
     h: "No path to the public internet through MeshWG",
     p: "MeshWG forwards your overlay traffic between your own machines only. There is no internet egress path through us — your devices continue to reach the internet through their own local network.",
+    features: ["No internet routing", "Private network only", "You stay in control"]
   },
 ];
 
@@ -33,7 +48,7 @@ const dontDoList = [
   { bold: "We don't ship firmware.",                  rest: "The router runs whatever it normally runs." },
   { bold: "We don't install an agent on your devices.", rest: "The WireGuard implementation is the one already in the device." },
   { bold: "We don't invent a new tunnel protocol.",     rest: "It's WireGuard, RFC-style." },
-  { bold: "We don't intercept your traffic",           rest: "— it's WireGuard-encrypted end to end." },
+  { bold: "We don't intercept your traffic.",           rest: "It's WireGuard-encrypted end to end." },
   { bold: "We don't retain per-machine private keys.", rest: "They're shown to you once at creation, then gone." },
 ];
 
@@ -60,7 +75,7 @@ const description = "How MeshWG actually works: the architecture promises we mak
   <Nav />
   <PageHero
     eyebrow="/ docs"
-    title="How it actually works."
+    title='How it <span style="color: #2563EB;">actually works.</span>'
     lede="A high-level overview of the architecture, the standard WireGuard configuration MeshWG generates, and the end-to-end testing that verifies every claim on this site before each release."
     wrapTitle={true}
     wrapLede={true}
@@ -69,26 +84,47 @@ const description = "How MeshWG actually works: the architecture promises we mak
   <section class="docs-section">
     <div class="wrap">
 
-      <!-- TOC -->
-      <nav class="toc">
-        <span class="toc-label">On this page</span>
-        <a href="#architecture">Architecture</a>
-        <a href="#config">The config we generate</a>
-        <a href="#doesnt-do">What it doesn't do</a>
-        <a href="#verification">How we verify it works</a>
-      </nav>
-
       <!-- ── Architecture -->
       <article id="architecture" class="doc-block">
-        <header>
-          <div class="db-eyebrow">/ 01 architecture</div>
-          <h2>Architecture in five claims.</h2>
-        </header>
-        <div class="claims">
-          {archPoints.map((c) => (
-            <div class="claim">
-              <h3>{c.h}</h3>
-              <p>{c.p}</p>
+        <div class="arch-header-layout">
+          <header class="arch-header-left">
+            <div class="db-eyebrow">/ 01 ARCHITECTURE</div>
+            <h2>Architecture in five claims.</h2>
+            <p class="arch-subtitle"><span style="color: #2563EB; font-weight: 500;">MeshWG keeps things simple.</span> Here are the core principles that define how it works, and why it's different.</p>
+          </header>
+          
+          <!-- TOC Sidebar -->
+          <nav class="toc-sidebar">
+            <span class="toc-label">ON THIS PAGE</span>
+            <div class="toc-links">
+              <a href="#architecture" class="active">Architecture</a>
+              <a href="#config">The config we generate</a>
+              <a href="#doesnt-do">What it doesn't do</a>
+              <a href="#verification">How we verify it works</a>
+            </div>
+          </nav>
+        </div>
+
+        <div class="bento-grid">
+          {archPoints.map((c, i) => (
+            <div class={`bento-card bento-card-${i + 1}`}>
+              <header class="bc-head">
+                <span class="bc-num">{c.num}</span>
+                <span class="bc-tag">{c.tag}</span>
+              </header>
+              <div class="bc-body">
+                <h3>{c.h}</h3>
+                <p>{c.p}</p>
+              </div>
+              <div class="bc-divider"></div>
+              <ul class="bc-features">
+                {c.features.map(f => (
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    {f}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
@@ -97,7 +133,7 @@ const description = "How MeshWG actually works: the architecture promises we mak
       <!-- ── Config -->
       <article id="config" class="doc-block">
         <header>
-          <div class="db-eyebrow">/ 02 the config we generate</div>
+          <div class="db-eyebrow">/ 02 THE CONFIG WE GENERATE</div>
           <h2>Standard WireGuard. Nothing custom.</h2>
           <p class="db-lede">
             When you add a machine in the dashboard, MeshWG returns a
@@ -106,7 +142,26 @@ const description = "How MeshWG actually works: the architecture promises we mak
           </p>
         </header>
 
-        <pre class="config-pre"><span class="hdr"># WireGuard config for machine "branch-mumbai"</span>
+        <div class="code-window">
+          <header class="cw-header">
+            <div class="cw-left">
+              <span class="cw-badge">WireGuard</span>
+              <span class="cw-divider">|</span>
+              <span class="cw-title">Configuration for machine "branch-mumbai"</span>
+            </div>
+            <div class="cw-right">
+              <button class="cw-btn-copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy
+              </button>
+              <button class="cw-btn-dropdown">
+                .conf
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+            </div>
+          </header>
+          <div class="cw-body">
+            <pre class="config-pre">
 <span class="sec">[Interface]</span>
 <span class="key">PrivateKey</span>          = <span class="val">&lt;shown once at machine creation&gt;</span>
 <span class="key">Address</span>             = <span class="val">10.100.0.2/16</span>
@@ -118,23 +173,28 @@ const description = "How MeshWG actually works: the architecture promises we mak
 <span class="key">Endpoint</span>            = <span class="val">vpn.meshwg.com:51820</span>
 <span class="key">AllowedIPs</span>          = <span class="val">10.100.0.0/16</span>
 <span class="key">PersistentKeepalive</span> = <span class="val">25</span></pre>
+          </div>
+        </div>
       </article>
 
       <!-- ── What it doesn't do -->
       <article id="doesnt-do" class="doc-block">
         <header>
-          <div class="db-eyebrow">/ 03 what it doesn't do</div>
+          <div class="db-eyebrow">/ 03 WHAT IT DOESN'T DO</div>
           <h2>The honest list of things MeshWG isn't.</h2>
           <p class="db-lede">We keep it simple. No gimmicks, no magic. Here's what MeshWG doesn't do.</p>
         </header>
-        <ul class="dont">
-          {dontDoList.map((item) => (
-            <li>
-              <span class="dont-dash">—</span>
-              <span class="dont-text"><strong>{item.bold}</strong> {item.rest}</span>
-            </li>
+        <div class="dont-grid">
+          {dontDoList.map((item, i) => (
+            <div class={`dont-card dont-card-${i + 1}`}>
+              <div class="dc-num">{String(i + 1).padStart(2, '0')}</div>
+              <div class="dc-content">
+                <div class="dc-title">{item.bold}</div>
+                <div class="dc-desc">{item.rest}</div>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       </article>
 
       <!-- ── Verification -->
@@ -152,11 +212,16 @@ const description = "How MeshWG actually works: the architecture promises we mak
         </header>
 
         <div class="cov-grid">
+          <div class="cov-head-cell">Test</div>
+          <div class="cov-head-cell">What is verified</div>
+          <div class="cov-head-cell cov-head-desktop">Test</div>
+          <div class="cov-head-cell cov-head-desktop">What is verified</div>
+
           {testCoverage.map((t) => (
-            <div class="cov">
-              <div class="cov-name">{t.n}</div>
-              <div class="cov-what">{t.what}</div>
-            </div>
+            <>
+              <div class="cov-cell-name">{t.n}</div>
+              <div class="cov-cell-what">{t.what}.</div>
+            </>
           ))}
         </div>
 
@@ -178,13 +243,30 @@ const description = "How MeshWG actually works: the architecture promises we mak
 <style>
   .docs-section { padding: 0 0 48px; }
 
-  /* TOC */
-  .toc {
-    display: flex; flex-wrap: wrap; gap: 18px 24px;
-    padding: 16px 0;
-    margin-bottom: 56px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
+  /* Arch Header & TOC Sidebar */
+  .arch-header-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 40px;
+  }
+  .arch-header-left {
+    max-width: 600px;
+  }
+  .arch-subtitle {
+    color: var(--text-2);
+    font-size: 15.5px;
+    line-height: 1.65;
+    margin: 12px 0 0;
+  }
+  .toc-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 24px;
+    border-left: 2px solid #2563EB;
+    min-width: 200px;
   }
   .toc-label {
     font-family: var(--font-mono);
@@ -192,13 +274,30 @@ const description = "How MeshWG actually works: the architecture promises we mak
     text-transform: uppercase;
     letter-spacing: .06em;
     font-size: 11px;
-    margin-right: 8px;
   }
-  .toc a {
+  .toc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .toc-links a {
     color: var(--text-2);
     transition: color .12s ease;
+    text-decoration: none;
   }
-  .toc a:hover { color: var(--text); }
+  .toc-links a:hover { color: var(--text); }
+  .toc-links a.active { color: #2563EB; font-weight: 500; }
+  
+  @media (max-width: 900px) {
+    .arch-header-layout {
+      flex-direction: column;
+    }
+    .toc-sidebar {
+      border-left: none;
+      padding-left: 0;
+    }
+  }
 
   /* Doc blocks */
   .doc-block {
@@ -231,121 +330,355 @@ const description = "How MeshWG actually works: the architecture promises we mak
     max-width: none;
   }
 
-  /* Architecture claims */
-  .claims {
+  /* Bento Grid */
+  .bento-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(6, 1fr);
     gap: 16px;
     margin-top: 32px;
   }
-  .claim {
-    background: var(--surface);
-    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--border));
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  .bento-card {
+    background: #ffffff;
+    border: 2px solid #0F172A;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 6px 6px 0px #0F172A;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
   }
-  .claim:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  .bento-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #0F172A;
   }
-  .claim h3 {
+  .bento-card-1, .bento-card-2, .bento-card-3 {
+    grid-column: span 2;
+  }
+  .bento-card-4, .bento-card-5 {
+    grid-column: span 3;
+  }
+  .bc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .bc-num {
+    background: #EFF6FF;
+    color: #2563EB;
+    font-size: 16px;
+    font-weight: 700;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: grid; place-items: center;
+  }
+  .bc-tag {
+    background: #F1F5F9;
+    color: #475569;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 999px;
+    letter-spacing: .05em;
+  }
+  .bc-body {
+    flex: 1;
+  }
+  .bc-body h3 {
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 700;
     margin: 0 0 8px;
-    letter-spacing: -.005em;
+    color: #0F172A;
+    line-height: 1.3;
   }
-  .claim p {
-    color: var(--text-2);
-    font-size: 13.5px;
-    line-height: 1.65;
+  .bc-body p {
+    color: #64748B;
+    font-size: 12.5px;
+    line-height: 1.5;
     margin: 0;
   }
-
-  /* Config pre */
-  .config-pre {
-    margin: 32px 0 0;
-    background: var(--code-bg);
-    color: var(--code-fg);
-    border-radius: var(--radius-lg);
-    padding: 24px 26px;
-    font: 12.5px/1.75 var(--font-mono);
-    overflow: auto;
-    border: 1px solid var(--border-strong);
-    white-space: pre;
+  .bc-divider {
+    height: 1px;
+    background: #E2E8F0;
+    margin: 12px 0;
   }
-  .config-pre .hdr { color: var(--code-com); }
-  .config-pre .sec { color: var(--code-key); font-weight: 600; }
-  .config-pre .key { color: var(--text-2); font-weight: 500; }
-  .config-pre .val { color: var(--code-num); }
-
-  /* Don't-do list */
-  .dont {
+  .bc-features {
     list-style: none;
-    padding: 0; margin: 32px 0 0;
-    display: flex; flex-direction: column;
+    padding: 0;
+    margin: 0 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .bc-features li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #475569;
+  }
+  .bc-foot {
+    margin-top: auto;
+  }
+  .bc-link {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #2563EB;
+    text-decoration: none;
+  }
+  .bc-link:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 1024px) {
+    .bento-card-1, .bento-card-2, .bento-card-3, .bento-card-4, .bento-card-5 {
+      grid-column: span 3;
+    }
+  }
+  @media (max-width: 600px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+    }
+    .bento-card-1, .bento-card-2, .bento-card-3, .bento-card-4, .bento-card-5 {
+      grid-column: span 1;
+    }
+  }
+
+  /* Code Window */
+  .code-window {
+    margin-top: 32px;
+    border: 2px solid #2563EB;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    overflow: hidden;
+  }
+  .cw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #E2E8F0;
+    background: #ffffff;
+  }
+  .cw-left, .cw-right {
+    display: flex;
+    align-items: center;
     gap: 12px;
   }
-  .dont li {
-    display: flex; align-items: center; gap: 20px;
-    padding: 16px 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    color: var(--text-2);
-    font-size: 15px;
-    line-height: 1.6;
+  .cw-badge {
+    background: #EFF6FF;
+    color: #2563EB;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
   }
-  .dont-dash {
-    flex-shrink: 0;
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    background: color-mix(in oklab, var(--accent) 10%, var(--surface));
-    border: 1px solid color-mix(in oklab, var(--accent) 20%, var(--border));
-    border-radius: var(--radius);
-    color: var(--accent);
+  .cw-divider {
+    color: #E2E8F0;
+    font-weight: 300;
+  }
+  .cw-title {
+    color: #64748B;
     font-family: var(--font-mono);
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1;
+    font-size: 12px;
   }
-  .dont-text strong {
-    color: var(--text);
-    font-weight: 500;
+  .cw-btn-copy {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #2563EB;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .cw-btn-copy:hover {
+    opacity: 0.9;
+  }
+  .cw-btn-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #EFF6FF;
+    color: #2563EB;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .cw-btn-dropdown:hover {
+    background: #DBEAFE;
+  }
+  .cw-body {
+    background: #F8FAFC;
+    padding: 24px 32px;
+    overflow-x: auto;
+  }
+  .config-pre {
+    margin: 0;
+    font: 13.5px/1.75 var(--font-mono);
+    white-space: pre;
+    color: #334155;
+  }
+  .config-pre .hdr { color: #94A3B8; }
+  .config-pre .sec { color: #2563EB; font-weight: 700; }
+  .config-pre .key { color: #334155; font-weight: 600; }
+  .config-pre .val { color: #EA580C; font-weight: 500; }
+
+  /* Don't-do grid */
+  .dont-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .dont-card {
+    background: #ffffff;
+    border: 2px solid #2563EB;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0px #2563EB;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .dont-card-5 {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: center;
+  }
+  .dc-num {
+    background: #EFF6FF;
+    color: #2563EB;
+    font-size: 16px;
+    font-weight: 700;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .dc-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dc-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F172A;
+  }
+  .dc-desc {
+    font-size: 14px;
+    color: #64748B;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 600px) {
+    .dont-grid {
+      grid-template-columns: 1fr;
+    }
+    .dont-card-5 {
+      grid-column: span 1;
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 
   /* Coverage grid */
   .cov-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0;
+    grid-template-columns: minmax(180px, 1fr) 2fr minmax(180px, 1fr) 2fr;
     margin-top: 32px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border: 2px solid #0F172A;
+    border-radius: 8px;
     overflow: hidden;
+    background: #ffffff;
   }
-  .cov {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 16px;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    background: var(--surface);
+  .cov-head-cell {
+    background: #EFF6FF;
+    color: #2563EB;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 16px 24px;
+    border-bottom: 2px solid #0F172A;
+    border-right: 2px solid #0F172A;
   }
-  .cov:nth-child(2n) { border-right: 0; }
-  .cov:nth-last-child(-n+2) { border-bottom: 0; }
-  .cov-name {
+  .cov-cell-name {
     font-family: var(--font-mono);
-    font-size: 11.5px;
-    color: var(--accent);
-    letter-spacing: .02em;
+    font-size: 13px;
+    color: #2563EB;
+    padding: 24px;
+    border-bottom: 2px solid #0F172A;
+    border-right: 2px solid #0F172A;
+    display: flex;
+    align-items: center;
   }
-  .cov-what {
-    color: var(--text-2);
-    font-size: 13.5px;
+  .cov-cell-what {
+    color: #334155;
+    font-size: 14px;
     line-height: 1.5;
+    padding: 24px;
+    border-bottom: 2px solid #0F172A;
+    border-right: 2px solid #0F172A;
+    display: flex;
+    align-items: center;
+  }
+  .cov-grid > div:nth-child(4n) {
+    border-right: none;
+  }
+  .cov-grid > div:nth-last-child(-n+4) {
+    border-bottom: none;
+  }
+
+  @media (max-width: 1024px) {
+    .cov-grid {
+      grid-template-columns: minmax(180px, 1fr) 2fr;
+    }
+    .cov-grid > div:nth-child(4n) {
+      border-right: 2px solid #0F172A;
+    }
+    .cov-grid > div:nth-child(2n) {
+      border-right: none;
+    }
+    .cov-grid > div:nth-last-child(-n+4) {
+      border-bottom: 2px solid #0F172A;
+    }
+    .cov-grid > div:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+    .cov-head-desktop {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cov-grid {
+      grid-template-columns: 1fr;
+    }
+    .cov-grid > div:nth-child(2n) {
+      border-right: 2px solid #0F172A;
+    }
+    .cov-grid > div {
+      border-right: none !important;
+    }
+    .cov-grid > div:nth-last-child(-n+2) {
+      border-bottom: 2px solid #0F172A;
+    }
+    .cov-grid > div:last-child {
+      border-bottom: none;
+    }
+    .cov-head-cell {
+      display: none;
+    }
   }
   .cov-foot {
     margin-top: 24px;
@@ -384,3 +717,52 @@ const description = "How MeshWG actually works: the architecture promises we mak
     .doc-block { margin-bottom: 56px; }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyBtn = document.querySelector('.cw-btn-copy');
+    const confBtn = document.querySelector('.cw-btn-dropdown');
+    
+    const rawConfig = `# WireGuard config for machine "branch-mumbai"
+[Interface]
+PrivateKey          = <shown once at machine creation>
+Address             = 10.100.0.2/16
+MTU                 = 1420
+
+[Peer]
+# MeshWG hub for "acme-networks"
+PublicKey           = <your MeshWG hub public key>
+Endpoint            = vpn.meshwg.com:51820
+AllowedIPs          = 10.100.0.0/16
+PersistentKeepalive = 25`;
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(rawConfig);
+          const originalHTML = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+          setTimeout(() => {
+            copyBtn.innerHTML = originalHTML;
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy: ', err);
+        }
+      });
+    }
+
+    if (confBtn) {
+      confBtn.addEventListener('click', () => {
+        const blob = new Blob([rawConfig], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'branch-mumbai.conf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      });
+    }
+  });
+</script>

@@ -567,7 +567,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     background: #ffffff;
     border: 2px solid #0F172A;
     border-radius: 12px;
-    padding: 24px;
+    padding: 20px;
     display: flex; flex-direction: column;
     box-shadow: 6px 6px 0px #0F172A;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -613,7 +613,7 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   }
   .plan-name {
     font-family: var(--font-sans, system-ui);
-    font-size: 13px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: #64748B;
@@ -625,11 +625,11 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   .plan-price {
     display: flex; align-items: baseline; gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
-    min-height: 48px;
+    margin-bottom: 12px;
+    min-height: 44px;
   }
   .plan-price .num {
-    font-size: 48px; /* Compressed for single screen view */
+    font-size: 40px; /* Compressed for single screen view */
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.03em;
@@ -638,27 +638,27 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
   }
   .plan-accent .plan-price .num { color: #2563EB; }
   .plan-price .unit {
-    font-size: 14px;
+    font-size: 13px;
     color: #475569;
     line-height: 1.5;
     font-weight: 500;
   }
   .plan-desc {
     color: #475569;
-    font-size: 15px;
+    font-size: 13.5px;
     line-height: 1.6;
-    margin: 0 0 32px;
-    min-height: 48px;
+    margin: 0 0 24px;
+    min-height: 42px;
   }
   .plan-list {
     list-style: none;
-    padding: 0; margin: 0 0 40px 0;
-    display: flex; flex-direction: column; gap: 14px;
+    padding: 0; margin: 0 0 28px 0;
+    display: flex; flex-direction: column; gap: 10px;
     flex: 1;
   }
   .plan-list li {
     color: #334155;
-    font-size: 15px;
+    font-size: 13.5px;
     line-height: 1.4;
     padding-left: 28px;
     position: relative;
@@ -679,9 +679,9 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 48px;
+    height: 40px;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 13.5px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
@@ -936,13 +936,19 @@ const description = "₹349 per machine per month, billed annually. Or ₹499 pe
     border-radius: 16px;
     padding: 16px;
     border: 1px solid #F1F5F9;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.04);
   }
   .rc-annual {
-    background: #EFF6FF;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
     border-color: #BFDBFE;
   }
   .rc-monthly {
-    background: #ffffff;
+    background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+    border-color: #E2E8F0;
   }
   .rc-top-row {
     display: flex;

@@ -15,9 +15,8 @@ const { eyebrow, title, lede, wrapLede = false, wrapTitle = false } = Astro.prop
     <div class="ph-grid">
       <div class="ph-left">
         <div class="ph-eyebrow" data-reveal>{eyebrow}</div>
-        <h1 class:list={["ph-h", { "ph-h--wrap": wrapTitle }]} data-reveal data-reveal-delay="100">{title}</h1>
+        <h1 class:list={["ph-h", { "ph-h--wrap": wrapTitle }]} data-reveal data-reveal-delay="100" set:html={title} />
       </div>
-      <div class="ph-right" data-reveal data-reveal-delay="200">
         {lede && <p class:list={["ph-lede", { "ph-lede--wrap": wrapLede }]} set:html={lede} />}
       </div>
     </div>
@@ -31,7 +30,6 @@ const { eyebrow, title, lede, wrapLede = false, wrapTitle = false } = Astro.prop
      room below it. */
   .page-hero {
     padding: 152px 0 32px;
-    border-bottom: 1px solid var(--border);
     position: relative;
   }
   @keyframes gradientMesh {

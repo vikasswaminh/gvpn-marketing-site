@@ -13,6 +13,7 @@ const vendorGuides = [
   {
     name: "TP-Link",
     color: "#4ACBD6",
+    categories: ["Home routers"],
     blurb: "Archer · Deco · ER series with WireGuard support.",
     steps: [
       "Open the router's admin UI (typically http://192.168.0.1)",
@@ -25,6 +26,7 @@ const vendorGuides = [
   {
     name: "MikroTik",
     color: "#293239",
+    categories: ["Enterprise"],
     blurb: "RouterOS 7+. WireGuard is a first-class interface type.",
     steps: [
       "Open WinBox or the WebFig admin",
@@ -37,6 +39,7 @@ const vendorGuides = [
   {
     name: "OpenWrt",
     color: "#F08000",
+    categories: ["Home routers", "Enterprise"],
     blurb: "19.07+ via LuCI or /etc/config/network. Wraps wg-quick.",
     steps: [
       "Install: opkg update && opkg install wireguard-tools luci-app-wireguard luci-proto-wireguard",
@@ -49,6 +52,7 @@ const vendorGuides = [
   {
     name: "Ubiquiti",
     color: "#0559C9",
+    categories: ["Enterprise"],
     blurb: "UDM (firmware 3.x+) and EdgeRouter with the wireguard package.",
     steps: [
       "UDM: Settings → Teleport & VPN → VPN Client → WireGuard, import the config",
@@ -61,6 +65,7 @@ const vendorGuides = [
   {
     name: "OPNsense / pfSense",
     color: "#D94F00",
+    categories: ["Firewalls", "Enterprise"],
     blurb: "OPNsense 22.1+ has WireGuard in core. pfSense 2.7+ as a package.",
     steps: [
       "VPN → WireGuard → Instances → Add",
@@ -73,6 +78,7 @@ const vendorGuides = [
   {
     name: "Linux / Mac / Windows / mobile",
     color: "#0a0a0a",
+    categories: ["Operating systems", "Mobile"],
     blurb: "Use the official WireGuard app — it imports the .conf as-is.",
     steps: [
       "Install the official WireGuard client from wireguard.com/install/",
@@ -86,115 +92,199 @@ const vendorGuides = [
 
 const title = "Quickstart — MeshWG";
 const description = "Get your first machine on a MeshWG mesh in under 2 minutes. Step-by-step setup for TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense, and the official WireGuard apps.";
+
+const steps = [
+  {
+    num: "01",
+    time: "~ 30 seconds",
+    title: "Sign up",
+    body: "Create your account with Google or email. No credit card. You'll land in the dashboard in under a minute.",
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+    btnText: "Sign up free &rarr;",
+    btnUrl: "/signup",
+    btnPrimary: true
+  },
+  {
+    num: "02",
+    time: "~ 1 minute",
+    title: "Add a machine",
+    body: "Click Add machine, give it a name (e.g. \"branch-mumbai\" or \"office-router\"), and we generate a WireGuard config tied to that machine.",
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><circle cx="7" cy="15" r="1.5" fill="#2563EB" stroke="none"/><line x1="10" y1="15" x2="17" y2="15"/><line x1="14" y1="3" x2="14" y2="8"/><line x1="11.5" y1="5.5" x2="16.5" y2="5.5"/></svg>`,
+    btnText: "Add machine &rarr;",
+    btnUrl: "/dashboard",
+    btnPrimary: false
+  },
+  {
+    num: "03",
+    time: "~ 30 seconds",
+    title: "Paste the config into your device",
+    body: "Open the WireGuard section of your router or the official WireGuard app on your laptop / phone. Paste the config. The tunnel comes up within seconds.",
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>`,
+    btnText: "View device guides &rarr;",
+    btnUrl: "#vendor-guides",
+    btnPrimary: false
+  }
+];
 ---
 
 <Base title={title} description={description}>
   <Nav />
-  <div class="qs-hero">
-    <div class="qs-hero-bg"></div>
-    <div class="wrap">
-      <div class="qs-eyebrow">/ QUICKSTART</div>
-      <h1 class="qs-h1">Get your first machine online in <span class="text-blue">2 minutes.</span></h1>
-      <p class="qs-lede">Three steps to create the mesh, plus vendor-specific paste instructions for whatever hardware you have.</p>
-      
-      <div class="qs-benefits">
-        <div class="qs-benefit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          No credit card
+  <div class="how-bg"></div>
+  <div class="wrap">
+    <div class="how-header">
+      <div class="how-header-main">
+        <div class="sec-eyebrow">/ QUICKSTART</div>
+        <h2 class="sec-h">Get your first machine online in <span class="blue">2 minutes.</span></h2>
+        <p class="sec-lede">Three simple steps to create the mesh, plus vendor-specific instructions for whatever hardware you have.</p>
+        
+        <div class="how-features">
+          <div class="h-feature">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            No credit card
+          </div>
+          <div class="h-feature">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Under 2 minutes
+          </div>
+          <div class="h-feature">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            Works with your hardware
+          </div>
         </div>
-        <div class="qs-benefit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Under 2 minutes
-        </div>
-        <div class="qs-benefit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-          Works with your hardware
+      </div>
+
+      <div class="how-header-aside">
+        <div class="callout-box">
+          <div class="callout-inner">
+            <h3>A private network,<br/>ready in minutes.</h3>
+            <p>Connect your devices securely<br/>and start building your mesh.</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <section class="qs-section">
-    <div class="wrap">
+    <div class="how-steps">
+      {steps.map((s, i) => (
+        <>
+          <article class="step-card">
+            <div class="sc-top">
+              <span class="sc-num">{s.num}</span>
+              <span class="sc-time">{s.time}</span>
+            </div>
+            
+            <div class="sc-icon-wrap">
+              <div class="sc-icon" set:html={s.icon} />
+            </div>
+            
+            <h3 class="sc-title">{s.title}</h3>
+            <p class="sc-body">{s.body}</p>
+            
+            <div class="sc-bot">
+              <a href={s.btnUrl} class={`sc-btn ${s.btnPrimary ? 'btn-primary' : 'btn-outline'}`} set:html={s.btnText} />
+            </div>
+          </article>
 
-      <div class="qs-cards-container">
-        <!-- Step 01 -->
-        <div class="qs-card">
-          <div class="qs-card-left">
-            <div class="qs-step-n">01</div>
-            <div class="qs-icon-box">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          {i < steps.length - 1 && (
+            <div class="sc-connector">
+              <div class="connector-line"></div>
+              <div class="connector-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+              <div class="connector-line"></div>
             </div>
+          )}
+        </>
+      ))}
+    </div>
+      <div id="vendor-guides" style="padding-top: 64px;">
+        <!-- Filter Bar -->
+        <div class="vguide-filters-wrap">
+          <div class="vg-filters">
+            <button class="vg-filter-btn active">All devices</button>
+            <button class="vg-filter-btn">Home routers</button>
+            <button class="vg-filter-btn">Enterprise</button>
+            <button class="vg-filter-btn">Firewalls</button>
+            <button class="vg-filter-btn">Operating systems</button>
+            <button class="vg-filter-btn">Mobile</button>
           </div>
-          <div class="qs-card-main">
-            <h2>Sign up</h2>
-            <p>Create your account with Google or email. No credit card.<br/>You land in the dashboard in under a minute.</p>
-            <a class="btn btn-primary" href={site.signupFree} target="_blank" rel="noopener">Sign up free &rarr;</a>
-          </div>
-        </div>
-        
-        <!-- Step 02 -->
-        <div class="qs-card">
-          <div class="qs-card-left">
-            <div class="qs-step-n">02</div>
-            <div class="qs-icon-box">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg>
-            </div>
-          </div>
-          <div class="qs-card-main">
-            <h2>Add a machine</h2>
-            <p>Click Add machine, give it a name (e.g. "branch-mumbai" or "office-router"), and we generate a WireGuard config tied to that machine. The config is shown once — download it or copy it now.</p>
-            <a class="btn btn-ghost-blue" href={site.signupFree}>Add machine &rarr;</a>
-          </div>
-        </div>
-
-        <!-- Step 03 -->
-        <div class="qs-card">
-          <div class="qs-card-left">
-            <div class="qs-step-n">03</div>
-            <div class="qs-icon-box">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            </div>
-          </div>
-          <div class="qs-card-main">
-            <h2>Paste the config into your device</h2>
-            <p>Open the WireGuard section of your router or the official WireGuard app on your laptop / phone. Paste the config. The tunnel comes up within seconds.</p>
-            <p class="hint">Vendor-specific instructions below. Pick yours.</p>
-            <a class="btn btn-ghost-blue" href="#vendor-guides">View device guides &rarr;</a>
+          <div class="vg-sort">
+            <button class="vg-sort-btn">Sort: Popular <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
           </div>
         </div>
       </div>
-      <div id="vendor-guides" style="padding-top: 32px;"></div>
 
       <!-- ── Per-vendor guides -->
-      <div class="vendor-grid">
-        {vendorGuides.map((v) => (
-          <article class="vguide">
+      <div class="vendor-grid" id="vendor-grid">
+        {vendorGuides.map((v, idx) => (
+          <article class="vguide" data-name={v.name} data-categories={v.categories ? v.categories.join(',') : ''} data-index={idx}>
             <header class="vg-head">
-              <span class="vg-mark" style={`background:${v.color}`}>{v.name.slice(0, 2).toUpperCase()}</span>
-              <div>
+              <span class="vg-mark">{v.name.slice(0, 2).toUpperCase()}</span>
+              <div class="vg-head-main">
                 <h3 class="vg-name">{v.name}</h3>
                 <p class="vg-blurb">{v.blurb}</p>
               </div>
+              <div class="vg-arrow-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
             </header>
+            
             <ol class="vg-steps">
               {v.steps.map((s) => <li>{s}</li>)}
             </ol>
-            <a class="vg-docs" href={v.docs} target="_blank" rel="noopener">Vendor docs ↗</a>
+            
+            <footer class="vg-foot">
+              <a class="vg-docs" href={v.docs} target="_blank" rel="noopener">Vendor docs ↗</a>
+              <a class="vg-btn" href={v.docs} target="_blank" rel="noopener">View guide &rarr;</a>
+            </footer>
           </article>
         ))}
       </div>
 
       <!-- ── Stuck? -->
-      <div class="self-host">
-        <div class="sh-content">
-          <div class="sh-eyebrow">/ stuck?</div>
-          <h3>Email us. We answer fast.</h3>
+      <div class="support-section">
+        <div class="support-left">
+          <div class="support-badges">
+            <span class="badge badge-green"><span class="dot"></span> SUPPORT</span>
+            <span class="badge badge-light">We typically respond within a few hours</span>
+          </div>
+          <h2>Email us. We answer fast.</h2>
           <p>Most setups land in under 2 minutes. If yours doesn't, send a note with your router model and we'll walk it through with you — usually same day.</p>
+          <div class="support-cta">
+            <a href="mailto:hello@meshwg.com" class="btn btn-primary">Email hello@meshwg.com &rarr;</a>
+            <a href="/docs" class="btn btn-line">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Read the docs &rarr;
+            </a>
+          </div>
         </div>
-        <div class="sh-cta">
-          <a class="btn btn-primary" href="mailto:hello@meshwg.com?subject=MeshWG%20quickstart%20help">Email hello@meshwg.com</a>
-          <a class="btn" href="/docs">Read the docs</a>
+        <div class="support-right">
+          <div class="sr-header">OTHER WAYS TO GET HELP</div>
+          <div class="sr-cards">
+            <a href="/docs" class="sr-card hover-card">
+              <div class="sr-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+              <div class="sr-text">
+                <strong>Documentation</strong>
+                <span>Step-by-step guides for every device.</span>
+              </div>
+              <div class="sr-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+            </a>
+            <a href="#" class="sr-card hover-card">
+              <div class="sr-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+              <div class="sr-text">
+                <strong>Community</strong>
+                <span>Get help from other users.</span>
+              </div>
+              <div class="sr-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+            </a>
+            <a href="mailto:hello@meshwg.com" class="sr-card hover-card">
+              <div class="sr-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <div class="sr-text">
+                <strong>Contact support</strong>
+                <span>Still stuck? Send us a message.</span>
+              </div>
+              <div class="sr-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -205,308 +295,705 @@ const description = "Get your first machine on a MeshWG mesh in under 2 minutes.
 </Base>
 
 <style>
-  /* Hero Section */
-  .qs-hero {
-    padding: 110px 0 16px; /* Reduced from 130px to fit on single screen */
-    position: relative;
-    overflow: hidden;
-  }
-  .qs-hero-bg {
+  /* Background Grid */
+  .how-bg {
     position: absolute;
-    top: 0; right: 0;
-    width: 900px; height: 900px;
-    background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 70%);
+    top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
+    background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.5;
   }
-  .qs-hero .wrap {
-    position: relative;
-    z-index: 1;
+
+  /* Header Section */
+  .how-header {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    margin-bottom: 56px;
+    margin-top: 130px; /* Offset for fixed nav and banner */
   }
-  .qs-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-  }
-  .qs-h1 {
-    font-family: var(--font-display);
-    font-size: clamp(32px, 3.8vw, 42px);
-    font-weight: 700;
-    color: var(--text);
-    margin: 0;
-    letter-spacing: -0.015em;
-  }
-  .text-blue {
-    color: #2563EB;
-  }
-  .qs-lede {
-    font-size: 17px;
-    color: var(--text-2);
-    margin: 0;
-    max-width: 800px;
+  .how-header-main {
+    flex: 1;
+    max-width: 850px;
   }
   
-  /* Benefits Row */
-  .qs-benefits {
+  .sec-eyebrow {
+    font-family: var(--font-mono, monospace);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #1E3A8A; /* Deeper blue for contrast */
+    margin-bottom: 12px;
+  }
+  .sec-h {
+    font-family: var(--font-display, sans-serif);
+    font-size: clamp(28px, 3.2vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0F172A;
+    margin: 0 0 12px;
+    line-height: 1.1;
+  }
+  .sec-h .blue {
+    color: #2563EB;
+  }
+  .sec-lede {
+    font-size: 15.5px;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+
+  .how-features {
     display: flex;
-    gap: 32px;
-    margin-top: 16px;
+    align-items: center;
+    gap: 24px;
     flex-wrap: wrap;
   }
-  .qs-benefit {
-    display: flex;
+  .h-feature {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-2);
+    color: #475569;
   }
 
-  /* Cards Section */
-  .qs-section {
-    padding: 0 0 64px; /* Removed top padding */
+  /* Callout Box */
+  .how-header-aside {
+    flex-shrink: 0;
+    width: 320px;
   }
-  .qs-cards-container {
+  .callout-box {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 12px 40px rgba(37, 99, 235, 0.05);
+  }
+  .callout-inner {
+    border-left: 3px solid #2563EB;
+    padding-left: 16px;
+  }
+  .callout-inner h3 {
+    font-family: var(--font-display, sans-serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 8px;
+    line-height: 1.3;
+  }
+  .callout-inner p {
+    font-size: 14px;
+    color: #475569;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Steps Row */
+  .how-steps {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* Step Card */
+  .step-card {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px; /* Reduced from 20px */
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Reduced gap between cards */
+    border: 2px solid #2563EB;
+    box-shadow: 6px 6px 0px #2563EB;
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
-  .qs-card {
-    background: #ffffff;
-    border: 1px solid rgba(37, 99, 235, 0.15);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.03);
-    padding: 24px 32px; /* Reduced padding */
+  .step-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #2563EB;
+  }
+  
+  .sc-top {
     display: flex;
-    gap: 32px; /* Reduced gap between left icon and text */
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px; /* Reduced from 16px */
   }
-  .qs-card-left {
+  .sc-num {
+    background: #2563EB;
+    color: #ffffff;
+    font-size: 11px; /* Reduced from 13px */
+    font-weight: 700;
+    font-family: var(--font-mono, monospace);
+    width: 24px; /* Reduced from 28px */
+    height: 24px;
     display: flex;
     align-items: center;
-    gap: 24px;
-    flex-shrink: 0;
+    justify-content: center;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   }
-  .qs-step-n {
+  .sc-time {
     background: #EFF6FF;
     color: #2563EB;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 16px;
-    width: 48px;
-    height: 48px;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+  .sc-icon-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px; /* Reduced from 16px */
+  }
+  .sc-icon {
+    width: 44px; /* Reduced from 56px */
+    height: 44px;
+    background: #EFF6FF;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .qs-icon-box {
-    background: #EFF6FF;
-    width: 72px;
-    height: 72px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .sc-icon svg {
+    width: 22px;
+    height: 22px;
   }
-  .qs-card-main {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    flex: 1;
-  }
-  .qs-card-main h2 {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0;
-    color: var(--text);
+
+  .sc-title {
+    text-align: center;
+    font-family: var(--font-display, sans-serif);
+    font-size: 16px; /* Reduced from 18px */
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0 0 6px; /* Reduced from 8px */
     letter-spacing: -0.01em;
   }
-  .qs-card-main p {
-    font-size: 15.5px;
-    color: var(--text-2);
-    line-height: 1.6;
-    margin: 0;
-    max-width: 600px;
+  
+  .sc-body {
+    text-align: center;
+    font-size: 12.5px; /* Reduced from 13.5px */
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 16px; /* Reduced from 24px */
+    flex-grow: 1;
   }
-  .qs-card-main .hint {
-    font-size: 14px;
-    color: var(--text-3);
+
+  .sc-bot {
+    margin-top: auto;
   }
   
-  /* Standardized Ghost Button for Quickstart */
-  .btn-ghost-blue {
-    display: inline-flex;
+  .sc-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 34px; /* Reduced from 40px */
+    border-radius: 8px;
+    font-size: 12.5px; /* Reduced from 13.5px */
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn-primary {
+    background: #2563EB;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  }
+  .btn-primary:hover {
+    background: #1D4ED8;
+  }
+  .btn-outline {
+    background: #ffffff;
+    border: 1px solid #BFDBFE;
+    color: #2563EB;
+  }
+  .btn-outline:hover {
+    background: #EFF6FF;
+    border-color: #93C5FD;
+  }
+
+  /* Connectors */
+  .sc-connector {
+    display: flex;
+    align-items: center;
+    width: 60px;
+    flex-shrink: 0;
+  }
+  .connector-line {
+    flex: 1;
+    height: 2px;
+    background-image: linear-gradient(to right, #BFDBFE 50%, transparent 50%);
+    background-size: 8px 100%;
+  }
+  .connector-arrow {
+    width: 28px;
+    height: 28px;
+    background: #ffffff;
+    border: 2px solid #EFF6FF;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 20px;
-    height: 42px;
-    font-size: 15px;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
+    margin: 0 4px;
+  }
+
+
+  /* Vendor Filters */
+  .vguide-filters-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 999px;
+    padding: 6px;
+    margin-bottom: 32px;
+    gap: 16px;
+    overflow-x: auto;
+  }
+  .vg-filters {
+    display: flex;
+    gap: 4px;
+  }
+  .vg-filter-btn {
+    background: transparent;
+    border: none;
+    font-size: 13.5px;
     font-weight: 600;
-    color: #2563EB;
+    color: #475569;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .vg-filter-btn:hover {
+    color: #0F172A;
+  }
+  .vg-filter-btn.active {
+    background: #0062FF;
+    color: #ffffff;
+  }
+  .vg-sort {
+    padding-right: 8px;
+  }
+  .vg-sort-btn {
     background: #ffffff;
-    border: 1px solid #2563EB;
-    border-radius: 8px; /* Consistent radius */
-    text-decoration: none;
-    transition: all 0.15s ease;
-  }
-  .btn-ghost-blue:hover, .btn-ghost-blue:focus-visible {
-    background: #EFF6FF;
-    outline: none;
-  }
-  .qs-card-main .btn-primary {
-    border-radius: 8px; /* Matching border radius */
-    height: 42px;
-    padding: 0 20px;
-    font-size: 15px;
+    border: 1px solid #E2E8F0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0F172A;
+    padding: 6px 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
   }
 
   /* Vendor grid */
   .vendor-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 32px;
+    gap: 16px; /* Reduced from 20px */
+    margin-bottom: 0px;
   }
   .vguide {
-    background: var(--surface);
-    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--border));
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    display: flex; flex-direction: column;
-    gap: 16px;
+    background: #ffffff;
+    border: 2px solid #0F172A;
+    border-radius: 12px;
+    padding: 16px; /* Reduced from 20px */
+    display: flex; 
+    flex-direction: column;
+    box-shadow: 6px 6px 0px #0F172A;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .vguide:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #0F172A;
   }
   .vg-head {
-    display: flex; align-items: flex-start; gap: 12px;
+    display: flex; 
+    align-items: flex-start; 
+    gap: 10px; /* Reduced from 12px */
+    margin-bottom: 12px; /* Reduced from 16px */
   }
   .vg-mark {
-    width: 32px; height: 32px;
-    border-radius: var(--radius-sm);
+    width: 32px; height: 32px; /* Reduced from 36px */
+    background: #F1F5F9;
+    border-radius: 8px;
     display: grid; place-items: center;
-    color: #fff;
-    font-family: var(--font-mono);
-    font-weight: 600;
-    font-size: 11px;
+    color: #0F172A;
+    font-family: var(--font-display, sans-serif);
+    font-weight: 700;
+    font-size: 12px; /* Reduced from 13px */
     flex-shrink: 0;
   }
+  .vg-head-main {
+    flex: 1;
+  }
   .vg-name {
-    font-size: 15px;
-    font-weight: 500;
+    font-family: var(--font-display, sans-serif);
+    font-size: 14px; /* Reduced from 15px */
+    font-weight: 700;
+    color: #0F172A;
     margin: 0 0 4px;
   }
   .vg-blurb {
-    font-size: 12.5px;
-    color: var(--text-3);
+    font-size: 11px; /* Reduced from 11.5px */
+    color: #64748B;
     margin: 0;
-    font-family: var(--font-mono);
-    line-height: 1.5;
+    line-height: 1.4;
   }
+  .vg-arrow-icon {
+    width: 24px; /* Reduced from 28px */
+    height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #EFF6FF;
+    box-shadow: 0 2px 6px rgba(37,99,235,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .vg-arrow-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+  
   .vg-steps {
     list-style: none;
     counter-reset: vg;
     padding: 0; margin: 0;
     display: flex; flex-direction: column;
-    gap: 10px;
+    gap: 8px; /* Reduced from 10px */
     flex: 1;
+    margin-bottom: 16px; /* Reduced from 24px */
   }
   .vg-steps li {
     counter-increment: vg;
-    padding-left: 26px;
+    padding-left: 24px; /* Reduced from 28px */
     position: relative;
-    color: var(--text-2);
-    font-size: 13px;
-    line-height: 1.55;
+    color: #334155;
+    font-size: 11.5px; /* Reduced from 12.5px */
+    line-height: 1.35; /* Reduced from 1.4 */
   }
   .vg-steps li::before {
-    content: counter(vg, decimal-leading-zero);
+    content: counter(vg);
     position: absolute;
     left: 0; top: 0;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-4);
+    background: #EFF6FF;
+    color: #2563EB;
+    width: 18px; height: 18px; /* Reduced from 20px */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px; /* Reduced from 11px */
+    font-weight: 700;
+  }
+  
+  .vg-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
   }
   .vg-docs {
-    font-size: 13px;
-    color: var(--accent);
-    align-self: flex-start;
-    transition: color .12s ease;
+    font-size: 11px; /* Reduced from 12px */
+    font-weight: 600;
+    color: #2563EB;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 6px;
   }
-  .vg-docs:hover { color: var(--accent-strong); }
+  .vg-docs:hover { color: #1D4ED8; }
+  .vg-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px; /* Reduced from 32px */
+    padding: 0 12px;
+    font-size: 11px; /* Reduced from 12px */
+    font-weight: 600;
+    color: #2563EB;
+    background: #ffffff;
+    border: 1px solid #BFDBFE;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .vg-btn:hover {
+    background: #EFF6FF;
+    border-color: #93C5FD;
+  }
 
-  /* Self-host strip */
-  .self-host {
+  /* Support Section */
+  .support-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    padding: 64px 0 64px 0;
+    align-items: flex-start;
+  }
+  .support-left {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 24px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 36px;
+    align-items: flex-start;
+    gap: 20px;
   }
-  .sh-eyebrow {
-    font-family: var(--font-mono);
+  .support-badges {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .badge {
+    font-family: var(--font-sans, system-ui);
     font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .badge-green {
+    background: #ECFDF5;
+    color: #059669;
     text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--accent);
-    margin-bottom: 10px;
+    letter-spacing: .05em;
   }
-  .self-host h3 {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -.01em;
-    margin: 0 0 6px;
+  .badge-green .dot {
+    width: 6px; height: 6px;
+    background: #10B981;
+    border-radius: 50%;
   }
-  .self-host p {
-    margin: 0 auto;
-    color: var(--text-2);
-    font-size: 14.5px;
+  .badge-light {
+    background: #F1F5F9;
+    color: #475569;
+  }
+  .support-left h2 {
+    font-family: var(--font-display, sans-serif);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.1;
+  }
+  .support-left p {
+    font-size: 16px;
+    color: #475569;
     line-height: 1.6;
-    max-width: 800px;
+    margin: 0 0 12px;
+    max-width: 500px;
   }
-  .self-host code {
-    font-family: var(--font-mono);
-    font-size: .92em;
-    background: var(--accent-soft);
-    border: 1px solid var(--accent);
-    padding: 1px 6px;
-    border-radius: var(--radius-sm);
-    color: var(--accent-strong);
-  }
-  .sh-cta {
-    display: flex; gap: 12px;
+  .support-cta {
+    display: flex;
+    gap: 12px;
     flex-wrap: wrap;
+  }
+  .support-cta .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .support-cta .btn-primary {
+    background: #2563EB;
+    color: #ffffff;
+    border: 2px solid #2563EB;
+  }
+  .support-cta .btn-primary:hover {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+  }
+  .support-cta .btn-line {
+    background: #ffffff;
+    color: #0F172A;
+    border: 2px solid #2563EB;
+  }
+  .support-cta .btn-line:hover {
+    background: #F8FAFC;
+    border-color: #1D4ED8;
+  }
+  
+  .support-right {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 480px;
+    margin-left: auto;
+  }
+  .sr-header {
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 16px;
+  }
+  .sr-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .sr-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #BFDBFE;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.2s ease;
+  }
+  .sr-card:hover {
+    border-color: #93C5FD;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .sr-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .sr-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+  .sr-text strong {
+    font-family: var(--font-sans, system-ui);
+    font-size: 14px;
+    font-weight: 700;
+    color: #0F172A;
+  }
+  .sr-text span {
+    font-size: 13px;
+    color: #64748B;
+  }
+  .sr-arrow {
+    display: flex;
+    align-items: center;
     justify-content: center;
   }
 
-  @media (max-width: 980px) {
-    .qs-hero { padding: 110px 0 24px; }
-    .qs-section { padding: 24px 0 32px; }
-    
-    .qs-card {
+  @media (max-width: 1024px) {
+    .how-header {
       flex-direction: column;
-      gap: 24px;
-      padding: 32px 24px;
     }
-    
-    .qs-card-left {
+    .how-header-aside {
       width: 100%;
+      max-width: 400px;
     }
-    
-    .qs-card-main p {
+  }
+
+  @media (max-width: 800px) {
+    .how-steps {
+      flex-direction: column;
+    }
+    .sc-connector {
+      width: 100%;
+      height: 40px;
+      flex-direction: column;
+      padding: 8px 0;
+    }
+    .connector-line {
+      width: 2px;
+      height: 100%;
+      background-image: linear-gradient(to bottom, #BFDBFE 50%, transparent 50%);
+      background-size: 100% 8px;
+    }
+    .connector-arrow {
+      transform: rotate(90deg);
+      margin: 4px 0;
+    }
+    .vendor-grid { grid-template-columns: 1fr; }
+    .support-section {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .support-right {
       max-width: 100%;
     }
-    
-    .vendor-grid { grid-template-columns: 1fr; }
-    .self-host { padding: 24px; }
   }
 </style>
+
+<script>
+  const filterBtns = document.querySelectorAll('.vg-filter-btn');
+  const sortBtn = document.querySelector('.vg-sort-btn');
+  const grid = document.getElementById('vendor-grid');
+  
+  if (grid) {
+    const cards = Array.from(grid.querySelectorAll('.vguide'));
+    let currentSort = 'popular'; // 'popular' or 'az'
+    
+    // Filtering
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active state
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const filter = btn.textContent.trim();
+        
+        cards.forEach(card => {
+          const categories = card.getAttribute('data-categories') || '';
+          if (filter === 'All devices' || categories.includes(filter)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // Sorting
+    if (sortBtn) {
+      sortBtn.addEventListener('click', () => {
+        if (currentSort === 'popular') {
+          currentSort = 'az';
+          sortBtn.innerHTML = 'Sort: A-Z <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+          
+          cards.sort((a, b) => {
+            return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+          });
+        } else {
+          currentSort = 'popular';
+          sortBtn.innerHTML = 'Sort: Popular <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+          
+          cards.sort((a, b) => {
+            return parseInt(a.getAttribute('data-index')) - parseInt(b.getAttribute('data-index'));
+          });
+        }
+        
+        // Re-append in new order
+        cards.forEach(card => grid.appendChild(card));
+      });
+    }
+  }
+</script>

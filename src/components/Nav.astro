@@ -33,8 +33,25 @@ const currentPath = Astro.url.pathname;
         <a class="btn btn-ghost" href={site.signIn}>Sign in</a>
         <a class="btn btn-primary" href={site.signupFree}>Sign up free</a>
       </div>
+      <button class="mobile-menu-btn" aria-label="Toggle mobile menu" aria-expanded="false" id="mobile-menu-btn">
+        <svg class="icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
   </nav>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-inner">
+      <a href="/quickstart" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
+      <a href="/docs" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
+      <a href="/compatibility" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
+      <a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
+      <a href="/pricing" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
+      <div class="mobile-nav-divider"></div>
+      <a href={site.signIn}>Sign in</a>
+      <a href={site.signupFree} class="mobile-nav-primary">Sign up free</a>
+    </div>
+  </div>
 </header>
 
 <style>
@@ -165,9 +182,104 @@ const currentPath = Astro.url.pathname;
     color: #2563EB; /* MeshWG blue on hover for better UX */
   }
 
+  .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    padding: 8px;
+    margin-right: -8px;
+  }
+  
+  .mobile-nav {
+    display: none;
+  }
+
   @media (max-width: 980px) {
     .nav-links { display: none; }
-    .nav-inner { gap: 16px; }
-    .nav-cta .btn-ghost { display: none; }
+    .nav-inner { gap: 16px; justify-content: space-between; }
+    .nav-cta { display: none; }
+    .nav-spacer { display: none; }
+    
+    .mobile-menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .mobile-nav {
+      display: block;
+      position: fixed;
+      top: 64px; /* below nav */
+      left: 0; right: 0; height: calc(100vh - 64px);
+      background: #ffffff;
+      z-index: 99;
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      overflow-y: auto;
+    }
+    
+    .mobile-nav.is-open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .mobile-nav-inner {
+      display: flex;
+      flex-direction: column;
+      padding: 32px 24px;
+      gap: 24px;
+    }
+    
+    .mobile-nav-inner a {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+    }
+    
+    .mobile-nav-inner a.active {
+      color: var(--accent);
+    }
+    
+    .mobile-nav-divider {
+      height: 1px;
+      background: #eaeaea;
+      margin: 8px 0;
+    }
+    
+    .mobile-nav-primary {
+      color: #2563EB !important;
+      font-weight: 600 !important;
+    }
   }
 </style>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const nav = document.getElementById('mobile-nav');
+  const iconMenu = btn?.querySelector('.icon-menu') as HTMLElement;
+  const iconClose = btn?.querySelector('.icon-close') as HTMLElement;
+  
+  if (btn && nav) {
+    btn.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+      nav.classList.toggle('is-open');
+      
+      if (iconMenu && iconClose) {
+        if (!isExpanded) {
+          iconMenu.style.display = 'none';
+          iconClose.style.display = 'block';
+        } else {
+          iconMenu.style.display = 'block';
+          iconClose.style.display = 'none';
+        }
+      }
+    });
+  }
+</script>

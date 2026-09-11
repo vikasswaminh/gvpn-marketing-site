@@ -73,16 +73,15 @@ const description = "How MeshWG actually works: the architecture promises we mak
 
 <Base title={title} description={description}>
   <Nav />
-  <PageHero
-    eyebrow="/ docs"
-    title='How it <span style="color: #2563EB;">actually works.</span>'
-    lede="A high-level overview of the architecture, the standard WireGuard configuration MeshWG generates, and the end-to-end testing that verifies every claim on this site before each release."
-    wrapTitle={true}
-    wrapLede={true}
-  />
-
-  <section class="docs-section">
+  <section class="docs-section" style="padding-top: 152px;">
     <div class="wrap">
+      <header style="margin-bottom: 16px;">
+        <div class="db-eyebrow">/ docs</div>
+        <h1 style="font-size: clamp(32px, 4.5vw, 48px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; color: #111827;">How it <span style="color: #2563EB;">actually works.</span></h1>
+        <p class="db-lede">
+          A high-level overview of the architecture, the standard WireGuard configuration MeshWG generates, and the end-to-end testing that verifies every claim on this site before each release.
+        </p>
+      </header>
 
       <!-- ── Architecture -->
       <article id="architecture" class="doc-block">
@@ -307,11 +306,12 @@ const description = "How MeshWG actually works: the architecture promises we mak
 
   .db-eyebrow {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--accent);
-    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    color: #2563EB;
+    margin-bottom: 20px;
   }
   .doc-block h2 {
     font-size: 28px;

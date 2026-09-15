@@ -217,7 +217,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
 .post-body-grid { display: grid; grid-template-columns: 240px minmax(0, 1fr) 240px; gap: 48px; }
 
 /* New NH-style classes */
-.nh-sidebar { position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow-y: scroll; }
+.nh-sidebar { position: sticky; top: 120px; align-self: start; max-height: calc(100vh - 140px); overflow-y: scroll; }
 .nh-sidebar > div { min-height: 105vh; padding-bottom: 20px; }
 .nh-sidebar-right { direction: rtl; }
 .nh-sidebar-right > div { direction: ltr; padding-left: 16px; }

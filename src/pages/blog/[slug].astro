@@ -27,43 +27,58 @@ const readMinutes = Math.ceil((post.body ? post.body.split(/\s+/).length : 5000)
   
   <BlogLayout isHomepage={false}>
     <article class="blog-article">
-      <header class="mag-header" style="margin-bottom: 32px;">
-        <div class="mag-pill-row" style="margin-bottom: 16px;">
-          <div class="mag-pill pill-purple">
-            {post.data.tags && post.data.tags.includes('strategy guide') ? 'STRATEGY & ARCHITECTURE' : 'ENGINEERING GUIDE'}
+        <nav aria-label="Breadcrumb" class="breadcrumbs" style="font-size: 13px; color: #475569; margin-bottom: 24px;">
+          <a href="/" style="color: #475569; text-decoration: none;">Home</a> <span style="margin: 0 8px;">/</span>
+          <a href="/blog/" style="color: #475569; text-decoration: none;">Blog</a> <span style="margin: 0 8px;">/</span>
+          <span style="color: #0f172a; font-weight: 500;">{title}</span>
+        </nav>
+        <header class="post-header">
+          <div class="post-meta-top">
+            {post.data.tags && post.data.tags.length > 0 && (
+              <>
+                <span class={post.data.tags.includes('strategy guide') ? 'mag-pill pill-purple' : 'mag-pill pill-orange'} style="font-size: 11px; padding: 4px 12px; border-radius: 100px; font-weight: 700; text-transform: uppercase;">
+                  {post.data.tags.includes('strategy guide') ? 'STRATEGY & ARCHITECTURE' : 'ENGINEERING GUIDE'}
+                </span>
+                <span class="meta-dot">•</span>
+              </>
+            )}
+            <span class="meta-date">{post.data.pubDate.toISOString().split('T')[0]}</span>
+            <span class="meta-dot">•</span>
+            <span class="meta-read">{readMinutes} MIN READ</span>
           </div>
-          <span class="mag-subtext" style="font-family: var(--font-mono); font-size: 13px; color: var(--text-4);">
-            {pubDate}
-          </span>
-          <span class="mag-subtext dot" style="color: var(--text-4);">·</span>
-          <span class="mag-subtext" style="font-family: var(--font-mono); font-size: 13px; color: var(--text-4);">
-            {readMinutes} MIN READ
-          </span>
-        </div>
-        <h1 class="mag-h1" style="font-size: 3rem; line-height: 1.15; margin-bottom: 24px;">{title}</h1>
-        <p class="mag-desc" style="font-size: 1.25rem; line-height: 1.6; color: var(--text-3); margin-bottom: 32px;">{description}</p>
+          <h1 class="post-h1">{title}</h1>
+          {description && <p class="post-desc">{description}</p>}
+        </header>
         
-        <div class="post-meta-footer" style="display: flex; gap: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 48px;">
-          <div class="author-block" style="display: flex; gap: 16px; align-items: center;">
-            <div class="author-avatar" style="width: 48px; height: 48px; border-radius: 50%; background: #FFF3E0; display: flex; align-items: center; justify-content: center; color: #F97316;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
+        <div class="post-author-row">
+          <div class="author-block">
+            <div class="author-avatar" style="background: #FFF7ED; color: #c2410c;" aria-hidden="true">⚡</div>
             <div class="author-info">
-              <div class="author-name" style="font-weight: 700; color: var(--text); font-family: var(--font-heading); line-height: 1.2;">{post.data.author || 'MeshWG Technical Architecture Group'}</div>
-              <div class="author-role" style="font-size: 14px; color: var(--text-3); margin-top: 4px;">Network Architecture</div>
+              <div class="author-name">{post.data.author || 'MeshWG Technical Architecture Group'}</div>
+              <div class="author-role">Network Architecture</div>
             </div>
           </div>
-          <div class="tag-pills" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
-            {post.data.tags?.map(tag => (
-              <span class="tag-pill" style="padding: 6px 16px; border: 1px solid var(--border); border-radius: 99px; font-size: 13px; color: var(--text-3); background: #fff; font-family: var(--font-mono);">#{tag}</span>
-            ))}
+          
+          {post.data.tags && post.data.tags.length > 0 && (
+            <div class="post-tags">
+              {post.data.tags.map(tag => (
+                <span class="tag">#{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      
+        <div class="prose">
+          <Content />
+        </div>
+        
+        <div class="author-bio-box">
+          <div class="author-bio-avatar" aria-hidden="true">ME</div>
+          <div class="author-bio-content">
+            <div class="author-bio-title">Written by <strong>{post.data.author || 'MeshWG Technical Architecture Group'}</strong></div>
+            <p class="author-bio-desc">Our core networking team specializes in zero-trust architecture, multi-cloud SD-WANs, and high-performance kernel VPNs. We build <a href="https://meshwg.com">MeshWG</a> to simplify enterprise WireGuard orchestration.</p>
           </div>
         </div>
-      </header>
-      
-      <div class="post-content">
-        <Content />
-      </div>
     </article>
   </BlogLayout>
 
@@ -101,117 +116,6 @@ const readMinutes = Math.ceil((post.body ? post.body.split(/\s+/).length : 5000)
     font-family: var(--font-body);
   }
 
-  /* Markdown Content Styles */
-  .post-content {
-    font-family: var(--font-body);
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--text);
-  }
-  .post-content h2 {
-    font-family: var(--font-heading);
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-top: 2.5rem;
-    margin-bottom: 1.25rem;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
-  .post-content h3 {
-    font-family: var(--font-heading);
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: var(--text);
-  }
-  .post-content p {
-    margin-bottom: 1.5rem;
-  }
-  .post-content ul, .post-content ol {
-    margin-bottom: 1.5rem;
-    padding-left: 1.5rem;
-  }
-  .post-content li {
-    margin-bottom: 0.5rem;
-  }
-  .post-content pre {
-    padding: 1.25rem;
-    border-radius: 8px;
-    background: var(--bg-2);
-    overflow-x: auto;
-    margin: 2rem 0;
-    border: 1px solid var(--border-faint);
-  }
-  .post-content code {
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-    background: var(--bg-2);
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
-  }
-  .post-content pre code {
-    background: transparent;
-    padding: 0;
-  }
-  .post-content a {
-    color: var(--accent);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
-  }
-  .post-content a:hover {
-    color: var(--accent-hover);
-  }
-  .post-content blockquote {
-    border-left: 4px solid #14b8a6; /* Teal border like the screenshot */
-    margin: 2rem 0;
-    font-style: italic;
-    color: var(--text-2);
-    background: #f8fafc;
-    padding: 1.5rem 1.75rem;
-    border-radius: 0 12px 12px 0;
-    font-size: 1.125rem;
-  }
-  .post-content blockquote p {
-    margin-bottom: 0;
-  }
-  .post-content blockquote a {
-    color: var(--accent);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
-  }
-  
-  /* Tables */
-  .post-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 2.5rem 0;
-    font-size: 0.95rem;
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  }
-  .post-content th, .post-content td {
-    padding: 1rem 1.25rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-faint);
-  }
-  .post-content th {
-    background-color: var(--bg-2);
-    font-weight: 700;
-    color: var(--text);
-    font-family: var(--font-heading);
-  }
-  .post-content tr:last-child td {
-    border-bottom: none;
-  }
-  .post-content tr:hover td {
-    background-color: #f8fafc;
-  }
-  
   .blog-article {
     max-width: 900px;
     width: 100%;
@@ -219,9 +123,5 @@ const readMinutes = Math.ceil((post.body ? post.body.split(/\s+/).length : 5000)
     margin: 0 auto;
     overflow-wrap: break-word;
     word-break: break-word;
-  }
-  .post-content {
-    width: 100%;
-    min-width: 0;
   }
 </style>

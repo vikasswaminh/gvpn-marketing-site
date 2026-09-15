@@ -13,7 +13,7 @@ cover: '../../assets/images/mesh_control_plane_keys_peers_routes.png'
 
 > **Related Reading:** [Managed vs Self-Hosted WireGuard VPN: Enterprise Mesh Network Architecture Guide (2026)](/blog/managed-vs-self-hosted-wireguard-vpn-2026/)
 
-<div class="tldr-box">
+<article class="tldr-box">
 <h3>TL;DR</h3>
 <ul>
   <li><strong>Architectural Separation of Concerns:</strong> The control plane is strictly out-of-band. It coordinates identity, cryptographic metadata, and routing intent. User payloads never touch the control plane; they flow point-to-point between nodes via WireGuard kernel modules.</li>
@@ -23,7 +23,7 @@ cover: '../../assets/images/mesh_control_plane_keys_peers_routes.png'
   <li><strong>Agentless Appliance and Router Support:</strong> Because the control plane delivers standard WireGuard configuration primitives, physical routers (MikroTik RouterOS 7, OpenWrt, OPNsense, Ubiquiti UniFi, TP-Link Omada) act as enterprise mesh gateways without requiring custom host binaries.</li>
   <li><strong>High-Availability Fault Tolerance:</strong> If the control plane goes down entirely, active data plane tunnels stay up indefinitely. The mesh degrades gracefully to a static state: existing traffic continues flowing at hardware wire speed.</li>
 </ul>
-</div>
+</article>
 
 <div class="bp-intro"> 
 

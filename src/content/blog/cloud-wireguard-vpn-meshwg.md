@@ -14,8 +14,8 @@ cover: '../../assets/images/cloud_wireguard_vpn.png'
 > **Related Reading:** [How to Set Up a Router VPN Without Installing VPN Software (2026 MeshWG Guide)](/blog/how-to-set-up-a-router-vpn-without-installing-vpn-software/)
 
 <div class="bp-intro">
-    <div class="tldr-box">
-      <h3 id="tl-dr">TL;DR</h3>
+    <article class="tldr-box">
+      <h3>TL;DR</h3>
       <ul>
         <li><strong>Eliminating Traffic Hairpinning:</strong> In a standard hub-and-spoke VPN, traffic between Branch A (192.168.10.0/24) and Branch B (192.168.20.0/24) routes through the cloud gateway, doubling latency and multiplying cloud bandwidth costs. MeshWG establishes direct branch-to-branch peer connections across the Internet.</li>
         <li><strong>Kernel-Space Performance:</strong> MeshWG utilizes the mainline Linux kernel module (<code>wireguard.ko</code>). Packets are encrypted and encapsulated inside the network stack without crossing user-space boundaries, achieving multi-gigabit throughput with minimal CPU core utilization.</li>
@@ -23,7 +23,7 @@ cover: '../../assets/images/cloud_wireguard_vpn.png'
         <li><strong>Mandatory MTU Calculation and MSS Clamping:</strong> To prevent Path MTU Discovery (PMTUD) black holes and packet fragmentation over WAN connections, overlay interfaces require an MTU of 1420 (over standard IPv4 Ethernet) or 1400 (over IPv6), paired with TCP MSS clamping in nftables or iptables.</li>
         <li><strong>Seamless Hybrid Subnet Forwarding:</strong> Routing private enterprise subnets across cloud VPCs and physical local area networks requires enabling Linux kernel IP forwarding (<code>net.ipv4.ip_forward = 1</code>) alongside deterministic route tables and optional dynamic routing via BGP through FRRouting.</li>
       </ul>
-    </div>
+    </article>
 </div>
 
 ## Executive Summary

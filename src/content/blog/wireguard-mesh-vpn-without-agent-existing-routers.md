@@ -14,15 +14,15 @@ cover: '../../assets/images/agentless_wireguard_mesh.png'
 > **Related Reading:** [How WireGuard Site-to-Site VPN Works (2026 Protocol Guide)](/blog/wireguard-site-to-site-vpn-how-it-works-2026/)
 
 <div class="bp-intro">
-    <div class="tldr-box">
-      <h3 id="tl-dr">TL;DR</h3>
+    <article class="tldr-box">
+      <h3>TL;DR</h3>
       <ul>
         <li><strong>No Agent Needed:</strong> The most common objection to a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) is that it sounds like another piece of software to roll out. Modern WireGuard [mesh VPNs](/blog/how-to-set-up-a-wireguard-mesh-vpn/) run directly on the routers most businesses already own, using native WireGuard support. The router is the endpoint.</li>
         <li><strong>Cloud Control Plane:</strong> The coordination problem — who to trust, where to send traffic, how to rotate keys — is handled by a cloud control plane. Each branch dials outbound to the coordination service, receives its peer list and keys, and then talks peer-to-peer over encrypted tunnels.</li>
         <li><strong>Fast Deployment:</strong> A 20-site deployment comes online in under two minutes per site, on hardware that was already in the building, with no new appliance and no licensing line.</li>
         <li><strong>Purpose Built:</strong> This model suits 5-to-50-branch businesses with mixed router fleets and generalist IT teams. It replaces the hand-edited `wg0.conf` with automated coordination.</li>
       </ul>
-    </div>
+    </article>
     <p class="lede-p">
       A field engineer's guide to turning the routers you already own — TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense — into a cloud-coordinated WireGuard mesh, with no agent to install, no firmware to flash, and no specialist to schedule.
     </p>

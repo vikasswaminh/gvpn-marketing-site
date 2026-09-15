@@ -20,7 +20,7 @@ WireGuard has transformed site-to-site networking by offering an ultra-fast, sta
 
 In a site-to-site architecture, border gateways at each physical site establish an encrypted WireGuard overlay network over the public Internet. When a host on Site A's local subnet, such as IP address 10.10.0.45, sends traffic to a server on Site B's local subnet, such as IP address 10.20.0.5, the Site A gateway intercepts the packet, encrypts it into a standard UDP datagram on port 51820, and routes it across the tunnel to the Site B gateway. The receiving gateway decrypts the packet and forwards it to the destination host on its local LAN. End devices require zero VPN software installation; all encryption and routing occur transparently at the router boundary.
 
-<details class="tldr-box" open>
+<article class="tldr-box">
 <summary>Architectural Key Takeaways</summary>
 <ul>
 <li><strong>Primary Use Case:</strong> Interconnecting entire local area subnets across corporate branch offices, cloud VPC environments, homelabs, and edge compute locations.</li>
@@ -32,7 +32,7 @@ In a site-to-site architecture, border gateways at each physical site establish 
 <li><strong>Multi-Vendor Support:</strong> Natively supported across Linux, MikroTik RouterOS version 7, OpenWrt, Ubiquiti UniFi and EdgeOS, OPNsense, pfSense, macOS, and Windows.</li>
 <li><strong>Automated Mesh Scaling:</strong> Manual static meshes require quadratic peer key management. Hosted orchestration platforms like MeshWG automate site-to-site mesh routing on existing router hardware without requiring expensive SD-WAN hardware boxes.</li>
 </ul>
-</details>
+</article>
 
 ## Key Engineering Principles & Architectural Constraints
 

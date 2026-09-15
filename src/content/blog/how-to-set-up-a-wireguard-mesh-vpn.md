@@ -26,15 +26,15 @@ cover: '../../assets/images/wireguard_mesh_tutorial.png'
 </div>
 
 <div class="bp-intro">
-    <div class="tldr-box">
-      <h3 id="tl-dr">TL;DR</h3>
+    <article class="tldr-box">
+      <h3>TL;DR</h3>
       <ul>
         <li><strong>No New Hardware or Agents:</strong> A WireGuard mesh VPN connects all your locations into one private, encrypted network — without buying new hardware, without installing an agent on every device, and without managing certificates. The setup takes under two minutes per site.</li>
         <li><strong>Automated Orchestration:</strong> This tutorial walks you through MeshWG, a hosted WireGuard mesh platform that turns the routers you already own (TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense, pfSense) into a cloud-managed private mesh with central zero-trust policies.</li>
         <li><strong>1/10th the Cost of SD-WAN:</strong> The first two machines are free forever, with no card and no time limit. A 20-site deployment runs around ₹7,000 a month — roughly one-tenth of a comparable traditional SD-WAN deployment.</li>
         <li><strong>Fast Setup:</strong> If you want to skip the theory, create your free account and jump to Step 1. Otherwise, read on to understand why the setup works and how to avoid the mistakes that break most DIY WireGuard meshes.</li>
       </ul>
-    </div>
+    </article>
 </div>
 
 ## What a WireGuard mesh VPN actually is

@@ -15,8 +15,8 @@ cover: '../../assets/images/multiple_locations.png'
 > **Related Reading:** [How to Set Up a WireGuard Mesh VPN (Full Guide)](/blog/how-to-set-up-a-wireguard-mesh-vpn/)
 
 <div class="bp-intro">
-    <div class="tldr-box">
-      <h3 id="tl-dr">TL;DR</h3>
+    <article class="tldr-box">
+      <h3>TL;DR</h3>
       <ul>
         <li><strong>Kernel-Level Efficiency:</strong> WireGuard runs directly in kernel space, eliminating expensive user-to-kernel context switches common in OpenVPN, delivering line-rate speed and low CPU utilization on low-power edge routers.</li>
         <li><strong>Cryptokey Routing Engine:</strong> WireGuard routes packets strictly based on an internal mapping of public keys to allowed IP addresses, combining authentication, encryption, and routing table enforcement into a single atomic operation.</li>
@@ -25,7 +25,7 @@ cover: '../../assets/images/multiple_locations.png'
         <li><strong>MeshWG Automated Orchestration:</strong> Manually managing N-to-N peer relationships across dozens of routers requires hand-crafting configuration files. MeshWG automates key distribution, dynamic <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">[NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/)</a>, endpoint discovery, and subnet routing state management across distributed edge gateways.</li>
         <li><strong>Dynamic Routing Synergy:</strong> For large enterprise multi-site overlays, coupling WireGuard with dynamic routing daemons like FRRouting running Border Gateway Protocol over overlay interfaces eliminates static route maintenance and enables automated link failover.</li>
       </ul>
-    </div>
+    </article>
 </div>
 
 ## Executive Summary

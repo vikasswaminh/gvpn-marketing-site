@@ -13,7 +13,7 @@ cover: '../../assets/images/sdwan_alternatives.png'
 
 > **Related Reading:** [WireGuard Mesh VPN for Remote Teams: Secure Employee Access to Office Networks](/blog/wireguard-mesh-vpn-for-remote-teams-secure-office-networks/)
 
-<div class="bp-intro"> <!-- § Why look for alternatives --> <div class="tldr-box"> <h3>TL;DR</h3> <p>
+<div class="bp-intro"> <!-- § Why look for alternatives --> <article class="tldr-box"> <h3>TL;DR</h3> <p>
 [SD-WAN](/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/) was designed to replace MPLS. In the late 2010s the
           replacement story was clean: MPLS circuits cost ₹40,000–80,000
           per site per month; SD-WAN over commodity broadband cost a
@@ -47,7 +47,7 @@ That gap between "what SD-WAN sells" and "what most SMB
           of them costs noticeably less than box-based SD-WAN at the
           SMB scale. Beyond that, they differ on a handful of axes that
           determine which fits your specific environment.
-</p> </div> <p>
+</p> </article> <p>
 Box-based SD-WAN was the right answer in 2018. In 2026, most
           SMB and mid-market teams looking for branch-office connectivity
           are quietly evaluating something else — usually a cloud-managed

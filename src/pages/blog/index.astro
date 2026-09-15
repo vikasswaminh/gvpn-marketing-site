@@ -4,6 +4,7 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import { posts } from "../../utils/posts";
+import { Image } from 'astro:assets';
 
 const title = "Blog — MeshWG";
 const description = "Founder-written notes on branch networking, WireGuard, mesh VPN, and connecting the routers you already own.";
@@ -22,20 +23,24 @@ const formatDate = (dateStr) => {
   <Nav />
   
   <BlogLayout isHomepage={true}>
-    <div class="mag-header">
-      <h1 class="mag-h1">MeshWG Engineering & Strategy Blog</h1>
-      <p class="mag-desc">Expert articles on mesh networks, WireGuard, routing, & IT infrastructure</p>
-    </div>
-    
-    <div class="mag-pill-row">
-      <div class="mag-pill pill-orange">NEWEST ARTICLES</div>
-      <span class="mag-subtext">Latest from our experts</span>
-    </div>
+      <div class="mag-header">
+        <h1 class="mag-h1">MeshWG Engineering & Strategy Blog</h1>
+        <p class="mag-desc">Expert articles on mesh networks, WireGuard, routing, & IT infrastructure</p>
+      </div>
+
+      <div class="mag-pill-row">
+        <div class="mag-pill pill-blue" style="font-size: 12px;">🔥 NEWEST ARTICLES</div>
+        <span class="mag-subtext">Latest from our experts</span>
+      </div>
 
     <!-- Featured Post -->
     <a href={`/blog/${featuredPost.slug}/`} class="mag-featured hover-card" data-tilt>
       <div class="feat-img">
-        <img src="/multi-location-routers.png" alt="Multi-Location Router Network" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+        {featuredPost.cover ? (
+          <Image src={featuredPost.cover} alt={featuredPost.title} class="abs-cover" />
+        ) : (
+          <img src="/multi-location-routers.png" alt="Multi-Location Router Network" class="abs-cover" />
+        )}
         <!-- Sleek Placeholder Mesh Gradient -->
         <div class="mesh-bg" style="opacity: 0.2;"></div>
       </div>
@@ -62,7 +67,11 @@ const formatDate = (dateStr) => {
         <a href={`/blog/${p.slug}/`} class="mag-card hover-card" data-tilt>
           <!-- High quality tech image -->
           <div class="card-img-wrapper">
-            <img src={`/images/tech_net_${(i % 3) + 1}.png`} alt="" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+            {p.cover ? (
+              <Image src={p.cover} alt={p.title} class="abs-cover" />
+            ) : (
+              <img src={`/images/tech_net_${(i % 3) + 1}.png`} alt="" class="abs-cover" />
+            )}
           </div>
           <div class="card-content">
             <div class={`mag-pill ${p.category === 'STRATEGY & ARCHITECTURE' ? 'pill-purple' : 'pill-orange'}`} style="margin-bottom: 12px;">{p.category}</div>
@@ -139,28 +148,35 @@ const formatDate = (dateStr) => {
     text-align: left;
   }
   .mag-h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 800;
     letter-spacing: -.02em;
     margin-bottom: 8px;
     color: var(--text);
-    font-family: var(--font-sans);
+    font-family: var(--font-heading);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .mag-desc {
     font-family: var(--font-body);
     color: var(--text-3);
-    font-size: 16px;
+    font-size: 15px;
+    line-height: 1.5;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .mag-pill-row {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
   .mag-subtext {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--text-4);
   }
 
@@ -181,14 +197,22 @@ const formatDate = (dateStr) => {
     border: 2px solid #1E3A8A;
     border-radius: 20px;
     overflow: hidden;
-    background: #fff;
+    background: #ffffff;
     color: inherit;
     text-decoration: none;
     min-height: 240px;
     height: auto;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     margin-bottom: 48px;
-    box-shadow: 0 4px 20px #0000000d;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  .feat-img img, .card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
   .feat-img {
     position: relative;
@@ -205,16 +229,16 @@ const formatDate = (dateStr) => {
   .feat-t {
     font-size: 1.35rem;
     margin: 0 0 8px;
-    line-height: 1.25;
-    letter-spacing: -.01em;
+    line-height: 1.2;
+    letter-spacing: -.02em;
     font-weight: 800;
     color: #0f172a;
     font-family: var(--font-heading);
   }
   .feat-d {
-    font-size: .95rem;
+    font-size: 0.95rem;
     color: #475569;
-    margin: 0 0 16px;
+    margin: 0 0 12px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -224,7 +248,7 @@ const formatDate = (dateStr) => {
   }
   .feat-meta {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 13px;
     color: var(--text-4);
     display: flex;
     align-items: center;
@@ -252,26 +276,25 @@ const formatDate = (dateStr) => {
     display: flex;
     flex-direction: column;
     border: 2px solid #1E3A8A;
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
     background: var(--surface);
-    color: inherit;
-    text-decoration: none;
+    color: var(--text);
+    height: 100%;
     box-shadow: 0 4px 20px -2px #1e3a8a0d;
-    transition: all .3s cubic-bezier(.16,1,.3,1);
+    transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .mag-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 28px -4px #1e3a8a1a;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -4px #1e3a8a1a;
   }
   .card-img-wrapper {
     width: 100%;
-    height: 140px;
-    min-height: 140px;
+    height: 120px;
+    min-height: 120px;
     overflow: hidden;
-    border-bottom: 1px solid var(--border);
     position: relative;
-    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
   }
   .card-img-wrapper img {
     transition: transform .5s ease;
@@ -280,16 +303,16 @@ const formatDate = (dateStr) => {
     transform: scale(1.05);
   }
   .card-content {
-    padding: 16px 20px;
+    padding: 16px;
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
   .card-t {
-    font-size: 1rem;
+    font-size: 1.1rem;
     margin: 0 0 8px;
-    line-height: 1.3;
+    line-height: 1.25;
     letter-spacing: -.01em;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -300,7 +323,7 @@ const formatDate = (dateStr) => {
     color: var(--text);
   }
   .card-d {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--text-3);
     margin: 0;
     display: -webkit-box;
@@ -315,5 +338,6 @@ const formatDate = (dateStr) => {
     .mag-featured { grid-template-columns: 1fr; }
     .feat-img { height: 200px; border-right: none; border-bottom: 1px solid var(--border-faint); }
     .mag-grid { grid-template-columns: 1fr; }
+    .mag-h1, .mag-desc { white-space: normal; }
   }
 </style>

@@ -16,5 +16,9 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
 
+  markdown: {
+    shikiConfig: { theme: 'github-light', wrap: true },
+  },
+
   integrations: [sitemap()],
 });

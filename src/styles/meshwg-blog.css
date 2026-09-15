@@ -420,19 +420,46 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
 }
 
 /* FAQ Badges and CTA Links injected from Markdown */
-.faq-badge {
-  display: inline-block;
-  background-color: #f1f5f9;
-  color: #0f172a;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-right: 12px;
-  border: 1px solid #cbd5e1;
-  vertical-align: middle;
+.prose details {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
 }
+.prose summary {
+  list-style: none !important;
+  display: block !important;
+}
+.prose summary::-webkit-details-marker {
+  display: none !important;
+}
+.prose summary::after {
+  content: '+' !important;
+  color: #10b981 !important;
+  font-size: 1.5rem !important;
+  font-weight: 400 !important;
+  position: absolute !important;
+  right: 1.25rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+.prose details[open] summary::after {
+  content: '\2212' !important;
+}
+
+.faq-badge {
+  display: inline-block !important;
+  background-color: #fee2e2 !important;
+  color: #ef4444 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  margin-right: 12px !important;
+  border: none !important;
+  vertical-align: middle !important;
+}
+
+.cta-strip { background: #ffffff !important; border: 1px solid #e2e8f0 !important; }
 
 .cta-link {
   display: inline-block;

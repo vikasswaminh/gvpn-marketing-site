@@ -398,18 +398,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
   margin: 0;
 }
 .faq-badge {
-  display: inline-flex;
-  align-items: center;
-  background: #fee2e2;
-  color: #b91c1c;
-  font-size: 11px;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 6px;
-  flex-shrink: 0;
+  display: none;
 }
 
 

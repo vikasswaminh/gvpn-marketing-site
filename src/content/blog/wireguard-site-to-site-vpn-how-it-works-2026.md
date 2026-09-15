@@ -483,7 +483,7 @@ Two machines are free, forever.
 <details class="mesh-faq">
   <summary>
     <span class="faq-badge">FAQ</span>
-    How does a <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> differ from a traditional VPN?
+    How does a mesh VPN differ from a traditional VPN?
   </summary>
   <p>A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.</p>
 </details>
@@ -499,7 +499,7 @@ Two machines are free, forever.
 <details class="mesh-faq">
   <summary>
     <span class="faq-badge">FAQ</span>
-    How does WireGuard <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">NAT Traversal</a> work?
+    How does WireGuard NAT Traversal work?
   </summary>
   <p>WireGuard doesn't have native <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">NAT traversal</a>, which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.</p>
 </details>

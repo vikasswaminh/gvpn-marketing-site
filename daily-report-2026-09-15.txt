@@ -44,8 +44,17 @@ ensure styling parity with the standalone gvpn-blog repository.
   [12] Added responsive media queries for proper mobile wrapping of the header.
   [13] Modified `src/pages/compatibility.astro` and `src/components/CompatibilityGrid.astro` 
        (updates to the compatibility grids/tables).
-  [14] Committed and pushed the blog layout styling fixes to the `master` branch 
-       (Commit c011a64).
+  [14] Committed and pushed the blog layout styling fixes to the `master` branch.
+  [15] Deep-synced `src/styles/meshwg-blog.css` with `gvpn-blog`'s `global.css` 
+       to guarantee identical typography, font sizes, blockquotes, and TL;DR styling.
+  [16] Copied over all 20 Markdown (`.md`) files from `gvpn-blog` to ensure 
+       identical content, fixing the legacy HTML TL;DR boxes to markdown.
+  [17] Refactored `gvpn-marketing-site/src/pages/blog/[slug].astro` HTML structure 
+       so the header (breadcrumbs, pill, title, description, tags, author) 
+       topologically matches the standalone blog EXACTLY.
+  [18] Removed conflicting inline `<style>` overrides in `[slug].astro` so the 
+       global synced CSS applies perfectly to `.prose` elements.
+  [19] Committed and pushed these final sync changes to `master` (Commit 2c03075).
 
 
 ────────────────────────────────────────────────────────────────────────────────

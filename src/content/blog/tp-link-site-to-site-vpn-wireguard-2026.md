@@ -302,7 +302,7 @@ No. MeshWG can be deployed directly on your existing edge routers (like TP-Link,
 </details>
 
 <details>
-<summary>How does WireGuard [NAT Traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) work?</summary>
+<summary>How does WireGuard <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">NAT Traversal</a> work?</summary>
 WireGuard doesn't have native [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/), which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.
 </details>
 

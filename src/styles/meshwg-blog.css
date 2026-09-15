@@ -342,6 +342,77 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
   margin-bottom: 0;
 }
 
+/* === mesh-faq: "Common questions" FAQ style (with FAQ badge + green + icon) === */
+.prose .mesh-faq {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  padding: 0;
+  transition: border-color 0.2s ease;
+}
+.prose .mesh-faq:hover {
+  border-color: #cbd5e1;
+}
+.prose .mesh-faq summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: var(--font-heading);
+  margin: 0;
+  padding: 1rem 3rem 1rem 1.25rem;
+  list-style: none;
+  position: relative;
+  border-bottom: none;
+  background: transparent;
+}
+.prose .mesh-faq summary::-webkit-details-marker {
+  display: none;
+}
+.prose .mesh-faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #22c55e;
+  transition: transform 0.2s;
+}
+.prose .mesh-faq[open] summary::after {
+  content: '−';
+  color: #22c55e;
+}
+.prose .mesh-faq[open] summary {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 0;
+}
+.prose .mesh-faq > p,
+.prose .mesh-faq > div {
+  padding: 1rem 1.25rem;
+  margin: 0;
+}
+.faq-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+
 .post-cta { margin-top: 64px; padding: 40px; background: #0B257A; border-radius: var(--radius-xl); border: 1px solid #1E3A8A; text-align: center; color: #ffffff; box-shadow: 0 10px 30px -10px rgba(11, 37, 122, 0.5); }
 .post-cta h3 { font-size: 1.5rem; margin-top: 0; margin-bottom: 12px; color: #ffffff; }
 .post-cta p { font-size: 16px; color: #cbd5e1; margin-bottom: 24px; max-width: 400px; margin-inline: auto; }

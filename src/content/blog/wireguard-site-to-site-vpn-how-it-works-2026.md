@@ -499,9 +499,9 @@ Two machines are free, forever.
 <details class="mesh-faq">
   <summary>
     <span class="faq-badge">FAQ</span>
-    How does WireGuard [NAT Traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) work?
+    How does WireGuard <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">NAT Traversal</a> work?
   </summary>
-  <p>WireGuard doesn't have native [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/), which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.</p>
+  <p>WireGuard doesn't have native <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">NAT traversal</a>, which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.</p>
 </details>
 
 ---

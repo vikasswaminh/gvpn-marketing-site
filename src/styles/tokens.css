@@ -91,11 +91,11 @@
   --r-xl:           24px;
 
   /* ── Layout ───────────────────────────────────────────────────────── */
-  --wrap-max:       100%;
-  --wrap-pad-x:     1vw; /* Reduced from 4vw to stretch content closer to edges */
-  --maxw-narrow:    1200px;
-  --maxw:           100%;
-  --maxw-wide:      100%;
+  --wrap-max:       1200px;
+  --wrap-pad-x:     24px;
+  --maxw-narrow:    1000px;
+  --maxw:           1200px;
+  --maxw-wide:      1400px;
   --container:      100%;
 
   /* ── Shadows (polished modern) ───────────────────────── */

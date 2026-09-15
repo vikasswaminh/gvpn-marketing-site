@@ -1,0 +1,91 @@
+================================================================================
+  MESHWG MARKETING SITE — DAILY WORK REPORT
+  Date       : Monday, September 15, 2026
+  Prepared by: Antigravity AI (Pair Programming Session)
+  Repository : github.com/vikasswaminh/gvpn-marketing-site
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+1. OVERVIEW
+────────────────────────────────────────────────────────────────────────────────
+
+Today's session on the marketing site (gvpn-marketing-site) focused on a major 
+architectural refactor of the blog system, migrating it from static hardcoded 
+Astro pages to a scalable, Markdown-driven Astro Content Collection. 
+
+Additionally, critical layout fixes were applied to the blog index page to 
+ensure styling parity with the standalone gvpn-blog repository.
+
+
+────────────────────────────────────────────────────────────────────────────────
+2. FULL LIST OF TASKS COMPLETED TODAY
+────────────────────────────────────────────────────────────────────────────────
+
+  [01] Architected and implemented Astro Content Collections for the blog.
+  [02] Created `src/content/config.ts` to enforce frontmatter schemas (Zod).
+  [03] Migrated 17+ individual hardcoded `.astro` blog pages from `src/pages/blog/` 
+       into Markdown (`.md`) files under `src/content/blog/`.
+  [04] Deleted obsolete `.astro` blog pages to eliminate technical debt.
+  [05] Created dynamic routing template `src/pages/blog/[slug].astro` to 
+       programmatically generate blog pages from the Markdown collection.
+  [06] Updated `src/utils/posts.ts` to fetch and sort posts from the new 
+       Content Collection API instead of static imports.
+  [07] Configured `package.json` and `package-lock.json` with necessary 
+       dependencies for Astro Content Collections.
+  [08] Refactored `src/layouts/BlogLayout.astro` and `src/layouts/Base.astro` 
+       to integrate smoothly with the new Markdown content injection.
+  [09] Diagnosed and fixed layout inconsistencies on the blog index page 
+       (`src/pages/blog/index.astro`).
+  [10] Synchronised typography on the blog index (`.mag-h1` to `1.75rem`, 
+       `.mag-desc` to `15px`) and enforced single-line rendering.
+  [11] Corrected the featured blog card (`.mag-featured`) layout from a `35/65` 
+       split to a balanced `1fr 1fr` split, perfectly matching the live site.
+  [12] Added responsive media queries for proper mobile wrapping of the header.
+  [13] Modified `src/pages/compatibility.astro` and `src/components/CompatibilityGrid.astro` 
+       (updates to the compatibility grids/tables).
+  [14] Committed and pushed the blog layout styling fixes to the `master` branch 
+       (Commit c011a64).
+
+
+────────────────────────────────────────────────────────────────────────────────
+3. ARCHITECTURAL CHANGES (CONTENT COLLECTIONS MIGRATION)
+────────────────────────────────────────────────────────────────────────────────
+
+  The legacy blog system relied on individual `.astro` files for each article. 
+  This approach didn't scale and made it difficult to query, sort, and manage 
+  metadata (like tags and publish dates) globally.
+
+  The new architecture utilises Astro's Content Collections (`src/content/blog`):
+    - All articles are now written in standard Markdown (`.md`).
+    - Frontmatter is strictly typed and validated via Zod in `config.ts`.
+    - `[slug].astro` dynamically generates the URL paths using `getStaticPaths()`.
+    - This drastically cleans up the `src/pages/blog/` directory, leaving only 
+      the `index.astro` and the dynamic `[slug].astro` files.
+
+
+────────────────────────────────────────────────────────────────────────────────
+4. UNCOMMITTED CHANGES (PENDING REVIEW)
+────────────────────────────────────────────────────────────────────────────────
+
+  While the styling fixes were committed, the large-scale Content Collection 
+  migration remains uncommitted in your local working directory. 
+  
+  Please review the following unstaged changes before committing:
+    - Modified: package.json / package-lock.json
+    - Modified: src/layouts/Base.astro / BlogLayout.astro
+    - Modified: src/pages/compatibility.astro / src/components/CompatibilityGrid.astro
+    - Modified: src/utils/posts.ts
+    - Deleted: 17+ legacy `.astro` blog pages in src/pages/blog/
+    - Untracked: src/content/blog/ (all new Markdown files)
+    - Untracked: src/content/config.ts
+    - Untracked: src/pages/blog/[slug].astro
+
+  Recommended next step:
+  Run a local build (`npm run build`) in `gvpn-marketing-site` to verify the 
+  Markdown migration works perfectly, then commit the migration en masse.
+
+
+────────────────────────────────────────────────────────────────────────────────
+END OF DAILY REPORT — 2026-09-15
+================================================================================

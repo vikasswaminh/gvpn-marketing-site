@@ -237,6 +237,23 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
   })} />
 
   <style is:inline>
+    /* Global Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--border);
+      border-radius: 10px;
+      border: 2px solid var(--bg); /* Adds breathing room around the thumb */
+    }
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) var(--bg);
+    }
+
     [data-reveal-delay="400"] { transition-delay: 400ms; }
     [data-reveal-delay="500"] { transition-delay: 500ms; }
 

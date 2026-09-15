@@ -17,7 +17,7 @@ const { isHomepage = false } = Astro.props;
     <div class="mag-wrap">
       
       <!-- LEFT SIDEBAR -->
-      <aside class="mag-sidebar mag-left">
+      <aside class={`mag-sidebar mag-left ${isHomepage ? 'hide-scrollbar' : ''}`}>
         <div class="mag-pill pill-purple">STRATEGY & ARCHITECTURE</div>
         <ul class="mag-list">
           {strategyPosts.map((p) => (
@@ -34,15 +34,17 @@ const { isHomepage = false } = Astro.props;
       </main>
 
       <!-- RIGHT SIDEBAR -->
-      <aside class="mag-sidebar mag-right">
-        <div class="mag-pill pill-orange">ENGINEERING GUIDES</div>
-        <ul class="mag-list">
-          {engineeringPosts.map((p) => (
-            <li>
-              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
-            </li>
-          ))}
-        </ul>
+      <aside class={`mag-sidebar mag-right ${isHomepage ? 'hide-scrollbar' : ''}`}>
+        <div class="mag-right-inner">
+          <div class="mag-pill pill-orange">ENGINEERING GUIDES</div>
+          <ul class="mag-list">
+            {engineeringPosts.map((p) => (
+              <li>
+                <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </aside>
 
     </div>
@@ -82,11 +84,13 @@ const { isHomepage = false } = Astro.props;
   /* 3-Column Layout */
   .mag-wrap {
     display: grid;
-    grid-template-columns: 280px minmax(0, 1fr) 280px; 
+    grid-template-columns: 1fr 3fr 1fr; 
     gap: 48px;
     align-items: start;
     width: 100%;
-    padding: 0 1vw; /* Reduced from 4vw to make it cover more of the screen */
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 1.25rem;
   }
 
   /* Pilly Buttons */
@@ -117,9 +121,28 @@ const { isHomepage = false } = Astro.props;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
     padding-bottom: 24px;
-    scrollbar-width: none; /* Firefox */
+    padding-right: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
   }
-  .mag-sidebar::-webkit-scrollbar { display: none; /* Chrome, Safari */ }
+  
+  .mag-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .mag-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .mag-sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--border-strong);
+    border-radius: 10px;
+  }
+  
+  .mag-sidebar.hide-scrollbar {
+    scrollbar-width: none;
+  }
+  .mag-sidebar.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
   .mag-list {
     list-style: none;
@@ -153,11 +176,22 @@ const { isHomepage = false } = Astro.props;
     /* For long-form reading, constrain line length */
     max-width: 100%;
     margin: 0 auto;
-    background: #ffffff; /* Clean white surface for article */
-    border: 1px solid var(--border-faint);
-    border-radius: var(--radius-xl);
-    padding: 48px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    background: transparent;
+    padding: 0 16px;
+  }
+  
+  .mag-left {
+    padding-right: 16px;
+  }
+  
+  .mag-right {
+    direction: rtl;
+    padding-left: 0;
+  }
+  
+  .mag-right-inner {
+    direction: ltr;
+    padding-left: 16px;
   }
 
   /* Responsive Design */
@@ -178,9 +212,9 @@ const { isHomepage = false } = Astro.props;
     
     /* Ensure article comes first visually by order */
     .mag-center { order: 1; }
-    .mag-left { order: 2; border-top: 1px solid var(--border-faint); padding-top: 32px; }
-    .mag-right { order: 3; border-top: 1px solid var(--border-faint); padding-top: 32px; }
+    .mag-left { order: 2; border-right: none; border-top: 1px solid var(--border-faint); padding-right: 0; padding-top: 32px; }
+    .mag-right { order: 3; border-left: none; border-top: 1px solid var(--border-faint); padding-left: 0; padding-top: 32px; }
     
-    .mag-center.is-article { padding: 32px 24px; border: none; box-shadow: none; background: transparent; }
+    .mag-center.is-article { padding: 32px 0; border: none; box-shadow: none; background: transparent; }
   }
 </style>

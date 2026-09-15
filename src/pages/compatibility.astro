@@ -57,54 +57,180 @@ const faqs = [
 
   <CompatibilityGrid />
 
-  <section class="addendum">
+  <section class="addendum redesigned">
     <div class="wrap">
 
-      <article class="addendum-block">
-        <div class="ad-eyebrow">/ how it works</div>
-        <h2>Three patterns that make this list possible.</h2>
-        <p>
-          The reason MeshWG operates across this breadth of hardware is
-          that it does not depend on any vendor's proprietary tunnel
-          protocol. The encrypted layer is standard WireGuard — the same
-          protocol every router on this page implements natively. What
-          MeshWG provides is the coordination layer above the protocol:
-          keypair distribution, peer state, policy enforcement, and the
-          dashboard that turns dozens of individual router configurations
-          into a single navigable mesh.
-        </p>
-        <p>
-          The result for an organisation evaluating mesh VPN is a
-          materially simpler decision. Existing branches with TP-Link
-          ER605 gateways slot in as easily as branches running MikroTik
-          RB5009, Ubiquiti UDM, or GL.iNet Flint 2. New branches can
-          standardise on whichever vendor procurement prefers without
-          changing the broader network architecture. Hardware refresh
-          cycles run independently of mesh-platform decisions.
-        </p>
+      <!-- About compatibility Box -->
+      <div class="compat-alert-box">
+        <div class="cab-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <div class="cab-content">
+          <h3>About compatibility</h3>
+          <p>
+            Compatibility reflects whether the device's stock firmware ships WireGuard or supports loading it as a kernel module or package. Older firmware revisions may require a one-time vendor update before MeshWG can configure the mesh. If a router currently in your branch estate is not listed, the most likely reason is firmware vintage — reach <a href="mailto:hello@meshwg.com">hello@meshwg.com</a> with the exact model and firmware version, and the editorial team will confirm. Additional models are added to this list as the team verifies vendor documentation.
+          </p>
+        </div>
+        <button class="cab-close" aria-label="Close" onclick="this.parentElement.style.display='none'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- How it works -->
+      <article class="addendum-block split-block">
+        <div class="split-content">
+          <div class="ad-eyebrow">/ how it works</div>
+          <h2>Three patterns that make<br/><span style="color: #2563EB;">this list possible.</span></h2>
+          <p>
+            The reason MeshWG operates across this breadth of hardware is
+            that it does not depend on any vendor's proprietary tunnel
+            protocol. The encrypted layer is standard WireGuard — the same
+            protocol every router on this page implements natively. What
+            MeshWG provides is the coordination layer above the protocol:
+            keypair distribution, peer state, policy enforcement, and the
+            dashboard that turns dozens of individual router configurations
+            into a single navigable mesh.
+          </p>
+          <p>
+            The result for an organisation evaluating mesh VPN is a
+            materially simpler decision. Existing branches with TP-Link
+            ER605 gateways slot in as easily as branches running MikroTik
+            RB5009, Ubiquiti UDM, or GL.iNet Flint 2. New branches can
+            standardise on whichever vendor procurement prefers without
+            changing the broader network architecture. Hardware refresh
+            cycles run independently of mesh-platform decisions.
+          </p>
+        </div>
+        <div class="split-visual ui-card">
+          <div class="sv-routers-diagram">
+            <div class="sv-col">
+              <div class="sv-router">
+                <img src="/img/routers/tplink-er605.png" alt="TP-Link ER605" onerror="this.style.display='none'"/>
+                <div class="sv-router-label"><strong>TP-Link ER605</strong><br/>Branch Office</div>
+              </div>
+              <div class="sv-router">
+                <img src="/img/routers/mikrotik-rb5009.png" alt="MikroTik RB5009" onerror="this.style.display='none'"/>
+                <div class="sv-router-label"><strong>MikroTik RB5009</strong><br/>Branch Office</div>
+              </div>
+            </div>
+            
+            <div class="sv-center">
+              <div class="sv-mesh-core">
+                <div class="sv-mesh-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"></circle><circle cx="5" cy="19" r="3"></circle><circle cx="19" cy="19" r="3"></circle><line x1="6.5" y1="16.5" x2="10.5" y2="7.5"></line><line x1="17.5" y1="16.5" x2="13.5" y2="7.5"></line><line x1="8" y1="19" x2="16" y2="19"></line></svg>
+                </div>
+                <div class="sv-mesh-title">MeshWG</div>
+                <div class="sv-mesh-sub">One mesh. Any hardware</div>
+              </div>
+              <!-- Connector lines -->
+              <svg class="sv-connectors" viewBox="0 0 400 300" preserveAspectRatio="none">
+                <path d="M50 70 C 150 70, 150 150, 200 150" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-dasharray="4 4" />
+                <path d="M50 230 C 150 230, 150 150, 200 150" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-dasharray="4 4" />
+                <path d="M350 70 C 250 70, 250 150, 200 150" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-dasharray="4 4" />
+                <path d="M350 230 C 250 230, 250 150, 200 150" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-dasharray="4 4" />
+              </svg>
+            </div>
+
+            <div class="sv-col">
+              <div class="sv-router">
+                <img src="/img/routers/ubnt-udm.png" alt="Ubiquiti UDM" onerror="this.style.display='none'"/>
+                <div class="sv-router-label"><strong>Ubiquiti UDM</strong><br/>Head Office</div>
+              </div>
+              <div class="sv-router">
+                <img src="/img/routers/glinet-flint-2.png" alt="GL.iNet Flint 2" onerror="this.style.display='none'"/>
+                <div class="sv-router-label"><strong>GL.iNet Flint 2</strong><br/>Remote Site</div>
+              </div>
+            </div>
+          </div>
+          <div class="sv-features-row">
+            <div class="sv-feat">
+              <div class="sv-feat-icon" style="background:#DBEAFE; color:#1D4ED8;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+              <div class="sv-feat-text"><strong>Vendor-agnostic</strong><br/>Works across major vendors</div>
+            </div>
+            <div class="sv-feat">
+              <div class="sv-feat-icon" style="background:#E0E7FF; color:#4338CA;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"></circle><circle cx="5" cy="19" r="3"></circle><circle cx="19" cy="19" r="3"></circle><line x1="6.5" y1="16.5" x2="10.5" y2="7.5"></line><line x1="17.5" y1="16.5" x2="13.5" y2="7.5"></line><line x1="8" y1="19" x2="16" y2="19"></line></svg></div>
+              <div class="sv-feat-text"><strong>One mesh</strong><br/>Dozens of devices</div>
+            </div>
+            <div class="sv-feat">
+              <div class="sv-feat-icon" style="background:#DBEAFE; color:#1D4ED8;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+              <div class="sv-feat-text"><strong>Simple expansion</strong><br/>Add branches without re-architecting</div>
+            </div>
+          </div>
+        </div>
       </article>
 
-      <article class="addendum-block">
-        <div class="ad-eyebrow">/ the protocol layer</div>
-        <h2>Why standardising on WireGuard matters strategically.</h2>
-        <p>
-          WireGuard is not a MeshWG-specific protocol. It is the modern
-          encrypted-tunnel standard adopted by every major router vendor,
-          built into the Linux kernel since 2020, and supported by every
-          mainstream operating system. Organisations that standardise
-          their private networking on WireGuard preserve the freedom to
-          switch coordination platforms later without changing their
-          router fleet, and to introduce additional WireGuard-speaking
-          tools alongside MeshWG when specific use cases call for them.
-        </p>
-        <p>
-          That architectural openness is a deliberate choice — proprietary
-          VPN protocols deliver short-term lock-in benefits to vendors but
-          accumulate cost as the organisation grows. The 57 models on
-          this list represent infrastructure investments that remain
-          portable, durable, and aligned with where the broader
-          private-networking industry is headed.
-        </p>
+      <!-- The protocol layer -->
+      <article class="addendum-block split-block">
+        <div class="split-content">
+          <div class="ad-eyebrow">/ the protocol layer</div>
+          <h2>Why standardising on<br/>WireGuard <span style="color: #2563EB;">matters strategically.</span></h2>
+          <p>
+            WireGuard is not a MeshWG-specific protocol. It is the modern
+            encrypted-tunnel standard adopted by every major router vendor,
+            built into the Linux kernel since 2020, and supported by every
+            mainstream operating system. Organisations that standardise
+            their private networking on WireGuard preserve the freedom to
+            switch coordination platforms later without changing their
+            router fleet, and to introduce additional WireGuard-speaking
+            tools alongside MeshWG when specific use cases call for them.
+          </p>
+          <p>
+            That architectural openness is a deliberate choice — proprietary
+            VPN protocols deliver short-term lock-in benefits to vendors but
+            accumulate cost as the organisation grows. The 57 models on
+            this list represent infrastructure investments that remain
+            portable, durable, and aligned with where the broader
+            private-networking industry is headed.
+          </p>
+        </div>
+        <div class="split-visual ui-card row-layout" style="background: #F0F5FF; align-items: center;">
+          <div class="sv-shield-area">
+             <div class="sv-shield-glow">
+                <svg viewBox="0 0 100 120" fill="none">
+                   <path d="M50 5 L90 25 V60 C90 90 50 115 50 115 C50 115 10 90 10 60 V25 Z" fill="url(#shield-grad)"/>
+                   <path d="M50 5 L90 25 V60 C90 90 50 115 50 115 C50 115 10 90 10 60 V25 Z" stroke="#3B82F6" stroke-width="4"/>
+                   <rect x="42" y="50" width="16" height="20" rx="3" fill="#fff"/>
+                   <path d="M46 50 V44 C46 41 54 41 54 44 V50" stroke="#fff" stroke-width="3" fill="none"/>
+                   <defs>
+                     <linearGradient id="shield-grad" x1="50" y1="5" x2="50" y2="115" gradientUnits="userSpaceOnUse">
+                       <stop offset="0%" stop-color="#60A5FA"/>
+                       <stop offset="100%" stop-color="#2563EB"/>
+                     </linearGradient>
+                   </defs>
+                </svg>
+             </div>
+             <div class="sv-shield-tags">
+               <svg viewBox="0 0 24 24" width="14" height="14" fill="#10B981"><circle cx="12" cy="12" r="12"/><path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2" fill="none"/></svg>
+               <span>Open • Secure • Portable</span>
+             </div>
+          </div>
+          <div class="sv-features-list">
+             <div class="sv-list-card">
+               <div class="sv-list-icon" style="color: #2563EB; background: #DBEAFE;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
+               <div class="sv-list-text">
+                 <h4>Open standard</h4>
+                 <p>Built into Linux since 2020</p>
+               </div>
+               <svg class="sv-chevron" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+             </div>
+             <div class="sv-list-card">
+               <div class="sv-list-icon" style="color: #2563EB; background: #DBEAFE;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 9.73 1 1 0 0 1-.14-1.4l2.5-2.5a1 1 0 0 1 1.4 0 2 2 0 0 0 2.83 0l.7-.7a4 4 0 0 0-5.66-5.66l-1.4 1.4a1 1 0 0 1-1.4 0l-1.6-1.6a1 1 0 0 1 0-1.4l3.77-3.77a6 6 0 0 1 7.94 0z"/><path d="M11 15l-8 8v-3h3v-3h3v-2l1.6-1.6"/></svg></div>
+               <div class="sv-list-text">
+                 <h4>Stay flexible</h4>
+                 <p>Switch platforms without changing hardware</p>
+               </div>
+               <svg class="sv-chevron" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+             </div>
+             <div class="sv-list-card">
+               <div class="sv-list-icon" style="color: #2563EB; background: #DBEAFE;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg></div>
+               <div class="sv-list-text">
+                 <h4>Long-term value</h4>
+                 <p>Investments remain portable and durable</p>
+               </div>
+               <svg class="sv-chevron" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+             </div>
+          </div>
+        </div>
       </article>
 
       <article id="faq" class="addendum-block faq">
@@ -316,4 +442,147 @@ const faqs = [
     .addendum-block { margin-bottom: 48px; }
     .cta-strip { padding: 24px 22px; }
   }
+
+  /* New Redesign Styles */
+  .compat-alert-box {
+    display: flex; gap: 16px;
+    background: #EFF6FF; /* tailwind blue-50 */
+    border: 1px solid #BFDBFE; /* tailwind blue-200 */
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+    align-items: flex-start;
+  }
+  .cab-icon {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #3B82F6; color: #fff;
+    display: grid; place-items: center;
+  }
+  .cab-icon svg { width: 20px; height: 20px; }
+  .cab-content { flex: 1; }
+  .cab-content h3 { font-size: 16px; font-weight: 700; color: #1E3A8A; margin: 0 0 4px; }
+  .cab-content p { font-size: 14px; line-height: 1.6; color: #1E40AF; margin: 0; }
+  .cab-content a { color: #2563EB; font-weight: 600; text-decoration: underline; }
+  .cab-close {
+    flex-shrink: 0; background: transparent; border: none;
+    color: #64748B; cursor: pointer; padding: 4px;
+    border-radius: 4px;
+  }
+  .cab-close:hover { background: #DBEAFE; }
+  .cab-close svg { width: 18px; height: 18px; }
+
+  .split-block {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 48px;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+  @media (max-width: 980px) {
+    .split-block { grid-template-columns: 1fr; gap: 32px; }
+  }
+  .split-content h2 { font-size: 36px !important; line-height: 1.1 !important; margin-bottom: 24px !important; letter-spacing: -0.02em !important; font-weight: 800 !important; color: #111827 !important;}
+  .split-visual {
+    background: #F8FAFC;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid #E2E8F0;
+    display: flex; flex-direction: column; gap: 24px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  }
+  
+  /* Router Diagram */
+  .sv-routers-diagram {
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative;
+    padding: 20px; background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .sv-col { display: flex; flex-direction: column; gap: 40px; z-index: 2;}
+  .sv-router {
+    background: #fff; border: 1px solid #E2E8F0;
+    border-radius: 12px; padding: 12px; width: 140px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .sv-router img { width: 80px; height: auto; margin: 0 auto 8px; display: block; object-fit: contain; aspect-ratio: 4/3;}
+  .sv-router-label { font-size: 11px; color: #64748B; line-height: 1.4;}
+  .sv-router-label strong { color: #1E293B; font-size: 12px; }
+  
+  .sv-center { z-index: 2; position: relative;}
+  .sv-mesh-core {
+    background: #2563EB; color: #fff;
+    border-radius: 16px; padding: 24px 20px;
+    text-align: center; width: 160px;
+    box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+  }
+  .sv-mesh-icon {
+    width: 40px; height: 40px; margin: 0 auto 12px;
+    background: rgba(255,255,255,0.2); border-radius: 50%;
+    display: grid; place-items: center;
+  }
+  .sv-mesh-icon svg { width: 24px; height: 24px; color: #fff;}
+  .sv-mesh-title { font-size: 18px; font-weight: 700; margin-bottom: 4px;}
+  .sv-mesh-sub { font-size: 11px; opacity: 0.9;}
+  
+  .sv-connectors {
+    position: absolute; top: 0; left: -120px; width: 400px; height: 100%;
+    z-index: -1; pointer-events: none;
+  }
+
+  .sv-features-row {
+    display: flex; gap: 16px; justify-content: space-between;
+  }
+  @media (max-width: 640px) { .sv-features-row { flex-direction: column; } }
+  .sv-feat {
+    flex: 1; display: flex; align-items: center; gap: 12px;
+    background: #fff; border: 1px solid #E2E8F0;
+    padding: 12px; border-radius: 12px;
+  }
+  .sv-feat-icon {
+    width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+    display: grid; place-items: center;
+  }
+  .sv-feat-icon svg { width: 20px; height: 20px;}
+  .sv-feat-text { font-size: 11px; color: #64748B; line-height: 1.3;}
+  .sv-feat-text strong { color: #1E293B; font-size: 13px; display: block; margin-bottom: 2px;}
+
+  /* Protocol Shield Section */
+  .split-visual.row-layout { flex-direction: row; gap: 40px; padding: 48px; }
+  @media (max-width: 640px) { .split-visual.row-layout { flex-direction: column; padding: 24px;} }
+  .sv-shield-area { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 24px;}
+  .sv-shield-glow {
+    position: relative; width: 140px; height: 160px;
+    filter: drop-shadow(0 20px 30px rgba(37,99,235,0.2));
+  }
+  .sv-shield-tags {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid #E2E8F0;
+    padding: 6px 12px; border-radius: 99px;
+    font-size: 12px; font-weight: 600; color: #1F2937;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .sv-features-list { flex: 1.2; display: flex; flex-direction: column; gap: 12px;}
+  .sv-list-card {
+    display: flex; align-items: center; gap: 16px;
+    background: #fff; border: 1px solid #E2E8F0;
+    padding: 16px; border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .sv-list-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-color: #BFDBFE;
+  }
+  .sv-list-icon { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; display: grid; place-items: center;}
+  .sv-list-icon svg { width: 22px; height: 22px;}
+  .sv-list-text { flex: 1;}
+  .sv-list-text h4 { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #111827;}
+  .sv-list-text p { margin: 0; font-size: 13px; color: #6B7280; line-height: 1.4;}
+  .sv-chevron { width: 20px; height: 20px; flex-shrink: 0;}
 </style>

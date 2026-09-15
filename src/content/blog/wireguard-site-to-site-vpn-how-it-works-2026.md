@@ -1,0 +1,567 @@
+---
+title: 'WireGuard site-to-site VPN: How WireGuard Site-to-Site VPN Works (2026 Protocol Guide)'
+description: 'WireGuard site-to-site VPN: Understand the mechanics of WireGuard site-to-site VPNs. Learn how multi-site meshes, CGNAT handling, and control planes operate under the hood.'
+pubDate: 2026-05-16
+updatedDate: 2026-05-16
+author: 'MeshWG editorial team'
+tags: ['strategy guide', 'wireguard', 'vpn', 'security', 'architecture', 'enterprise wireguard setup', 'mesh vpn architecture 2026', 'zero trust network access', 'wireguard routing guide', 'network hardware', 'cloud vpn', 'enterprise routing', 'router configuration', 'network management', 'mesh infrastructure', 'hardware deployment']
+seoKeywords: ["WireGuard site-to-site VPN", "how WireGuard works", "VPN protocol"]
+cover: '../../assets/images/how_it_works.png'
+---
+
+> **Related Reading:** [WireGuard Site-to-Site VPN: Multi-Location Setup Guide (2026)](/blog/wireguard-site-to-site-vpn-multiple-locations/)
+
+> **Related Reading:** [Branch Office VPN Guide for SMBs (2026)](/blog/branch-office-vpn-smb-rollout-playbook-2026/)
+
+<article class="tldr-box">
+  <h3>TL;DR</h3>
+  <ul>
+    <li><strong>Ideal for LANs:</strong> WireGuard is exceptionally well-suited for site-to-site VPNs due to its symmetric peers, connectionless nature, and explicit routing.</li>
+    <li><strong>Symmetric Peers:</strong> There is no client/server mode in WireGuard core—both sides of a tunnel maintain the same state and use identical configuration shapes.</li>
+    <li><strong>Connectionless Protocol:</strong> WireGuard uses UDP datagrams without TCP session state, so tunnels stay up seamlessly even if upstream IP addresses rotate.</li>
+    <li><strong>Explicit Routing:</strong> The `AllowedIPs` field securely handles both inbound filtering and outbound routing without requiring separate shadow routing tables or policy files.</li>
+    <li><strong>Minimal Setup:</strong> A two-peer site-to-site connection requires just ~16 lines of configuration across both ends, though scaling beyond three peers introduces complexity.</li>
+  </ul>
+</article>
+
+<div class="bp-intro"> <!-- Intro / UVP --> <p class="lede-p">
+Yes — WireGuard works beautifully for site-to-site VPN. It works
+between two routers, between thirty routers, and between routers
+sitting behind ISP CGNAT with no static public IP at either end.
+
+What you do not get out of the box is a control plane: someone has
+to generate the keypairs, distribute the configurations, keep the
+AllowedIPs in sync, and update everyone when a peer's overlay
+address changes. [MeshWG](/blog/cloud-wireguard-vpn-meshwg/) is that control plane. It runs on top of
+the WireGuard already in your TP-Link, MikroTik, OpenWrt, Ubuntu,
+OPNsense, or Ubiquiti gear — and connects a 20-branch network for
+around ₹7,000 a month against the ₹30 lakhs of hardware plus
+₹30,000 a month of licensing a comparable SDWAN deployment costs.
+Setup takes under two minutes per site. Two machines are free,
+forever. Below is exactly how WireGuard site-to-site works under
+the hood in 2026, where the manual-configuration approach starts
+to bite, and how to decide between hand-rolling and a cloud
+control plane for your environment.
+</p> </div>
+
+<!-- § 2 How WireGuard handles peer discovery, keys, and handshakes --> <h2>How WireGuard handles peer discovery, keys, and handshakes</h2> <p>
+Most guides on the public web cover WireGuard configuration. Few
+          cover what the protocol is actually doing underneath. The
+          mechanics are worth the ten minutes — they explain why certain
+          failure modes look the way they do, and why some seemingly-similar
+          alternatives behave very differently.
+</p> <h3>There is no dynamic peer discovery</h3> <p>
+WireGuard does not have a peer-discovery layer in the base
+          protocol. Every peer's public key is statically configured on the
+          peers it talks to. There is no rendezvous server, no STUN-like
+          NAT hole-punch dance, no broadcast probe — none of that lives in
+          WireGuard core. This is by design (minimal attack surface, no
+          extra moving parts) and it's the wedge for every cloud control
+          plane in the space, including MeshWG. The cloud control plane
+<em>is</em> the rendezvous layer; it generates and distributes
+          the configurations so the peers themselves never need to discover
+          each other.
+</p> <h3>The Noise_IK handshake</h3> <p>
+Each peer holds a long-term static Curve25519 keypair. When two
+          peers first exchange traffic, they run a Noise_IK handshake —
+          exchanging fresh ephemeral keys and deriving session keys via
+          HKDF on the combined static-plus-ephemeral material. The
+          handshake also produces a chaining key used for the next rekey
+          so that even if a current session key is compromised, past
+          traffic stays encrypted (forward secrecy).
+</p> <p>
+The handshake re-runs every two minutes by default if traffic
+          flows. If no traffic flows, the tunnel goes idle and the peer
+          table no longer marks the session as recent. PersistentKeepalive
+          — when configured — sends a 32-byte heartbeat every N seconds
+          (25 is the common default). This keeps the tunnel session alive
+          and, more importantly for branch-office work, keeps the NAT
+          mapping at any intermediate firewall fresh so the tunnel stays
+          reachable through CGNAT.
+</p> <h3>The peer state machine, observed</h3> <p>
+From <code>wg show</code> on either side, the entire visible
+          state surface is: which peers are configured, when each peer's
+          latest handshake completed, what its last known endpoint IP was,
+          and how many bytes have moved in each direction. That's all. No
+          phase-1 SA, no phase-2 SA, no IKE keepalive cycle, no transform
+          set, no proposal table. The minimalism is operational, not
+          aesthetic — failure modes become reason-able-about because
+          there's less state to be wrong in.
+</p> <p>
+For comparison the Linux kernel WireGuard implementation is
+          roughly four thousand lines of C. The original kernel IPsec
+          stack runs to about a hundred thousand. That ratio shows up in
+          everything from boot times to bug counts to how long it takes a
+          new engineer to feel confident reading the source. Section four
+          revisits the IPsec comparison from a deployment angle; the
+          implementation-size point is just to ground why WireGuard's
+          configuration is small in the first place.
+</p> <!-- § 3 How to create a site-to-site VPN? --> <h2>How to create a site-to-site VPN?</h2> <p>
+Five steps, platform-agnostic. The walkthrough below works for
+          Linux servers, MikroTik RouterOS, OpenWrt, OPNsense, and the
+          official WireGuard apps. For the TP-Link-specific menu paths —
+          Archer, Deco, ER, and Omada — see the companion post on
+<a href="/blog/tp-link-site-to-site-vpn-wireguard-2026/">TP-Link site-to-site VPN with WireGuard</a>;
+          this one stays at the protocol level so it generalises across
+          gear.
+</p> <ol class="steps"> <li> <h3>Generate a keypair at each site</h3> <p>
+On Linux or macOS: <code>wg genkey | tee privatekey | wg pubkey &gt; publickey</code>.
+              On router admin UIs, there's a one-click "Generate keypair"
+              button on the WireGuard panel. The private key stays on that
+              peer; only the public key gets shared with the others. Lose
+              a private key and the move is to regenerate the pair on that
+              peer and re-distribute the new public key — nothing else
+              needs to change.
+</p> </li> <li> <h3>Pick the overlay IP scheme</h3> <p>
+Pick an overlay subnet that does not collide with any LAN
+              you intend to route. The conventional default is
+<code>10.100.0.0/24</code> for small mesh networks. Assign
+              one <code>/32</code> per peer — for example 10.100.0.1 for
+              the HQ, 10.100.0.2 for branch-mumbai, 10.100.0.3 for
+              branch-pune. On wg-quick configurations the line is
+<code>Address = 10.100.0.1/24</code> (the /24 here is the
+              network mask the kernel uses to know "the rest of this
+              subnet is reachable via wg0").
+</p> </li> <li> <h3>Decide which peer holds the static endpoint</h3> <p>
+WireGuard is symmetric, but operationally one peer needs an
+              endpoint the others can dial. Pick the peer with the most
+              stable address — typically the HQ on a business fibre line
+              with a static IP. The dialer peers will have
+<code>Endpoint = hq.example.com:51820</code> in their
+              configurations; the listener peer has no Endpoint line at
+              all (it just accepts whatever comes in). If neither side
+              has a static IP — both behind ISP CGNAT — you need a third
+              peer with a stable address as the rendezvous. That's what
+              section six and the cloud-control-plane discussion are
+              about.
+</p> </li> <li> <h3>Set AllowedIPs correctly on every peer</h3> <p>
+This is the single most common first-time gotcha. On every
+              peer's <code>[Peer]</code> block referencing some other
+              peer, AllowedIPs must list both:
+</p> <p>
+— The other peer's overlay IP, as a <code>/32</code> — e.g. <code>10.100.0.2/32</code><br>
+— The other peer's LAN subnet, as the appropriate CIDR — e.g. <code>192.168.20.0/24</code> </p> <p>
+The /32 lets the two peers reach each other directly across
+              the overlay. The LAN subnet entry is what tells the kernel
+              "packets destined to 192.168.20.x go down the wg0 tunnel,
+              not out the default route." Without it, the tunnel comes up,
+<code>wg show</code> reports healthy handshakes, but
+<code>ping 192.168.20.5</code> from across the tunnel gets
+              a no-route-to-host error. Missing the LAN entry is why so
+              many setup posts on Reddit ask "tunnel is up but I can't
+              reach LAN" — section 3 of this guide is the answer.
+</p> </li> <li> <h3>Bring up the tunnel and verify</h3> <p> <code>wg-quick up wg0</code> on Linux. Apply / Save in the
+              router admin UI. Within about ten seconds the handshake
+              completes. From a LAN client on one side, ping a LAN host
+              on the other side. If the ping answers, the tunnel and the
+              routing are both correct. From either peer, <code>wg show</code>
+will display the latest handshake time (seconds ago) and the
+              accumulated transfer bytes in each direction.
+</p> </li> </ol> <p>
+The whole walkthrough takes about fifteen minutes the first
+          time and about three minutes once you've done it before. Most
+          of the time gets spent staring at AllowedIPs — write down both
+          peers' overlay IPs and LAN subnets on paper before opening any
+          configuration file. The post-mortem on virtually every
+          "tunnel comes up but routing does not work" support case
+          traces back to a wrong CIDR in AllowedIPs.
+</p> <!-- § 4 Is IPsec better than WireGuard for site-to-site? --> <h2>Is IPsec better than WireGuard for site-to-site?</h2> <p>
+Neither is universally better. Both are encrypted tunnels that
+          carry LAN traffic between sites; both are mature enough to
+          stake a production deployment on. The right pick depends on the
+          constraints your environment actually has, not on which
+          protocol your favourite vendor pushes.
+</p> <h3>Where IPsec is the right pick</h3> <ul class="bullets"> <li> <strong>Vendor interop with non-WireGuard endpoints.</strong>
+If you're terminating a tunnel against a Cisco ASA, an AWS
+            Site-to-Site VPN gateway in policy-based mode, a Fortinet
+            firewall at a partner site, or any of the older Juniper SRX
+            family — IPsec is the lingua franca. WireGuard requires
+            WireGuard on both ends; IPsec does not.
+</li> <li> <strong>Compliance requirements that name IPsec by name.</strong>
+Some financial-services audit checklists still list IPsec
+            explicitly. Picking the protocol your auditor recognises
+            saves a quarter of arguing.
+</li> <li> <strong>You already operate IPsec successfully.</strong>
+Protocol churn for its own sake is not a win. If your team's
+            muscle memory is in IPsec and the deployment is working,
+            keep it.
+</li> <li> <strong>Both sides have static public IPs and your IKE policy
+            is well-defined.</strong> IPsec's home turf. Phase 1 and
+            phase 2 align quickly when both ends agree on transforms.
+</li> </ul> <h3>Where WireGuard is the right pick</h3> <ul class="bullets"> <li> <strong>One or both sides behind ISP CGNAT or DHCP.</strong>
+The typical retail branch in India in 2026 has a CGNAT'd
+            fibre line. WireGuard with PersistentKeepalive handles this
+            cleanly because every peer can dial outbound and the
+            keepalive maintains the NAT mapping. IPsec without
+            extensive NAT-T tuning tends to struggle here.
+</li> <li> <strong>Mixed-vendor estates.</strong> WireGuard's
+            configuration is identical on TP-Link, MikroTik, OpenWrt,
+            Ubuntu, OPNsense, and Ubiquiti. IPsec is also cross-vendor
+            in theory, but in practice the IKE policy details vary
+            between firmware versions and bite worst during upgrades.
+</li> <li> <strong>You want a configuration you can read in five minutes.</strong>
+About eight lines of wg-quick per peer covers a complete
+            site-to-site setup. An equivalent IPsec configuration with
+            full IKEv2 phase 1 and phase 2 policy is closer to thirty
+            lines, plus the transform sets and proposals both ends
+            have to agree on.
+</li> <li> <strong>Fast failover matters.</strong> WireGuard re-handshakes
+            in a second or two when an upstream IP changes. IPsec's
+            IKE rekey timers are typically longer, and some
+            implementations require a full tunnel teardown before the
+            new IP is accepted.
+</li> <li> <strong>It's the 2026 default for new greenfield SMB and
+            prosumer site-to-site deployments.</strong> Most teams I
+            talk to who are starting fresh in 2026 pick WireGuard
+            unless they have one of the constraints in the IPsec list
+            above.
+</li> </ul> <p>
+The honest summary: this is not a religious choice. Both
+          protocols ship encrypted packets between two networks. Pick by
+          the constraints. MeshWG uses WireGuard because it's the right
+          pick for the BYO-router-plus-cloud-control-plane-plus-branches-
+          behind-CGNAT pattern we serve every day. A different deployment
+          with two static IPs and an existing IPsec stack would be silly
+          to migrate just to chase a protocol fashion.
+</p> <!-- § 5 Multi-site WireGuard --> <h2>Multi-site WireGuard: 3, 5, 30 peers</h2> <p>
+Almost every public-web guide to "WireGuard site-to-site" stops
+          at two routers. When [scaling to multiple locations](/blog/wireguard-site-to-site-vpn-multiple-locations/), the textbook patterns for adding a third are
+          where the manual-configuration approach starts paying its bill.
+</p> <h3>The full-mesh option</h3> <p>
+A full mesh of N peers means every peer has direct tunnels to
+          every other peer. The math is N×(N-1)/2 tunnel pairs to
+          maintain. Three peers = three pairs. Five peers = ten pairs.
+          Ten peers = forty-five pairs. Each peer's wg-quick configuration
+          has N-1 <code>[Peer]</code> blocks; adding peer N+1 means
+          touching every existing peer's configuration AND adding the new
+          one. This is why hand-rolled [WireGuard mesh](/blog/manage-multiple-wireguard-tunnels-mesh-vpn-2026/) deployments past
+          five or six sites usually collapse into "we should have built
+          something" within six months.
+</p> <p>
+Full mesh has one real advantage: peer-to-peer flows take the
+          direct path between source and destination. No extra hop, no
+          extra latency. For latency-sensitive workloads — VoIP between
+          two branches, real-time database replication between sites —
+          this matters. For most branch-office work it doesn't.
+</p> <h3>The hub-and-spoke option</h3> <p>
+Every peer has exactly one <code>[Peer]</code> block, pointing
+          at a central hub. The hub has N peer blocks, one per branch.
+          Branch-to-branch traffic traverses the hub: encrypted at the
+          source branch, decrypted and re-encrypted at the hub, delivered
+          encrypted to the destination branch. One extra hop of
+          WireGuard, a few milliseconds of latency on a well-placed hub.
+</p> <p>
+In return you get a single place for everything: policy lives
+          on the hub, logging is centralised at the hub, revocation is
+          one config change at the hub. Adding peer N+1 is a four-minute
+          job at the new branch and zero changes at the existing peers.
+          For 95% of branch-networking deployments, the trade pays back
+          on the first re-shuffle of which branches exist.
+</p> <p>
+Hub-and-spoke is what virtually every cloud-control-plane WG
+          product does under the hood, including MeshWG. The mechanics
+          are transparent: from the branch router's perspective, it's
+          maintaining one outbound WireGuard tunnel to
+<code>vpn.meshwg.com:51820</code>; the hub handles the
+          forwarding logic.
+</p> <h3>One operational pattern that matters</h3> <p>
+When sizing the hub, account for the aggregate bandwidth of
+          cross-branch flows. A 10-branch mesh where four branches
+          stream an overnight backup runs all four backups through the
+          hub. MeshWG's shared hub comfortably supports the small-fleet
+          patterns we see in practice; for sustained, high-throughput
+          cross-branch streaming, the right answer is a dedicated
+          deployment — talk to us and we'll size it for the workload.
+</p> <!-- § 6 WireGuard through CGNAT and double-NAT --> <h2>WireGuard through CGNAT and double-NAT</h2> <p>
+This is the section that doesn't show up in any of the
+          top-ranking WireGuard site-to-site guides on the public web,
+          and yet it's the reality for most branch-office work in India
+          in 2026. Worth the words.
+</p> <p>
+CGNAT — Carrier-Grade NAT — is what most Indian ISPs run on
+          their consumer and small-business fibre tiers in 2026. Reliance
+          Jio Fiber, Airtel Xstream Fiber, and ACT Fibernet all default
+          to it on the plans most branches actually buy. What CGNAT
+          means practically: your branch's public IP is shared with
+          thousands of other customers on the same carrier, you cannot
+          accept inbound connections to it, and the IP itself rotates
+          every few hours as the carrier's NAT pool reshuffles.
+</p> <p>
+Traditional site-to-site VPN designs assume both sides have a
+          stable inbound public IP — that's how the "other side" knows
+          where to dial. CGNAT breaks that assumption. The branch
+          doesn't have an inbound IP to publish; even if it did, the IP
+          would change before you could write it down.
+</p> <h3>How WireGuard handles it</h3> <p>
+Every peer can be configured as a pure dialer. It sends
+          outbound UDP to a known endpoint and never accepts inbound
+          connections at all. The dialer's wg-quick configuration has
+          an <code>Endpoint = hostname:port</code> line; the listener's
+          configuration has no Endpoint line.
+</p> <p>
+The single configuration line that makes CGNAT work is
+<code>PersistentKeepalive = 25</code> in the dialer's Peer
+          block. Every 25 seconds the dialer sends a tiny encrypted
+          heartbeat outbound. The ISP's NAT layer sees the outbound
+          packet, refreshes its NAT mapping, and that mapping stays
+          valid for the next minute or two — long enough for return
+          packets to find their way back. Without PersistentKeepalive,
+          the NAT mapping would expire after the carrier's idle
+          timeout (often 30-60 seconds), and your tunnel would mostly
+          work but occasionally drop until traffic re-triggered the
+          mapping.
+</p> <h3>When both sides are behind CGNAT</h3> <p>
+The case where neither branch has a stable inbound IP is the
+          common one. Two retail branches, two ISP-CGNAT'd fibre lines,
+          no way for either to dial the other directly. The fix is to
+          introduce a third peer with a stable public address — a cloud
+          hub. Both branches dial the hub outbound; the hub forwards
+          encrypted packets between them. Neither branch opens an
+          inbound port. Neither pays for a static IP. Neither
+          subscribes to a Dynamic DNS service.
+</p> <p>
+This is the no-static-IP scenario modern mesh-VPN
+          platforms like MeshWG are built for. The pattern has been
+          validated through extensive testing on Jio Fiber, Airtel
+          Xstream, and ACT Fibernet in 2026; all three behave the
+          same way — outbound UDP works, PersistentKeepalive holds
+          the mapping, and tunnels recover within a second or two
+          when the branch's public IP rotates. The same applies to
+          the double-NAT case where the ISP-issued router sits in
+          front of the branch router; the keepalive holds through
+          both NAT layers reliably.
+</p> <!-- § 7 Disadvantages --> <h2>What are the disadvantages of WireGuard?</h2> <p>
+The honest list. None of these are dealbreakers for
+          branch-office or prosumer use, but they're worth knowing
+          before you commit. Per the rest of this site, this section
+          is feature-positive — it describes what WireGuard chose not
+          to do and what that costs in operations.
+</p> <ul class="bullets"> <li> <strong>No built-in peer discovery.</strong> Every peer's
+            public key has to be statically configured on the peers it
+            talks to. There's no equivalent to IPsec's IKE peer-discovery
+            or Tailscale's coordination server in the core protocol.
+            This keeps the attack surface tiny, but it means someone
+            has to do the distribution. Cloud control planes — MeshWG,
+            Tailscale's coordinator, Netbird's signal server, headscale
+            — exist exactly to solve this layer.
+</li> <li> <strong>No identity layer beyond the keypair.</strong>
+WireGuard says "this public key is allowed to send packets
+            for this overlay IP." It does not say "this user belongs
+            to this department" or "this device passed the device-posture
+            check." For RBAC, ZTNA, or device-posture scenarios, you
+            layer those on top — typically via the same control plane
+            that distributes the configurations.
+</li> <li> <strong>Roaming behaviour is opinionated.</strong> If a
+            peer's source IP changes between handshakes, WireGuard
+            accepts the new IP and updates its peer table automatically.
+            That's exactly what you want for laptops moving between
+            Wi-Fi and 4G — and occasionally surprising for static-config
+            scenarios where you'd rather pin the endpoint.
+</li> <li> <strong>No traffic shaping, no QoS in the protocol.</strong>
+If you need to prioritise voice over backup traffic at the
+            tunnel level, that work happens in Linux tc, the router's
+            QoS layer, or an upstream firewall — not in WireGuard
+            itself. For most branch deployments this isn't a blocker;
+            for specialised cases it adds an integration step.
+</li> <li> <strong>UDP-only in the base protocol.</strong> A small
+            number of pathological corporate firewalls block all UDP
+            except port 53 and port 443. WireGuard can be tunneled over
+            TCP/443 via auxiliary tools like wstunnel or udp2raw — but
+            that's not part of WireGuard core; it's an operational
+            workaround. The same workaround applies to IPsec in the
+            same firewall, so this isn't unique to WireGuard.
+</li> </ul> <p>
+None of these are dealbreakers for the deployments MeshWG
+          serves. They're the deliberate trade-offs WireGuard made to
+          keep the protocol small enough to be audited, fast enough to
+          live in the kernel hot path, and simple enough that a new
+          engineer can read the source and feel confident in a
+          weekend. For branch networking, the trade was the right one.
+</p> <!-- § 8 Comparison table --> <section id="compare-wg-s2s" data-astro-cid-tj6vkdow> <div class="wrap" data-astro-cid-tj6vkdow> <div class="sec-eyebrow" data-astro-cid-tj6vkdow>/ patterns</div> <h2 class="sec-h" data-astro-cid-tj6vkdow>Three ways to run WireGuard site-to-site in 2026.</h2> <p class="sec-lede" data-astro-cid-tj6vkdow>DIY per-peer configs, hub-and-spoke on your own server, or a managed cloud control plane. The right pick depends on how many sites you have, whether your branches have static IPs, and how much of this you want to operate yourself.</p> <div class="compare-wrap" data-astro-cid-tj6vkdow> <table class="compare" data-astro-cid-tj6vkdow> <thead data-astro-cid-tj6vkdow> <tr data-astro-cid-tj6vkdow> <th scope="col" class="rh" data-astro-cid-tj6vkdow></th> <th scope="col" data-astro-cid-tj6vkdow>DIY per-peer configs</th><th scope="col" data-astro-cid-tj6vkdow>Self-hosted hub-and-spoke (headscale, wg-easy, etc.)</th> <th scope="col" class="us" data-astro-cid-tj6vkdow>MeshWG</th> </tr> </thead> <tbody data-astro-cid-tj6vkdow> <tr data-astro-cid-tj6vkdow> <th scope="row" class="rh" data-astro-cid-tj6vkdow>Setup time, 2-site mesh</th> <td data-astro-cid-tj6vkdow>About 15 minutes once you&#39;ve done it before</td><td data-astro-cid-tj6vkdow>About 45 minutes (host setup + hub config + 2 peers)</td> <td class="us" data-astro-cid-tj6vkdow>Under 2 minutes per site</td> </tr><tr data-astro-cid-tj6vkdow> <th scope="row" class="rh" data-astro-cid-tj6vkdow>Adding the Nth peer when N&gt;2</th> <td data-astro-cid-tj6vkdow>Update N existing configs + add 1 new</td><td data-astro-cid-tj6vkdow>Update hub config + add the new peer</td> <td class="us" data-astro-cid-tj6vkdow>1 paste at the new site; 0 changes at the other peers</td> </tr><tr data-astro-cid-tj6vkdow> <th scope="row" class="rh" data-astro-cid-tj6vkdow>Branches behind ISP CGNAT / no static public IP</th> <td data-astro-cid-tj6vkdow>Requires one peer with a static IP</td><td data-astro-cid-tj6vkdow>Self-host the hub on a VPS with a static IP</td> <td class="us" data-astro-cid-tj6vkdow>Native — every branch dials outbound only, works through CGNAT</td> </tr><tr data-astro-cid-tj6vkdow> <th scope="row" class="rh" data-astro-cid-tj6vkdow>Key + peer-state distribution</th> <td data-astro-cid-tj6vkdow>Manual: scp, paste, version control by hand</td><td data-astro-cid-tj6vkdow>Self-managed via the hub&#39;s admin UI</td> <td class="us" data-astro-cid-tj6vkdow>Cloud control plane handles key rotation, peer state, and revocation</td> </tr><tr data-astro-cid-tj6vkdow> <th scope="row" class="rh" data-astro-cid-tj6vkdow>Per-site monthly cost (20 sites, US$ or INR)</th> <td data-astro-cid-tj6vkdow>₹0 software, paid in engineer-hours</td><td data-astro-cid-tj6vkdow>VPS ₹500–2,000/mo + maintenance hours</td> <td class="us" data-astro-cid-tj6vkdow>₹349 per machine per month, no hub to maintain</td> </tr><tr data-astro-cid-tj6vkdow> <th scope="row" class="rh" data-astro-cid-tj6vkdow>Open standard underneath</th> <td data-astro-cid-tj6vkdow>✓ Pure WireGuard</td><td data-astro-cid-tj6vkdow>✓ Pure WireGuard</td> <td class="us" data-astro-cid-tj6vkdow>✓ Pure WireGuard — same wg-quick config format your peers already speak</td> </tr> </tbody> </table> </div> <div class="compare-foot" style="margin-bottom: 0;" data-astro-cid-tj6vkdow> <a class="cf-link" href="/docs" data-astro-cid-tj6vkdow>See exactly how the MeshWG control plane works under the hood →</a> </div> </div> </section>  <!-- § 9 Cloud control plane vs hand-roll --> <h2>When to use a cloud control plane vs hand-roll it</h2> <p>
+The decision is not religious; it's about your environment.
+          Two clear-cut patterns and one gray zone.
+</p> <h3>Hand-rolled DIY is the right pick when</h3> <ul class="bullets"> <li>
+You have two or three sites, all with static public IPs, and
+            growth past five sites is not on the 12-month roadmap.
+</li> <li>
+You have an in-house network engineer who already runs Linux
+            infrastructure and considers wg-quick configuration trivial
+            — and who has the time to maintain the keys, the AllowedIPs,
+            and the per-peer state by hand.
+</li> <li>
+You explicitly want zero third-party dependency. This is a
+            defensible choice for some scenarios — government,
+            air-gapped industrial, certain compliance regimes. The
+            operational cost is real but the surface area you control is
+            also real.
+</li> </ul> <h3>A cloud control plane earns its keep when</h3> <ul class="bullets"> <li>
+One or more of your branches don't have static public IPs.
+            Section six's CGNAT case is the typical one; without a
+            stable rendezvous point, neither manual nor self-hosted
+            DIY actually works without significant additional engineering.
+</li> <li>
+You're already at five sites, or expect to be within
+            twelve months. The hand-roll math gets painful between site
+            five and site ten.
+</li> <li>
+You don't have a full-time network engineer, and you don't
+            want to make this someone's part-time job. The control
+            plane handles key rotation, peer state distribution, and
+            revocation so your team doesn't have to.
+</li> <li>
+You want a single place to revoke a compromised branch
+            within seconds — without a coordinated configuration update
+            cycle at every other branch.
+</li> <li>
+You want every branch to come online while others are down.
+            Cloud control planes handle the peer-state propagation so
+            an offline HQ doesn't prevent a new branch from joining the
+            mesh.
+</li> </ul> <h3>The pilot pattern</h3> <p>
+Even for organisations that will eventually hand-roll,
+          starting with MeshWG's two-machines-free tier provides
+          a low-commitment way to validate topology and routing
+          decisions before any operational investment. Some
+          deployments remain on the free tier indefinitely — home
+          labs and one-engineer environments that never exceed
+          two peers. Others scale from a two-peer pilot to thirty
+          branches inside three months. Both are valid trajectories
+          of the same disciplined evaluation; the central value
+          of the pilot is that it answers the architectural
+          questions before either path becomes locked in.
+</p> <!-- FAQ --> <h2>Common questions</h2> <details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    Can WireGuard be used for site-to-site VPN?
+  </summary>
+  <p>Yes. WireGuard is well-suited for site-to-site VPN because every peer is symmetric — there is no client/server asymmetry — and the same wg-quick configuration that works between two laptops works between two routers and between thirty. The minimum viable case is two peers, each with one Interface and one Peer block, where AllowedIPs declares the remote subnet. Section 1 covers the two-peer case in detail.</p>
+</details><details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    Is IPsec better than WireGuard for site-to-site?
+  </summary>
+  <p>Neither protocol is universally better. IPsec is mature and the right pick when you need to interoperate with non-WireGuard endpoints (Cisco ASA, AWS Site-to-Site VPN gateway) or both sides have static public IPs and your team already runs IPsec confidently. WireGuard is the 2026 default for branches behind ISP CGNAT, mixed-vendor estates, and teams that want a configuration they can read in five minutes. Section 4 has the decision framework with each protocol&#39;s sweet spot.</p>
+</details><details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    What are the disadvantages of WireGuard?
+  </summary>
+  <p>WireGuard has no built-in peer discovery (every public key is statically configured), no identity layer beyond the keypair, no QoS or traffic shaping in the protocol, and is UDP-only by default. None of these block branch-office or prosumer use — they are the design trade-offs that keep the protocol small enough to audit (around 4,000 lines of kernel code). Section 7 has the full honest list and how each disadvantage is addressed in practice.</p>
+</details><details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    How to create a site-to-site VPN with WireGuard?
+  </summary>
+  <p>Five steps, platform-agnostic: (1) generate a keypair at each site with wg genkey | wg pubkey, (2) pick the overlay IP scheme — typically a /24 like 10.100.0.0/24, (3) decide which peer holds the static endpoint (or use a cloud peer if neither does), (4) set AllowedIPs to include both the remote overlay IP and the remote LAN subnet, (5) bring up the tunnel with wg-quick up wg0. Section 3 has the detailed walkthrough.</p>
+</details><details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    Does WireGuard support multiple sites in one VPN?
+  </summary>
+  <p>Yes. Two topology options: full mesh, where every peer has direct tunnels to every other peer; or hub-and-spoke, where every peer has one tunnel to a central hub that forwards between peers. Full mesh has lower latency for direct peer-to-peer flows but requires N×(N-1)/2 tunnel pairs to maintain. Hub-and-spoke scales cleanly past ten sites and is what cloud control planes including MeshWG use. Section 5 walks through both options.</p>
+</details><details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    How does WireGuard work behind CGNAT?
+  </summary>
+  <p>Every peer can be configured to dial outbound only, never accepting inbound connections. PersistentKeepalive = 25 sends a small encrypted heartbeat outbound every 25 seconds, which keeps the NAT mapping at the ISP edge alive so return packets find their way back. If both sides are behind CGNAT (the common case for retail branches on Indian fibre), you need a third peer with a stable public address — a cloud hub — for both branches to dial. Section 6 has the details with Indian-ISP verification.</p>
+</details><details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    What&#39;s the simplest WireGuard site-to-site configuration?
+  </summary>
+  <p>Two wg-quick configuration files, one at each site, each with one Peer block referencing the other. Total is roughly sixteen lines of configuration across both ends. The catch every first-time setup hits is AllowedIPs: each peer must list both the other peer&#39;s overlay IP (typically a /32) AND the other peer&#39;s LAN subnet (typically a /24). Missing the LAN subnet is why people get a working tunnel but cannot ping the remote LAN. Section 3 step 4 spells out the exact pattern.</p>
+</details> <!-- CTA --> <aside class="cta-strip"> <p>
+Want a WireGuard site-to-site mesh without hand-rolling a single
+          wg-quick file?
+<a class="cta-link" href="https://vpn.meshwg.com/signup">Start free →</a>
+Two machines are free, forever.
+</p> </aside> </div>
+
+## Frequently Asked Questions (FAQ)
+
+<details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    How does a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) differ from a traditional VPN?
+  </summary>
+  <p>A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.</p>
+</details>
+
+<details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    Does MeshWG require installing software on every device?
+  </summary>
+  <p>No. MeshWG can be deployed directly on your existing edge routers (like TP-Link, MikroTik, or OpenWrt). This provides agentless, site-wide protection for all devices behind the router without installing VPN clients on individual laptops or IoT devices.</p>
+</details>
+
+<details class="mesh-faq">
+  <summary>
+    <span class="faq-badge">FAQ</span>
+    How does WireGuard [NAT Traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) work?
+  </summary>
+  <p>WireGuard doesn't have native [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/), which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.</p>
+</details>
+
+---
+<div class="cta-box" style="background: var(--bg-2); padding: 32px; border-radius: 12px; text-align: center; margin-top: 48px; border: 1px solid var(--border);">
+  <h3 style="margin-top: 0;">Ready to upgrade your enterprise network?</h3>
+  <p style="color: var(--text-3); margin-bottom: 24px;">Deploy a high-performance WireGuard mesh network in minutes. No new hardware, no complex CLI configurations, and completely agentless.</p>
+  <a href="https://meshwg.com" class="btn btn-primary" style="text-decoration: none; padding: 12px 24px; font-size: 16px;">Try MeshWG Free</a>
+</div>
+
+
+<style>
+.mesh-faq {
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background-color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.mesh-faq summary {
+  list-style: none;
+  padding: 32px 16px 16px 16px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #111827;
+  cursor: pointer;
+}
+.mesh-faq summary::-webkit-details-marker {
+  display: none;
+}
+.mesh-faq summary::after {
+  content: "⌄";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #4b5563;
+}
+.mesh-faq[open] summary::after {
+  content: "⌃";
+}
+.mesh-faq .faq-badge {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  background-color: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.mesh-faq p {
+  padding: 0 16px 16px 16px;
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+</style>

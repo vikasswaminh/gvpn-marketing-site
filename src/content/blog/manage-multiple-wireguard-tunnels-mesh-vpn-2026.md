@@ -59,7 +59,7 @@ If a branch office's public IP address changes due to an ISP DHCP lease renewal,
 
 Furthermore, as key rotation schedules mature, rotating a single gateway's private/public key pair requires redistributing that public key to every peer in the mesh. Without automation or an overlay control plane, manual maintenance creates configuration drift, stale routing entries, security gaps, and unexpected network outages.
 
-## A Brief History of [Mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) Architecture & Overlay Routing
+## A Brief History of <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> Architecture & Overlay Routing
 
 To understand how modern WireGuard mesh networks function, we must trace how overlay networking evolved over the last three decades:
 
@@ -68,13 +68,13 @@ To understand how modern WireGuard mesh networks function, we must trace how ove
 - **Userspace Overlay Networks (2010s)**: Solutions like ZeroTier and Tinc pioneered userspace mesh overlays, using custom protocols and software daemons to handle [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) and automated peer discovery. However, operating in userspace introduced context-switching performance bottlenecks on high-throughput connections.
 - **WireGuard Integration & Modern Control Planes (2016–2026)**: Jason Donenfeld's introduction of WireGuard brought high-speed, kernel-level tunnel encapsulation to modern operating systems. To solve WireGuard's lack of a control plane, open-source and commercial orchestration engines (such as MeshWG, Tailscale, NetBird, and Headscale) emerged. These platforms separate the control plane (automating peer discovery and key exchange) from the data plane (using native kernel WireGuard for high-speed packet delivery).
 
-## Definition: What Is a WireGuard [Mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/)?
+## Definition: What Is a WireGuard <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a>?
 
-A WireGuard [Mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) is a software-defined overlay network topology wherein multiple gateway nodes, servers, or endpoints establish direct, mutually authenticated, and encrypted WireGuard tunnels with one another without routing data traffic through a central hub node.
+A WireGuard <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> is a software-defined overlay network topology wherein multiple gateway nodes, servers, or endpoints establish direct, mutually authenticated, and encrypted WireGuard tunnels with one another without routing data traffic through a central hub node.
 
-Unlike a traditional Hub-and-Spoke architecture—where traffic between Branch A and Branch B must traverse an intermediate central gateway—a WireGuard [Mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) routes packets directly from Gateway A to Gateway B across the shortest available path.
+Unlike a traditional Hub-and-Spoke architecture—where traffic between Branch A and Branch B must traverse an intermediate central gateway—a WireGuard <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> routes packets directly from Gateway A to Gateway B across the shortest available path.
 
-Key features of a WireGuard [Mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) include:
+Key features of a WireGuard <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> include:
 
 - **Direct Peer-to-Peer Encapsulation**: Data packets travel across direct, single-hop encrypted paths between participating nodes, eliminating intermediary forwarding delays and bandwidth bottlenecks.
 - **Kernel-Level Speed**: Encryption and decryption take place directly inside the host operating system kernel (Linux 5.6+), delivering multi-gigabit throughput and lower CPU overhead compared to userspace overlay daemons.

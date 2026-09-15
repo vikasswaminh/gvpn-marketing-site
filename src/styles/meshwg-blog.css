@@ -418,3 +418,34 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
   .js-reveal [data-reveal] { transition: none !important; opacity: 1 !important; transform: none !important; }
   [data-tilt] { transform: none !important; transition: none !important; }
 }
+
+/* FAQ Badges and CTA Links injected from Markdown */
+.faq-badge {
+  display: inline-block;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-right: 12px;
+  border: 1px solid #cbd5e1;
+  vertical-align: middle;
+}
+
+.cta-link {
+  display: inline-block;
+  background: #1F4FD8;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+  margin: 0 12px;
+  transition: all 0.2s ease;
+}
+.cta-link:hover {
+  background: #0B257A;
+  box-shadow: 0 4px 12px rgba(11, 37, 122, 0.2);
+}

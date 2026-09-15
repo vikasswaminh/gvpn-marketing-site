@@ -292,8 +292,8 @@ Any router that speaks WireGuard. For a single SafeStream box at one site, the T
 ## Frequently Asked Questions (FAQ)
 
 <details>
-<summary>How does a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) differ from a traditional VPN?</summary>
-A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
+<summary>How does a <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> differ from a traditional VPN?</summary>
+A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
 </details>
 
 <details>

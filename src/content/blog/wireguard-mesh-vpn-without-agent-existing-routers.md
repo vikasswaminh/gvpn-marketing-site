@@ -17,7 +17,7 @@ cover: '../../assets/images/agentless_wireguard_mesh.png'
     <article class="tldr-box">
       <h3>TL;DR</h3>
       <ul>
-        <li><strong>No Agent Needed:</strong> The most common objection to a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) is that it sounds like another piece of software to roll out. Modern WireGuard [mesh VPNs](/blog/how-to-set-up-a-wireguard-mesh-vpn/) run directly on the routers most businesses already own, using native WireGuard support. The router is the endpoint.</li>
+        <li><strong>No Agent Needed:</strong> The most common objection to a <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> is that it sounds like another piece of software to roll out. Modern WireGuard [mesh VPNs](/blog/how-to-set-up-a-wireguard-mesh-vpn/) run directly on the routers most businesses already own, using native WireGuard support. The router is the endpoint.</li>
         <li><strong>Cloud Control Plane:</strong> The coordination problem — who to trust, where to send traffic, how to rotate keys — is handled by a cloud control plane. Each branch dials outbound to the coordination service, receives its peer list and keys, and then talks peer-to-peer over encrypted tunnels.</li>
         <li><strong>Fast Deployment:</strong> A 20-site deployment comes online in under two minutes per site, on hardware that was already in the building, with no new appliance and no licensing line.</li>
         <li><strong>Purpose Built:</strong> This model suits 5-to-50-branch businesses with mixed router fleets and generalist IT teams. It replaces the hand-edited `wg0.conf` with automated coordination.</li>
@@ -75,7 +75,7 @@ The honest caveat: agentless mesh is the right model for site-to-site connectivi
 
 ## Architecture: the control plane and the data plane
 
-Every [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/), agentless or not, separates two planes of operation. Understanding this separation is the key to understanding how the whole thing works.
+Every <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a>, agentless or not, separates two planes of operation. Understanding this separation is the key to understanding how the whole thing works.
 
 **The data plane** is the encrypted traffic path between branches. In an agentless WireGuard mesh, the data plane runs entirely on the routers. Branch A encrypts traffic with WireGuard and sends it directly to Branch B over UDP. The mesh platform is not in this path — it does not see the traffic, it does not relay it (except in the fallback cases described below), and it does not add latency. The data plane is peer-to-peer.
 
@@ -256,7 +256,7 @@ The failures in agentless mesh deployments are usually the same few, and they ar
 - **Treating the control plane as a data plane.** Expecting the platform to inspect or filter traffic. It does not — it coordinates. If you need traffic inspection, that is a different tool.
 - **Skipping keepalive.** Assuming the tunnel will stay up on its own. On consumer connections, it will not.
 - **Forgetting to revoke.** Leaving a closed branch's key active. This is both a security and a hygiene problem.
-- **Over-buying the model.** Expecting packet-level WAN optimisation or application-aware QoS from a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/). Those are SD-WAN features; the mesh does not pretend to be SD-WAN.
+- **Over-buying the model.** Expecting packet-level WAN optimisation or application-aware QoS from a <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a>. Those are SD-WAN features; the mesh does not pretend to be SD-WAN.
 - **Under-buying the model.** Choosing a DIY WireGuard setup with hand-edited configs and no control plane, then discovering the operational tax of maintaining forty configs by hand. The control plane is the point.
 - **Ignoring the relay.** Not accounting for the branch pairs that will need the relay, then being surprised by latency on those paths.
 
@@ -353,8 +353,8 @@ No. It covers sites. For individual remote workers on arbitrary laptops, an agen
 ## Frequently Asked Questions (FAQ)
 
 <details>
-<summary>How does a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) differ from a traditional VPN?</summary>
-A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
+<summary>How does a <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> differ from a traditional VPN?</summary>
+A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
 </details>
 
 <details>

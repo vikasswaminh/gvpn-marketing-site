@@ -370,7 +370,7 @@ https://meshwg.com/careers.
 
 ## Optional
 
-- [Sitemap](https://meshwg.com/sitemap.xml)
+- [Sitemap](https://meshwg.com/sitemap-index.xml)
 - [Security policy](https://meshwg.com/.well-known/security.txt)
 - [Privacy policy](https://meshwg.com/privacy)
 - [Terms and conditions](https://meshwg.com/terms)

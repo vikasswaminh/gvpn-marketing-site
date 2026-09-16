@@ -90,8 +90,8 @@ const vendorGuides = [
   },
 ];
 
-const title = "Quickstart — MeshWG";
-const description = "Get your first machine on a MeshWG mesh in under 2 minutes. Step-by-step setup for TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense, and the official WireGuard apps.";
+const title = "Quickstart — WireGuard Mesh VPN Setup";
+const description = "Get your first machine on a MeshWG mesh in under 2 minutes. Step-by-step WireGuard mesh VPN setup for TP-Link, MikroTik, OpenWrt, Ubiquiti, OPNsense.";
 
 const steps = [
   {
@@ -290,6 +290,15 @@ const steps = [
 
     </div>
   </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Quickstart", "item": "https://meshwg.com/quickstart/" }
+    ]
+  })}></script>
 
   <Footer />
 </Base>

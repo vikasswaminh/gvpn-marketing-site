@@ -480,28 +480,19 @@ Two machines are free, forever.
 
 ## Frequently Asked Questions (FAQ)
 
-<details class="mesh-faq">
-  <summary>
-    <span class="faq-badge">FAQ</span>
-    How does a mesh VPN differ from a traditional VPN?
-  </summary>
-  <p>A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A <a href="/blog/how-to-set-up-a-wireguard-mesh-vpn/">mesh VPN</a> establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.</p>
+<details>
+<summary>How does a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) differ from a traditional VPN?</summary>
+A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
 </details>
 
-<details class="mesh-faq">
-  <summary>
-    <span class="faq-badge">FAQ</span>
-    Does MeshWG require installing software on every device?
-  </summary>
-  <p>No. MeshWG can be deployed directly on your existing edge routers (like TP-Link, MikroTik, or OpenWrt). This provides agentless, site-wide protection for all devices behind the router without installing VPN clients on individual laptops or IoT devices.</p>
+<details>
+<summary>Does MeshWG require installing software on every device?</summary>
+No. MeshWG can be deployed directly on your existing edge routers (like TP-Link, MikroTik, or OpenWrt). This provides agentless, site-wide protection for all devices behind the router without installing VPN clients on individual laptops or IoT devices.
 </details>
 
-<details class="mesh-faq">
-  <summary>
-    <span class="faq-badge">FAQ</span>
-    How does WireGuard NAT Traversal work?
-  </summary>
-  <p>WireGuard doesn't have native <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">NAT traversal</a>, which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.</p>
+<details>
+<summary>How does WireGuard [NAT Traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) work?</summary>
+WireGuard doesn't have native [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/), which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.
 </details>
 
 ---
@@ -510,58 +501,3 @@ Two machines are free, forever.
   <p style="color: var(--text-3); margin-bottom: 24px;">Deploy a high-performance WireGuard mesh network in minutes. No new hardware, no complex CLI configurations, and completely agentless.</p>
   <a href="https://meshwg.com" class="btn btn-primary" style="text-decoration: none; padding: 12px 24px; font-size: 16px;">Try MeshWG Free</a>
 </div>
-
-
-<style>
-.mesh-faq {
-  border: 1px solid #ef4444;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  background-color: #fff;
-  position: relative;
-  overflow: hidden;
-}
-.mesh-faq summary {
-  list-style: none;
-  padding: 32px 16px 16px 16px;
-  font-weight: 600;
-  font-size: 1.125rem;
-  color: #111827;
-  cursor: pointer;
-}
-.mesh-faq summary::-webkit-details-marker {
-  display: none;
-}
-.mesh-faq summary::after {
-  content: "⌄";
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.5rem;
-  color: #4b5563;
-}
-.mesh-faq[open] summary::after {
-  content: "⌃";
-}
-.mesh-faq .faq-badge {
-  position: absolute;
-  top: 12px;
-  left: 16px;
-  background-color: #fee2e2;
-  color: #ef4444;
-  border: 1px solid #fca5a5;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.mesh-faq p {
-  padding: 0 16px 16px 16px;
-  margin: 0;
-  color: #4b5563;
-  line-height: 1.6;
-}
-</style>

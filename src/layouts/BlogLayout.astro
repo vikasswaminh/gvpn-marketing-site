@@ -76,9 +76,14 @@ const { isHomepage = false } = Astro.props;
   .mag-section { 
     position: relative;
     z-index: 1;
-    padding: 120px 0 96px; 
+    padding: 152px 0 96px; 
     max-width: 100%;
     margin: 0 auto;
+  }
+  @media (max-width: 980px) {
+    .mag-section {
+      padding-top: 112px;
+    }
   }
 
   /* 3-Column Layout */
@@ -88,7 +93,7 @@ const { isHomepage = false } = Astro.props;
     gap: 48px;
     align-items: start;
     width: 100%;
-    max-width: var(--maxw);
+    max-width: 1536px;
     margin: 0 auto;
     padding: 0 1.25rem;
   }
@@ -116,9 +121,9 @@ const { isHomepage = false } = Astro.props;
     flex-direction: column;
     gap: 24px;
     position: sticky;
-    top: 100px;
+    top: 128px;
     height: fit-content;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 128px);
     overflow-y: auto;
     padding-bottom: 24px;
     padding-right: 12px;

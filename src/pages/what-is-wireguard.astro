@@ -75,10 +75,10 @@ const breadcrumbSchema = { "@context": "https://schema.org", "@type": "Breadcrum
         <h2 id="history">A brief history</h2>
         <p>WireGuard was designed by <strong>Jason A. Donenfeld</strong> starting around 2016, originally for Linux. The design goals were explicit: dramatically smaller code surface, modern cryptography only, no configurable cipher suites, kernel-resident for performance. The protocol stabilised in 2018-2019.</p>
         <p>Linus Torvalds <a href="https://lore.kernel.org/lkml/CAHk-=wgomG7DhYpAJSsjVTL5L4pOnS5x3DAdtBN9SyzcdyFZQA@mail.gmail.com/" rel="noopener" target="_blank">famously praised WireGuard's code quality</a> in 2018 ("Can I just once again state my love for it and hope it gets merged soon?"). It was merged into the Linux kernel mainline in <strong>5.6 (March 2020)</strong>, became the default in most Linux distributions soon after, and was subsequently ported to FreeBSD, OpenBSD, Windows, macOS, iOS, and Android.</p>
-        <p>As of 2026, WireGuard is the dominant modern VPN protocol — supported in virtually every consumer router firmware released after 2022, every major open-source firewall (OPNsense, pfSense), and underneath every major mesh-VPN product (Tailscale, NetBird, MeshWG, Headscale).</p>
+        <p>As of 2026, WireGuard is the dominant modern VPN protocol — supported in virtually every consumer router firmware released after 2022, every major open-source firewall (OPNsense, pfSense), and underneath every major mesh-VPN product (Tailscale, NetBird, MeshWG, Headscale). See our <a href="/compatibility/">router compatibility list</a> for specific models.</p>
 
         <h2 id="how">How WireGuard works</h2>
-        <p>WireGuard's design has three core elements:</p>
+        <p>WireGuard's design has three core elements. (For how MeshWG orchestrates this, see our <a href="/docs/">architecture docs</a>.)</p>
         <ul class="bullets">
           <li><strong>Public-key cryptography for identity.</strong> Each peer has a public key. The local peer's configuration lists every remote peer's public key, the IPs that peer is allowed to source traffic from (<code>AllowedIPs</code>), and where to reach them (<code>Endpoint</code>). There's no certificate authority, no PKI, no separate authentication mechanism. The public key IS the identity.</li>
           <li><strong>UDP transport, no TCP.</strong> WireGuard runs over UDP. The handshake is three messages (Noise_IK protocol). Once the handshake completes, encrypted packets flow as opaque UDP datagrams.</li>

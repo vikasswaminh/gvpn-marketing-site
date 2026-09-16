@@ -146,8 +146,8 @@ PersistentKeepalive = 21</code></pre>
 
         <h2 id="third-option">The third option neither Tailscale nor raw WireGuard is</h2>
         <p>For SMB multi-branch businesses (5-30 sites, each with a router, some non-laptop devices behind each router), neither raw WireGuard nor Tailscale fits cleanly. Raw WireGuard hits the operational issues above. Tailscale's per-user pricing scales linearly with team size while the actual mesh scales with sites, not people, so the pricing model is misaligned.</p>
-        <p>The shape that fits: <strong>router-based managed WireGuard</strong>. The coordination layer of Tailscale, but the tunnel terminates on the router (TP-Link, MikroTik, OpenWrt, OPNsense, pfSense, Ubiquiti, Asus, GL.iNet) so every LAN-side device joins automatically with no per-device install or per-user licence.</p>
-        <p>MeshWG is built for this specifically. Per-router pricing (₹349 ≈ $4.20/month, 2 free), generated paste-ready configuration in each vendor's native format, central policy, CGNAT relay built in. For a 10-branch business with 100 staff: $42/month on MeshWG vs $600/month on Tailscale Business.</p>
+        <p>The shape that fits: <strong>router-based managed WireGuard</strong>. The coordination layer of Tailscale, but the tunnel terminates on the router (TP-Link, MikroTik, OpenWrt, OPNsense, pfSense, Ubiquiti, Asus, GL.iNet) so every LAN-side device joins automatically with no per-device install or per-user licence. Check our <a href="/compatibility/">supported router compatibility list</a> to see if your hardware works.</p>
+        <p>MeshWG is built for this specifically. Per-router <a href="/pricing/">pricing</a> (₹349 ≈ $4.20/month, 2 free), generated paste-ready configuration in each vendor's native format, central policy, CGNAT relay built in. For a 10-branch business with 100 staff: $42/month on MeshWG vs $600/month on Tailscale Business.</p>
 
         <h2 id="pick">When to pick which</h2>
         <ul class="bullets">

@@ -3,6 +3,7 @@ import Base       from "../layouts/Base.astro";
 import Nav        from "../components/Nav.astro";
 import PageHero   from "../components/PageHero.astro";
 import Footer     from "../components/Footer.astro";
+import { strategyPosts, engineeringPosts } from "../utils/posts";
 
 // Architecture claims are written as customer-visible promises.
 // We describe what you get; we don't describe the inside of the box.
@@ -74,14 +75,29 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
 <Base title={title} description={description}>
   <Nav />
   <section class="docs-section" style="padding-top: 152px;">
-    <div class="wrap">
-      <header style="margin-bottom: 16px;">
-        <div class="db-eyebrow">/ docs</div>
-        <h1 style="font-size: clamp(32px, 4.5vw, 48px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; color: #111827;">MeshWG Documentation</h1>
-        <p class="db-lede">
-          Learn how MeshWG's managed WireGuard mesh VPN architecture works. Explore the standard WireGuard configuration, zero-trust policies, and end-to-end testing.
-        </p>
-      </header>
+    <div class="docs-editorial-wrap">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="mag-sidebar mag-left hide-scrollbar" aria-label="Strategy & Architecture articles">
+        <div class="mag-pill pill-purple">STRATEGY & ARCHITECTURE</div>
+        <ul class="mag-list">
+           {strategyPosts.map(p => (
+            <li>
+              <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      <!-- CENTER MAIN -->
+      <main class="docs-center-main">
+        <header style="margin-bottom: 16px;">
+          <div class="db-eyebrow">/ docs</div>
+          <h1 style="font-size: clamp(32px, 4.5vw, 48px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; color: #111827;">MeshWG Documentation</h1>
+          <p class="db-lede">
+            Learn how MeshWG's managed WireGuard mesh VPN architecture works. Explore the standard WireGuard configuration, zero-trust policies, and end-to-end testing.
+          </p>
+        </header>
 
       <!-- ── Getting Started -->
       <article id="getting-started" class="doc-block" style="margin-bottom: 48px;">
@@ -97,27 +113,11 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
 
       <!-- ── Architecture -->
       <article id="architecture" class="doc-block">
-        <div class="arch-header-layout">
-          <header class="arch-header-left">
-            <div class="db-eyebrow">/ 02 HOW MESHWG WORKS</div>
-            <h2>How MeshWG Works</h2>
-            <p class="arch-subtitle"><span style="color: #2563EB; font-weight: 500;">MeshWG keeps things simple.</span> Here are the core principles that define how it works, and why it's different.</p>
-          </header>
-          
-          <!-- TOC Sidebar -->
-          <nav class="toc-sidebar">
-            <span class="toc-label">ON THIS PAGE</span>
-            <div class="toc-links">
-              <a href="#getting-started">Getting Started</a>
-              <a href="#architecture" class="active">How MeshWG Works</a>
-              <a href="#config">Configuration</a>
-              <a href="#doesnt-do">What it doesn't do</a>
-              <a href="#verification">Security and Verification</a>
-              <a href="#router-setup">Router Setup</a>
-              <a href="#troubleshooting">Troubleshooting</a>
-            </div>
-          </nav>
-        </div>
+        <header>
+          <div class="db-eyebrow">/ 02 HOW MESHWG WORKS</div>
+          <h2>How MeshWG Works</h2>
+          <p class="arch-subtitle"><span style="color: #2563EB; font-weight: 500;">MeshWG keeps things simple.</span> Here are the core principles that define how it works, and why it's different.</p>
+        </header>
 
         <div class="bento-grid">
           {archPoints.map((c, i) => (
@@ -291,6 +291,22 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
         </p>
       </article>
 
+      </main>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="mag-sidebar mag-right hide-scrollbar" aria-label="Engineering Guides articles">
+        <div class="mag-right-inner">
+          <div class="mag-pill pill-orange">ENGINEERING GUIDES</div>
+          <ul class="mag-list">
+            {engineeringPosts.map(p => (
+              <li>
+                <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+
     </div>
   </section>
 
@@ -320,60 +336,54 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
     -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
-  /* Arch Header & TOC Sidebar */
-  .arch-header-layout {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 32px;
-    gap: 40px;
+  /* ----------------------------------
+     Editorial 3-Column Layout
+  ----------------------------------- */
+  .docs-editorial-wrap {
+    display: grid; 
+    grid-template-columns: 1fr 3fr 1fr; 
+    gap: 48px; 
+    max-width: var(--maxw); 
+    margin: 0 auto; 
+    padding: 0 1.25rem;
   }
-  .arch-header-left {
-    max-width: 600px;
-  }
-  .arch-subtitle {
-    color: var(--text-2);
-    font-size: 15.5px;
-    line-height: 1.65;
-    margin: 12px 0 0;
-  }
-  .toc-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-left: 24px;
-    border-left: 2px solid #2563EB;
-    min-width: 200px;
-  }
-  .toc-label {
-    font-family: var(--font-mono);
-    color: var(--text-4);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    font-size: 11px;
-  }
-  .toc-links {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 13px;
-  }
-  .toc-links a {
-    color: var(--text-2);
-    transition: color .12s ease;
-    text-decoration: none;
-  }
-  .toc-links a:hover { color: var(--text); }
-  .toc-links a.active { color: #2563EB; font-weight: 500; }
   
-  @media (max-width: 900px) {
-    .arch-header-layout {
-      flex-direction: column;
-    }
-    .toc-sidebar {
-      border-left: none;
-      padding-left: 0;
-    }
+  .mag-sidebar { position: sticky; top: 100px; align-self: start; }
+  .mag-pill { 
+    display: inline-block; 
+    font-family: var(--font-mono); 
+    font-size: 11px; 
+    font-weight: 700; 
+    padding: 6px 14px; 
+    border-radius: 99px; 
+    letter-spacing: 0.05em; 
+    text-transform: uppercase; 
+    margin-bottom: 12px; 
+  }
+  .pill-orange { color: #ffffff; background: #c2410c; }
+  .pill-purple { color: #ffffff; background: #6d28d9; }
+  
+  .mag-list { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 24px; 
+  }
+  .mag-list-link { 
+    display: block; 
+    font-size: 16px; 
+    font-weight: 500; 
+    color: var(--text-2); 
+    line-height: 1.6; 
+    transition: color 0.15s ease; 
+  }
+  .mag-list-link:hover { color: var(--accent); }
+
+  @media (max-width: 980px) {
+    .docs-editorial-wrap { grid-template-columns: minmax(0, 1fr); }
+    .mag-sidebar { display: none; }
   }
 
   /* Doc blocks */
@@ -410,8 +420,8 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
 
   /* Bento Grid */
   .bento-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 16px;
     margin-top: 32px;
   }
@@ -428,12 +438,6 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
   .bento-card:hover {
     transform: translate(-2px, -2px);
     box-shadow: 8px 8px 0px #0F172A;
-  }
-  .bento-card-1, .bento-card-2, .bento-card-3 {
-    grid-column: span 2;
-  }
-  .bento-card-4, .bento-card-5 {
-    grid-column: span 3;
   }
   .bc-head {
     display: flex;
@@ -506,19 +510,6 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
   }
   .bc-link:hover {
     text-decoration: underline;
-  }
-  @media (max-width: 1024px) {
-    .bento-card-1, .bento-card-2, .bento-card-3, .bento-card-4, .bento-card-5 {
-      grid-column: span 3;
-    }
-  }
-  @media (max-width: 600px) {
-    .bento-grid {
-      grid-template-columns: 1fr;
-    }
-    .bento-card-1, .bento-card-2, .bento-card-3, .bento-card-4, .bento-card-5 {
-      grid-column: span 1;
-    }
   }
 
   /* Code Window */

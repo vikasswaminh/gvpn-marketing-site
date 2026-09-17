@@ -269,32 +269,6 @@ const faqs = [
     </div>
   </section>
 
-  <!-- JSON-LD: WebPage + FAQPage + Breadcrumb -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "@id": `${url}#webpage`,
-    "name": title,
-    "description": description,
-    "datePublished": datePublished,
-    "dateModified": dateModified,
-    "author": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
-      "url": "https://meshwg.com/about",
-    },
-    "publisher": {
-      "@type": "Organization",
-      "@id": "https://meshwg.com/#organization",
-      "name": "MeshWG",
-      "url": "https://meshwg.com",
-      "logo": { "@type": "ImageObject", "url": "https://meshwg.com/favicon.svg" },
-    },
-    "keywords": ["WireGuard router compatibility", "supported routers", "mesh VPN routers", "TP-Link WireGuard", "MikroTik WireGuard", "Ubiquiti WireGuard", "GL.iNet WireGuard"],
-    "isAccessibleForFree": true,
-    "inLanguage": "en",
-  })}></script>
 
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",

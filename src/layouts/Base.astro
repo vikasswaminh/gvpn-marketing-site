@@ -75,6 +75,7 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
        eyebrows, and tabular data. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -162,38 +163,15 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
     ]
   })} />
 
-  <!-- HIGH-VOLUME SEO: Organization & WebSite Schema -->
+  <!-- HIGH-VOLUME SEO: WebSite Schema -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
-    "@type": ["Organization", "WebSite"],
+    "@type": "WebSite",
     "name": "MeshWG",
     "alternateName": "MeshWG Zero-Trust VPN",
     "url": "https://meshwg.com/",
     "description": "Zero-config, highly secure mesh VPN built on WireGuard. Connect servers, devices, and clouds in seconds without complex infrastructure.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://meshwg.com/search?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
-  })} />
-
-  <!-- HIGH-VOLUME SEO: SoftwareApplication Schema -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "MeshWG",
-    "operatingSystem": "Linux, Windows, macOS, iOS, Android",
-    "applicationCategory": "NetworkingApplication",
-    "description": "Enterprise-grade Mesh VPN and Zero Trust Network Access (ZTNA) platform built on top of the WireGuard protocol.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "INR",
-      "description": "Free for up to 2 machines forever"
-    }
+    "publisher": { "@id": "https://meshwg.com/#organization" }
   })} />
 
 

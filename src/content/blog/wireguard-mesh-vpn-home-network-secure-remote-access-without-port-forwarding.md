@@ -607,3 +607,12 @@ Deploying a WireGuard mesh VPN eliminates this compromise entirely. By pairing s
 <p>
 Whether you run a dedicated subnet router on a Raspberry Pi, deploy containers in a Proxmox cluster, or leverage router-native integration via <a href="/blog/cloud-wireguard-vpn-meshwg/">MeshWG</a>, you reclaim full network sovereignty. You turn your distributed devices into a unified, secure, private cloud that operates on your terms—invisible to scanners, impervious to ISP churn, and permanently protected behind zero-trust architecture. Ready to eliminate port forwarding? <a href="/pricing/">Start building your zero-trust mesh with MeshWG today.</a>
 </p>
+
+<aside class="cta-strip">
+<h3>Eliminate Port Forwarding with MeshWG</h3>
+<p>Get secure remote access to your homelab without exposing ports or struggling with CGNAT.</p>
+<div class="cta-row">
+<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 machines</a>
+<a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
+</div>
+</aside>

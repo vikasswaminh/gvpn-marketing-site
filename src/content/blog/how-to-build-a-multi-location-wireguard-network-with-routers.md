@@ -12,7 +12,9 @@ cover: '../../assets/images/multiple_locations.png'
 
 > **Related Reading:** [How to Set Up a Router VPN Without Installing VPN Software (2026 MeshWG Guide)](/blog/how-to-set-up-a-router-vpn-without-installing-vpn-software/)
 
-> **Related Reading:** [How to Set Up a WireGuard Mesh VPN (Full Guide)](/blog/how-to-set-up-a-wireguard-mesh-vpn/)
+> **Related Reading:** [WireGuard Site-to-Site VPN: Multi-Location Setup Guide (2026)](/blog/wireguard-site-to-site-vpn-multiple-locations/)
+
+> **Related Reading:** [Managing Multiple WireGuard Tunnels & Mesh VPN Guide (2026)](/blog/manage-multiple-wireguard-tunnels-mesh-vpn-2026/)
 
 <div class="bp-intro">
     <div class="tldr-box">

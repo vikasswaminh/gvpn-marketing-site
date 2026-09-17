@@ -304,4 +304,13 @@ MeshWG resolves the compromises that previously plagued enterprise remote access
 *   **Zero Public Attack Surface:** Eliminates exposed listening ports through automated, outbound STUN-assisted UDP hole punching.
 *   **Agentless Office Integration:** Connects remote teams to existing physical office networks and local servers via native router integration without deploying software across every workstation.
 
-To explore how MeshWG modernizes corporate remote access and eliminates legacy VPN bottlenecks, visit [MeshWG.com](https://meshwg.com).
+<aside class="cta-strip">
+<h3>Modernize your remote access with MeshWG</h3>
+<p>Replace slow, fragile legacy VPN concentrators with a high-speed, kernel-level WireGuard mesh fabric.</p>
+<div class="cta-row">
+<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 machines</a>
+<a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
+</div>
+</aside>
+
+To explore how MeshWG modernizes corporate remote access and eliminates legacy VPN bottlenecks, visit [MeshWG.com](https://meshwg.com) or [read our documentation](/docs/).

@@ -11,6 +11,8 @@ cover: '../../assets/images/how_it_works.png'
 
 > **Related Reading:** [WireGuard Site-to-Site VPN: Multi-Location Setup Guide (2026)](/blog/wireguard-site-to-site-vpn-multiple-locations/)
 
+> **Related Reading:** [How to Build a Multi-Location WireGuard Network with Routers: Enterprise Guide](/blog/how-to-build-a-multi-location-wireguard-network-with-routers/)
+
 > **Related Reading:** [Branch Office VPN Guide for SMBs (2026)](/blog/branch-office-vpn-smb-rollout-playbook-2026/)
 
 <article class="tldr-box">

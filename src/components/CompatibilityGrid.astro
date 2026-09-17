@@ -175,7 +175,22 @@ const vendorCount = grouped.length;
           <h2 class="cg-vendor-name" style={`--vc:${vendorColor[group.vendor] ?? "#525252"}`}>
             {group.vendor} {group.vendor === "OPNsense" || group.vendor === "pfSense" ? "Appliances" : group.vendor === "Generic" ? "Devices" : "Routers"}
           </h2>
-          <span class="cg-vendor-count">{group.items.length} models</span>
+          <div class="cg-head-right">
+            <span class="cg-vendor-count">{group.items.length} models</span>
+            {(() => {
+              const vendorDocs = {
+                "TP-Link": "/tp-link/wireguard/",
+                "MikroTik": "/mikrotik/wireguard/",
+                "OpenWrt": "/openwrt/wireguard/",
+                "OPNsense": "/opnsense/wireguard/",
+                "pfSense": "/pfsense/wireguard/"
+              };
+              if (vendorDocs[group.vendor]) {
+                return <a href={vendorDocs[group.vendor]} class="cg-vendor-doc-link">Setup guide &rarr;</a>;
+              }
+              return null;
+            })()}
+          </div>
         </header>
         <div class="cg-grid">
           {group.items.map(m => (
@@ -402,6 +417,21 @@ const vendorCount = grouped.length;
   }
 
   /* ── Card grid (dense; no whitespace waste) ────────────────────── */
+  .cg-head-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .cg-vendor-doc-link {
+    font-size: 13px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .cg-vendor-doc-link:hover {
+    color: var(--accent-strong);
+    text-decoration: underline;
+  }
   .cg-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);

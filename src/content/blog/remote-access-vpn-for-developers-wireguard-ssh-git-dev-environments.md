@@ -630,3 +630,13 @@ WireGuard utilizes modern, state-of-the-art cryptography recommended by modern c
 </ul>
 
 <p>Get started with MeshWG today at meshwg.com or contact our technical architecture team at <a href="mailto:contact@meshwg.com">contact@meshwg.com</a> to schedule a private enterprise architecture deep dive.</p>
+
+<aside class="cta-strip">
+<h3>Ready to secure your dev workflow?</h3>
+<p>MeshWG gives your team kernel-speed WireGuard tunnels to staging, CI/CD, and production — no bastions, no port forwarding, no client software on developer machines.</p>
+<div class="cta-row">
+<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 machines</a>
+<a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
+</div>
+</aside>
+

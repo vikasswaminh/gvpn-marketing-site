@@ -295,7 +295,27 @@ const description = "Learn how MeshWG's managed WireGuard mesh architecture work
 </Base>
 
 <style>
-  .docs-section { padding: 0 0 48px; }
+  .docs-section { 
+    padding: 0 0 48px; 
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+  }
+  .docs-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; 
+    height: 550px;
+    pointer-events: none;
+    z-index: -3;
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center top;
+    mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  }
 
   /* Arch Header & TOC Sidebar */
   .arch-header-layout {

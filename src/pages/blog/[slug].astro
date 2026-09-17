@@ -20,9 +20,11 @@ const { Content } = await post.render();
 const title = post.data.title;
 const description = post.data.description;
 const pubDate = new Date(post.data.pubDate);
+const updatedDate = post.data.updatedDate ? new Date(post.data.updatedDate) : null;
 const minutes = Math.ceil((post.body ? post.body.split(/\s+/).length : 5000) / 200);
 const tags = post.data.tags || [];
-const author = post.data.author || 'MeshWG editorial team';
+const author = post.data.author || 'MeshWG Engineering';
+const coverImage = post.data.cover?.src ? `https://meshwg.com${post.data.cover.src}` : "https://meshwg.com/meshwg-og.png";
 
 const hasStrategy = tags && tags.some(tag => tag.toLowerCase() === 'strategy guide' || tag.toLowerCase() === 'protocol deep-dive');
 const pillText = hasStrategy ? 'STRATEGY & ARCHITECTURE' : 'ENGINEERING GUIDE';
@@ -66,7 +68,13 @@ const pillClass = hasStrategy ? 'nh-sidebar-pill pill-purple' : 'nh-sidebar-pill
                 <span class="meta-dot">•</span>
               </>
             )}
-            <span class="meta-date">{pubDate.toISOString().split('T')[0]}</span>
+            <span class="meta-date">Published {pubDate.toISOString().split('T')[0]}</span>
+            {updatedDate && (
+              <>
+                <span class="meta-dot">•</span>
+                <span class="meta-date">Updated {updatedDate.toISOString().split('T')[0]}</span>
+              </>
+            )}
             <span class="meta-dot">•</span>
             <span class="meta-read">{minutes} MIN READ</span>
           </div>
@@ -170,9 +178,15 @@ const pillClass = hasStrategy ? 'nh-sidebar-pill pill-purple' : 'nh-sidebar-pill
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://meshwg.com/blog/${post.slug}/`
+    },
     "headline": title,
     "description": description,
+    "image": coverImage,
     "datePublished": pubDate.toISOString(),
+    ...(updatedDate && { "dateModified": updatedDate.toISOString() }),
     "author": {
       "@type": "Person",
       "name": author

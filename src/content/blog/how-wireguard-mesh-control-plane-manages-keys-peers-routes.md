@@ -44,7 +44,7 @@ It decouples the **control plane** (identity, key synchronization, policy compil
 
 ## The Scaling Wall: Why WireGuard Needs a Control Plane
 
-WireGuard is widely celebrated as the gold standard for secure tunneling protocols. Created by Jason A. Donenfeld, it delivers state-of-the-art cryptography (Curve25519, ChaCha20, Poly1305, BLAKE2s) in fewer than 4,000 lines of Linux kernel code. It outperforms legacy IPsec IKEv2 and OpenVPN in raw throughput, connection establishment speed, and attack surface minimization. (See our comprehensive comparison in <a href="/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/">[Mesh VPN vs IPSec vs SD-WAN]](/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/)</a>).
+WireGuard is widely celebrated as the gold standard for secure tunneling protocols. Created by Jason A. Donenfeld, it delivers state-of-the-art cryptography (Curve25519, ChaCha20, Poly1305, BLAKE2s) in fewer than 4,000 lines of Linux kernel code. It outperforms legacy IPsec IKEv2 and OpenVPN in raw throughput, connection establishment speed, and attack surface minimization. (See our comprehensive comparison in [Mesh VPN vs IPSec vs SD-WAN](/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/)).
 
 Yet, WireGuard was intentionally designed as an unopinionated cryptographic network primitive, not a dynamic enterprise network solution. In a pure, unmanaged WireGuard deployment, establishing connections across an organization presents fundamental operational challenges.
 
@@ -69,7 +69,7 @@ Vanilla WireGuard requires at least one side of a point-to-point tunnel to posse
 - Branch offices, retail outlets, and remote clinics operate on commercial fiber or 5G cellular uplinks provisioned behind Carrier-Grade NAT (CGNAT) or dynamic PPPoE pools.
 - Remote laptops transition across home Wi-Fi, coffee shops, and cellular hotspots, cycling their local IP subnets and WAN addresses multiple times per day.
 
-If Node A and Node B both sit behind CGNAT, neither can accept an inbound connection attempt. They cannot discover each other's dynamically mapped NAT translation ports without an external coordination broker. (Detailed deep dive in <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">[WireGuard NAT Traversal & CGNAT Guide]](/blog/wireguard-nat-traversal-behind-cgnat-2026/)</a>).
+If Node A and Node B both sit behind CGNAT, neither can accept an inbound connection attempt. They cannot discover each other's dynamically mapped NAT translation ports without an external coordination broker. (Detailed deep dive in [WireGuard NAT Traversal & CGNAT Guide](/blog/wireguard-nat-traversal-behind-cgnat-2026/)).
 
 ---
 

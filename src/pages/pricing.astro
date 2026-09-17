@@ -49,8 +49,8 @@ const pricingFaqs = [
   },
 ];
 
-const title = "MeshWG Pricing — WireGuard Mesh VPN for Business";
-const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine per month on our Cloud plan. Connect your business mesh VPN securely. Two machines free forever.";
+const title = "MeshWG Pricing — Plans, Features & Billing";
+const description = "Transparent WireGuard mesh VPN pricing. 2 machines free forever. ₹349 per machine/month on our Cloud plan. View plans, features, and billing details.";
 ---
 
 <Base title={title} description={description}>
@@ -59,7 +59,8 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
     <div class="ph-bg"></div>
     <div class="wrap">
       <div class="ph-eyebrow">/ PRICING</div>
-      <h1 class="ph-h1">Pay for what you <span class="text-blue">mesh.</span></h1>
+      <h1 class="ph-h1">MeshWG Pricing</h1>
+      <p class="ph-lede" style="font-size: 28px; font-weight: 700; color: #0F172A; margin-bottom: 12px; line-height: 1.2;">Pay for what you <span class="text-blue">mesh.</span></p>
       <p class="ph-lede">A machine is anything in your mesh. Two free forever. After that, ₹349 per machine per month on annual billing — or ₹499 if you'd rather pay monthly.</p>
 
       <!-- Controls Row: Toggle + Trust Icons -->
@@ -90,18 +91,19 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
 
   <section class="price-section">
     <div class="wrap">
+      <h2 class="visually-hidden" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Plans and Pricing</h2>
 
       <!-- Plans -->
       <div class="plans">
         <article class="plan hover-card">
           <div class="plan-head">
-            <div class="plan-name">FREE</div>
+            <h3 class="plan-name">FREE</h3>
           </div>
           <div class="plan-price">
             <span class="num">₹0</span>
             <span class="unit">forever</span>
           </div>
-          <p class="plan-desc">Start meshing today. Free for as long as you stay small.</p>
+          <p class="plan-desc">Start meshing today with our <a href="/quickstart/" style="text-decoration: underline;">Quickstart guide</a>. Free for as long as you stay small.</p>
           <ul class="plan-list">
             <li>2 machines</li>
             <li>Hosted by us — nothing to install</li>
@@ -116,7 +118,7 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
         <article class="plan plan-accent hover-card">
           <div class="plan-head">
             <div class="plan-badge">MOST POPULAR</div>
-            <div class="plan-name">CLOUD</div>
+            <h3 class="plan-name">CLOUD</h3>
           </div>
           <div class="plan-price">
             <span class="num" data-cloud-price>₹349</span>
@@ -136,13 +138,13 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
 
         <article class="plan hover-card">
           <div class="plan-head">
-            <div class="plan-name">PRO</div>
+            <h3 class="plan-name">PRO</h3>
           </div>
           <div class="plan-price">
             <span class="num">Custom</span>
             <span class="unit">talk to us</span>
           </div>
-          <p class="plan-desc">Bigger fleets, dedicated infrastructure, custom needs.</p>
+          <p class="plan-desc">Bigger fleets, dedicated infrastructure. View <a href="/compatibility/" style="text-decoration: underline;">supported routers</a>.</p>
           <ul class="plan-list">
             <li>Dedicated infrastructure</li>
             <li>Custom domain (acme.meshwg.com)</li>
@@ -165,7 +167,7 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
         <header class="calc-head">
           <div class="calc-head-left">
             <div class="calc-eyebrow">/ CALCULATOR</div>
-            <h2>How much for your <span class="text-blue">mesh</span>?</h2>
+            <h2>Calculate Your Pricing</h2>
             <p>Drag the slider. The number's exact.</p>
           </div>
           <div class="calc-head-right">
@@ -260,7 +262,7 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
           <header class="pfaq-head">
             <div class="pfaq-head-left">
               <div class="db-eyebrow">/ BILLING FAQ</div>
-              <h2>Billing questions, <span class="text-blue">answered.</span></h2>
+              <h2>Billing Questions & FAQ</h2>
               <p>Clear answers to help you choose the right plan and manage your billing with confidence.</p>
             </div>
             <div class="pfaq-head-right">
@@ -283,7 +285,7 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
                   <summary class="faq-summary">
                     <div class="faq-icon-wrap" set:html={f.icon}></div>
                     <div class="faq-content">
-                      <div class="faq-q">{f.q}</div>
+                      <h3 class="faq-q">{f.q}</h3>
                       <div class="faq-short">{f.short}</div>
                     </div>
                     <div class="faq-toggle">
@@ -300,7 +302,7 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
                   <summary class="faq-summary">
                     <div class="faq-icon-wrap" set:html={f.icon}></div>
                     <div class="faq-content">
-                      <div class="faq-q">{f.q}</div>
+                      <h3 class="faq-q">{f.q}</h3>
                       <div class="faq-short">{f.short}</div>
                     </div>
                     <div class="faq-toggle">
@@ -326,6 +328,54 @@ const description = "Transparent WireGuard mesh VPN pricing. ₹349 per machine 
       "name": f.q,
       "acceptedAnswer": { "@type": "Answer", "text": f.a },
     })),
+  })}></script>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://meshwg.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Pricing",
+        "item": "https://meshwg.com/pricing/"
+      }
+    ]
+  })}></script>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MeshWG",
+    "applicationCategory": "NetworkingApplication",
+    "operatingSystem": "All",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free Plan",
+        "price": "0",
+        "priceCurrency": "INR",
+        "description": "2 machines free forever"
+      },
+      {
+        "@type": "Offer",
+        "name": "Cloud Plan (Annual)",
+        "price": "349",
+        "priceCurrency": "INR",
+        "description": "₹349 per machine/month (billed annually)"
+      },
+      {
+        "@type": "Offer",
+        "name": "Cloud Plan (Monthly)",
+        "price": "499",
+        "priceCurrency": "INR",
+        "description": "₹499 per machine/month (billed monthly)"
+      }
+    ]
   })}></script>
 
   <Footer />

@@ -65,13 +65,8 @@ Box-based SD-WAN was the right answer in 2018. In 2026, most
           different sweet spot. Pick by the constraints your environment
           actually has.
 </p>
-deployments actually use" is where the seven alternatives in
-          this post live. Each of them does encrypted tunnels and central
-          policy. Each of them ships in minutes rather than weeks. Each
-          of them costs noticeably less than box-based SD-WAN at the
-          SMB scale. Beyond that, they differ on a handful of axes that
-          determine which fits your specific environment.
- </div>  <h2>What to look for in a modern SD-WAN alternative</h2> <p>
+  </div>
+  <h2>What to look for in a modern SD-WAN alternative</h2> <p>
 Before reading the seven options, pin down what your
           environment actually needs. The most expensive mistake teams
           make in this category is picking a tool optimised for a

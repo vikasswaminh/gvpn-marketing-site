@@ -2,8 +2,11 @@
 title: "Site-to-Site WireGuard Setup Guide: Manual vs Automated"
 description: "A step-by-step tutorial on connecting two physical locations using raw WireGuard configuration, and how to automate the process using a managed mesh."
 pubDate: 2026-09-16
+updatedDate: 2026-09-16
 author: "MeshWG Engineering"
-tags: ["wireguard", "site-to-site", "tutorial"]
+tags: ["engineering guide", "wireguard", "site-to-site", "tutorial"]
+seoKeywords: ["WireGuard site-to-site", "manual WireGuard setup", "MeshWG automation"]
+cover: "../../assets/images/wireguard_site_to_site.png"
 ---
 
 Setting up a site-to-site VPN allows two physical locations (like a main office and a branch) to share a single secure network. WireGuard is an excellent Layer 3 protocol for this because of its high performance and minimal configuration footprint.

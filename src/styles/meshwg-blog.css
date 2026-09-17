@@ -117,11 +117,6 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
 ----------------------------------- */
 .mag-section { 
   padding: 48px 0 48px;
-  background-image: 
-    linear-gradient(to right, var(--border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  background-size: 48px 48px;
-  background-position: center top;
 }
 .mag-wrap { display: grid; grid-template-columns: 1fr 3fr 1fr; gap: 48px; max-width: var(--maxw); margin: 0 auto; padding: 0 1.25rem; }
 

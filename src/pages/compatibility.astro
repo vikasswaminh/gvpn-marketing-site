@@ -5,10 +5,15 @@ import PageHero           from "../components/PageHero.astro";
 import Footer             from "../components/Footer.astro";
 import CompatibilityGrid  from "../components/CompatibilityGrid.astro";
 import { site }           from "../site";
+import { Image }          from 'astro:assets';
+import imgTplink          from '../assets/routers/tplink-er605.png';
+import imgMikrotik        from '../assets/routers/mikrotik-rb5009.png';
+import imgUbnt            from '../assets/routers/ubnt-udm.png';
+import imgGlinet          from '../assets/routers/glinet-flint-2.png';
 
 const url           = "https://meshwg.com/compatibility/";
-const title         = "Supported routers — 57 WireGuard-ready models across 9 vendor families | MeshWG";
-const description   = "The comprehensive list of router and gateway models that work with MeshWG today — TP-Link, MikroTik, Ubiquiti, GL.iNet, Asus, Synology, OPNsense, pfSense, and more. Filter by vendor, search by model number.";
+const title         = "MeshWG Router Compatibility — Supported WireGuard Devices";
+const description   = "The comprehensive list of WireGuard-compatible routers that work with MeshWG today — TP-Link, MikroTik, Ubiquiti, GL.iNet, Asus, Synology, OPNsense, pfSense, and more. Filter by vendor, search by model number.";
 const datePublished = "2026-05-17";
 const dateModified  = "2026-05-17";
 
@@ -47,9 +52,12 @@ const faqs = [
     <div class="wrap">
       <header>
         <div class="ad-eyebrow">/ compatibility</div>
-        <h1 style="font-size: clamp(32px, 4.5vw, 48px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; color: #111827; white-space: nowrap;">The routers that work with <span style="color: #2563EB;">MeshWG</span> today.</h1>
-        <p style="color: var(--text-2); font-size: 17px; line-height: 1.6; margin: 0;">
+        <h1 style="font-size: clamp(32px, 4.5vw, 48px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; color: #111827; white-space: nowrap;">Compatible Routers and Devices</h1>
+        <p style="color: var(--text-2); font-size: 17px; line-height: 1.6; margin: 0 0 16px 0;">
           57 router models across 9 vendor families, each independently verified by the editorial team. Filter by vendor, search by model number, and check the minimum firmware that ships WireGuard support.
+        </p>
+        <p style="color: var(--text-2); font-size: 15px; line-height: 1.6; margin: 0;">
+          MeshWG compatibility means your router supports standard WireGuard, allowing it to seamlessly join your mesh network. You can <a href="/quickstart/" style="color: #2563EB; text-decoration: underline;">set up a compatible router</a> in minutes or <a href="/docs/" style="color: #2563EB; text-decoration: underline;">read the MeshWG documentation</a> to learn more about the architecture.
         </p>
       </header>
     </div>
@@ -105,11 +113,11 @@ const faqs = [
           <div class="sv-routers-diagram">
             <div class="sv-col">
               <div class="sv-router">
-                <img src="/img/routers/tplink-er605.png" alt="TP-Link ER605" />
+                <Image src={imgTplink} alt="TP-Link ER605" width={160} loading="lazy" decoding="async" />
                 <div class="sv-router-label"><strong>TP-Link ER605</strong><br/>Branch Office</div>
               </div>
               <div class="sv-router">
-                <img src="/img/routers/mikrotik-rb5009.png" alt="MikroTik RB5009" />
+                <Image src={imgMikrotik} alt="MikroTik RB5009" width={160} loading="lazy" decoding="async" />
                 <div class="sv-router-label"><strong>MikroTik RB5009</strong><br/>Branch Office</div>
               </div>
             </div>
@@ -133,11 +141,11 @@ const faqs = [
 
             <div class="sv-col">
               <div class="sv-router">
-                <img src="/img/routers/ubnt-udm.png" alt="Ubiquiti UDM" />
+                <Image src={imgUbnt} alt="Ubiquiti UDM" width={160} loading="lazy" decoding="async" />
                 <div class="sv-router-label"><strong>Ubiquiti UDM</strong><br/>Head Office</div>
               </div>
               <div class="sv-router">
-                <img src="/img/routers/glinet-flint-2.png" alt="GL.iNet Flint 2" />
+                <Image src={imgGlinet} alt="GL.iNet Flint 2" width={160} loading="lazy" decoding="async" />
                 <div class="sv-router-label"><strong>GL.iNet Flint 2</strong><br/>Remote Site</div>
               </div>
             </div>
@@ -236,17 +244,17 @@ const faqs = [
       <article id="faq" class="addendum-block faq">
         <div class="ad-eyebrow">/ frequently asked</div>
         <h2>Compatibility, firmware, and what to do if your model is not listed.</h2>
-        {faqs.map((f) => (
-          <details>
-            <summary>
-              <div class="faq-summary-content">
+        <div class="faq-list">
+          {faqs.map((f) => (
+            <div class="faq-item">
+              <h3 class="faq-q">
                 <span class="faq-tag">ROUTER FAQ</span>
-                <span class="faq-q">{f.q}</span>
-              </div>
-            </summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
+                {f.q}
+              </h3>
+              <p>{f.a}</p>
+            </div>
+          ))}
+        </div>
       </article>
 
       <aside class="cta-strip">
@@ -261,13 +269,12 @@ const faqs = [
     </div>
   </section>
 
-  <!-- JSON-LD: Article + ItemList + FAQPage + Breadcrumb -->
+  <!-- JSON-LD: WebPage + FAQPage + Breadcrumb -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": `${url}#article`,
-    "mainEntityOfPage": { "@type": "WebPage", "@id": url },
-    "headline": title,
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    "name": title,
     "description": description,
     "datePublished": datePublished,
     "dateModified": dateModified,
@@ -352,65 +359,48 @@ const faqs = [
 
   /* FAQ */
   .faq h2 { margin-bottom: 32px; }
-  details {
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .faq-item {
     border: 1px solid #DA291C;
     border-radius: 8px;
-    padding: 10px 16px;
-    margin-bottom: 8px;
+    padding: 16px;
     background: #ffffff;
     transition: background 0.2s;
   }
-  details:nth-child(even) {
+  .faq-item:nth-child(even) {
     background: #e8eef5;
   }
-  summary {
-    cursor: pointer;
-    list-style: none;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px;
-  }
-  summary::-webkit-details-marker { display: none; }
-  .faq-summary-content {
+  .faq-q {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
+    font-size: 16.5px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.3;
+    margin: 0;
   }
   .faq-tag {
     align-self: flex-start;
     border: 1px solid #DA291C;
     border-radius: 12px;
-    padding: 1px 6px;
+    padding: 2px 8px;
     color: #DA291C;
     font-weight: 700;
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
-  .faq-q {
-    font-size: 15.5px;
-    font-weight: 600;
-    color: #111827;
-    line-height: 1.3;
-  }
-  summary::after {
-    content: "";
-    display: block;
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" stroke="%23111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: transform 0.2s ease;
-  }
-  details[open] summary::after { transform: rotate(180deg); }
-  details p {
-    margin: 10px 0 0;
+  .faq-item p {
+    margin: 12px 0 0;
     color: var(--text-2);
-    font-size: 14.5px;
+    font-size: 15px;
     line-height: 1.6;
-    padding-top: 10px;
+    padding-top: 12px;
     border-top: 1px solid color-mix(in oklab, #DA291C 20%, transparent);
   }
 

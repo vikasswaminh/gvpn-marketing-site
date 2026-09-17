@@ -5,7 +5,7 @@ const faqs = [
   [
     {
       q: "How is this different from Tailscale?",
-      a: "MeshWG runs on your own infrastructure using standard WireGuard, with no third-party control plane. You keep full control of your network, data, and infrastructure.",
+      a: "Tailscale requires an agent on every endpoint and runs a proprietary protocol on top of WireGuard. MeshWG runs natively on your existing routers using standard, in-kernel WireGuard, requiring zero software installation on your devices.",
     },
     {
       q: "Do I need to install software or replace anything?",
@@ -13,7 +13,7 @@ const faqs = [
     },
     {
       q: "Is the encryption strong?",
-      a: "Yes — it's standard WireGuard, the same protocol used by every major VPN service today. Your private keys never leave your device.",
+      a: "Yes — it's standard WireGuard, the same protocol used by every major VPN service today. Your private keys never leave your device. (See our <a href='/docs/'>technical documentation</a>).",
     },
   ],
   [
@@ -27,7 +27,7 @@ const faqs = [
     },
     {
       q: "Is this for businesses or homes?",
-      a: "Both. A homelabber meshing their VPS, home network, and remote cabin uses it the same way a 20-branch retailer does. The product doesn't care what you call yourself.",
+      a: "Both. A homelabber meshing their VPS, home network, and remote cabin uses it the same way a 20-branch retailer does. The product doesn't care what you call yourself. (Read our <a href='/blog/'>deployment guides</a>).",
     },
   ],
 ];
@@ -58,7 +58,7 @@ const faqs = [
                 </div>
               </summary>
               <div class="faq-a">
-                <p>{f.a}</p>
+                <p set:html={f.a}></p>
               </div>
             </details>
           ))}

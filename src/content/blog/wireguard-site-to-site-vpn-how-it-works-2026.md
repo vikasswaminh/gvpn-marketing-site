@@ -1,6 +1,6 @@
 ---
-title: 'WireGuard site-to-site VPN: How WireGuard Site-to-Site VPN Works (2026 Protocol Guide)'
-description: 'WireGuard site-to-site VPN: Understand the mechanics of WireGuard site-to-site VPNs. Learn how multi-site meshes, CGNAT handling, and control planes operate under the hood.'
+title: "How WireGuard Site-to-Site VPN Works (2026 Protocol Guide)"
+description: "Understand the mechanics of WireGuard site-to-site VPNs. Learn how multi-site meshes, CGNAT handling, and control planes operate under the hood."
 pubDate: 2026-05-16
 updatedDate: 2026-05-16
 author: 'MeshWG editorial team'

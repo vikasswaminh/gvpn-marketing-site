@@ -1,6 +1,6 @@
 ---
-title: 'WireGuard Site-to-Site VPN: Multi-Location Setup Guide (2026)'
-description: 'WireGuard Site-to-Site VPN: Learn how to connect multiple locations using WireGuard site-to-site VPN. Step-by-step setup for Linux, MikroTik, OpenWrt, Ubiquiti, MTU tuning & MeshWG.'
+title: "WireGuard Site-to-Site VPN: Multi-Location Setup Guide (2026)"
+description: "Learn how to connect multiple locations using WireGuard site-to-site VPN. Step-by-step setup for Linux, MikroTik, OpenWrt, Ubiquiti, MTU tuning & MeshWG."
 pubDate: 2026-08-24
 updatedDate: 2026-08-24
 author: 'MeshWG editorial team'

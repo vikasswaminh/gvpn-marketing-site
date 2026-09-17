@@ -67,8 +67,8 @@ const testCoverage = [
   { n: "Delete-org cleanup",       what: "Deleting an organization removes everything that belonged to it, with no orphans" },
 ];
 
-const title = "MeshWG Documentation — WireGuard Mesh Architecture";
-const description = "Learn how MeshWG's managed WireGuard mesh VPN architecture works. Explore the standard WireGuard configuration, zero-trust policies, and end-to-end testing.";
+const title = "MeshWG Documentation — WireGuard Mesh VPN Setup & Configuration";
+const description = "Learn how MeshWG's managed WireGuard mesh architecture works. View standard WireGuard configuration examples, setup guides, and end-to-end testing details.";
 ---
 
 <Base title={title} description={description}>
@@ -77,18 +77,30 @@ const description = "Learn how MeshWG's managed WireGuard mesh VPN architecture 
     <div class="wrap">
       <header style="margin-bottom: 16px;">
         <div class="db-eyebrow">/ docs</div>
-        <h1 style="font-size: clamp(32px, 4.5vw, 48px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; color: #111827;">How it <span style="color: #2563EB;">actually works.</span></h1>
+        <h1 style="font-size: clamp(32px, 4.5vw, 48px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; color: #111827;">MeshWG Documentation</h1>
         <p class="db-lede">
-          A high-level overview of the architecture, the standard WireGuard configuration MeshWG generates, and the end-to-end testing that verifies every claim on this site before each release.
+          Learn how MeshWG's managed WireGuard mesh VPN architecture works. Explore the standard WireGuard configuration, zero-trust policies, and end-to-end testing.
         </p>
       </header>
+
+      <!-- ── Getting Started -->
+      <article id="getting-started" class="doc-block" style="margin-bottom: 48px;">
+        <header>
+          <div class="db-eyebrow">/ 01 GETTING STARTED</div>
+          <h2>Getting Started</h2>
+          <p class="db-lede">
+            MeshWG provides a hosted control plane for standard WireGuard, making it easy to build a zero-trust mesh network. 
+            The fastest way to begin is to <a href="/quickstart/" style="color: #2563EB; font-weight: 500;">Follow the MeshWG Quickstart</a>.
+          </p>
+        </header>
+      </article>
 
       <!-- ── Architecture -->
       <article id="architecture" class="doc-block">
         <div class="arch-header-layout">
           <header class="arch-header-left">
-            <div class="db-eyebrow">/ 01 ARCHITECTURE</div>
-            <h2>Architecture in five claims.</h2>
+            <div class="db-eyebrow">/ 02 HOW MESHWG WORKS</div>
+            <h2>How MeshWG Works</h2>
             <p class="arch-subtitle"><span style="color: #2563EB; font-weight: 500;">MeshWG keeps things simple.</span> Here are the core principles that define how it works, and why it's different.</p>
           </header>
           
@@ -96,10 +108,13 @@ const description = "Learn how MeshWG's managed WireGuard mesh VPN architecture 
           <nav class="toc-sidebar">
             <span class="toc-label">ON THIS PAGE</span>
             <div class="toc-links">
-              <a href="#architecture" class="active">Architecture</a>
-              <a href="#config">The config we generate</a>
+              <a href="#getting-started">Getting Started</a>
+              <a href="#architecture" class="active">How MeshWG Works</a>
+              <a href="#config">Configuration</a>
               <a href="#doesnt-do">What it doesn't do</a>
-              <a href="#verification">How we verify it works</a>
+              <a href="#verification">Security and Verification</a>
+              <a href="#router-setup">Router Setup</a>
+              <a href="#troubleshooting">Troubleshooting</a>
             </div>
           </nav>
         </div>
@@ -132,8 +147,8 @@ const description = "Learn how MeshWG's managed WireGuard mesh VPN architecture 
       <!-- ── Config -->
       <article id="config" class="doc-block">
         <header>
-          <div class="db-eyebrow">/ 02 THE CONFIG WE GENERATE</div>
-          <h2>Standard WireGuard. Nothing custom.</h2>
+          <div class="db-eyebrow">/ 03 CONFIGURATION</div>
+          <h2>Configuration: Standard WireGuard</h2>
           <p class="db-lede">
             When you add a machine in the dashboard, MeshWG returns a
             wg-quick configuration that any WireGuard implementation
@@ -179,8 +194,8 @@ const description = "Learn how MeshWG's managed WireGuard mesh VPN architecture 
       <!-- ── What it doesn't do -->
       <article id="doesnt-do" class="doc-block">
         <header>
-          <div class="db-eyebrow">/ 03 WHAT IT DOESN'T DO</div>
-          <h2>The honest list of things MeshWG isn't.</h2>
+          <div class="db-eyebrow">/ 04 WHAT IT DOESN'T DO</div>
+          <h2>What MeshWG Doesn't Do</h2>
           <p class="db-lede">We keep it simple. No gimmicks, no magic. Here's what MeshWG doesn't do.</p>
         </header>
         <div class="dont-grid">
@@ -199,8 +214,8 @@ const description = "Learn how MeshWG's managed WireGuard mesh VPN architecture 
       <!-- ── Verification -->
       <article id="verification" class="doc-block">
         <header>
-          <div class="db-eyebrow">/ 04 how we verify it works</div>
-          <h2>Every release is tested end-to-end against real traffic.</h2>
+          <div class="db-eyebrow">/ 05 SECURITY AND VERIFICATION</div>
+          <h2>Security and Verification</h2>
           <p class="db-lede">
             Before any release ships, an automated end-to-end test drives
             the live service the same way a customer would, and measures
@@ -231,6 +246,46 @@ const description = "Learn how MeshWG's managed WireGuard mesh VPN architecture 
           <a href="mailto:hello@meshwg.com">hello@meshwg.com</a> and we'll
           share the latest run.
         </p>
+      </article>
+
+
+      <!-- ── Router Setup -->
+      <article id="router-setup" class="doc-block">
+        <header>
+          <div class="db-eyebrow">/ 06 ROUTER SETUP</div>
+          <h2>Router Setup & Compatibility</h2>
+          <p class="db-lede">
+            You can deploy MeshWG directly onto supported network edge devices for transparent site-to-site connectivity. 
+            <a href="/compatibility/" style="color: #2563EB; font-weight: 500;">View supported WireGuard routers and devices</a> to find compatible hardware from TP-Link, MikroTik, Ubiquiti, and more.
+          </p>
+        </header>
+      </article>
+
+      <!-- ── Troubleshooting -->
+      <article id="troubleshooting" class="doc-block">
+        <header>
+          <div class="db-eyebrow">/ 07 TROUBLESHOOTING</div>
+          <h2>Troubleshoot Connectivity Issues</h2>
+          <p class="db-lede">
+            If a machine cannot connect to your MeshWG network, verify the following configuration basics:
+          </p>
+        </header>
+        <div class="dont-grid">
+          <div class="dont-card">
+            <div class="dc-num">01</div>
+            <div class="dc-content">
+              <div class="dc-title">Check the Endpoint</div>
+              <div class="dc-desc">Verify that your WireGuard peer configuration correctly points to the MeshWG endpoint (e.g. <code>vpn.meshwg.com:51820</code>). If your local network blocks outbound UDP on port 51820, the handshake will fail.</div>
+            </div>
+          </div>
+          <div class="dont-card">
+            <div class="dc-num">02</div>
+            <div class="dc-content">
+              <div class="dc-title">Check AllowedIPs</div>
+              <div class="dc-desc">Ensure the <code>AllowedIPs</code> field in your configuration matches the overlay subnet assigned to your organization (e.g. <code>10.100.0.0/16</code>).</div>
+            </div>
+          </div>
+        </div>
       </article>
 
     </div>

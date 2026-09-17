@@ -1,6 +1,6 @@
 ---
-title: 'Cloud WireGuard VPN: How to Connect Cloud Servers and Branch Networks with MeshWG'
-description: 'Cloud WireGuard VPN: Deep dive into how a cloud-managed WireGuard VPN works. Learn about control planes, peer-to-peer encryption, and zero-trust mesh architecture.'
+title: "How to Connect Cloud Servers and Branch Networks with MeshWG"
+description: "Deep dive into how a cloud-managed WireGuard VPN works. Learn about control planes, peer-to-peer encryption, and zero-trust mesh architecture."
 pubDate: 2026-08-31
 updatedDate: 2026-08-31
 author: 'Senior Infrastructure & Network Systems Architect'

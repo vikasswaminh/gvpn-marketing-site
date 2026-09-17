@@ -1,152 +1,308 @@
 ---
+import { Image } from 'astro:assets';
 import Base from "../../layouts/Base.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
-import BlogLayout from "../../layouts/BlogLayout.astro";
-import { posts } from "../../utils/posts";
-import { Image } from 'astro:assets';
+import PostCard from "../../components/PostCard.astro";
+import { posts, strategyPosts, engineeringPosts } from "../../utils/posts";
+import "../../styles/meshwg-blog.css";
 
-const title = "Blog — MeshWG";
-const description = "Founder-written notes on branch networking, WireGuard, mesh VPN, and connecting the routers you already own.";
+const title = "MeshWG Engineering & Strategy Blog | WireGuard Mesh VPN";
+const description = "The official MeshWG engineering and strategy blog. Expert technical guides and architectural blueprints for deploying enterprise WireGuard mesh networks.";
+const seoKeywords = ["wireguard mesh vpn", "meshwg", "mesh vpn setup", "enterprise wireguard architecture", "zero trust network access"];
 
-const featuredPost = posts[0];
-const gridPosts = posts.slice(1); // Show all remaining posts in the grid
+const featured = posts[0];
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-};
+const gridSlugs = [
+  'remote-access-vpn-for-developers-wireguard-ssh-git-dev-environments',
+  'remote-access-vpn-vs-rdp-2026',
+  'wireguard-mesh-vpn-for-remote-teams-secure-office-networks',
+  'wireguard-mesh-vpn-home-network-secure-remote-access-without-port-forwarding',
+  'wireguard-mesh-vpn-key-management-key-rotation-best-practices',
+  'how-wireguard-mesh-control-plane-manages-keys-peers-routes',
+  'wireguard-mesh-vpn-without-agent-existing-routers',
+  'how-to-set-up-a-wireguard-mesh-vpn',
+  'cloud-wireguard-vpn-meshwg',
+  'how-to-build-a-multi-location-wireguard-network-with-routers',
+  'how-to-set-up-a-router-vpn-without-installing-vpn-software',
+  'managed-vs-self-hosted-wireguard-vpn-2026',
+  'wireguard-site-to-site-vpn-multiple-locations',
+  'wireguard-nat-traversal-behind-cgnat-2026',
+  'manage-multiple-wireguard-tunnels-mesh-vpn-2026',
+  'mesh-vpn-vs-ipsec-vs-sdwan-2026',
+  'tp-link-site-to-site-vpn-wireguard-2026',
+  'branch-office-vpn-smb-rollout-playbook-2026',
+  'sd-wan-alternatives-2026',
+  'wireguard-site-to-site-vpn-how-it-works-2026'
+];
+
+const gridPosts = gridSlugs.map(slug => posts.find(p => p.slug === slug)).filter(Boolean).filter(p => p.slug !== featured?.slug);
+
+const remainingPosts = posts.filter(p => p.slug !== featured?.slug && !gridPosts.some(gp => gp.slug === p.slug));
+gridPosts.push(...remainingPosts);
+
+const featuredPillText = featured?.category === 'STRATEGY & ARCHITECTURE' ? 'STRATEGY & ARCHITECTURE' : 'ENGINEERING GUIDE';
+const featuredPillClass = featured?.category === 'STRATEGY & ARCHITECTURE' ? 'mag-pill pill-purple' : 'mag-pill pill-orange';
 ---
 
 <Base title={title} description={description}>
   <Nav />
+
+  <div class="blog-layout-wrapper">
+    <div class="tech-grid-bg"></div>
+    
+    <section class="mag-section">
+      <div class="mag-wrap">
+        
+        <!-- LEFT SIDEBAR -->
+        <aside class="mag-sidebar mag-left hide-scrollbar" aria-label="Strategy & Architecture articles">
+          <div class="mag-pill pill-purple">STRATEGY & ARCHITECTURE</div>
+          <ul class="mag-list">
+             {strategyPosts.map(p => (
+              <li>
+                <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        <!-- CENTER MAIN -->
+        <main class="mag-center is-homepage">
+          <div class="mag-header">
+            <h1 class="mag-h1">MeshWG Engineering & Strategy Blog</h1>
+            <p class="mag-desc">Expert articles on mesh networks, WireGuard, routing, & IT infrastructure</p>
+          </div>
+
+          <div class="mag-pill-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+            <div class="mag-pill pill-blue" style="background: #1F4FD8; color: white; display: flex; align-items: center; gap: 6px; margin-bottom: 0;"><span style="color: #f97316; font-size: 1.2em;">🔥</span> NEWEST ARTICLES</div>
+            <span class="mag-subtext" style="color: var(--text-4); font-size: 14px; font-weight: 500;">Latest from our experts</span>
+          </div>
+
+          <!-- Featured Post -->
+          {featured && (
+            <a href={`/blog/${featured.slug}/`} class="mag-featured hover-card" data-tilt>
+              <div class="feat-img">
+                {featured.cover ? (
+                  <Image src={featured.cover} alt={featured.title} width={1200} height={630} widths={[400, 600, 800, 1200]} quality={60} format="avif" sizes="(max-width: 768px) 100vw, 600px" loading="eager" fetchpriority="high" decoding="async" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+                ) : (
+                  <img src="/multi-location-routers.png" alt={featured.title} class="abs-cover" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+                )}
+                <div class="mesh-bg" style="opacity: 0.2;"></div>
+              </div>
+              <div class="feat-content">
+                <div class="mag-pill-row" style="border-bottom: 0; padding-bottom: 0; margin-bottom: 12px;">
+                  <div class={featuredPillClass}>{featuredPillText}</div>
+                  <div class="mag-pill pill-red">NEW</div>
+                </div>
+                <h2 class="feat-t">{featured.title}</h2>
+                <p class="feat-d">{featured.description}</p>
+                <div class="feat-meta">
+                  <span>{featured.datePublished}</span>
+                  <span class="dot">·</span>
+                  <span>{featured.readMinutes} min read</span>
+                  <span class="dot">·</span>
+                  <span class="read-link" aria-hidden="true">Read article &rarr;</span>
+                </div>
+              </div>
+            </a>
+          )}
+
+          <!-- Grid Posts -->
+          <div class="mag-grid">
+            {gridPosts.map((p) => (
+              <PostCard
+                url={`/blog/${p.slug}/`}
+                title={p.title}
+                description={p.description}
+                pubDate={p.datePublished}
+                tags={p.category === 'STRATEGY & ARCHITECTURE' ? ['strategy guide'] : []}
+                cover={p.cover}
+                minutes={p.readMinutes.toString()}
+              />
+            ))}
+          </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="mag-sidebar mag-right hide-scrollbar" aria-label="Engineering Guides articles">
+          <div class="mag-right-inner">
+            <div class="mag-pill pill-orange">ENGINEERING GUIDES</div>
+            <ul class="mag-list">
+              {engineeringPosts.map(p => (
+                <li>
+                  <a href={`/blog/${p.slug}/`} class="mag-list-link">{p.title}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://meshwg.com/blog/" },
+    ],
+  })}></script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": "https://meshwg.com/blog/#blog",
+    "name": "MeshWG Blog",
+    "description": description,
+    "url": "https://meshwg.com/blog/",
+    "publisher": {
+      "@type": "Organization",
+      "@id": "https://meshwg.com/#organization",
+      "name": "MeshWG",
+      "url": "https://meshwg.com",
+    },
+    "blogPost": posts.map((p) => ({
+      "@type": "BlogPosting",
+      "headline": p.title,
+      "description": p.description,
+      "url": `https://meshwg.com/blog/${p.slug}/`,
+      "datePublished": p.datePublished,
+    })),
+  })}></script>
   
-  <BlogLayout isHomepage={true}>
-      <div class="mag-header">
-        <h1 class="mag-h1">MeshWG Engineering & Strategy Blog</h1>
-        <p class="mag-desc">Expert articles on mesh networks, WireGuard, routing, & IT infrastructure</p>
-      </div>
-
-      <div class="mag-pill-row">
-        <div class="mag-pill pill-blue" style="font-size: 12px;">🔥 NEWEST ARTICLES</div>
-        <span class="mag-subtext">Latest from our experts</span>
-      </div>
-
-    <!-- Featured Post -->
-    <a href={`/blog/${featuredPost.slug}/`} class="mag-featured hover-card" data-tilt>
-      <div class="feat-img">
-        {featuredPost.cover ? (
-          <Image src={featuredPost.cover} alt={featuredPost.title} class="abs-cover" />
-        ) : (
-          <img src="/multi-location-routers.png" alt="Multi-Location Router Network" class="abs-cover" />
-        )}
-        <!-- Sleek Placeholder Mesh Gradient -->
-        <div class="mesh-bg" style="opacity: 0.2;"></div>
-      </div>
-      <div class="feat-content">
-        <div class="mag-pill-row" style="margin-bottom: 8px;">
-          <div class={`mag-pill ${featuredPost.category === 'STRATEGY & ARCHITECTURE' ? 'pill-purple' : 'pill-orange'}`}>{featuredPost.category}</div>
-          <div class="mag-pill pill-red">NEW</div>
-        </div>
-        <h2 class="feat-t">{featuredPost.title}</h2>
-        <p class="feat-d">{featuredPost.description}</p>
-        <div class="feat-meta">
-          <span>{formatDate(featuredPost.datePublished)}</span>
-          <span class="dot">·</span>
-          <span>{featuredPost.readMinutes} min read</span>
-          <span class="dot">·</span>
-          <span class="read-link">Read article &rarr;</span>
-        </div>
-      </div>
-    </a>
-
-    <!-- Grid Posts -->
-    <div class="mag-grid">
-      {gridPosts.map((p, i) => (
-        <a href={`/blog/${p.slug}/`} class="mag-card hover-card" data-tilt>
-          <!-- High quality tech image -->
-          <div class="card-img-wrapper">
-            {p.cover ? (
-              <Image src={p.cover} alt={p.title} class="abs-cover" />
-            ) : (
-              <img src={`/images/tech_net_${(i % 3) + 1}.png`} alt="" class="abs-cover" />
-            )}
-          </div>
-          <div class="card-content">
-            <div class={`mag-pill ${p.category === 'STRATEGY & ARCHITECTURE' ? 'pill-purple' : 'pill-orange'}`} style="margin-bottom: 12px;">{p.category}</div>
-            <h3 class="card-t">{p.title}</h3>
-            <p class="card-d">{p.description}</p>
-            <div class="feat-meta" style="margin-top: auto; padding-top: 10px;">
-              <span>{formatDate(p.datePublished)}</span>
-              <span class="dot">·</span>
-              <span>{p.readMinutes} min read</span>
-              <span class="dot">·</span>
-              <span class="read-link">Read article &rarr;</span>
-            </div>
-          </div>
-        </a>
-      ))}
-    </div>
-
-    <!-- HIGH-VOLUME SEO: Blog Breadcrumbs & ItemList -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meshwg.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://meshwg.com/blog/" },
-      ],
-    })}></script>
-
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Blog",
-      "@id": "https://meshwg.com/blog/#blog",
-      "name": "MeshWG Blog",
-      "description": description,
-      "url": "https://meshwg.com/blog/",
-      "publisher": {
-        "@type": "Organization",
-        "@id": "https://meshwg.com/#organization",
-        "name": "MeshWG",
-        "url": "https://meshwg.com",
-      },
-      "blogPost": posts.map((p) => ({
-        "@type": "BlogPosting",
-        "headline": p.title,
-        "description": p.description,
-        "url": `https://meshwg.com/blog/${p.slug}/`,
-        "datePublished": p.datePublished,
-      })),
-    })}></script>
-  </BlogLayout>
-
   <Footer />
 </Base>
 
 <style>
+  .blog-layout-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg);
+  }
+
+  .tech-grid-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px), 
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  }
+
+  .mag-section { 
+    position: relative;
+    z-index: 1;
+    padding: 152px 0 96px; 
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  @media (max-width: 980px) {
+    .mag-section {
+      padding-top: 112px;
+    }
+  }
+
+  .mag-wrap {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr; 
+    gap: 48px;
+    align-items: start;
+    width: 100%;
+    max-width: 1536px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
   .mag-pill {
     display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: 99px;
-    letter-spacing: .05em;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    white-space: nowrap;
     width: max-content;
   }
-  .pill-orange { color: #fff; background: #c2410c; }
-  .pill-red { color: #fff; background: #b91c1c; }
-  .pill-purple { color: #fff; background: #6d28d9; }
-  .pill-blue { color: #fff; background: #1F4FD8; }
+  .pill-orange { background: #F97316; color: #fff; }
+  .pill-purple { background: #8B5CF6; color: #fff; }
+  .pill-blue { background: #1F4FD8; color: #fff; }
+  .pill-red { background: #DC2626; color: #fff; }
 
-  .mag-header {
-    margin-bottom: 24px;
-    text-align: left;
+  .mag-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 128px;
+    height: fit-content;
+    max-height: calc(100vh - 128px);
+    overflow-y: auto;
+    padding-bottom: 24px;
+    padding-right: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
   }
+  
+  .mag-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .mag-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .mag-sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--border-strong);
+    border-radius: 10px;
+  }
+  
+  .mag-sidebar.hide-scrollbar {
+    scrollbar-width: none;
+  }
+  .mag-sidebar.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mag-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .mag-list-link {
+    display: block;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-2);
+    font-weight: 500;
+    transition: color 0.15s ease;
+    text-decoration: none;
+  }
+  .mag-list-link:hover {
+    color: var(--accent);
+  }
+
+  .mag-center {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mag-left { padding-right: 16px; }
+  .mag-right { direction: rtl; padding-left: 0; }
+  .mag-right-inner { direction: ltr; padding-left: 16px; }
+
+  .mag-header { margin-bottom: 24px; text-align: left; }
   .mag-h1 {
     font-size: 1.75rem;
     font-weight: 800;
@@ -154,9 +310,6 @@ const formatDate = (dateStr) => {
     margin-bottom: 8px;
     color: var(--text);
     font-family: var(--font-heading);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   .mag-desc {
     font-family: var(--font-body);
@@ -164,9 +317,6 @@ const formatDate = (dateStr) => {
     font-size: 15px;
     line-height: 1.5;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .mag-pill-row {
@@ -175,22 +325,7 @@ const formatDate = (dateStr) => {
     gap: 16px;
     margin-bottom: 24px;
   }
-  .mag-subtext {
-    font-size: 15px;
-    color: var(--text-4);
-  }
 
-  /* Shared Mesh Background */
-  .mesh-bg {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at 0% 0%, rgba(22, 119, 255, 0.2) 0%, transparent 60%),
-                radial-gradient(circle at 100% 100%, rgba(249, 115, 22, 0.15) 0%, transparent 60%);
-    background-color: #1e293b;
-  }
-  .card-mesh { background-color: #0f172a; }
-
-  /* Featured Article */
   .mag-featured {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -206,19 +341,18 @@ const formatDate = (dateStr) => {
     margin-bottom: 48px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   }
-  .feat-img img, .card-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
   .feat-img {
     position: relative;
     background: var(--bg-2);
     overflow: hidden;
     height: 100%;
+  }
+  .mesh-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 0% 0%, rgba(22, 119, 255, 0.2) 0%, transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(249, 115, 22, 0.15) 0%, transparent 60%);
+    background-color: #1e293b;
   }
   .feat-content {
     padding: 24px 32px;
@@ -256,22 +390,15 @@ const formatDate = (dateStr) => {
     gap: 8px;
     margin-top: auto;
   }
-  .feat-meta span {
-    white-space: nowrap;
-  }
-  .read-link {
-    color: #c2410c;
-    font-weight: 700;
-    font-family: var(--font-body);
-    font-size: 13px;
-  }
+  .feat-meta span { white-space: nowrap; }
+  .read-link { color: #c2410c; font-weight: 700; font-family: var(--font-body); font-size: 13px; }
 
-  /* Grid Posts */
   .mag-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
   }
+  
   .mag-card {
     display: flex;
     flex-direction: column;
@@ -283,23 +410,26 @@ const formatDate = (dateStr) => {
     height: 100%;
     box-shadow: 0 4px 20px -2px #1e3a8a0d;
     transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
   }
   .mag-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 24px -4px #1e3a8a1a;
   }
-  .card-img-wrapper {
+  .card-img-container {
     width: 100%;
-    height: 100px;
-    min-height: 100px;
-    overflow: hidden;
+    height: 180px;
     position: relative;
+    overflow: hidden;
     border-bottom: 1px solid var(--border);
   }
-  .card-img-wrapper img {
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: transform .5s ease;
   }
-  .mag-card:hover .card-img-wrapper img {
+  .mag-card:hover .card-img {
     transform: scale(1.05);
   }
   .card-content {
@@ -325,7 +455,7 @@ const formatDate = (dateStr) => {
   .card-d {
     font-size: 15px;
     color: var(--text-3);
-    margin: 0;
+    margin: 0 0 16px 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -333,11 +463,33 @@ const formatDate = (dateStr) => {
     line-height: 1.5;
     font-family: var(--font-body);
   }
+  .card-meta {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-4);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .dot { color: var(--border-strong); }
 
+  @media (max-width: 1200px) {
+    .mag-wrap { grid-template-columns: 240px minmax(0, 1fr) 240px; gap: 32px; }
+  }
+
+  @media (max-width: 980px) {
+    .mag-wrap { grid-template-columns: 1fr; gap: 64px; }
+    .mag-sidebar { position: static; max-height: none; overflow: visible; padding-bottom: 0; }
+    .mag-center { order: 1; }
+    .mag-left { order: 2; border-right: none; border-top: 1px solid var(--border-faint); padding-right: 0; padding-top: 32px; }
+    .mag-right { order: 3; border-left: none; border-top: 1px solid var(--border-faint); padding-left: 0; padding-top: 32px; }
+  }
+  
   @media (max-width: 768px) {
     .mag-featured { grid-template-columns: 1fr; }
     .feat-img { height: 200px; border-right: none; border-bottom: 1px solid var(--border-faint); }
     .mag-grid { grid-template-columns: 1fr; }
-    .mag-h1, .mag-desc { white-space: normal; }
   }
 </style>

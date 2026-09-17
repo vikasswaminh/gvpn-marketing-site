@@ -101,7 +101,7 @@ const steps = [
     body: "Create your account with Google or email. No credit card. You'll land in the dashboard in under a minute.",
     icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
     btnText: "Sign up free &rarr;",
-    btnUrl: "/signup",
+    btnUrl: site.signupFree,
     btnPrimary: true
   },
   {
@@ -111,7 +111,7 @@ const steps = [
     body: "Click Add machine, give it a name (e.g. \"branch-mumbai\" or \"office-router\"), and we generate a WireGuard config tied to that machine.",
     icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><circle cx="7" cy="15" r="1.5" fill="#2563EB" stroke="none"/><line x1="10" y1="15" x2="17" y2="15"/><line x1="14" y1="3" x2="14" y2="8"/><line x1="11.5" y1="5.5" x2="16.5" y2="5.5"/></svg>`,
     btnText: "Add machine &rarr;",
-    btnUrl: "/dashboard",
+    btnUrl: "https://vpn.meshwg.com/dashboard",
     btnPrimary: false
   },
   {
@@ -134,7 +134,7 @@ const steps = [
     <div class="how-header">
       <div class="how-header-main">
         <div class="sec-eyebrow">/ QUICKSTART</div>
-        <h2 class="sec-h">Get your first machine online in <span class="blue">2 minutes.</span></h2>
+        <h1 class="sec-h">Get your first machine online in <span class="blue">2 minutes.</span></h1>
         <p class="sec-lede">Three simple steps to create the mesh, plus vendor-specific instructions for whatever hardware you have.</p>
         
         <div class="how-features">
@@ -241,6 +241,211 @@ const steps = [
       </div>
 
       <!-- ── Stuck? -->
+      
+      
+
+      
+      
+      <!-- Extended SEO Guide Content -->
+      <div class="qs-guide-header">
+        <h2>Everything you need to build a mesh network — <span>under one control plane</span></h2>
+        <p>Prerequisites, architecture, site-to-site connectivity, verification, and troubleshooting — all the context you need to configure your WireGuard routers seamlessly.</p>
+      </div>
+
+      <div class="qs-sections-grid">
+        
+        <div class="qs-card">
+          <div class="qs-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="qs-card-content">
+            <h2>What You Need</h2>
+            <ul>
+              <li><strong>Supported Router or Device:</strong> A router from our <a href="/compatibility/">compatibility hub</a> (TP-Link, MikroTik, Ubiquiti, etc.) or a device running the official WireGuard client.</li>
+              <li><strong>Internet Connection:</strong> Basic outbound internet access. You do not need a static IP, port forwarding, or DDNS on your clients.</li>
+              <li><strong>MeshWG Account:</strong> A free <a href="https://vpn.meshwg.com/signup">MeshWG account</a> to orchestrate the network.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qs-card">
+          <div class="qs-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <div class="qs-card-content">
+            <h2>How MeshWG Works</h2>
+            <p>MeshWG operates as a <strong>hosted control plane</strong> for standard WireGuard. When you add a machine to your dashboard, MeshWG generates a WireGuard configuration. The private keys are returned once and are never retained server-side. MeshWG orchestrates the peer connections (endpoint IPs and routing tables) across your network. Your actual encrypted traffic is designed to flow directly peer-to-peer between your routers, utilizing relays only when direct UDP connections are blocked.</p>
+          </div>
+        </div>
+
+        <div class="qs-card">
+          <div class="qs-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="qs-card-content">
+            <h2>Connecting Locations (Site-to-Site)</h2>
+            <p>To connect two branch offices (e.g., sharing a subnet like <code>192.168.10.0/24</code>), you do not need complex manual routing. In the dashboard, edit the machine representing your router and add its local subnet to its <strong>Advertised Routes</strong>. MeshWG will automatically update the <code>AllowedIPs</code> on all other authorized peers in your network to route traffic seamlessly.</p>
+          </div>
+        </div>
+
+        <div class="qs-card">
+          <div class="qs-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="qs-card-content">
+            <h2>Verification</h2>
+            <p>Once you apply the WireGuard configuration to your device, verify the tunnel is active:</p>
+            <ol>
+              <li><strong>Check Dashboard Status:</strong> Verify the machine's "Last Seen" status updates to <i>Just now</i> in the MeshWG dashboard.</li>
+              <li><strong>Test Overlay IP:</strong> Ping the machine's assigned Overlay IP (e.g., <code>10.x.x.x</code>) from another connected device on the mesh.</li>
+              <li><strong>Test Site-to-Site:</strong> If you configured Advertised Routes, ping a device on the remote LAN subnet from a local device.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="qs-card">
+          <div class="qs-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="qs-card-content">
+            <h2>Troubleshooting</h2>
+            <p>If your tunnel fails to establish a handshake or pass traffic, check these common issues:</p>
+            <ol>
+              <li><strong>CGNAT or Strict Firewalls:</strong> WireGuard requires UDP traffic. MeshWG utilizes STUN-assisted UDP hole punching to traverse <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">CGNAT</a>, but persistent handshake failures often indicate blocked UDP traffic. Verify your firewall allows outbound UDP on the WireGuard port.</li>
+              <li><strong>MTU Clipping:</strong> If the tunnel establishes but websites fail to load or SSH sessions freeze, your MTU is likely too high. Try lowering the WireGuard interface MTU from the default 1420 to 1360 or 1280.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="qs-card">
+          <div class="qs-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="qs-card-content">
+            <h2>Security Considerations</h2>
+            <p>MeshWG is built around standard WireGuard cryptography. Private keys generated during setup are shown to you once and are not persisted server-side. Additionally, MeshWG employs a Zero Trust access model—machines cannot communicate with each other by default unless you explicitly create an Access Rule allowing the connection. Learn more in our <a href="/docs/">technical documentation</a>.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <style>
+        .qs-guide-header {
+          margin: 64px 0 32px 0;
+          max-width: 100%;
+          border-top: 1px solid #E5E7EB;
+          padding-top: 48px;
+        }
+        .qs-guide-header h2 {
+          font-family: var(--font-display, system-ui);
+          font-size: 28px;
+          font-weight: 700;
+          color: #111827;
+          line-height: 1.2;
+          margin: 0 0 16px 0;
+          letter-spacing: -0.02em;
+        }
+        .qs-guide-header h2 span {
+          color: #2563EB;
+        }
+        .qs-guide-header p {
+          color: #4B5563;
+          font-size: 15px;
+          line-height: 1.6;
+          margin: 0;
+          max-width: 800px;
+        }
+        .qs-sections-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+          margin: 0 0 64px 0;
+        }
+        @media (max-width: 768px) {
+          .qs-sections-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .qs-card {
+          background: #ffffff;
+          border: 1px solid #BFDBFE;
+          border-radius: 12px;
+          padding: 24px;
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+          transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .qs-card:hover {
+          border-color: #93C5FD;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        .qs-card-icon {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          background: #111827;
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .qs-card-icon svg {
+          width: 16px;
+          height: 16px;
+          stroke-width: 2.2;
+        }
+        .qs-card-content {
+          display: flex;
+          flex-direction: column;
+        }
+        .qs-card-content h2 {
+          font-family: var(--font-display, system-ui);
+          font-size: 16.5px;
+          font-weight: 700;
+          color: #111827;
+          margin: 0 0 6px 0;
+          line-height: 1.2;
+        }
+        .qs-card-content p, .qs-card-content ul, .qs-card-content ol {
+          font-size: 13.5px;
+          color: #6B7280;
+          line-height: 1.5;
+          margin: 0 0 12px 0;
+        }
+        .qs-card-content p:last-child, .qs-card-content ul:last-child, .qs-card-content ol:last-child {
+          margin-bottom: 0;
+        }
+        .qs-card-content ul, .qs-card-content ol {
+          padding-left: 18px;
+        }
+        .qs-card-content li {
+          margin-bottom: 6px;
+        }
+        .qs-card-content li:last-child {
+          margin-bottom: 0;
+        }
+        .qs-card-content a {
+          color: #2563EB;
+          text-decoration: underline;
+        }
+        .qs-card-content strong {
+          color: #374151;
+          font-weight: 600;
+        }
+        .qs-card-content code {
+          background: #F3F4F6;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 12.5px;
+          color: #1F2937;
+          font-family: var(--font-mono, monospace);
+        }
+      </style>
+
       <div class="support-section">
         <div class="support-left">
           <div class="support-badges">
@@ -268,11 +473,11 @@ const steps = [
               </div>
               <div class="sr-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             </a>
-            <a href="#" class="sr-card hover-card">
+            <a href="/blog/" class="sr-card hover-card">
               <div class="sr-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
               <div class="sr-text">
-                <strong>Community</strong>
-                <span>Get help from other users.</span>
+                <strong>Resources & Guides</strong>
+                <span>Tutorials and deep dives on our blog.</span>
               </div>
               <div class="sr-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             </a>
@@ -301,6 +506,7 @@ const steps = [
   })}></script>
 
   <Footer />
+
 </Base>
 
 <style>

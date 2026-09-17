@@ -1,6 +1,6 @@
 ---
-title: 'WireGuard mesh VPN control plane: How WireGuard Mesh Control Planes Manage Keys, Peers & Routes'
-description: 'WireGuard mesh VPN control plane: A deep technical dive into how modern WireGuard mesh VPN control planes orchestrate public keys, peer discovery across CGNAT, and dynamic AllowedIPs routing tables at scale.'
+title: "How WireGuard Mesh Control Planes Manage Keys, Peers & Routes"
+description: "A deep technical dive into how modern WireGuard mesh VPN control planes orchestrate public keys, peer discovery across CGNAT, and dynamic AllowedIPs routing tables at scale."
 pubDate: 2026-09-07
 updatedDate: 2026-09-07
 author: 'MeshWG Network Architecture Team'
@@ -457,7 +457,7 @@ When an enterprise connects its Identity Provider through System for Cross-domai
 
 WireGuard revolutionized the data plane by proving that an encrypted network tunnel can be simple, secure, and fast enough to run in the core operating system kernel. But WireGuard was never intended to solve the multi-node coordination problem on its own.
 
-Without an intelligent control plane, managing a WireGuard network across branches, cloud environments, and mobile endpoints degrades into a manual configuration nightmare. The quadratic scaling wall, dynamic IP churn, Carrier-Grade NAT, and strict Cryptokey Routing constraints turn static VPN configurations into fragile, high-maintenance systems that break as soon as the organization grows.
+Without an intelligent control plane, managing a WireGuard network across branches, cloud environments, and mobile endpoints degrades into a manual configuration nightmare (for MeshWG's specific implementation, see our [technical documentation](/docs/)). The quadratic scaling wall, dynamic IP churn, Carrier-Grade NAT, and strict Cryptokey Routing constraints turn static VPN configurations into fragile, high-maintenance systems that break as soon as the organization grows.
 
 A modern out-of-band control plane changes the economics and operational reality of private networking:
 - It keeps the data plane fast, direct, and private by running pure, in-kernel WireGuard peer-to-peer over the shortest physical path.

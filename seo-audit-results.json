@@ -1,0 +1,382 @@
+{
+  "totalRoutes": 80,
+  "missingTitles": [
+    "/google23bc3c232ea55eb4.html"
+  ],
+  "missingDescriptions": [
+    "/google23bc3c232ea55eb4.html"
+  ],
+  "missingH1s": [
+    "/google23bc3c232ea55eb4.html",
+    "/quickstart/"
+  ],
+  "duplicateTitles": [],
+  "duplicateDescriptions": [],
+  "internalBrokenLinks": [
+    {
+      "from": "/alternatives/cloudflare-one/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/alternatives/headscale/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/alternatives/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/alternatives/netbird/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/alternatives/tailscale/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/alternatives/twingate/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/alternatives/zerotier/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/branch-office-vpn-smb-rollout-playbook-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/cloud-wireguard-vpn-meshwg/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/how-to-build-a-multi-location-wireguard-network-with-routers/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/how-to-set-up-a-router-vpn-without-installing-vpn-software/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/how-to-set-up-a-wireguard-mesh-vpn/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/how-wireguard-mesh-control-plane-manages-keys-peers-routes/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/manage-multiple-wireguard-tunnels-mesh-vpn-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/managed-vs-self-hosted-wireguard-vpn-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/mesh-vpn-vs-ipsec-vs-sdwan-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/remote-access-vpn-for-developers-wireguard-ssh-git-dev-environments/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/remote-access-vpn-for-internal-applications-secure-private-web-apps/",
+      "to": "/blog/wireguard-mesh-vpn-remote-teams/"
+    },
+    {
+      "from": "/blog/remote-access-vpn-for-internal-applications-secure-private-web-apps/",
+      "to": "/blog/remote-access-vpn-developers-ssh-git/"
+    },
+    {
+      "from": "/blog/remote-access-vpn-for-internal-applications-secure-private-web-apps/",
+      "to": "/blog/zero-trust-network-segmentation/"
+    },
+    {
+      "from": "/blog/remote-access-vpn-for-internal-applications-secure-private-web-apps/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/remote-access-vpn-vs-rdp-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/sd-wan-alternatives-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/site-to-site-wireguard-setup-guide/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/tp-link-site-to-site-vpn-wireguard-2026/",
+      "to": "/signup/"
+    },
+    {
+      "from": "/blog/tp-link-site-to-site-vpn-wireguard-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/wireguard-mesh-vpn-for-remote-teams-secure-office-networks/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/wireguard-mesh-vpn-home-network-secure-remote-access-without-port-forwarding/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/wireguard-mesh-vpn-key-management-key-rotation-best-practices/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/wireguard-mesh-vpn-without-agent-existing-routers/",
+      "to": "/blog/wireguard-nat-traversal-cgnat-firewalls-2026/"
+    },
+    {
+      "from": "/blog/wireguard-mesh-vpn-without-agent-existing-routers/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/wireguard-nat-traversal-behind-cgnat-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/wireguard-site-to-site-vpn-how-it-works-2026/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/blog/wireguard-site-to-site-vpn-multiple-locations/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/careers/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/cloudflare-tunnel-vs-ngrok/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/netbird-vs-headscale/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/openwrt-vs-mikrotik-wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/opnsense-vs-pfsense-wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/tailscale-vs-cloudflare-tunnel/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/tailscale-vs-headscale/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/tailscale-vs-netbird/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/tailscale-vs-twingate/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/tailscale-vs-wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/tailscale-vs-zerotier/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/twingate-vs-cloudflare/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/twingate-vs-netbird/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/wireguard-vs-openvpn/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compare/zerotier-vs-wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/compatibility/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/contact/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/contact/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/contact/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/docs/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/industries/healthcare/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/industries/hospitality/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/industries/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/industries/logistics/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/industries/retail/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/mikrotik/wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/openwrt/wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/opnsense/wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/pfsense/wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/pricing/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/privacy/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/quickstart/",
+      "to": "/signup/"
+    },
+    {
+      "from": "/quickstart/",
+      "to": "/dashboard/"
+    },
+    {
+      "from": "/quickstart/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/refund/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/router-mesh-vpn/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/terms/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/router/archer-ax23/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/router/archer-ax73/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/router/deco-x50/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/router/deco-x60/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/router/er605/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/router/er7206/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/tp-link/wireguard/router/er8411/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/what-is-wireguard/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/what-is-ztna/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/why-vpn-keeps-disconnecting/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/wireguard-router/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/ztna-for-small-business/",
+      "to": "/.well-known/security.txt/"
+    },
+    {
+      "from": "/ztna-vs-vpn/",
+      "to": "/.well-known/security.txt/"
+    }
+  ],
+  "orphanPages": [
+    "/404.html",
+    "/alternatives/",
+    "/compare/cloudflare-tunnel-vs-ngrok/",
+    "/compare/netbird-vs-headscale/",
+    "/compare/twingate-vs-cloudflare/",
+    "/compare/twingate-vs-netbird/",
+    "/google23bc3c232ea55eb4.html",
+    "/tp-link/wireguard/router/archer-ax23/",
+    "/tp-link/wireguard/router/archer-ax73/",
+    "/tp-link/wireguard/router/deco-x50/",
+    "/tp-link/wireguard/router/deco-x60/",
+    "/tp-link/wireguard/router/er605/",
+    "/tp-link/wireguard/router/er7206/",
+    "/tp-link/wireguard/router/er8411/",
+    "/why-vpn-keeps-disconnecting/"
+  ]
+}

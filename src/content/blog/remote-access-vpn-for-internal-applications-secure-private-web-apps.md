@@ -8,11 +8,11 @@ seoKeywords: ["Remote Access VPN for Internal Applications", "secure private web
 cover: '../../assets/images/remote_access_vpn_internal.png'
 ---
 
-> **Related Reading:** [WireGuard Mesh VPN for Remote Teams: Secure Employee Access to Office Networks](/blog/wireguard-mesh-vpn-remote-teams/)
+> **Related Reading:** [WireGuard Mesh VPN for Remote Teams: Secure Employee Access to Office Networks](/blog/wireguard-mesh-vpn-for-remote-teams-secure-office-networks/)
 
-> **Related Reading:** [Remote Access VPN for Developers: Secure SSH, Git, and Dev Environments with WireGuard](/blog/remote-access-vpn-developers-ssh-git/)
+> **Related Reading:** [Remote Access VPN for Developers: Secure SSH, Git, and Dev Environments with WireGuard](/blog/remote-access-vpn-for-developers-wireguard-ssh-git-dev-environments/)
 
-> **Related Reading:** [Zero Trust Network Segmentation for Remote Teams: A Practical Architecture Guide](/blog/zero-trust-network-segmentation/)
+> **Related Reading:** [Zero Trust Network Segmentation for Remote Teams: A Practical Architecture Guide](/what-is-ztna/)
 
 <div class="tldr-box">
   <h3>TL;DR</h3>

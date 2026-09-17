@@ -1,6 +1,6 @@
 ---
-title: 'Router vpn without software: How to Set Up a Router VPN Without Installing VPN Software'
-description: 'Router vpn without software: Master setting up a native router VPN gateway without installing software on client devices. Step-by-step OpenWrt, WireGuard, and MeshWG deployment guide.'
+title: "How to Set Up a Router VPN Without Installing VPN Software"
+description: "Master setting up a native router VPN gateway without installing software on client devices. Step-by-step OpenWrt, WireGuard, and MeshWG deployment guide."
 pubDate: 2026-08-25
 updatedDate: 2026-08-25
 author: 'MeshWG editorial team'

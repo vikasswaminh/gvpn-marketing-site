@@ -1,6 +1,6 @@
 ---
-title: 'Multi location wireguard network: How to Build a Multi-Location WireGuard Network with Routers: Enterprise Guide'
-description: 'Multi location wireguard network: Master multi-location site-to-site WireGuard networks across routers. Covers kernel routing, NAT traversal, MTU tuning, firewall rules, and MeshWG mesh orchestration.'
+title: "How to Build a Multi-Location WireGuard Network with Routers: Enterprise Guide"
+description: "Master multi-location site-to-site WireGuard networks across routers. Covers kernel routing, NAT traversal, MTU tuning, firewall rules, and MeshWG mesh orchestration."
 pubDate: 2026-08-27
 updatedDate: 2026-08-27
 author: 'MeshWG editorial team'

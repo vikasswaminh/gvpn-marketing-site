@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/routers/*.png');
 // WireGuard-compatible router inventory — v1 launch list (57 high-confidence
 // models). Lower-confidence rows (regional firmware variance, very recent
 // hardware, OpenWrt-conditional models) deliberately omitted from day-one
@@ -170,20 +172,24 @@ const vendorCount = grouped.length;
     {grouped.map(group => (
       <div class="cg-group" data-vendor-group={group.vendor}>
         <header class="cg-group-head">
-          <span class="cg-vendor-name" style={`--vc:${vendorColor[group.vendor] ?? "#525252"}`}>{group.vendor}</span>
+          <h2 class="cg-vendor-name" style={`--vc:${vendorColor[group.vendor] ?? "#525252"}`}>
+            {group.vendor} {group.vendor === "OPNsense" || group.vendor === "pfSense" ? "Appliances" : group.vendor === "Generic" ? "Devices" : "Routers"}
+          </h2>
           <span class="cg-vendor-count">{group.items.length} models</span>
         </header>
         <div class="cg-grid">
           {group.items.map(m => (
             <article class="cg-card" data-search={`${m.vendor} ${m.family} ${m.model}`.toLowerCase()} data-vendor={m.vendor}>
-              <div class="cg-thumb" data-shape={m.shape} style={`--vc:${vendorColor[m.vendor] ?? "#525252"}`}>
-                <img
-                  src={`/img/routers/${m.slug}.png`}
-                  alt={`${m.vendor} ${m.model}`}
-                  loading="lazy"
-                  width="160" height="120"
-                  onerror="this.style.display='none'; this.parentElement.classList.add('cg-thumb--silhouette');"
-                />
+              <div class={`cg-thumb ${!images[`/src/assets/routers/${m.slug}.png`] ? 'cg-thumb--silhouette' : ''}`} data-shape={m.shape} style={`--vc:${vendorColor[m.vendor] ?? "#525252"}`}>
+                {images[`/src/assets/routers/${m.slug}.png`] && (
+                  <Image
+                    src={images[`/src/assets/routers/${m.slug}.png`]()}
+                    alt={`${m.vendor} ${m.model}`}
+                    width={200}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
                 {m.shape === "flat" && (
                   <svg class="cg-sil" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="4" y="14" width="56" height="20" rx="2"/>
@@ -230,7 +236,7 @@ const vendorCount = grouped.length;
               </div>
               <div class="cg-meta">
                 <div class="cg-family">{m.family}</div>
-                <div class="cg-model">{m.model}</div>
+                <strong class="cg-model">{m.model}</strong>
                 <div class="cg-fw">{m.minFirmware}</div>
               </div>
             </article>
@@ -489,3 +495,14 @@ const vendorCount = grouped.length;
   }
   @media (max-width: 420px)  { .cg-grid { grid-template-columns: repeat(2, 1fr); } }
 </style>
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Supported WireGuard Routers and Devices",
+  "itemListElement": models.map((m, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": `${m.vendor} ${m.family ? m.family + ' ' : ''}${m.model}`
+  }))
+})}></script>

@@ -271,7 +271,9 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
 .prose ul, .prose ol { padding-left: 1.75rem; }
 .prose li { padding-left: 0.25rem; }
 .prose li + li { margin-top: 0.75rem; }
-.prose blockquote { font-size: 1.125rem; font-style: normal; line-height: 1.6; margin: 1.5rem 0; padding: 1.25rem 2rem; border-left: 4px solid #0d9488; color: var(--text); background: #ffffff; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+.prose blockquote { font-size: 1.0625rem; font-style: normal; line-height: 1.5; margin: 0.5rem 0; padding: 0.75rem 1.25rem; border-left: 4px solid #0d9488; color: var(--text); background: #ffffff; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+.prose blockquote p { margin: 0 !important; }
+.prose blockquote + blockquote { margin-top: 0.5rem !important; }
 .prose > :first-child { margin-top: 0 !important; }
 .prose code { font-family: var(--font-mono); font-size: 0.9em; background: var(--bg-2); border: 1px solid var(--border); border-radius: 6px; padding: 0.2rem 0.4rem; color: var(--brand-red); font-weight: 500; }
 .prose pre { background: #F0F7FF !important; padding: 1.75rem; border-radius: var(--radius-lg); overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--border-strong); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }

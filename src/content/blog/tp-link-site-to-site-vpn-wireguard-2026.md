@@ -1,6 +1,6 @@
 ---
-title: 'TP-Link site-to-site VPN: TP-Link WireGuard Site-to-Site VPN Setup Guide'
-description: 'TP-Link site-to-site VPN: Step-by-step guide to configuring a WireGuard site-to-site VPN on TP-Link routers. Bypass static IPs and complex IPsec configurations easily.'
+title: "TP-Link WireGuard Site-to-Site VPN Setup Guide"
+description: "Step-by-step guide to configuring a WireGuard site-to-site VPN on TP-Link routers. Bypass static IPs and complex IPsec configurations easily."
 pubDate: 2026-05-16
 updatedDate: 2026-05-16
 author: 'MeshWG editorial team'
@@ -285,7 +285,7 @@ Any router that speaks WireGuard. For a single SafeStream box at one site, the T
   <p>
     Two of your TP-Link branches can be on a single mesh in under
     five minutes — and the first two machines stay free forever.
-    <a class="cta-link" href="https://meshwg.com/signup">Start free →</a>
+    <a class="cta-link" href="https://vpn.meshwg.com/signup">Start free →</a>
   </p>
 </aside>
 

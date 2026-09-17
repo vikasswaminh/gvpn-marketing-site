@@ -1,6 +1,6 @@
 ---
-title: 'WireGuard Mesh VPN Key Management & Rotation: 2026 Best Practices'
-description: 'WireGuard mesh VPN key management: Master WireGuard mesh VPN key management and zero-downtime key rotation. Learn how to handle Curve25519 identity keys, avoid AllowedIPs collisions, and automate fleet re-keying across routers and cloud VPCs.'
+title: "WireGuard Mesh VPN Key Management & Rotation: 2026 Best Practices"
+description: "Master WireGuard mesh VPN key management and zero-downtime key rotation. Learn how to handle Curve25519 identity keys, avoid AllowedIPs collisions, and automate fleet re-keying across routers and cloud VPCs."
 pubDate: 2026-09-08
 updatedDate: 2026-09-08
 author: 'MeshWG Network Architecture Team'

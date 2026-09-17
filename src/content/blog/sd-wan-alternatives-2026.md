@@ -1,6 +1,6 @@
 ---
-title: 'SD-WAN alternatives: 7 Modern SD-WAN Alternatives for Branch Offices (2026)'
-description: 'SD-WAN alternatives: Looking beyond traditional SD-WAN? Discover 7 cost-effective SD-WAN alternatives for SMB branch connectivity and network management.'
+title: "7 Modern SD-WAN Alternatives for Branch Offices (2026)"
+description: "Looking beyond traditional SD-WAN? Discover 7 cost-effective SD-WAN alternatives for SMB branch connectivity and network management."
 pubDate: 2026-05-16
 updatedDate: 2026-05-16
 author: 'MeshWG editorial team'

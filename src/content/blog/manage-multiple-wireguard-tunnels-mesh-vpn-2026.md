@@ -1,6 +1,6 @@
 ---
-title: 'Wireguard mesh vpn: Managing Multiple WireGuard Tunnels & Mesh VPN Guide (2026)'
-description: 'Wireguard mesh vpn: Master WireGuard mesh networking and multi-tunnel management in 2026. Learn architecture, full-mesh topologies, automated configs, BGP routing, and scaling strategies.'
+title: "Managing Multiple WireGuard Tunnels & Mesh VPN Guide (2026)"
+description: "Master WireGuard mesh networking and multi-tunnel management in 2026. Learn architecture, full-mesh topologies, automated configs, BGP routing, and scaling strategies."
 pubDate: 2026-08-20
 updatedDate: 2026-08-20
 author: 'MeshWG editorial team'

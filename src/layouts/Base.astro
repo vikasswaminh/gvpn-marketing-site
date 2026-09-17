@@ -286,25 +286,60 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
 
         // 3D Tilt Animation Logic
         document.querySelectorAll('[data-tilt]').forEach(el => {
+          let rect = null;
+          let rAF = null;
+          let isTicking = false;
+
+          const updateRect = () => {
+            rect = el.getBoundingClientRect();
+          };
+
+          const onScrollOrResize = () => {
+            rect = null; // Invalidate cache so it recalculates on next mousemove
+          };
+
+          el.addEventListener('mouseenter', () => {
+            updateRect();
+            window.addEventListener('scroll', onScrollOrResize, { passive: true });
+            window.addEventListener('resize', onScrollOrResize, { passive: true });
+          });
+
           el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            // Max tilt angle: 6 degrees for a subtle, premium feel
-            const rotateX = ((y - centerY) / centerY) * -6; 
-            const rotateY = ((x - centerX) / centerX) * 6;
-            
-            el.style.setProperty('--rotateX', `${rotateX}deg`);
-            el.style.setProperty('--rotateY', `${rotateY}deg`);
+            if (!rect) updateRect(); // fallback if invalidated
+            const clientX = e.clientX;
+            const clientY = e.clientY;
+
+            const { left, top, width, height } = rect;
+
+            if (!isTicking) {
+              rAF = requestAnimationFrame(() => {
+                isTicking = false;
+
+                const x = clientX - left;
+                const y = clientY - top;
+                
+                const centerX = width / 2;
+                const centerY = height / 2;
+                
+                // Max tilt angle: 6 degrees for a subtle, premium feel
+                const rotateX = ((y - centerY) / centerY) * -6; 
+                const rotateY = ((x - centerX) / centerX) * 6;
+                
+                el.style.setProperty('--rotateX', `${rotateX}deg`);
+                el.style.setProperty('--rotateY', `${rotateY}deg`);
+              });
+              isTicking = true;
+            }
           });
           
           el.addEventListener('mouseleave', () => {
+            if (rAF) cancelAnimationFrame(rAF);
+            isTicking = false;
+            rect = null;
             el.style.setProperty('--rotateX', '0deg');
             el.style.setProperty('--rotateY', '0deg');
+            window.removeEventListener('scroll', onScrollOrResize);
+            window.removeEventListener('resize', onScrollOrResize);
           });
         });
 

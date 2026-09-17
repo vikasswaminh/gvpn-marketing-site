@@ -1,6 +1,6 @@
 ---
-title: 'WireGuard NAT Traversal: Connecting Peers Behind CGNAT & Firewalls (2026)'
-description: 'Wireguard nat traversal: Complete 2026 engineering guide to WireGuard NAT Traversal. Learn UDP hole punching, PersistentKeepalive, CGNAT workarounds, STUN/ICE mechanics, and enterprise relay strategies.'
+title: "WireGuard NAT Traversal: Connecting Peers Behind CGNAT & Firewalls (2026)"
+description: "Complete 2026 engineering guide to WireGuard NAT Traversal. Learn UDP hole punching, PersistentKeepalive, CGNAT workarounds, STUN/ICE mechanics, and enterprise relay strategies."
 pubDate: 2026-08-21
 updatedDate: 2026-08-21
 author: 'MeshWG editorial team'

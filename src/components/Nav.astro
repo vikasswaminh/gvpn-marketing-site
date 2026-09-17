@@ -259,7 +259,7 @@ const currentPath = Astro.url.pathname;
   }
 </style>
 
-<script>
+<script is:inline defer>
   const btn = document.getElementById('mobile-menu-btn');
   const nav = document.getElementById('mobile-nav');
   const iconMenu = btn?.querySelector('.icon-menu') as HTMLElement;

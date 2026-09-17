@@ -76,15 +76,17 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" />
+  </noscript>
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <script
     defer
     data-domain="meshwg.com"
-    data-api="/p/event"
-    src="/p/script.js"
+    src="https://plausible.io/js/script.js"
   ></script>
 
   {/* Canonical Organization schema. Every page's @id references this via
@@ -264,37 +266,41 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
 
         // 3D Tilt Animation Logic
         document.querySelectorAll('[data-tilt]').forEach(el => {
-          let rect = null;
+          let docLeft = 0;
+          let docTop = 0;
+          let width = 0;
+          let height = 0;
           let rAF = null;
           let isTicking = false;
 
           const updateRect = () => {
-            rect = el.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
+            docLeft = rect.left + window.scrollX;
+            docTop = rect.top + window.scrollY;
+            width = rect.width;
+            height = rect.height;
           };
 
-          const onScrollOrResize = () => {
-            rect = null; // Invalidate cache so it recalculates on next mousemove
+          const onResize = () => {
+            width = 0; // Invalidate cache so it recalculates on next mousemove
           };
 
           el.addEventListener('mouseenter', () => {
             updateRect();
-            window.addEventListener('scroll', onScrollOrResize, { passive: true });
-            window.addEventListener('resize', onScrollOrResize, { passive: true });
+            window.addEventListener('resize', onResize, { passive: true });
           });
 
           el.addEventListener('mousemove', (e) => {
-            if (!rect) updateRect(); // fallback if invalidated
-            const clientX = e.clientX;
-            const clientY = e.clientY;
-
-            const { left, top, width, height } = rect;
+            if (!width) updateRect(); // fallback if invalidated
+            const pageX = e.pageX;
+            const pageY = e.pageY;
 
             if (!isTicking) {
               rAF = requestAnimationFrame(() => {
                 isTicking = false;
 
-                const x = clientX - left;
-                const y = clientY - top;
+                const x = pageX - docLeft;
+                const y = pageY - docTop;
                 
                 const centerX = width / 2;
                 const centerY = height / 2;
@@ -313,11 +319,10 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
           el.addEventListener('mouseleave', () => {
             if (rAF) cancelAnimationFrame(rAF);
             isTicking = false;
-            rect = null;
+            width = 0;
             el.style.setProperty('--rotateX', '0deg');
             el.style.setProperty('--rotateY', '0deg');
-            window.removeEventListener('scroll', onScrollOrResize);
-            window.removeEventListener('resize', onScrollOrResize);
+            window.removeEventListener('resize', onResize);
           });
         });
 

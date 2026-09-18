@@ -43,6 +43,7 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
+    <meta name="title" content={title} />
   <meta name="description" content={description} />
   {keywords && <meta name="keywords" content={keywords} />}
   <ViewTransitions />
@@ -341,3 +342,4 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? "htt
   </script>
 </body>
 </html>
+

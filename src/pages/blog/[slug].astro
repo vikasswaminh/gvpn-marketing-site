@@ -31,7 +31,7 @@ const pillText = hasStrategy ? 'STRATEGY & ARCHITECTURE' : 'ENGINEERING GUIDE';
 const pillClass = hasStrategy ? 'nh-sidebar-pill pill-purple' : 'nh-sidebar-pill pill-orange';
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} keywords={post.data.seoKeywords?.join(", ")}>
   <Nav />
   
   <div id="progress-container">
@@ -196,3 +196,4 @@ const pillClass = hasStrategy ? 'nh-sidebar-pill pill-purple' : 'nh-sidebar-pill
 
   <Footer />
 </Base>
+

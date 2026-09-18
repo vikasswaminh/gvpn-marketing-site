@@ -1,8 +1,8 @@
 # Cloudflare Pages custom headers — https://developers.cloudflare.com/pages/configuration/headers/
 # Mirrors the security posture already enforced on vpn.meshwg.com (see
 # deploy/Caddyfile in the controller repo), adapted to what this static
-# site actually loads: Google Fonts (style/font) + a same-origin
-# self-hosted analytics script+beacon at /p/*. No third-party script
+# site actually loads: Google Fonts (style/font) + Plausible
+# analytics script+beacon at plausible.io. No other third-party script
 # origins, no iframes, no forms.
 #
 # script-src/style-src need 'unsafe-inline': Astro's `inlineStylesheets:
@@ -18,4 +18,4 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://plausible.io; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'

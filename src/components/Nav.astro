@@ -262,8 +262,8 @@ const currentPath = Astro.url.pathname;
 <script is:inline defer>
   const btn = document.getElementById('mobile-menu-btn');
   const nav = document.getElementById('mobile-nav');
-  const iconMenu = btn?.querySelector('.icon-menu') as HTMLElement;
-  const iconClose = btn?.querySelector('.icon-close') as HTMLElement;
+  const iconMenu = btn?.querySelector('.icon-menu');
+  const iconClose = btn?.querySelector('.icon-close');
   
   if (btn && nav) {
     btn.addEventListener('click', () => {

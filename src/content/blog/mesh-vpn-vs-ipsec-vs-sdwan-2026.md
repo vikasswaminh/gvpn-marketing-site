@@ -114,45 +114,45 @@ Different sectors arrive at this decision from different starting positions, and
 
 ## Common questions
 
-<div class="faq-item">
-  <h3>What is the difference between mesh VPN, IPsec, and SD-WAN?</h3>
+<details class="mesh-faq">
+  <summary>What is the difference between mesh VPN, IPsec, and SD-WAN?</summary>
   <p>Mesh VPN is cloud-coordinated peer-to-peer networking running on standard routers. IPsec is the foundational tunnel protocol used for decades. SD-WAN combines encrypted transport with traffic engineering and centralised orchestration on dedicated appliances.</p>
-</div>
+</details>
 
-<div class="faq-item">
-  <h3>Is mesh VPN better than SD-WAN?</h3>
+<details class="mesh-faq">
+  <summary>Is mesh VPN better than SD-WAN?</summary>
   <p>It depends on your organisation. For 5 to 50 branch businesses wanting simplicity and low cost on existing hardware, mesh VPN is often better. For hundreds of sites needing packet-level WAN optimisation and carrier-managed SLAs, SD-WAN is typically better.</p>
-</div>
+</details>
 
-<div class="faq-item">
-  <h3>Is mesh VPN cheaper than SD-WAN?</h3>
+<details class="mesh-faq">
+  <summary>Is mesh VPN cheaper than SD-WAN?</summary>
   <p>Generally, yes. By eliminating the need for expensive dedicated vendor appliances at each site and their associated licensing costs, a mesh VPN can often be deployed for a fraction of the cost of traditional SD-WAN over a 5-year TCO.</p>
-</div>
+</details>
 
-<div class="faq-item">
-  <h3>Can mesh VPN replace IPsec?</h3>
+<details class="mesh-faq">
+  <summary>Can mesh VPN replace IPsec?</summary>
   <p>For internal corporate connectivity between branches, mesh VPN is a modern replacement that avoids IPsec's complexity. However, IPsec remains necessary when interoperating with third-party networks or legacy vendor firewalls that only support IPsec.</p>
-</div>
+</details>
 
-<div class="faq-item">
-  <h3>What is the best private network solution for an SMB in 2026?</h3>
+<details class="mesh-faq">
+  <summary>What is the best private network solution for an SMB in 2026?</summary>
   <p>For most SMBs, mesh VPN provides the best balance of low cost, fast deployment, and operational simplicity without requiring dedicated networking staff or new hardware.</p>
-</div>
+</details>
 
-<div class="faq-item">
-  <h3>Does SD-WAN still have a role in 2026?</h3>
+<details class="mesh-faq">
+  <summary>Does SD-WAN still have a role in 2026?</summary>
   <p>Absolutely. Large enterprises, multinational deployments, and regulated industries that require application-aware routing and strict carrier-backed SLAs still rely heavily on SD-WAN platforms.</p>
-</div>
+</details>
 
-<div class="faq-item">
-  <h3>How long does a mesh VPN rollout typically take for a multi-branch business?</h3>
+<details class="mesh-faq">
+  <summary>How long does a mesh VPN rollout typically take for a multi-branch business?</summary>
   <p>Because there is no hardware to ship, a mesh VPN can often connect a new site in under two minutes once the configuration is generated, making the rollout vastly faster than traditional SD-WAN timelines.</p>
-</div>
+</details>
 
-<div class="faq-item">
-  <h3>What kind of business gets the most value from mesh VPN today?</h3>
+<details class="mesh-faq">
+  <summary>What kind of business gets the most value from mesh VPN today?</summary>
   <p>Businesses with 5 to 50 sites, distributed workforces, tight IT budgets, and no specialist networking team—such as retail chains, clinic groups, and mid-market professional services—gain the most immediate value.</p>
-</div>
+</details>
 
 <div class="post-cta">
   <h3>Ready to validate this on your own network?</h3>
@@ -164,17 +164,17 @@ Different sectors arrive at this decision from different starting positions, and
 
 ## Frequently Asked Questions (FAQ)
 
-<details>
+<details class="mesh-faq">
 <summary>How does a mesh VPN differ from a traditional VPN?</summary>
 A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A mesh VPN establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Does MeshWG require installing software on every device?</summary>
 No. MeshWG can be deployed directly on your existing edge routers (like TP-Link, MikroTik, or OpenWrt). This provides agentless, site-wide protection for all devices behind the router without installing VPN clients on individual laptops or IoT devices.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does WireGuard [NAT Traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) work?</summary>
 WireGuard doesn't have native [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/), which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.
 </details>

@@ -310,59 +310,59 @@ The most informative way to evaluate the model is to run it on real branches. Tw
 
 ## Common questions
 
-<details>
+<details class="mesh-faq">
 <summary>Q1. What does "without an agent" actually mean?</summary>
 It means no software is installed on the router. The router's native WireGuard support is the endpoint; the mesh platform provides only the coordination layer — keys, peers, and policy. The router does the encryption and forwarding; the platform does the orchestration.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q2. Does the mesh work behind carrier-grade NAT?</summary>
 Yes. Every branch dials outbound to the control plane, so CGNAT and dynamic IPs are non-issues. The router initiates the connection, which works from behind any NAT that allows outbound UDP.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q3. Is the control plane in the traffic path?</summary>
 No. Traffic between branches is peer-to-peer and encrypted end-to-end. The control plane coordinates but does not relay, except in the fallback case where two branches cannot connect peer-to-peer due to symmetric NAT.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q4. Can the mesh read my traffic?</summary>
 No. Traffic is encrypted end-to-end with WireGuard's crypto (X25519, ChaCha20-Poly1305, Poly1305). The control plane can see coordination metadata — who is talking to whom — but not the content of the traffic.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q5. Which routers are supported?</summary>
 Any router with native WireGuard support — OpenWrt, MikroTik RouterOS 7, TP-Link business/Omada, Ubiquiti, OPNsense, and others. The coordination lives in the control plane, so the router fleet can be mixed and routers can be replaced without reconfiguring the mesh.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q6. How long does onboarding take?</summary>
 Under two minutes per site. The human step is entering the coordination endpoint and key on the router — or scanning a QR code on supported firmware. The control plane delivers the peer list automatically.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q7. Is agentless mesh the same as SD-WAN?</summary>
 No. Agentless mesh delivers encrypted site-to-site connectivity with central policy and a dashboard. SD-WAN adds application-aware routing, packet deduplication, and carrier-managed SLAs — capabilities the mesh does not attempt. They are built for different shapes of organisation.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q8. Does agentless mesh cover remote workers?</summary>
 No. It covers sites. For individual remote workers on arbitrary laptops, an agent-based zero-trust client is the appropriate tool. The two models are complementary.
 </details>
 
 ## Frequently Asked Questions (FAQ)
 
-<details>
+<details class="mesh-faq">
 <summary>How does a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) differ from a traditional VPN?</summary>
 A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Does MeshWG require installing software on every device?</summary>
 No. MeshWG can be deployed directly on your existing edge routers (like TP-Link, MikroTik, or OpenWrt). This provides agentless, site-wide protection for all devices behind the router without installing VPN clients on individual laptops or IoT devices.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does WireGuard [NAT Traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) work?</summary>
 WireGuard doesn't have native [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/), which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.
 </details>

@@ -291,17 +291,17 @@ Any router that speaks WireGuard. For a single SafeStream box at one site, the T
 
 ## Frequently Asked Questions (FAQ)
 
-<details>
+<details class="mesh-faq">
 <summary>How does a [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) differ from a traditional VPN?</summary>
 A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A [mesh VPN](/blog/how-to-set-up-a-wireguard-mesh-vpn/) establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Does MeshWG require installing software on every device?</summary>
 No. MeshWG can be deployed directly on your existing edge routers (like TP-Link, MikroTik, or OpenWrt). This provides agentless, site-wide protection for all devices behind the router without installing VPN clients on individual laptops or IoT devices.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does WireGuard [NAT Traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/) work?</summary>
 WireGuard doesn't have native [NAT traversal](/blog/wireguard-nat-traversal-behind-cgnat-2026/), which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.
 </details>

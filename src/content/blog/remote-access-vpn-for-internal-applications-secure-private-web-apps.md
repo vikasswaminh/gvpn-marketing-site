@@ -465,42 +465,42 @@ MeshWG solves this by providing an enterprise-grade cloud control plane for stan
 
 ## Frequently Asked Questions (FAQ)
 
-<details>
+<details class="mesh-faq">
 <summary>Why shouldn't internal web applications be published behind a public reverse proxy with basic authentication?</summary>
 Publishing internal web applications to the public internet with HTTP Basic Authentication or basic login forms exposes them directly to automated port scanning, credential stuffing bots, distributed denial of service (DDoS) attacks, and unauthenticated remote code execution (RCE) vulnerabilities. Even when behind a cloud web application firewall (WAF), zero-day bypasses in application runtimes (such as Log4j or framework-level deserialization bugs) can be triggered before application-level authentication runs. A private WireGuard remote access overlay eliminates inbound listening ports from the public internet entirely, rendering the application invisible to external scanners.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does WireGuard achieve cryptographic stealth for private internal web apps?</summary>
 WireGuard operates entirely over UDP and uses the `Noise_IK` cryptographic handshake. When an unauthenticated packet or scanning probe hits a WireGuard port, the kernel compares the sender's public key against its peer table. If the packet is not cryptographically signed by a recognized peer, WireGuard drops the packet completely in silence without sending an ICMP port unreachable response or TCP RST flag. To an internet port scanner like Nmap, Masscan, or Shodan, the server port appears completely closed or nonexistent.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Can users access internal web applications using friendly domain names (FQDNs) rather than overlay IP addresses?</summary>
 Yes. Internal web applications typically rely on host-header routing, HTTP cookies, and valid TLS certificates, which require fully qualified domain names (such as `grafana.internal.corp` or `billing.corp`). By using split-horizon DNS or local resolver configuration (such as CoreDNS or systemd-resolved within the WireGuard client configuration), queries for internal domains resolve exclusively to overlay IP addresses (e.g., `10.100.0.0/24`), while regular public internet domains resolve through public recursive resolvers.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How do you handle TLS/HTTPS certificates for private web apps that have no public DNS records?</summary>
 The cleanest production method is using Let's Encrypt with ACME DNS-01 challenge verification. The ACME client on the internal reverse proxy proves ownership of the domain by creating a temporary TXT record on your public authoritative DNS provider (via an API key). Let's Encrypt validates the TXT record externally and issues a universally trusted public TLS certificate, even though the web server itself has no public IP address and only listens on an internal WireGuard overlay interface.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does a WireGuard remote access overlay prevent remote employees from moving laterally across internal networks?</summary>
 Traditional legacy corporate VPNs assign connecting clients an IP address inside a physical office or cloud subnet, granting broad Layer 3 network reachability. In contrast, a WireGuard remote access overlay enforces strict Layer 4 microsegmentation using host-level packet filters (such as nftables or iptables). Connecting remote employees can be cryptographically and firewall-restricted to reach only specific destination IP addresses and web ports (e.g., `10.100.0.5` on port 443), while blocking access to database ports (5432, 3306), SSH (22), and adjacent staging workloads.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Does using a WireGuard overlay for internal web applications slow down regular employee web browsing?</summary>
 No. When configured as a split-tunnel VPN, the client configuration sets AllowedIPs to include only the internal overlay subnets (for example, `AllowedIPs = 10.100.0.0/24`). Packets addressed to internal web applications traverse the fast WireGuard kernel tunnel, while regular traffic (such as SaaS tools, video conferencing, and general browsing) exits directly through the user's local internet connection without entering the corporate network or suffering latency penalties.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does MeshWG handle NAT traversal and CGNAT when the internal application server is behind a branch office router?</summary>
 MeshWG uses automated UDP hole punching combined with STUN discovery and global relay fallback nodes. When an internal application server sits behind ISP Carrier-Grade NAT (CGNAT) or strict symmetric NAT with no static public IP, MeshWG coordinates the cryptographic handshake over UDP, establishing direct peer-to-peer tunnels whenever feasible or seamlessly relaying encrypted packets without decrypting payload data.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Can external contractors or third-party developers be granted time-limited access to a single internal staging dashboard?</summary>
 Yes. With MeshWG's identity-driven access rules, administrators can define granular policies that grant specific public keys or SSO-authenticated user accounts temporary, time-bound access strictly to a single application IP and port (e.g., `10.100.0.15:443`). When the contract expires or permissions are revoked, the peer public key is de-provisioned across the network in real time, instantly terminating the tunnel.
 </details>
@@ -532,7 +532,10 @@ You do not need to replace your entire network infrastructure, purchase six-figu
 
 ---
 <div class="cta-box" style="background: var(--bg-2); padding: 32px; border-radius: 12px; text-align: center; margin-top: 48px; border: 1px solid var(--border);">
-  <h3 style="margin-top: 0;">Ready to upgrade your enterprise network?</h3>
+  <details class="mesh-faq">
+  <summary>Ready to upgrade your enterprise network?</summary>
+
   <p style="color: var(--text-3); margin-bottom: 24px;">Deploy a high-performance WireGuard mesh network in minutes. No new hardware, no complex CLI configurations, and completely agentless.</p>
   <a href="https://meshwg.com" class="btn btn-primary" style="text-decoration: none; padding: 12px 24px; font-size: 16px;">Try MeshWG Free</a>
 </div>
+</details>

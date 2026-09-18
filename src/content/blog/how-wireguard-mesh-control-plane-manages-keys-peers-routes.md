@@ -405,37 +405,37 @@ When an enterprise connects its Identity Provider through System for Cross-domai
 
 ## Frequently Asked Questions
 
-<details>
+<details class="mesh-faq">
 <summary>What is the primary role of a control plane in a WireGuard mesh VPN?</summary>
 <p>The control plane serves as the out-of-band coordination authority. WireGuard itself is deliberately stateless and has no built-in dynamic peer discovery, key distribution, or route propagation mechanisms. The control plane discovers peer network endpoints across NAT, calculates conflict-free AllowedIPs matrices, distributes cryptographic public keys, and applies policy updates to local node routing tables without touching user data packets.</p>
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Does the WireGuard control plane sit in the data path or inspect traffic?</summary>
 <p>No. In a properly decoupled mesh architecture like MeshWG, the control plane is strictly out-of-band. Nodes establish direct, peer-to-peer UDP tunnels over the WireGuard protocol using kernel-space encryption (ChaCha20-Poly1305). Payload traffic flows directly between endpoints without traversing the control plane, ensuring full line-rate throughput and zero packet inspection by the orchestrator.</p>
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does a control plane solve WireGuard's AllowedIPs routing restriction?</summary>
 <p>WireGuard enforces Cryptokey Routing, meaning an IP address or subnet can only map to exactly one peer public key per interface. The control plane maintains a global topology graph and automatically computes disjoint prefix allocations, prevents route collisions, handles subnet gateway failovers, and dynamically installs granular host routes on local nodes.</p>
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How are cryptographic keys managed and rotated across the mesh?</summary>
 <p>Private keys are generated locally on the node and never leave the device boundary. The node transmits only its public key to the control plane over an authenticated TLS/gRPC channel. For re-keying, the control plane orchestrates atomic key swaps across all related peers with overlapping grace periods to eliminate packet drop during rotation.</p>
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does the control plane facilitate NAT traversal between peers behind Carrier-Grade NAT (CGNAT)?</summary>
 <p>Each node communicates outbound with control plane STUN/coordination endpoints, which observe the public IP and UDP port assigned by the NAT gateway. The control plane exchanges these reflexive endpoints between peers simultaneously, triggering coordinated UDP hole punching and persistent keepalive packets to maintain NAT state table bindings.</p>
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>What happens if the control plane goes offline or becomes unreachable?</summary>
 <p>Because the data plane is completely decoupled, existing WireGuard peer connections, routing tables, and encryption handshakes continue operating uninterrupted. An outage on the control plane only freezes configuration updates, meaning new nodes cannot join and key rotations are deferred until connectivity is restored.</p>
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Can an agentless router join a WireGuard mesh controlled by an external control plane?</summary>
 <p>Yes. Edge routers running OpenWrt, MikroTik RouterOS 7, OPNsense, Ubiquiti, or TP-Link Omada execute native WireGuard in their OS. The control plane provides configuration updates via lightweight API calls, dynamic DNS/STUN endpoints, or automated configuration pushes, transforming existing hardware into fully meshed branch gateways without custom agent binaries.</p>
 </details>

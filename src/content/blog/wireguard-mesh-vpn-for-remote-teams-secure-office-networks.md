@@ -257,10 +257,13 @@ Split tunneling directs only corporate-bound IP prefixes across the encrypted Wi
 The traditional model of enterprise remote access—anchored by expensive, centralized VPN concentrators that force all workforce traffic through geographic bottlenecks—is fundamentally incompatible with modern distributed engineering teams. A WireGuard mesh VPN for remote teams delivers an uncompromising alternative. 
 
 <aside class="cta-strip">
-<h3>Transform Your Remote Team Connectivity with MeshWG</h3>
-<p>Turn the routers, cloud VPCs, and servers you already own into an enterprise-grade Zero Trust mesh in under 2 minutes.</p>
+<details class="mesh-faq">
+  <summary>Transform Your Remote Team Connectivity with MeshWG</summary>
+
+  <p>Turn the routers, cloud VPCs, and servers you already own into an enterprise-grade Zero Trust mesh in under 2 minutes.</p>
+</details>
+
 <div class="cta-row">
 <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 machines</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>
-</aside>

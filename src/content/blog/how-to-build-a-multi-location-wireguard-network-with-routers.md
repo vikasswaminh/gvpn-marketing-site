@@ -308,7 +308,7 @@ To connect physical branch office routers to an AWS VPC environment:
 
 Traffic originating from cloud virtual machines inside private AWS subnets routes to physical branch office hosts transparently across direct, low-latency, kernel-encrypted WireGuard tunnels.
 
-<details>
+<details class="mesh-faq">
 <summary>FAQs</summary>
 
 **Q1. Can WireGuard handle dynamic WAN IP addresses on edge routers automatically?**

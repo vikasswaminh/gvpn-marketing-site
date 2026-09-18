@@ -340,7 +340,7 @@ resource "aws_instance" "headscale_server" {
 - **ARM64 Compute Sizing:** Provisions a cost-effective `t4g.small` EC2 instance with an assigned public IP inside a targeted public subnet.
 - **Automated Bootstrap:** Executes a cloud-init script to install Docker runtimes, create configuration directories, and download the Headscale control plane binary at initial boot.
 
-<details>
+<details class="mesh-faq">
 <summary>FAQs</summary>
 
 **Q1. Does a managed WireGuard SaaS provider have access to unencrypted application data?**

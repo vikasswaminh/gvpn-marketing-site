@@ -575,32 +575,32 @@ Using BGP over WireGuard allows subnets added at Site B (`10.20.0.0/24`) to be a
 
 ## Frequently Asked Questions
 
-<details>
+<details class="mesh-faq">
 <summary>Q1. How many peers can a single WireGuard interface manage?</summary>
 A single WireGuard interface (`wg0`) can manage hundreds of peers simultaneously. Because WireGuard operates in kernel space using Cryptokey Routing hashtables, memory usage remains extremely low (under 20MB of RAM for 100 active peers), and throughput scales efficiently across available CPU cores.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q2. What is the difference between a Hub-and-Spoke and a Full Mesh WireGuard VPN?</summary>
 In a Hub-and-Spoke VPN, all remote branch traffic routes through a central hub server, creating a potential bandwidth bottleneck and increased latency. In a Full Mesh WireGuard VPN, every node connects directly to every other node over single-hop encrypted tunnels, delivering lower latency, direct peer-to-peer speeds, and higher network redundancy.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q3. How do I fix MTU packet drop issues in WireGuard mesh networks?</summary>
 MTU issues occur when encrypted outer WireGuard packets exceed standard 1500-byte WAN MTUs. Set the WireGuard interface MTU to 1420 bytes (or 1412 for IPv6) and apply TCP MSS clamping to your gateway firewall rules using `iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu`.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q4. Why does AllowedIPs cause traffic to drop in multi-peer setups?</summary>
 WireGuard’s Cryptokey Routing requires every IP subnet in `AllowedIPs` to be uniquely mapped to one peer per interface. If the same subnet is assigned to multiple peers on `wg0`, WireGuard binds that subnet exclusively to the last loaded peer, causing traffic to all other peers sharing that subnet to fail silently.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q5. How does WireGuard handle dynamic IP updates on mesh nodes?</summary>
 WireGuard supports dynamic endpoint roaming natively. When a node behind a dynamic IP sends an authenticated packet to a peer, the receiving peer updates the sender's IP endpoint in memory automatically. For persistent DNS hostname resolution across interface reboots, run a periodic endpoint refresh script or use an automated control plane platform.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q6. Can I run dynamic routing protocols like BGP over WireGuard?</summary>
 Yes. BGP can be run over WireGuard overlay tunnels using routing daemons like FRRouting (FRR) or BIRD. Set `AllowedIPs` to permit overlay transit range traffic, enable IP forwarding, and configure BGP peerings over the `wg0` interface to automate network route discovery and multi-path failover.
 </details>

@@ -378,12 +378,12 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
   transform: translateY(-50%);
   font-size: 1.5rem;
   font-weight: 400;
-  color: #22c55e;
+  color: var(--accent);
   transition: transform 0.2s;
 }
 .prose .mesh-faq[open] summary::after {
   content: '−';
-  color: #22c55e;
+  color: var(--accent);
 }
 .prose .mesh-faq[open] summary {
   border-bottom: 1px solid #e2e8f0;

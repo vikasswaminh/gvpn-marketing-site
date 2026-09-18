@@ -630,51 +630,54 @@ For network architects and engineers reviewing the technical specifications cite
 
 ## Frequently Asked Questions
 
-<details>
+<details class="mesh-faq">
 <summary>Q1. Can WireGuard carry 802.1Q VLAN tags directly over the tunnel interface?</summary>
 No. WireGuard is fundamentally a Layer 3 (`tun`) network tunnel. It operates strictly on raw IPv4 and IPv6 datagrams and has no awareness of Layer 2 Ethernet frames, MAC addresses, or 802.1Q tags. To connect VLANs, you terminate the 802.1Q tags on the router's physical trunk interface, and route the individual IP subnets through WireGuard using standard Layer 3 routing and `AllowedIPs` entries.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q2. How do I isolate a local Guest or IoT VLAN from reaching our WireGuard mesh?</summary>
 Isolation requires two complementary controls: First, in your router's firewall (using nftables, iptables, or OpenWrt zones), create an explicit rule that drops all forwarding between the Guest VLAN interface (e.g., `eth0.50`) and the WireGuard interface (`wg0`). Second, in the WireGuard peer configurations on other routers, never include the Guest VLAN's CIDR in `AllowedIPs`. WireGuard's Cryptokey Routing will automatically discard any packet originating from an undeclared subnet.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q3. Why is bridging Layer 2 across WAN links considered an anti-pattern?</summary>
 Layer 2 bridging (such as running VXLAN or GRETAP over WireGuard) forces all broadcast, multicast, and unknown unicast (BUM) traffic across your internet connection. ARP requests, mDNS discovery packets, and DHCP broadcasts consume valuable WAN bandwidth. Furthermore, a switching loop or broadcast storm occurring at one physical site will instantly propagate across the tunnel and knock down all interconnected branches.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q4. What MTU should I configure for VLANs routing over WireGuard?</summary>
 For standard internet uplinks with a physical MTU of 1500 bytes, configure your WireGuard interface MTU to 1420 bytes (or 1412 bytes for PPPoE connections). This accounts for the 32-byte WireGuard cryptographic envelope and 28-byte outer IP/UDP transport header. In addition, always enable TCP MSS clamping on your gateway router to limit TCP SYN packets to 1380 bytes, eliminating fragmentation and web application timeouts.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q5. How do I connect two offices that have overlapping VLAN subnets (e.g., both use 192.168.1.0/24)?</summary>
 WireGuard cannot route between identical subnets on the same interface due to Cryptokey Routing constraints. The best long-term solution is renumbering one site into an organized non-overlapping scheme (such as `10.SiteID.VlanID.0/24`). If renumbering is impossible, you must implement 1:1 Stateless Network Address Translation (NETMAP in nftables/iptables) at the gateway router to translate the local `192.168.1.0/24` subnet into a virtual `10.200.x.0/24` prefix before traffic enters the WireGuard tunnel.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q6. Does selective VLAN routing require installing client software on every workstation?</summary>
 No. The router-to-router mesh architecture is completely agentless for end-user devices. The edge router acts as the site-to-site gateway. Workstations, printers, medical devices, and servers connect normally to their physical switch ports and use their local default gateway without any software installed. The gateway router handles encryption, encapsulation, and access control transparently.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q7. Can I use WireGuard to connect a cloud VPC subnet directly to an on-premise VLAN?</summary>
 Yes. You can launch a lightweight virtual machine or container in your cloud VPC (AWS, GCP, Azure, or Hetzner) running WireGuard, declare the on-premise VLAN CIDR in its `AllowedIPs`, and update the VPC route table to point that CIDR to your WireGuard instance. Traffic between your on-premise server VLAN and cloud instances flows seamlessly over the encrypted overlay.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Q8. How does MeshWG automate selective VLAN connectivity across multiple branches?</summary>
 MeshWG acts as an out-of-band coordination control plane. It runs directly on the routers you already own (MikroTik, OpenWrt, Ubiquiti, OPNsense, Linux). Through a central dashboard, you specify which local subnets should be visible across the mesh. MeshWG automatically generates cryptographic keys, provisions non-overlapping `AllowedIPs` routing tables, coordinates UDP hole punching across CGNAT broadband lines, and pushes atomic configuration updates to your fleet without touching your actual data packets.
 </details>
 
 <aside class="cta-strip">
-<h3>Ready to build your VLAN mesh?</h3>
-<p>MeshWG gives you a hosted control plane to orchestrate your WireGuard nodes across all your VLANs, so you don't have to manage keys, AllowedIPs, and endpoints by hand.</p>
+<details class="mesh-faq">
+  <summary>Ready to build your VLAN mesh?</summary>
+
+  <p>MeshWG gives you a hosted control plane to orchestrate your WireGuard nodes across all your VLANs, so you don't have to manage keys, AllowedIPs, and endpoints by hand.</p>
+</details>
+
 <div class="cta-row">
 <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>
-</aside>

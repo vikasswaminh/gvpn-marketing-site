@@ -305,12 +305,13 @@ MeshWG resolves the compromises that previously plagued enterprise remote access
 *   **Agentless Office Integration:** Connects remote teams to existing physical office networks and local servers via native router integration without deploying software across every workstation.
 
 <aside class="cta-strip">
-<h3>Modernize your remote access with MeshWG</h3>
-<p>Replace slow, fragile legacy VPN concentrators with a high-speed, kernel-level WireGuard mesh fabric.</p>
+<details class="mesh-faq">
+  <summary>Modernize your remote access with MeshWG</summary>
+
+  <p>Replace slow, fragile legacy VPN concentrators with a high-speed, kernel-level WireGuard mesh fabric.</p>
+</details>
+
 <div class="cta-row">
 <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 machines</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>
-</aside>
-
-To explore how MeshWG modernizes corporate remote access and eliminates legacy VPN bottlenecks, visit [MeshWG.com](https://meshwg.com) or [read our documentation](/docs/).

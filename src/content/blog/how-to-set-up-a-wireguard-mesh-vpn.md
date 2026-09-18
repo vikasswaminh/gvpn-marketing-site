@@ -370,42 +370,42 @@ The most honest way to evaluate any of this is to run it on real branches. Two m
 
 ## Frequently Asked Questions (FAQ)
 
-<details>
+<details class="mesh-faq">
 <summary>What is a WireGuard mesh VPN?</summary>
 A WireGuard mesh VPN is a private, encrypted network where every participating site can reach every other site directly over the WireGuard protocol, coordinated by a central layer that manages keys, IPs, and peer relationships.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How long does it take to set up a WireGuard mesh VPN?</summary>
 With a managed platform like MeshWG, the first site comes online in under two minutes. A complete two-site mesh, including verification and policies, fits in a single working session.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Is a WireGuard mesh VPN secure?</summary>
 Yes, when configured correctly. WireGuard is a modern, audited, kernel-level protocol, and MeshWG adds zero-trust access policies that are enforced before traffic reaches its destination, plus server-side keys encrypted at rest.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How much does it cost?</summary>
 The first two machines are free forever. A 20-site deployment runs around ₹7,000 a month — roughly one-tenth of a comparable SD-WAN deployment.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Can I add sites later?</summary>
 Yes. Adding a site is a self-service step that takes under two minutes, and the mesh propagates the change automatically. Scaling from 2 to 50 sites uses the same process.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does a mesh VPN differ from a traditional VPN?</summary>
 A traditional VPN routes all traffic through a central gateway, creating a bottleneck. A mesh VPN establishes direct, peer-to-peer connections between all devices (like branch offices or cloud servers), reducing latency and eliminating a single point of failure.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Does MeshWG require installing software on every device?</summary>
 No. MeshWG can be deployed directly on your existing edge routers (like TP-Link, MikroTik, or OpenWrt). This provides agentless, site-wide protection for all devices behind the router without installing VPN clients on individual laptops or IoT devices.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does WireGuard NAT Traversal work?</summary>
 WireGuard doesn't have native NAT traversal, which is why MeshWG provides a cloud coordination plane. It handles UDP hole punching, PersistentKeepalives, and automatic endpoint discovery to seamlessly connect peers behind CGNAT or strict enterprise firewalls.
 </details>

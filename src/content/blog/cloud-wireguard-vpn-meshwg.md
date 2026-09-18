@@ -423,7 +423,7 @@ gcloud compute routes create route-branch-ny \
 - Open UDP port 51820 in the Hetzner Cloud Firewall template.
 - When using Hetzner Cloud vSwitch / Private Networks (10.0.0.0/16), define static routes under the Networks → Routes section in the Hetzner Console to direct branch traffic through the internal IP of the gateway VM.
 
-<details>
+<details class="mesh-faq">
 <summary>FAQs</summary>
 
 **Q1: Can MeshWG establish direct peer-to-peer connections when both branch offices sit behind Carrier-Grade NAT (CGNAT)?**

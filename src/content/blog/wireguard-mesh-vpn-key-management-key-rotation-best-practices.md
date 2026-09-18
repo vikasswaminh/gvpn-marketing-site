@@ -483,12 +483,12 @@ Enterprise networks in 2026 are rarely homogeneous. A production deployment typi
 
 ## Frequently Asked Questions (FAQs)
 
-<details>
+<details class="mesh-faq">
 <summary>What is the difference between WireGuard's automatic session re-keying and long-term identity key rotation?</summary>
 WireGuard’s internal Noise protocol automatically executes transient session re-keying every 120 seconds (or after $2^{64}$ bytes) using ephemeral Diffie-Hellman handshakes. This provides forward secrecy for active data payloads. In contrast, long-term identity key rotation involves changing the static 32-byte Curve25519 keypair configured in the interface file or kernel state. Rotating identity keys is necessary to mitigate device theft, limit credential exposure, revoke access, and satisfy security compliance standards (SOC2, PCI-DSS).
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does a mesh VPN rotate static WireGuard keys without dropping active packets?</summary>
 Zero-downtime rotation is achieved through atomic state transitions. Because WireGuard’s Cryptokey Routing forbids duplicate AllowedIPs entries on a single interface, an orchestration system either:
 <ul>
@@ -497,32 +497,32 @@ Zero-downtime rotation is achieved through atomic state transitions. Because Wir
 </ul>
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Why is distributing WireGuard private keys from a central server considered an anti-pattern?</summary>
 Generating private keys centrally on an administrative server and pushing them to endpoints over the network destroys the zero-trust security model. If the central server is breached, the attacker acquires the cryptographic material to decrypt or impersonate every node across the entire company. Private keys must always be derived locally within the endpoint's secure memory boundary and never leave the device.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How does WireGuard AllowedIPs routing complicate key rotation in a full mesh?</summary>
 WireGuard tightly couples packet encryption to IP routing through AllowedIPs. A given IP address or CIDR subnet can only map to exactly one peer public key per interface. If you attempt to add a peer's new public key while its old key is still associated with that subnet, the kernel either rejects the update or prematurely strips the route from the old peer, causing packet blackholing if the remote node hasn't switched keys yet.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>What role does a Preshared Key (PSK) play in WireGuard key management?</summary>
 A Preshared Key (PSK) introduces an additional 256-bit symmetric encryption layer to the Noise_IKpsk2 handshake. It is specifically designed as a post-quantum defense mechanism. Even if a future quantum computer running Shor’s algorithm breaks Curve25519, historical and active traffic remains fully protected as long as the symmetric PSK remains uncompromised. Rotating PSKs frequently provides robust, defense-in-depth quantum resilience.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>How often should static WireGuard identity keys be rotated in production?</summary>
 In enterprise zero-trust architectures, rotating static identity keys every 30 to 90 days is standard best practice. For compliance-heavy environments (PCI-DSS v4.0, defense, banking), automated rotations every 7 to 14 days are common. Symmetric PSKs should ideally be rotated on a daily or weekly schedule. Emergency revocations must execute within seconds.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>Can hardware edge routers like MikroTik, OpenWrt, and Ubiquiti rotate keys automatically without custom agent daemons?</summary>
 Yes. Agentless orchestration architectures like MeshWG communicate with edge routers using native operating system APIs (such as RouterOS REST API, OpenWrt UCI scripts, or secure management webhooks). The control plane instructs the router to generate a fresh Curve25519 keypair locally, extracts the public key, and coordinates peer table updates across the network without requiring custom binary daemons.
 </details>
 
-<details>
+<details class="mesh-faq">
 <summary>What happens if a node is offline when a network-wide key rotation occurs?</summary>
 When an offline node reconnects, its outdated peer table will prevent it from communicating with peers that have already rotated to new keys. A robust control plane handles this by maintaining an Epoch History Table. When the offline node reconnects, it authenticates with the control plane out-of-band, downloads the current global epoch manifest, derives its own fresh keypair, and updates its local peer table before attempting to re-establish WireGuard tunnels.
 </details>

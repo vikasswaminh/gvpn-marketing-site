@@ -336,7 +336,7 @@ Modern cloud workloads running inside Amazon Web Services (AWS VPC), Google Clou
 
 **Result:** Any physical office laptop, IP printer, or smart device connected to the physical router can send traffic directly to AWS EC2 private IPs (`10.100.x.x`) without installing any software or utilizing AWS Virtual Private Gateway services.
 
-<details>
+<details class="mesh-faq">
 <summary>FAQs</summary>
 
 **1. Does setting up a router VPN slow down internet speeds for all home devices?**

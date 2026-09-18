@@ -470,7 +470,7 @@ Connecting on-premises branch offices behind CGNAT to public cloud VPCs (AWS/GCP
 - **Disable Source/Destination Check**: On the AWS EC2 Gateway instance network interface, disable Source/Dest checks to allow forwarding of branch LAN subnets (`192.168.10.0/24`).
 - **Target AWS Route Tables**: In AWS Private Subnet route tables, set destination `192.168.10.0/24` to target the Instance ID of the WireGuard Cloud Gateway VM.
 
-<details>
+<details class="mesh-faq">
 <summary>Frequently Asked Questions (FAQ)</summary>
 
 **Q1. How does WireGuard connect through CGNAT?**

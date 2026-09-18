@@ -407,7 +407,7 @@ In a hybrid cloud WireGuard transit architecture, lightweight virtual machine in
    - Target: i-0123456789abcdef (EC2 WireGuard Gateway Instance ID)
 4. **Configure WireGuard:** Install WireGuard on the EC2 instance, set Address = 10.200.0.1/24, and add your branch office peer configuration.
 
-<details>
+<details class="mesh-faq">
 <summary>Frequently Asked Questions (FAQ)</summary>
 
 **Q1: Can I connect branch offices that both operate behind Carrier-Grade NAT (CGNAT)?**

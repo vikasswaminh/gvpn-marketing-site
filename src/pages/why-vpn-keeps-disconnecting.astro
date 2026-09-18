@@ -78,6 +78,11 @@ const breadcrumbSchema = { "@context": "https://schema.org", "@type": "Breadcrum
       </aside>
 
       <article>
+        <blockquote style="margin-bottom: 2rem; padding: 1rem; border-left: 4px solid #0056b3; background: #f8f9fa;">
+          <strong>Related Reading:</strong> <a href="/blog/how-wireguard-mesh-control-plane-manages-keys-peers-routes/">How WireGuard Mesh Control Planes Manage Keys, Peers & Routes</a><br/>
+          <strong>Related Reading:</strong> <a href="/blog/wireguard-nat-traversal-behind-cgnat-2026/">WireGuard NAT Traversal: Connecting Peers Behind CGNAT & Firewalls</a>
+        </blockquote>
+
         <h2 id="diagnose">First: diagnose the pattern</h2>
         <p>Before fixing anything, identify the pattern. Look at the VPN client's logs (WireGuard: <code>wg show</code> + system log; OpenVPN: the client log file). Note the disconnect timestamps. Three patterns map to three different causes:</p>
         <ul class="bullets">

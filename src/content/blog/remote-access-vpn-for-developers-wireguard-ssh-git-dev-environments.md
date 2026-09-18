@@ -429,14 +429,20 @@ sudo sysctl -w net.ipv4.conf.wg0.rp_filter=2
 <p>MeshWG transforms raw WireGuard kernel networking into an automated, enterprise-grade Zero Trust developer remote access platform.</p>
 
 <h3>Key Capabilities of MeshWG for Modern Engineering Teams</h3>
-<p><strong>1. Out-of-Band Control Plane with Zero Data Interception</strong><br/>
-MeshWG operates strictly as an out-of-band coordination control plane. Your proprietary source code, database queries, and SSH terminal sessions never touch MeshWG servers. Sensitive developer traffic flows directly point-to-point between your workstations, cloud VPCs, and office servers through kernel-level WireGuard tunnels encrypted with keys that only your devices possess.</p>
+<details class="mesh-faq">
+<summary>1. Out-of-Band Control Plane with Zero Data Interception?</summary>
+<p>MeshWG operates strictly as an out-of-band coordination control plane. Your proprietary source code, database queries, and SSH terminal sessions never touch MeshWG servers. Sensitive developer traffic flows directly point-to-point between your workstations, cloud VPCs, and office servers through kernel-level WireGuard tunnels encrypted with keys that only your devices possess.</p>
+</details>
 
-<p><strong>2. Identity-Aware Zero Trust Access Control (SSO / IdP Integration)</strong><br/>
-MeshWG integrates natively with your existing Identity Provider (Google Workspace, Okta, Microsoft Entra ID, GitHub Organizations). Developers authenticate using their corporate credentials and hardware MFA tokens. MeshWG dynamically provisions peer cryptographic keys and enforces granular, role-based access rules. When an employee is offboarded in your IdP, their WireGuard peer keys are instantly revoked across your entire infrastructure within milliseconds.</p>
+<details class="mesh-faq">
+<summary>2. Identity-Aware Zero Trust Access Control (SSO / IdP Integration)?</summary>
+<p>MeshWG integrates natively with your existing Identity Provider (Google Workspace, Okta, Microsoft Entra ID, GitHub Organizations). Developers authenticate using their corporate credentials and hardware MFA tokens. MeshWG dynamically provisions peer cryptographic keys and enforces granular, role-based access rules. When an employee is offboarded in your IdP, their WireGuard peer keys are instantly revoked across your entire infrastructure within milliseconds.</p>
+</details>
 
-<p><strong>3. Agentless Gateway Integration for Office Labs and Edge Hardware</strong><br/>
-Many engineering teams maintain on-premises physical hardware labs, GPU clusters, or embedded testing boards connected to network edge routers running OpenWrt, MikroTik RouterOS 7, Ubiquiti UniFi, pfSense, or OPNsense. Unlike proprietary zero-trust vendors that require installing unverified third-party binary daemons on every single machine, MeshWG provides agentless router integration. It configures the router's native, upstream WireGuard implementation via standard API hooks or lightweight config sync, instantly bridging remote developers to physical lab subnets without host-level software.</p>
+<details class="mesh-faq">
+<summary>3. Agentless Gateway Integration for Office Labs and Edge Hardware?</summary>
+<p>Many engineering teams maintain on-premises physical hardware labs, GPU clusters, or embedded testing boards connected to network edge routers running OpenWrt, MikroTik RouterOS 7, Ubiquiti UniFi, pfSense, or OPNsense. Unlike proprietary zero-trust vendors that require installing unverified third-party binary daemons on every single machine, MeshWG provides agentless router integration. It configures the router's native, upstream WireGuard implementation via standard API hooks or lightweight config sync, instantly bridging remote developers to physical lab subnets without host-level software.</p>
+</details>
 
 <h2 id="12-critical-architectural-mistakes-in-developer-remote-access">Critical Architectural Mistakes in Developer Remote Access</h2>
 
@@ -576,29 +582,45 @@ Many engineering teams maintain on-premises physical hardware labs, GPU clusters
 
 <h2 id="15-comprehensive-developer-remote-access-faq">Comprehensive Developer Remote Access FAQ</h2>
 
-<p><strong>1. Does WireGuard support multi-factor authentication (MFA)?</strong><br/>
-WireGuard operates at the network packet layer using static Curve25519 cryptographic keys; the raw WireGuard protocol itself does not include an interactive prompt for usernames, passwords, or MFA tokens. However, enterprise platforms like MeshWG solve this cleanly by handling authentication out-of-band. Developers must authenticate against their corporate Identity Provider (Okta, Google Workspace, Entra ID) using hardware security keys (FIDO2/WebAuthn) or TOTP to receive or refresh their short-lived WireGuard cryptographic sessions.</p>
+<details class="mesh-faq">
+<summary>1. Does WireGuard support multi-factor authentication (MFA)?</summary>
+<p>WireGuard operates at the network packet layer using static Curve25519 cryptographic keys; the raw WireGuard protocol itself does not include an interactive prompt for usernames, passwords, or MFA tokens. However, enterprise platforms like MeshWG solve this cleanly by handling authentication out-of-band. Developers must authenticate against their corporate Identity Provider (Okta, Google Workspace, Entra ID) using hardware security keys (FIDO2/WebAuthn) or TOTP to receive or refresh their short-lived WireGuard cryptographic sessions.</p>
+</details>
 
-<p><strong>2. Can developers use graphical remote desktop tools (RDP / VNC) over WireGuard?</strong><br/>
-Yes. WireGuard is a complete Layer 3 IP overlay network that supports all IP-based protocols, including TCP, UDP, and ICMP. Developers running remote Linux desktop environments (via XRDP, X2Go, or VNC) connect directly to the devbox's overlay IP address (100.64.0.x). Because WireGuard eliminates the protocol overhead and packet buffering common in legacy SSL-VPNs, remote desktop frame rates are significantly smoother, with minimal mouse pointer latency.</p>
+<details class="mesh-faq">
+<summary>2. Can developers use graphical remote desktop tools (RDP / VNC) over WireGuard?</summary>
+<p>Yes. WireGuard is a complete Layer 3 IP overlay network that supports all IP-based protocols, including TCP, UDP, and ICMP. Developers running remote Linux desktop environments (via XRDP, X2Go, or VNC) connect directly to the devbox's overlay IP address (100.64.0.x). Because WireGuard eliminates the protocol overhead and packet buffering common in legacy SSL-VPNs, remote desktop frame rates are significantly smoother, with minimal mouse pointer latency.</p>
+</details>
 
-<p><strong>3. How does WireGuard handle split DNS for internal company domains?</strong><br/>
-WireGuard allows configuring specific DNS servers directly on the tunnel interface (DNS = 100.64.0.1, internal.company.com). Modern operating system resolvers (such as systemd-resolved on Linux, macOS scutil, and Windows DNS Client) support split DNS, directing resolution requests for internal domains (e.g., *.staging.company.internal) across the WireGuard tunnel to internal DNS servers, while all public internet lookups continue resolving through the developer's local ISP or public DNS provider.</p>
+<details class="mesh-faq">
+<summary>3. How does WireGuard handle split DNS for internal company domains?</summary>
+<p>WireGuard allows configuring specific DNS servers directly on the tunnel interface (DNS = 100.64.0.1, internal.company.com). Modern operating system resolvers (such as systemd-resolved on Linux, macOS scutil, and Windows DNS Client) support split DNS, directing resolution requests for internal domains (e.g., *.staging.company.internal) across the WireGuard tunnel to internal DNS servers, while all public internet lookups continue resolving through the developer's local ISP or public DNS provider.</p>
+</details>
 
-<p><strong>4. Will running WireGuard drain my laptop battery during development?</strong><br/>
-No. Unlike OpenVPN or legacy IPsec daemons that constantly run active user-space processes and periodic cryptographic keepalive handshakes, WireGuard runs directly in the OS kernel and remains completely silent when no packets are being transmitted. Benchmarks indicate that WireGuard consumes less than 15% of the CPU power required by OpenVPN during heavy file transfers, preserving laptop battery life during remote travel.</p>
+<details class="mesh-faq">
+<summary>4. Will running WireGuard drain my laptop battery during development?</summary>
+<p>No. Unlike OpenVPN or legacy IPsec daemons that constantly run active user-space processes and periodic cryptographic keepalive handshakes, WireGuard runs directly in the OS kernel and remains completely silent when no packets are being transmitted. Benchmarks indicate that WireGuard consumes less than 15% of the CPU power required by OpenVPN during heavy file transfers, preserving laptop battery life during remote travel.</p>
+</details>
 
-<p><strong>5. What happens if two developers work from the same home network?</strong><br/>
-Because WireGuard clients behind the same residential router use unique source ports and individual Curve25519 public keys, the home NAT router creates separate stateful translation table entries for each laptop. Both developers can connect simultaneously to the exact same remote cloud servers without routing collisions or connection conflicts.</p>
+<details class="mesh-faq">
+<summary>5. What happens if two developers work from the same home network?</summary>
+<p>Because WireGuard clients behind the same residential router use unique source ports and individual Curve25519 public keys, the home NAT router creates separate stateful translation table entries for each laptop. Both developers can connect simultaneously to the exact same remote cloud servers without routing collisions or connection conflicts.</p>
+</details>
 
-<p><strong>6. Can we route internet traffic through an egress IP while accessing dev environments?</strong><br/>
-Yes. While developers typically prefer split tunneling to maximize performance and preserve privacy, specific regulatory or compliance policies may require that third-party staging APIs or customer sandbox environments be accessed only from a vetted corporate public static IP. MeshWG supports selective exit nodes, allowing administrators to route specific external CIDRs through a centralized corporate egress gateway while maintaining direct peer-to-peer tunnels for internal SSH and Git traffic.</p>
+<details class="mesh-faq">
+<summary>6. Can we route internet traffic through an egress IP while accessing dev environments?</summary>
+<p>Yes. While developers typically prefer split tunneling to maximize performance and preserve privacy, specific regulatory or compliance policies may require that third-party staging APIs or customer sandbox environments be accessed only from a vetted corporate public static IP. MeshWG supports selective exit nodes, allowing administrators to route specific external CIDRs through a centralized corporate egress gateway while maintaining direct peer-to-peer tunnels for internal SSH and Git traffic.</p>
+</details>
 
-<p><strong>7. How does WireGuard prevent unauthorized lateral movement if a dev machine is infected with malware?</strong><br/>
-Native WireGuard strictly verifies that incoming packets match the designated AllowedIPs for the cryptographic key that encrypted them. When managed via MeshWG, centralized access policies enforce host-level firewall filtering rules (nftables). A compromised frontend developer workstation is cryptographically restricted from transmitting packets to production database subnets, internal secret managers, or other peer workstations on the mesh.</p>
+<details class="mesh-faq">
+<summary>7. How does WireGuard prevent unauthorized lateral movement if a dev machine is infected with malware?</summary>
+<p>Native WireGuard strictly verifies that incoming packets match the designated AllowedIPs for the cryptographic key that encrypted them. When managed via MeshWG, centralized access policies enforce host-level firewall filtering rules (nftables). A compromised frontend developer workstation is cryptographically restricted from transmitting packets to production database subnets, internal secret managers, or other peer workstations on the mesh.</p>
+</details>
 
-<p><strong>8. Is WireGuard compliant with federal and industry security standards (FIPS / SOC 2 / HIPAA)?</strong><br/>
-WireGuard utilizes modern, state-of-the-art cryptography recommended by modern cryptographers: Curve25519 for key exchange, ChaCha20 for symmetric encryption, Poly1305 for authentication, and BLAKE2s for hashing. While legacy FIPS 140-2 standards historically mandated older NIST curves (such as P-256 and AES), modern zero-trust guidance (including NIST SP 800-207) recognizes ChaCha20-Poly1305 (RFC 8439) as fully compliant with modern enterprise security standards. WireGuard architectures easily satisfy SOC 2 Type II, ISO 27001, and HIPAA encryption-in-transit requirements.</p>
+<details class="mesh-faq">
+<summary>8. Is WireGuard compliant with federal and industry security standards (FIPS / SOC 2 / HIPAA)?</summary>
+<p>WireGuard utilizes modern, state-of-the-art cryptography recommended by modern cryptographers: Curve25519 for key exchange, ChaCha20 for symmetric encryption, Poly1305 for authentication, and BLAKE2s for hashing. While legacy FIPS 140-2 standards historically mandated older NIST curves (such as P-256 and AES), modern zero-trust guidance (including NIST SP 800-207) recognizes ChaCha20-Poly1305 (RFC 8439) as fully compliant with modern enterprise security standards. WireGuard architectures easily satisfy SOC 2 Type II, ISO 27001, and HIPAA encryption-in-transit requirements.</p>
+</details>
 
 <h2 id="16-standards-rfcs-and-technical-references">Standards, RFCs, and Technical References</h2>
 

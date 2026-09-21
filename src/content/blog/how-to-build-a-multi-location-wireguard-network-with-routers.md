@@ -309,25 +309,34 @@ To connect physical branch office routers to an AWS VPC environment:
 Traffic originating from cloud virtual machines inside private AWS subnets routes to physical branch office hosts transparently across direct, low-latency, kernel-encrypted WireGuard tunnels.
 
 <details class="mesh-faq">
-<summary>FAQs</summary>
-
-**Q1. Can WireGuard handle dynamic WAN IP addresses on edge routers automatically?**
+<summary>Q1. Can WireGuard handle dynamic WAN IP addresses on edge routers automatically?</summary>
 Yes, but with an important operational caveat. Standard stock WireGuard resolves peer domain names (FQDNs) to static IP addresses only once when the interface is initially started. If a remote router's WAN IP address changes while the tunnel is active, stock WireGuard continues sending packets to the old IP address.
+</details>
 
-**Q2. How does MeshWG secure key management across distributed multi-location routers?**
+<details class="mesh-faq">
+<summary>Q2. How does MeshWG secure key management across distributed multi-location routers?</summary>
 MeshWG uses a zero-trust cryptographic model. Private keys are generated directly on local edge router nodes and stored securely in local system storage. Private keys are never transmitted over the network or stored on central MeshWG management servers. MeshWG coordinates public keys, network configuration parameters, WAN endpoints, and subnet rules, ensuring your underlying data payload encryption remains end-to-end private.
+</details>
 
-**Q3. What is the performance overhead of WireGuard on edge hardware compared to IPsec?**
+<details class="mesh-faq">
+<summary>Q3. What is the performance overhead of WireGuard on edge hardware compared to IPsec?</summary>
 WireGuard delivers significantly higher throughput and lower CPU utilization than IPsec or OpenVPN, particularly on embedded ARM edge hardware. Because WireGuard runs inside the Linux kernel and uses simple, fixed modern cryptographic algorithms (ChaCha20-Poly1305), it avoids heavy context-switching and complex security association state processing. On benchmarked ARM64 embedded routers, WireGuard achieves 3x to 5x the throughput of OpenVPN while reducing CPU usage by up to 60%.
+</details>
 
-**Q4. How do I prevent MTU issues and packet drop hangs across site-to-site WireGuard tunnels?**
+<details class="mesh-faq">
+<summary>Q4. How do I prevent MTU issues and packet drop hangs across site-to-site WireGuard tunnels?</summary>
 Set the WireGuard interface (`wg0`) MTU to 1440 bytes for standard IPv4 connections (or 1420 bytes for IPv6 transport and 1432 for PPPoE links). Additionally, implement TCP MSS Clamping on all edge routers using nftables or iptables: `iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtud` This forces TCP connections to negotiate segment sizes that fit within the encapsulated WireGuard packet boundary.
+</details>
 
-**Q5. Is it possible to communicate between two branch office routers if both are trapped behind strict CGNAT or double-NAT?**
+<details class="mesh-faq">
+<summary>Q5. Is it possible to communicate between two branch office routers if both are trapped behind strict CGNAT or double-NAT?</summary>
 Yes. When both edge routers sit behind strict or symmetric NAT firewalls (such as cellular 5G modems or provider-grade CGNAT), direct peer-to-peer UDP hole-punching may be blocked by network security policies. MeshWG resolves this automatically by routing traffic between those specific dynamic sites through an intermediate, authenticated Relay Gateway node with a reachable public IP address, restoring full site-to-site connectivity.
+</details>
 
-**Q6. How many simultaneous site-to-site WireGuard tunnels can a single edge router handle?**
+<details class="mesh-faq">
+<summary>Q6. How many simultaneous site-to-site WireGuard tunnels can a single edge router handle?</summary>
 Because WireGuard is stateless and highly resource-efficient, a modest x86_64 edge gateway router can manage hundreds of active peer tunnels simultaneously. The practical scaling limit is determined by total network bandwidth throughput and local RAM allocations rather than protocol state overhead. For large networks scaling beyond 50 sites, deploying automated control plane orchestration via MeshWG combined with dynamic BGP routing is recommended to maintain stability.
+</details>
 
 </details>
 

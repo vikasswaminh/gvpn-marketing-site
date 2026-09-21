@@ -424,22 +424,29 @@ gcloud compute routes create route-branch-ny \
 - When using Hetzner Cloud vSwitch / Private Networks (10.0.0.0/16), define static routes under the Networks → Routes section in the Hetzner Console to direct branch traffic through the internal IP of the gateway VM.
 
 <details class="mesh-faq">
-<summary>FAQs</summary>
-
-**Q1: Can MeshWG establish direct peer-to-peer connections when both branch offices sit behind Carrier-Grade NAT (CGNAT)?**
+<summary>Q1. Can MeshWG establish direct peer-to-peer connections when both branch offices sit behind Carrier-Grade NAT (CGNAT)?</summary>
 Answer: In most NAT scenarios (such as Full-Cone, Restricted-Cone, and Port-Restricted NAT), MeshWG's STUN hole-punching mechanism successfully coordinates simultaneous outbound UDP packets to establish a direct connection across the Internet. However, if both endpoints are trapped behind Symmetric NAT (where the NAT device maps every unique destination IP and port combination to a completely unpredictable external port), direct UDP hole punching is mathematically impossible. In this specific scenario, MeshWG automatically and transparently routes traffic through the nearest Cloud Hub relay without dropping the underlying connection.
+</details>
 
-**Q2: What is the mathematical formula for calculating the WireGuard MTU?**
+<details class="mesh-faq">
+<summary>Q2. What is the mathematical formula for calculating the WireGuard MTU?</summary>
 Answer: The formula accounts for all encapsulation headers: WireGuard MTU = Parent Physical Interface MTU - 20 bytes (IPv4 Header) - 8 bytes (UDP Header) - 32 bytes (WireGuard Packet Header) - 16 bytes (Poly1305 Authentication Tag) - 4 bytes (Alignment Padding) = Parent MTU - 80 bytes. For standard 1500-byte Ethernet interfaces, MTU = 1420. If the underlying WAN operates over IPv6, subtract an additional 20 bytes for the larger IPv6 base header, resulting in MTU = 1400.
+</details>
 
-**Q3: Why does WireGuard lack built-in user authentication (such as LDAP, SAML, or OAuth)?**
+<details class="mesh-faq">
+<summary>Q3. Why does WireGuard lack built-in user authentication (such as LDAP, SAML, or OAuth)?</summary>
 Answer: WireGuard was designed deliberately as a lean layer-3 cryptographic transport running inside the Linux kernel, prioritizing performance, code audibility, and protocol simplicity. High-level identity management, single sign-on (SSO), dynamic IP assignment, and multi-factor authentication are intentionally delegated to higher-level orchestrators, mesh control planes, and management tools.
+</details>
 
-**Q4: Is WireGuard certified for FIPS 140-2 or 140-3 compliance?**
+<details class="mesh-faq">
+<summary>Q4. Is WireGuard certified for FIPS 140-2 or 140-3 compliance?</summary>
 Answer: No. FIPS compliance mandates the exclusive use of NIST-approved cryptographic primitives (such as AES-GCM and SHA-256). WireGuard uses modern, non-NIST algorithms (ChaCha20-Poly1305, Curve25519, and BLAKE2s). For government and enterprise environments bound by strict statutory FIPS mandates, IPSec remains the standard choice, though WireGuard is approved and deployed across enterprise infrastructure worldwide.
+</details>
 
-**Q5: How does WireGuard handle dynamic public IP addresses without dropping active sessions?**
+<details class="mesh-faq">
+<summary>Q5. How does WireGuard handle dynamic public IP addresses without dropping active sessions?</summary>
 Answer: WireGuard implements Endpoint Roaming. When a peer's public IP address changes (for example, if an ISP reassigns a broadband connection or a gateway transitions to a backup LTE WAN link), the peer transmits an authenticated, encrypted packet from its new IP address. Upon successfully verifying the cryptographic MAC and decrypting the packet, the receiver automatically updates its internal endpoint record for that peer. Communication continues seamlessly without requiring a handshake renegotiation or connection restart.
+</details>
 
 </details>
 

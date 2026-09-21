@@ -341,22 +341,29 @@ resource "aws_instance" "headscale_server" {
 - **Automated Bootstrap:** Executes a cloud-init script to install Docker runtimes, create configuration directories, and download the Headscale control plane binary at initial boot.
 
 <details class="mesh-faq">
-<summary>FAQs</summary>
-
-**Q1. Does a managed WireGuard SaaS provider have access to unencrypted application data?**
+<summary>Q1. Does a managed WireGuard SaaS provider have access to unencrypted application data?</summary>
 No. WireGuard uses end-to-end authenticated encryption. Data payloads are encrypted using the destination peer's public key on the local device before entering the physical network. Managed SaaS platforms operate only the control plane, managing public key exchanges and network mapping updates. Data payloads travel directly between client nodes over peer-to-peer connections.
+</details>
 
-**Q2. What happens to active network traffic if a self-hosted control plane goes offline?**
+<details class="mesh-faq">
+<summary>Q2. What happens to active network traffic if a self-hosted control plane goes offline?</summary>
 Active peer-to-peer WireGuard tunnels continue to route application traffic normally if the control plane crashes. The Linux kernel processes data routing independently of the management API using existing cryptographic routing rules.
+</details>
 
-**Q3. Why use a control plane platform instead of manual WireGuard configuration files?**
+<details class="mesh-faq">
+<summary>Q3. Why use a control plane platform instead of manual WireGuard configuration files?</summary>
 Manual WireGuard configurations work well for static point-to-point setups, but become unmanageable as networks grow. In a full-mesh network of 500 hosts, adding a single new machine requires manually updating configurations across all 499 existing servers. Control plane platforms eliminate this manual work by automating public key distribution, NAT hole-punching, dynamic IP assignments, user authentication via OpenID Connect, and centralized access policies.
+</details>
 
-**Q4. How does WireGuard manage mobile endpoints moving between Wi-Fi and Cellular networks?**
+<details class="mesh-faq">
+<summary>Q4. How does WireGuard manage mobile endpoints moving between Wi-Fi and Cellular networks?</summary>
 WireGuard features built-in connection roaming capabilities. When an endpoint changes physical network interfaces or public IP addresses, it sends an authenticated WireGuard packet to its configured peer.
+</details>
 
-**Q5. Can WireGuard run inside Docker containers without host system privileges?**
+<details class="mesh-faq">
+<summary>Q5. Can WireGuard run inside Docker containers without host system privileges?</summary>
 Yes, but the container requires explicit network administration permissions (`--cap-add=NET_ADMIN`) to create and modify system network interfaces (`/dev/net/tun` or `wg0`). If a container host restricts system capabilities, the client software must run using a userspace implementation (`wireguard-go`), which increases CPU usage and reduces network throughput compared to native kernel-space execution.
+</details>
 
 </details>
 

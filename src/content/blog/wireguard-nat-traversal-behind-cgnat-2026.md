@@ -471,25 +471,34 @@ Connecting on-premises branch offices behind CGNAT to public cloud VPCs (AWS/GCP
 - **Target AWS Route Tables**: In AWS Private Subnet route tables, set destination `192.168.10.0/24` to target the Instance ID of the WireGuard Cloud Gateway VM.
 
 <details class="mesh-faq">
-<summary>Frequently Asked Questions (FAQ)</summary>
-
-**Q1. How does WireGuard connect through CGNAT?**
+<summary>Q1. How does WireGuard connect through CGNAT?</summary>
 WireGuard connects through Carrier-Grade NAT (CGNAT) by using `PersistentKeepalive = 25` in its configuration. This forces the node behind CGNAT to send periodic outbound UDP packets to the remote peer, opening and maintaining a stateful translation pinhole in the carrier firewall.
+</details>
 
-**Q2. Why is PersistentKeepalive necessary for WireGuard behind NAT?**
+<details class="mesh-faq">
+<summary>Q2. Why is PersistentKeepalive necessary for WireGuard behind NAT?</summary>
 Stateful firewalls and CGNAT devices drop inactive UDP connections after 30 to 60 seconds of idle time. Setting `PersistentKeepalive = 25` transmits a silent, 32-byte authenticated heartbeat frame every 25 seconds, keeping the firewall state table entry active 24/7.
+</details>
 
-**Q3. Can WireGuard connect two endpoints that are both behind Symmetric NAT?**
+<details class="mesh-faq">
+<summary>Q3. Can WireGuard connect two endpoints that are both behind Symmetric NAT?</summary>
 Direct peer-to-peer (P2P) WireGuard hole punching usually fails between two Symmetric NATs because both routers assign unpredictable random external ports. Connecting dual Symmetric NATs requires an intermediate public Relay Server (or a WireGuard management platform like MeshWG) to route packets.
+</details>
 
-**Q4. Does WireGuard consume extra battery or mobile data when using keepalives?**
+<details class="mesh-faq">
+<summary>Q4. Does WireGuard consume extra battery or mobile data when using keepalives?</summary>
 No. WireGuard's keepalive frame is an extremely lightweight 32-byte authenticated packet sent once every 25 seconds. It consumes under 100 KB of mobile data per month and has a negligible impact on mobile device battery life.
+</details>
 
-**Q5. How does WireGuard handle dynamic IP changes on remote peers?**
+<details class="mesh-faq">
+<summary>Q5. How does WireGuard handle dynamic IP changes on remote peers?</summary>
 WireGuard uses Cryptokey Endpoint Roaming. Whenever a receiving node authenticates an incoming packet using the sender's public key, it automatically updates the sender's public IP address and UDP port in memory. Future packets are immediately directed to the new IP endpoint.
+</details>
 
-**Q6. What MTU should be configured for WireGuard over cellular NAT links?**
+<details class="mesh-faq">
+<summary>Q6. What MTU should be configured for WireGuard over cellular NAT links?</summary>
 For standard broadband NAT, use MTU = 1420. For 4G/5G cellular modems or double-NAT connections, set MTU = 1380 and enable TCP MSS clamping (`--clamp-mss-to-pmtu`) on your firewall to prevent packet fragmentation.
+</details>
 
 </details>
 

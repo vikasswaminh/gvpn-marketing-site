@@ -528,56 +528,56 @@ The fundamental technological breakthrough enabling modern WireGuard mesh networ
 <p>Because WireGuard operates identically regardless of whether an endpoint is a virtual machine in AWS or a physical Raspberry Pi in a basement, the network architecture remains unified, auditable, and completely decoupled from underlying cloud provider networking constraints.</p>
 
 <header class="ph-head"> <h2>Frequently Asked Questions</h2> </header> 
-<details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-<summary itemprop="name">Q1. How does a WireGuard mesh VPN allow remote access without opening ports on my home router?</summary>
+<details class="mesh-faq">
+<summary>Q1. How does a WireGuard mesh VPN allow remote access without opening ports on my home router?</summary>
 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 <div itemprop="text">
 <p>A WireGuard mesh VPN uses UDP hole punching coordinated through an out-of-band discovery server (STUN). Both your home node and your remote client initiate outbound UDP connections to the discovery server. The server inspects the public IP and ephemeral source port assigned by each router's NAT table and shares these endpoints with the respective peers. Both peers then transmit UDP packets directly toward each other's mapped endpoints, opening stateful bi-directional NAT pathways through the firewalls without requiring inbound listening ports or router port forwarding rules.</p>
 </div>
 </div>
 </details>
-<details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-<summary itemprop="name">Q2. Can a WireGuard mesh VPN bypass Carrier-Grade NAT (CGNAT) and mobile hotspot firewalls?</summary>
+<details class="mesh-faq">
+<summary>Q2. Can a WireGuard mesh VPN bypass Carrier-Grade NAT (CGNAT) and mobile hotspot firewalls?</summary>
 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 <div itemprop="text">
 <p>Yes. Carrier-Grade NAT (CGNAT) prevents users from hosting inbound servers because the ISP assigns a private RFC 6598 IP address (100.64.0.0/10) shared among hundreds of subscribers. Because WireGuard mesh nodes initiate outbound traffic to coordinate, standard UDP hole punching punches through the ISP's carrier-grade stateful NAT. If both ends sit behind difficult symmetric NATs where port allocation is randomized, the mesh automatically fails over to an encrypted relay server (DERP/TURN) using outbound TLS or UDP.</p>
 </div>
 </div>
 </details>
-<details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-<summary itemprop="name">Q3. What is the difference between a traditional hub-and-spoke WireGuard VPN and a WireGuard mesh VPN?</summary>
+<details class="mesh-faq">
+<summary>Q3. What is the difference between a traditional hub-and-spoke WireGuard VPN and a WireGuard mesh VPN?</summary>
 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 <div itemprop="text">
 <p>In a traditional hub-and-spoke WireGuard configuration, one central server must possess a public static IP and open UDP port. All client-to-client traffic must travel to the central server, traverse its network interface, and bounce back out, creating a single point of failure, increased latency, and bandwidth throttling. In a WireGuard mesh VPN, an external control plane only exchanges public keys and connection metadata; after initial discovery, endpoints negotiate direct, encrypted peer-to-peer tunnels, routing data over the shortest possible geographical path.</p>
 </div>
 </div>
 </details>
-<details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-<summary itemprop="name">Q4. Do I need to install a WireGuard client on every single smart home device and IP camera?</summary>
+<details class="mesh-faq">
+<summary>Q4. Do I need to install a WireGuard client on every single smart home device and IP camera?</summary>
 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 <div itemprop="text">
 <p>No. By designating a single always-on machine (such as a Raspberry Pi, mini PC, or an existing home router running OpenWrt or MikroTik) as a WireGuard subnet router, that node advertises your local LAN CIDR (e.g., 192.168.1.0/24) to your mesh. When your remote laptop or phone connects to the mesh, traffic addressed to local smart bulbs, security cameras, or non-agent printers is routed seamlessly through the subnet gateway without modifying the end devices.</p>
 </div>
 </div>
 </details>
-<details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-<summary itemprop="name">Q5. Why is a WireGuard mesh safer than using Cloudflare Tunnels for self-hosted home services?</summary>
+<details class="mesh-faq">
+<summary>Q5. Why is a WireGuard mesh safer than using Cloudflare Tunnels for self-hosted home services?</summary>
 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 <div itemprop="text">
 <p>Cloudflare Tunnels terminate TLS at Cloudflare's edge servers, meaning Cloudflare decrypts, inspects, and re-encrypts all your traffic. Furthermore, Cloudflare's Terms of Service strictly forbid streaming large media files (like Plex, Jellyfin, or raw backups) over free tunnels. A WireGuard mesh VPN provides true end-to-end encryption where only your devices hold the private keys. Neither your ISP nor the coordination server can inspect your payloads, and there are no file type or bandwidth restrictions.</p>
 </div>
 </div>
 </details>
-<details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-<summary itemprop="name">Q6. How does WireGuard perform on low-power home devices like a Raspberry Pi 4 or an older router?</summary>
+<details class="mesh-faq">
+<summary>Q6. How does WireGuard perform on low-power home devices like a Raspberry Pi 4 or an older router?</summary>
 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 <div itemprop="text">
 <p>WireGuard operates directly inside the Linux kernel using modern, high-speed cryptographic primitives: ChaCha20 for symmetric encryption, Poly1305 for authentication, and Curve25519 for key exchange. Because these algorithms were explicitly designed to run efficiently on general-purpose CPUs without requiring specialized hardware AES-NI instructions, a Raspberry Pi 4 can effortlessly route over 600 to 800 Mbps of encrypted WireGuard traffic with minimal CPU utilization and negligible thermal overhead.</p>
 </div>
 </div>
 </details>
-<details itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-<summary itemprop="name">Q7. What happens to my home mesh VPN if my home ISP disconnects or changes my dynamic IP address?</summary>
+<details class="mesh-faq">
+<summary>Q7. What happens to my home mesh VPN if my home ISP disconnects or changes my dynamic IP address?</summary>
 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 <div itemprop="text">
 <p>When your home ISP rotates your public IP address, the local WireGuard mesh node immediately detects the change upon sending its periodic keepalive packet or receiving an out-of-band notification from the control plane. The node reports its new public endpoint to the coordination layer, which broadcasts the update to your active peers. Within milliseconds, remote peers update their WireGuard endpoint mappings and resume communications with zero manual intervention.</p>

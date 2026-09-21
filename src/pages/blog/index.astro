@@ -86,9 +86,9 @@ const featuredPillClass = featured?.category === 'STRATEGY & ARCHITECTURE' ? 'ma
             <a href={`/blog/${featured.slug}/`} class="mag-featured hover-card" data-tilt>
               <div class="feat-img">
                 {featured.cover ? (
-                  <Image src={featured.cover} alt={featured.title} width={1200} height={630} widths={[400, 600, 800, 1200]} quality={60} format="avif" sizes="(max-width: 768px) 100vw, 600px" loading="eager" fetchpriority="high" decoding="async" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+                  <Image src={featured.cover} alt={featured.title} width={1200} height={630} widths={[400, 600, 800, 1200]} quality={60} format="avif" sizes="(max-width: 768px) 100vw, 600px" loading="eager" fetchpriority="high" decoding="async" style="width: 100%; height: 100%; object-fit: contain; background: #0f172a; position: absolute; top: 0; left: 0;" />
                 ) : (
-                  <img src="/multi-location-routers.png" alt={featured.title} loading="eager" fetchpriority="high" decoding="async" class="abs-cover" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+                  <img src="/multi-location-routers.png" alt={featured.title} loading="eager" fetchpriority="high" decoding="async" class="abs-cover" style="width: 100%; height: 100%; object-fit: contain; background: #0f172a; position: absolute; top: 0; left: 0;" />
                 )}
                 <div class="mesh-bg" style="opacity: 0.2;"></div>
               </div>
@@ -422,15 +422,16 @@ const featuredPillClass = featured?.category === 'STRATEGY & ARCHITECTURE' ? 'ma
   }
   .card-img-container {
     width: 100%;
-    height: 180px;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    background: #0f172a;
     border-bottom: 1px solid var(--border);
   }
   .card-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform .5s ease;
   }
   .mag-card:hover .card-img {

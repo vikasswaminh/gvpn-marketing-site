@@ -612,29 +612,45 @@ table inet filter {
 
 ## Frequently Asked Questions (FAQs)
 
-**Q1. What is zero-downtime LAN renumbering in a WireGuard mesh network?**
+<details class="mesh-faq">
+<summary>Q1. What is zero-downtime LAN renumbering in a WireGuard mesh network?</summary>
 Zero-downtime LAN renumbering is the operational practice of re-addressing an on-premises or cloud network (such as migrating from an overlapping `192.168.1.0/24` subnet to an unassigned `10.140.20.0/24` subnet) without terminating established transport sessions, dropping WireGuard peer tunnels, or causing packet blackholes. It relies on interface dual-homing, multi-prefix AllowedIPs staging across all mesh peers, temporary stateful translation bridging, and controlled split-DNS cutovers.
+</details>
 
-**Q2. Why does modifying a physical LAN address break native WireGuard mesh routing?**
+<details class="mesh-faq">
+<summary>Q2. Why does modifying a physical LAN address break native WireGuard mesh routing?</summary>
 WireGuard enforces Cryptokey Routing directly inside the kernel. Each peer key is bound to explicit AllowedIPs prefixes. When an on-premises subnet router advertises a LAN across the mesh, remote peers route packets to `wg0` based on matching AllowedIPs. If you change physical LAN host addresses without updating AllowedIPs across every peer, outgoing packets are dropped at the client kernel, and incoming return packets are dropped by the gateway interface because the new source IP fails cryptographic authentication.
+</details>
 
-**Q3. How does interface dual-homing prevent outages during subnet renumbering?**
+<details class="mesh-faq">
+<summary>Q3. How does interface dual-homing prevent outages during subnet renumbering?</summary>
 Dual-homing assigns secondary IP addresses from the target subnet to the gateway router's physical interface while retaining the legacy IP address. The gateway answers ARP requests, updates link-layer neighbor tables, and routes packets for both subnets concurrently over the same physical switch fabric. Migrated hosts use the new gateway address, while un-migrated hosts use the legacy gateway, eliminating single cutover deadlines.
+</details>
 
-**Q4. Can multiple peers in a single WireGuard mesh advertise identical subnets simultaneously?**
+<details class="mesh-faq">
+<summary>Q4. Can multiple peers in a single WireGuard mesh advertise identical subnets simultaneously?</summary>
 No. WireGuard Cryptokey Routing mandates that every prefix in AllowedIPs must be strictly unique across all peers on a single interface. If two peers advertise `192.168.1.0/24` on the same `wg0` interface, WireGuard assigns the route exclusively to whichever peer was configured last, blackholing traffic destined for the other peer. Resolving this without downtime requires deploying intermediate 1:1 NAT or using MeshWG to stage virtual overlay translation blocks.
+</details>
 
-**Q5. How does MeshWG automate the zero-downtime subnet renumbering workflow?**
+<details class="mesh-faq">
+<summary>Q5. How does MeshWG automate the zero-downtime subnet renumbering workflow?</summary>
 Rather than requiring administrators to manually execute SSH loops, recalculate AllowedIPs, and reload `wg0.conf` across hundreds of remote peer endpoints, MeshWG coordinates routing state out-of-band. Operators add the new subnet to the gateway's advertised routes in the MeshWG dashboard. MeshWG atomically updates in-memory kernel AllowedIPs and policy routes across all remote peers in milliseconds, continuously validates end-to-end synthetic health checks, and enables safe one-click route withdrawal.
+</details>
 
-**Q6. What role does Linux Reverse Path Filtering (rp_filter) play in subnet renumbering failures?**
+<details class="mesh-faq">
+<summary>Q6. What role does Linux Reverse Path Filtering (rp_filter) play in subnet renumbering failures?</summary>
 By default, strict Reverse Path Filtering (`rp_filter = 1`) instructs the Linux kernel to drop incoming packets if their source IP is not routable through the exact arrival interface according to the FIB. During dual-homed migrations, traffic frequently follows asymmetric paths: arriving over WireGuard from a remote peer and returning through a local Ethernet alias. Setting `net.ipv4.conf.all.rp_filter = 2` (loose mode) ensures packets are accepted as long as the source address is reachable via any interface.
+</details>
 
-**Q7. How should DHCP lease durations be adjusted before a LAN migration?**
+<details class="mesh-faq">
+<summary>Q7. How should DHCP lease durations be adjusted before a LAN migration?</summary>
 At least 48 to 72 hours prior to the migration, network administrators should reduce the DHCP lease duration on the existing scope from standard durations (e.g., 24 hours) down to 300 seconds (5 minutes). This ensures that when the secondary DHCP server activates with the target subnet scope, all dynamic hosts request new leases within five minutes, drastically shrinking the multi-subnet transitional window.
+</details>
 
-**Q8. What is the rollback procedure if an unexpected dependency fails during cutover?**
+<details class="mesh-faq">
+<summary>Q8. What is the rollback procedure if an unexpected dependency fails during cutover?</summary>
 Because the dual-homing architecture retains the legacy IP configuration and routing state throughout the migration, rolling back requires zero physical changes. Operators revert split-DNS records to point back to legacy IP addresses, re-enable the legacy DHCP scope on the gateway, and withdraw the target subnet route in MeshWG. Active sessions that were never migrated continue operating without interruption.
+</details>
 
 ## Authoritative References
 

@@ -231,20 +231,30 @@ Four common failure modes and their fixes:
 
 ## Frequently Asked Questions 
 
-**Q1. Why is a WireGuard mesh VPN superior to a traditional corporate VPN concentrator for remote teams?**
+<details class="mesh-faq">
+<summary>Q1. Why is a WireGuard mesh VPN superior to a traditional corporate VPN concentrator for remote teams?</summary>
 A WireGuard mesh VPN decentralizes connections, establishing direct, encrypted point-to-point UDP tunnels to office subnet gateways and cloud VPCs across the shortest possible geographical route.
+</details>
 
-**Q2. How do remote employees access local office subnets without installing software on every office machine?**
+<details class="mesh-faq">
+<summary>Q2. How do remote employees access local office subnets without installing software on every office machine?</summary>
 Mesh networks utilize a designated node termed a Subnet Router or Office Gateway which advertises the local subnet CIDR.
+</details>
 
-**Q3. How does NAT traversal allow remote workers to reach the office without public static IPs or port forwarding?**
+<details class="mesh-faq">
+<summary>Q3. How does NAT traversal allow remote workers to reach the office without public static IPs or port forwarding?</summary>
 WireGuard mesh platforms like MeshWG employ STUN-assisted UDP hole punching.
+</details>
 
-**Q4. Can we enforce Zero Trust Network Access (ZTNA) and least-privilege rules on a full-mesh topology?**
+<details class="mesh-faq">
+<summary>Q4. Can we enforce Zero Trust Network Access (ZTNA) and least-privilege rules on a full-mesh topology?</summary>
 Yes. A modern WireGuard mesh is coordinated by a centralized control plane that acts as an access arbiter, integrating with Identity Providers (Okta, Microsoft Entra ID).
+</details>
 
-**Q5. What is split tunneling, and why is it essential for remote workforce performance?**
+<details class="mesh-faq">
+<summary>Q5. What is split tunneling, and why is it essential for remote workforce performance?</summary>
 Split tunneling directs only corporate-bound IP prefixes across the encrypted WireGuard tunnel, preventing corporate WAN saturation and reducing latency.
+</details>
 
 ## Standards, RFCs, and Technical References
 - **RFC 7748:** Elliptic Curves for Security

@@ -10,6 +10,22 @@ seoKeywords: ["How to Connect Non-WireGuard Devices to a WireGuard Mesh VPN", "W
 
 **Trust Badges:** WireGuard Kernel Cryptography · Layer 3 Subnet Routing · Proxy ARP Protocol · RFC 7748 · Zero-Trust Segmentation · Tested on Linux Kernel 6.x, RouterOS v7, and OpenWrt 23.x
 
+> **Related Reading:** [Zero-Downtime LAN Renumbering: How to Migrate a WireGuard Mesh Without Losing Connectivity](/blog/zero-downtime-lan-renumbering-wireguard-mesh/)
+> 
+> **Related Reading:** [WireGuard Mesh VPN Without Agent: Existing Routers Guide](/blog/wireguard-mesh-vpn-without-agent-existing-routers/)
+
+<article class="tldr-box">
+  <h3>TL;DR</h3>
+  <ul>
+    <li><strong>The Subnet Gateway Principle:</strong> Non-WireGuard devices never run tunnel software. They communicate using standard IP networking with a local gateway node that handles WireGuard encapsulation, cryptographic verification, and decapsulation on their behalf.</li>
+    <li><strong>Routing vs. Masquerading:</strong> True Layer 3 routing preserves the originating client IP for logging and zero-trust firewalling but requires a static route on the upstream LAN router. Source NAT (Masquerading) works without upstream router modifications at the expense of client IP visibility.</li>
+    <li><strong>Overcoming Asymmetric Routing:</strong> If the WireGuard subnet gateway is not the physical network's default gateway, return packets will flow out the standard internet router and be dropped. Engineers must deploy static return routes, policy routing, or gateway SNAT.</li>
+    <li><strong>Layer 3 vs. Layer 2 Discovery:</strong> WireGuard is strictly an IP-layer (L3) tunnel. Zero-configuration discovery protocols relying on link-local multicast (mDNS, SSDP, Bonjour) require an active multicast reflector (such as Avahi or an mDNS repeater) running on the gateway.</li>
+    <li><strong>The Critical Role of TCP MSS Clamping:</strong> Because WireGuard adds an 80-byte header (over IPv4), unmanaged endpoints transmitting standard 1500-byte packets will experience silent connection stalls unless the gateway clamps the TCP Maximum Segment Size (MSS) to the Path MTU.</li>
+    <li><strong>Granular Microsegmentation:</strong> Placing legacy devices behind a WireGuard subnet gateway provides an enforcement point. Using Linux nftables or MeshWG network policies, administrators can restrict remote access to specific ports (e.g., exposing only TCP 443 on an IPMI card while blocking administrative telnet).</li>
+  </ul>
+</article>
+
 ## Executive Summary
 
 Connecting every endpoint on a corporate or home network to an encrypted, peer-to-peer overlay network is the theoretical gold standard of modern zero-trust architecture. However, in production engineering, an inescapable reality surfaces: between 60% and 80% of connected hardware cannot run an agent.

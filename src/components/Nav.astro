@@ -11,7 +11,7 @@ const currentPath = Astro.url.pathname;
         <span class="badge">NEW</span>
         Self-serve signup is live. Free for 2 machines, forever. ₹349/machine/month after.
       </span>
-      <a href="/pricing" class="announcement-link" aria-label="See pricing details">See pricing &rarr;</a>
+      <a href="/pricing/" class="announcement-link" aria-label="See pricing details">See pricing &rarr;</a>
     </div>
   </div>
 
@@ -22,11 +22,11 @@ const currentPath = Astro.url.pathname;
         <span class="brand-name">{site.productName}</span>
       </a>
       <div class="nav-links">
-        <a href="/quickstart" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
-        <a href="/docs" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
-        <a href="/compatibility" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
-        <a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
-        <a href="/pricing" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
+        <a href="/quickstart/" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
+        <a href="/docs/" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
+        <a href="/compatibility/" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
+        <a href="/blog/" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
+        <a href="/pricing/" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
       </div>
       <div class="nav-spacer"></div>
       <div class="nav-cta">
@@ -42,11 +42,11 @@ const currentPath = Astro.url.pathname;
 
   <div class="mobile-nav" id="mobile-nav">
     <div class="mobile-nav-inner">
-      <a href="/quickstart" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
-      <a href="/docs" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
-      <a href="/compatibility" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
-      <a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
-      <a href="/pricing" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
+      <a href="/quickstart/" class={currentPath.startsWith('/quickstart') ? 'active' : ''}>Quickstart</a>
+      <a href="/docs/" class={currentPath.startsWith('/docs') ? 'active' : ''}>Docs</a>
+      <a href="/compatibility/" class={currentPath.startsWith('/compatibility') ? 'active' : ''}>Compatibility</a>
+      <a href="/blog/" class={currentPath.startsWith('/blog') ? 'active' : ''}>Blog</a>
+      <a href="/pricing/" class={currentPath.startsWith('/pricing') ? 'active' : ''}>Pricing</a>
       <div class="mobile-nav-divider"></div>
       <a href={site.signIn}>Sign in</a>
       <a href={site.signupFree} class="mobile-nav-primary">Sign up free</a>

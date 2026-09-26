@@ -40,3 +40,13 @@
 /wireguard-nat-traversal-behind-cgnat-2026 /blog/wireguard-nat-traversal-behind-cgnat-2026/ 301
 /wireguard-site-to-site-vpn-how-it-works-2026 /blog/wireguard-site-to-site-vpn-how-it-works-2026/ 301
 /wireguard-site-to-site-vpn-multiple-locations /blog/wireguard-site-to-site-vpn-multiple-locations/ 301
+
+# Virtual router category redirects
+/tp-link/ /tp-link/wireguard/ 301
+/tp-link /tp-link/wireguard/ 301
+/mikrotik/ /mikrotik/wireguard/ 301
+/mikrotik /mikrotik/wireguard/ 301
+/pfsense/ /pfsense/wireguard/ 301
+/pfsense /pfsense/wireguard/ 301
+/openwrt/ /openwrt/wireguard/ 301
+/openwrt /openwrt/wireguard/ 301

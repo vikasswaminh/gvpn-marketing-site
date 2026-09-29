@@ -678,6 +678,6 @@ MeshWG acts as an out-of-band coordination control plane. It runs directly on th
 </details>
 
 <div class="cta-row">
-<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+<a class="btn btn-primary btn-lg" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free → 2 routers</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>

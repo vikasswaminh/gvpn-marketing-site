@@ -177,7 +177,7 @@ uci add_list network.wg0_hub.allowed_ips='10.100.0.0/16'
 
 uci commit network
 /etc/init.d/network restart</code></pre>
-        <p>This is the format MeshWG generates if you pick the OpenWrt option in our <a href="https://vpn.meshwg.com/signup">vendor config picker</a> — paste-ready, no values to edit. For OpenWrt automation, the CLI form is also the format Ansible's <code>community.general.uci_set</code> module expects.</p>
+        <p>This is the format MeshWG generates if you pick the OpenWrt option in our <a href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">vendor config picker</a> — paste-ready, no values to edit. For OpenWrt automation, the CLI form is also the format Ansible's <code>community.general.uci_set</code> module expects.</p>
 
         <h2 id="performance">Performance on common chipsets</h2>
         <p>WireGuard's throughput on OpenWrt is almost entirely CPU-bound: there is no hardware encryption offload on consumer routers, so the symmetric-crypto performance of the SoC sets the ceiling. The realistic numbers across the OpenWrt-supported chipset families:</p>
@@ -233,7 +233,7 @@ uci commit network
             need it.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers, forever</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free → 2 routers, forever</a>
             <a class="btn btn-line btn-lg" href="/compatibility/">Check your router compatibility</a>
           </div>
           <p class="related">

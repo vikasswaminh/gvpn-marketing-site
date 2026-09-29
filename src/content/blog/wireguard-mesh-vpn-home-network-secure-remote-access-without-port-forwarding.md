@@ -612,7 +612,7 @@ Whether you run a dedicated subnet router on a Raspberry Pi, deploy containers i
 <h3>Eliminate Port Forwarding with MeshWG</h3>
 <p>Get secure remote access to your homelab without exposing ports or struggling with CGNAT.</p>
 <div class="cta-row">
-<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 machines</a>
+<a class="btn btn-primary btn-lg" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free → 2 machines</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>
 </aside>

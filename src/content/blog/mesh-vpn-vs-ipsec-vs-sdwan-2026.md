@@ -158,7 +158,7 @@ Different sectors arrive at this decision from different starting positions, and
   <h3>Ready to validate this on your own network?</h3>
   <p>The most informative way to evaluate a mesh-VPN approach is to run it on real branches. Two machines are included indefinitely, with no card and no time limit, so the model can be validated against the organisation's actual environment before any commitment.</p>
   <div class="cta-row">
-    <a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Begin a free trial →</a>
+    <a class="btn btn-primary btn-lg" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Begin a free trial →</a>
   </div>
 </div>
 

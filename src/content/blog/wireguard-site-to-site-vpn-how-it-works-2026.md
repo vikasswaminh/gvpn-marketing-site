@@ -476,7 +476,7 @@ Even for organisations that will eventually hand-roll,
 </details> <!-- CTA --> <aside class="cta-strip"> <p>
 Want a WireGuard site-to-site mesh without hand-rolling a single
           wg-quick file?
-<a class="cta-link" href="https://vpn.meshwg.com/signup">Start free →</a>
+<a class="cta-link" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free →</a>
 Two machines are free, forever.
 </p> </aside> </div>
 

@@ -624,7 +624,7 @@ Strategic Implementation Roadmap:
 <h3>Ready to build your mesh?</h3>
 <p>MeshWG gives you a hosted control plane to orchestrate your WireGuard nodes, so you don't have to manage keys and endpoints by hand.</p>
 <div class="cta-row">
-<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+<a class="btn btn-primary btn-lg" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free → 2 routers</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>
 </aside>

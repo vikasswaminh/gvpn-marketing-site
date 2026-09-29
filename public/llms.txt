@@ -304,8 +304,8 @@ comparison at a realistic site count.
 
 ## How signup works
 
-- "Sign up free" buttons on meshwg.com route to https://vpn.meshwg.com/signup;
-  "Sign in" routes to https://vpn.meshwg.com/login. Signup is self-serve
+- "Sign up free" buttons on meshwg.com route to https://github.com/vikasswaminh/gvpn-marketing-site#quick-start;
+  "Sign in" routes to https://github.com/vikasswaminh/gvpn-marketing-site#quick-start. Signup is self-serve
   and open to anyone.
 - Two paths: email + password (with a 6-digit OTP email-verification step
   before first login), or "Continue with Google" for a one-click flow.

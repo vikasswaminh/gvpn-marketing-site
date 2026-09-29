@@ -657,7 +657,7 @@ sudo sysctl -w net.ipv4.conf.wg0.rp_filter=2
 <h3>Ready to secure your dev workflow?</h3>
 <p>MeshWG gives your team kernel-speed WireGuard tunnels to staging, CI/CD, and production — no bastions, no port forwarding, no client software on developer machines.</p>
 <div class="cta-row">
-<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 machines</a>
+<a class="btn btn-primary btn-lg" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free → 2 machines</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>
 </aside>

@@ -26,7 +26,7 @@ Finalize `/quickstart/` to be visually clean and consistent with the existing Me
 - **Zero Trust:** Verified that machines cannot talk to each other by default without an Access Rule.
 
 ## 6. Internal Links Checked
-- Links to `/compatibility/`, `https://vpn.meshwg.com/signup`, `/blog/wireguard-nat-traversal-behind-cgnat-2026/`, and `/docs/` were added and verified to match existing site architecture.
+- Links to `/compatibility/`, `https://github.com/vikasswaminh/gvpn-marketing-site#quick-start`, `/blog/wireguard-nat-traversal-behind-cgnat-2026/`, and `/docs/` were added and verified to match existing site architecture.
 
 ## 7. Structured Data Verification
 - Validated that the `BreadcrumbList` JSON-LD schema is correctly formatted, with Home → Quickstart, and the duplicate declaration was removed.

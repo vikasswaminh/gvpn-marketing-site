@@ -468,7 +468,7 @@ A modern out-of-band control plane changes the economics and operational reality
   <h3>Experience True Agentless Mesh Networking with MeshWG</h3>
   <p>Turn the routers, cloud VPCs, and servers you already own into an enterprise-grade Zero Trust mesh in under 2 minutes.</p>
   <div class="cta-row">
-    <a href="https://vpn.meshwg.com/signup" class="btn btn-primary">Sign up free — 2 machines forever</a>
+    <a href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start" class="btn btn-primary">Sign up free — 2 machines forever</a>
     <a href="https://meshwg.com/docs">Read documentation â†—</a>
   </div>
 </div>

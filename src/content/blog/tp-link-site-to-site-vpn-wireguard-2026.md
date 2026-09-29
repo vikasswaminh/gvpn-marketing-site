@@ -285,7 +285,7 @@ Any router that speaks WireGuard. For a single SafeStream box at one site, the T
   <p>
     Two of your TP-Link branches can be on a single mesh in under
     five minutes — and the first two machines stay free forever.
-    <a class="cta-link" href="https://vpn.meshwg.com/signup">Start free →</a>
+    <a class="cta-link" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free →</a>
   </p>
 </aside>
 

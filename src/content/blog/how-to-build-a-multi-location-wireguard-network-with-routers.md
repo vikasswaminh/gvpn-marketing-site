@@ -359,7 +359,7 @@ While static manual configurations become unmanageable as site counts grow, comb
 <h3>Ready to build your mesh?</h3>
 <p>Explore MeshWG to deploy standard WireGuard site-to-site connectivity across your entire fleet in under 2 minutes.</p>
 <div class="cta-row">
-<a class="btn btn-primary btn-lg" href="https://vpn.meshwg.com/signup">Start free → 2 routers</a>
+<a class="btn btn-primary btn-lg" href="https://github.com/vikasswaminh/gvpn-marketing-site#quick-start">Start free → 2 routers</a>
 <a class="btn btn-line btn-lg" href="/quickstart/">Read the Quickstart</a>
 </div>
 </aside>

@@ -5,8 +5,8 @@
 export const site = {
   // CTAs. "Sign up free" goes to the public self-serve signup form;
   // "Sign in" goes to the password / Google / magic-link login page.
-  signupFree: "#",
-  signIn:     "#",
+  signupFree: "https://vpn.meshwg.com/signup",
+  signIn:     "https://vpn.meshwg.com/login",
 
   // Pro / sales contact.
   proContact: "mailto:hello@meshwg.com?subject=MeshWG%20Pro",

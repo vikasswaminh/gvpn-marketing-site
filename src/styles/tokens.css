@@ -319,20 +319,14 @@ em, i, cite, dfn, address, var { font-style: normal; }
 }
 
 /* ── Scrollbar (light canvas tuned) ───────────────────────────────── */
-@supports (scrollbar-width: thin) {
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-strong) transparent;
-  }
-}
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
+/* Custom scrollbar removed globally to prevent white gutter on Windows. 
+   Apply it only to specific scrollable containers if needed. */
+.table-wrapper::-webkit-scrollbar { width: 8px; height: 8px; }
+.table-wrapper::-webkit-scrollbar-track { background: transparent; }
+.table-wrapper::-webkit-scrollbar-thumb {
   background: var(--border-strong);
   border-radius: 999px;
-  border: 2px solid var(--bg);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--text-4); }
 
 /* ── 10/10 UI Upgrade Utilities ───────────────────────────────────── */
 .glass-nav {

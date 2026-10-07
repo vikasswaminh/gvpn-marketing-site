@@ -91,11 +91,11 @@
   --r-xl:           24px;
 
   /* ── Layout ───────────────────────────────────────────────────────── */
-  --wrap-max:       1200px;
+  --wrap-max:       1280px;
   --wrap-pad-x:     24px;
   --maxw-narrow:    1000px;
-  --maxw:           1200px;
-  --maxw-wide:      1400px;
+  --maxw:           1280px;
+  --maxw-wide:      1440px;
   --container:      100%;
 
   /* ── Shadows (polished modern) ───────────────────────── */

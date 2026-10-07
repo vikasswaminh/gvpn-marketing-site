@@ -279,9 +279,9 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--text); m
 .prose a:not(.btn) { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; text-decoration-color: var(--accent-glow); color: var(--accent-strong); transition: all 0.2s ease; }
 .prose a:not(.btn):hover { text-decoration-color: var(--accent-strong); color: var(--accent); }
 
-.prose table { display: table; width: 100%; table-layout: fixed; overflow-wrap: break-word; border-collapse: collapse; margin: 2.5rem 0; font-size: 0.95rem; border: 3px solid #000000; box-shadow: 0 10px 30px -10px rgba(11, 37, 122, 0.15); }
-.prose th { text-align: left; padding: 12px 14px; color: #ffffff; font-weight: 700; background: linear-gradient(135deg, #1F4FD8, #0B257A); white-space: normal; border: 2px solid #000000; font-family: var(--font-heading); letter-spacing: 0.02em; }
-.prose td { padding: 12px 14px; color: var(--text-2); border: 2px solid #000000; transition: background-color 0.2s ease; word-break: break-word; }
+.prose table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; border-collapse: collapse; margin: 2.5rem 0; font-size: 0.95rem; border: 3px solid #000000; box-shadow: 0 10px 30px -10px rgba(11, 37, 122, 0.15); }
+.prose th { text-align: left; padding: 12px 14px; color: #ffffff; font-weight: 700; background: linear-gradient(135deg, #1F4FD8, #0B257A); border: 2px solid #000000; font-family: var(--font-heading); letter-spacing: 0.02em; }
+.prose td { padding: 12px 14px; color: var(--text-2); border: 2px solid #000000; transition: background-color 0.2s ease; }
 .prose tr:last-child td { }
 .prose table tbody tr:nth-child(even) { background: var(--bg-2); }
 .prose table tbody tr:hover td { background: var(--accent-soft); }

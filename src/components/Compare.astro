@@ -193,8 +193,13 @@ const listIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" st
 </section>
 
 <style>
-  #compare { padding: 64px 0 16px; }
-  #compare .sec-h, #compare .sec-lede {
+  #compare { padding: 16px 0 16px; }
+  #compare .sec-h {
+    font-size: clamp(28px, 3.5vw, 42px); /* Slightly smaller so it fits on one line */
+    text-wrap: unset;
+    max-width: none;
+  }
+  #compare .sec-lede {
     text-wrap: unset;
     max-width: none;
   }

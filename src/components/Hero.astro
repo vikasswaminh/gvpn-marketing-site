@@ -1,12 +1,7 @@
 ---
 import { site } from "../site";
 
-const heroChecks = [
-  "2 machines free, forever",
-  "Setup in under 2 minutes",
-  "Works with any WireGuard router",
-  "No new hardware to buy",
-];
+
 ---
 
 <section class="hero">
@@ -38,18 +33,7 @@ const heroChecks = [
       </a>
     </div>
 
-    <div class="hero-meta-bar animate-fade-up delay-3">
-      <div class="hero-meta-inner">
-        {heroChecks.map((label, index) => (
-          <>
-            <span class="meta-item">
-              {label}
-            </span>
-            {index < heroChecks.length - 1 && <span class="meta-sep" aria-hidden="true">+</span>}
-          </>
-        ))}
-      </div>
-    </div>
+
   </div>
 
 
@@ -171,37 +155,7 @@ const heroChecks = [
     border: 2px solid var(--ink);
   }
 
-  /* ── Hero meta bar ─────────────── */
-  .hero-meta-bar {
-    width: 100%;
-    max-width: 1100px;
-    background: #f4f8ff; /* Soft premium blue background */
-    border: 1px solid rgba(37, 99, 235, 0.25); /* Elegant translucent blue border */
-    border-radius: 999px; /* Fully rounded sides */
-    padding: 14px 28px;
-    margin-top: 24px;
-    display: flex;
-    justify-content: center;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.05); /* Subtle glow for depth */
-  }
-  .hero-meta-inner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font: 500 14px/1 var(--font-sans);
-    color: #334155;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .meta-item {
-    display: inline-flex;
-    align-items: center;
-  }
-  .meta-sep {
-    color: #94a3b8;
-    margin: 0 4px;
-    font-weight: 400;
-  }
+
 
   /* ── Topology Image ──────────────────────────────────────────── */
   .hero-topology {
@@ -224,16 +178,7 @@ const heroChecks = [
     .hero { padding: 80px 0 40px; }
     .h1 { font-size: clamp(32px, 6vw, 44px); }
     .lede { font-size: 18px; margin-bottom: 32px; }
-    .hero-meta-bar { 
-      border-radius: 16px; 
-      padding: 16px; 
-    }
-    .hero-meta-inner { 
-      flex-direction: column; 
-      gap: 8px; 
-      font-size: 13px; 
-    }
-    .meta-sep { display: none; }
+
   }
   @media (max-width: 480px) {
     .hero-cta { flex-direction: column; width: 100%; gap: 12px; }

@@ -92,7 +92,7 @@ import { site } from "../site";
     margin-bottom: 24px;
   }
   .eyebrow-text {
-    font: 700 12px/1 var(--font-sans);
+    font: 700 clamp(12px, 0.9vw, 14px)/1 var(--font-sans);
     letter-spacing: 0.15em;
     color: #1E40AF; /* Deep, vibrant blue for perfect contrast */
     text-transform: uppercase;
@@ -101,14 +101,14 @@ import { site } from "../site";
   /* ── Display H1 ────────────────────────── */
   .h1 {
     font-family: var(--font-display);
-    font-size: clamp(36px, 4.5vw, 56px);
+    font-size: clamp(40px, 5.5vw, 76px);
     line-height: 1.1;
     letter-spacing: -0.02em;
     font-weight: 800;
     margin: 0 0 24px;
     color: var(--text);
     text-align: center;
-    max-width: 950px;
+    max-width: 1050px;
   }
   .h1 .it {
     font-style: normal;
@@ -117,9 +117,9 @@ import { site } from "../site";
 
   /* ── Lede ─────────────────────────────────────────────────────── */
   .lede {
-    font-size: 19px;
+    font-size: clamp(18px, 1.4vw, 22px);
     color: #4B5563;
-    max-width: 800px;
+    max-width: 850px;
     line-height: 1.6;
     text-wrap: pretty;
     font-weight: 500;
@@ -143,10 +143,10 @@ import { site } from "../site";
   }
   
   .hero-cta .btn {
-    min-width: 170px;
-    height: 48px; /* Reduced from default 56px */
-    padding: 0 24px;
-    font-size: 15px;
+    min-width: 180px;
+    height: 52px;
+    padding: 0 28px;
+    font-size: clamp(15px, 1.1vw, 17px);
     border-radius: 999px;
   }
   

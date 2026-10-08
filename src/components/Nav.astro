@@ -134,15 +134,15 @@ const currentPath = Astro.url.pathname;
     display: flex; align-items: center; gap: 10px;
     font-weight: 600; /* Made slightly bolder */
     letter-spacing: -0.01em;
-    font-size: 18px; /* Increased from 15px */
+    font-size: clamp(18px, 1.3vw, 21px); /* Responsive scale */
     color: var(--text);
   }
   .brand-name { color: var(--text); }
 
   .nav-links {
     display: flex;
-    gap: 26px;
-    font-size: 15px; /* Increased from 13px */
+    gap: clamp(20px, 2vw, 36px);
+    font-size: clamp(15px, 1.1vw, 17px);
     color: #000000; /* Made purely black */
   }
   .nav-links a {
@@ -167,10 +167,12 @@ const currentPath = Astro.url.pathname;
   .nav-links a.active::after { transform: scaleX(1); }
 
   .nav-spacer { flex: 1; }
-  .nav-cta { display: flex; gap: 6px; align-items: center; }
+  .nav-cta { display: flex; gap: 8px; align-items: center; }
   
   .nav-cta .btn {
-    font-size: 15px; /* Increased to match nav links */
+    font-size: clamp(15px, 1.1vw, 17px);
+    height: 44px; /* Slightly taller for proportional scale */
+    padding: 0 20px;
   }
   
   /* Make Sign in button a darker black color */
